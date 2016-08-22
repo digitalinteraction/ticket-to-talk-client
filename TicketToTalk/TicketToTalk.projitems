@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{D0DB0356-2F37-47CD-940A-4932F1D9B924}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TicketToTalk</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ISQLite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ISQLiteImp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\NetworkController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Area.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Article.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\CheckItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MediaType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\NavMenuItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MenuListData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Person.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PersonUser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Tag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Ticket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TicketArea.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TicketTag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ToggleSwitch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Token.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\SQLite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PersonCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\MenuListView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\MenuPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\RootPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\AddArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\AllArticles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Login.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Register.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\AllProfiles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\People\PersonProfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\User\UserProfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsByPeriod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsByAgePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\DisplayTickets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\ViewTickets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPerson.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPersonChoice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Inspiration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\EditArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\NewTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewPhotoTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\DisplayTicketInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\SelectNewTicketType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Logout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\ProjectResource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Inspiration\InspirationView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\CameraController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SelectActivePerson.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\AudioRecorder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioRecorder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\MediaController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewAudioTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\AreaDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\ArticleDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\InspirationDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonUserDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\TagDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketAreaDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketTagDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\UserDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\TicketController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\AreaController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\TagController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\PersonController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IImageResizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewVideoTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\UserController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Period.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\PeriodDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PersonPeriod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonPeriodDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\PeriodController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SendInvitation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SeeInvitations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Invitation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\InvitationCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SeeInvite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources\Session.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsPicture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TicketCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsSounds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsVideos.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ArticleCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ArticleController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\ConversationsView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\NewConversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ConversationController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Database\ConversationDB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\ConversationView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\ConversationSelect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConversationCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConversationItemCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConversationItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\PlayConversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtensionMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Audio\AudioPlayerLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Tickets\TicketInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Tickets\NewTicketInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Picture\PictureLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Picture\PersonProfileImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Picture\UserProfileImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\AddYoutubeLinkView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Video\YouTubePlayer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\People\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Inspiration\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Services\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Database\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Conversations\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\Audio\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\Tickets\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\Picture\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
+  </ItemGroup>
+</Project>

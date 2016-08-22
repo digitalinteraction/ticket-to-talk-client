@@ -1,0 +1,186 @@
+﻿using System;
+using System.Diagnostics;
+using Plugin.Media;
+using Xamarin.Forms;
+
+namespace TicketToTalk
+{
+	/// <summary>
+	/// Select new ticket type.
+	/// </summary>
+	public class SelectNewTicketType : ContentPage
+	{
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectNewTicketType"/> class.
+		/// </summary>
+		public SelectNewTicketType()
+		{
+
+			Title = "New Ticket";
+
+			var photoCell = new ImageCell
+			{
+				Text = "Picture",
+				Detail = "Add or Select a Picture",
+				DetailColor = ProjectResource.color_blue,
+				ImageSource = "photo_icon.png",
+			};
+			photoCell.Tapped += PhotoButton_Clicked;
+
+			var audioCell = new ImageCell
+			{
+				Text = "Sound", 
+				Detail = "Record a Sound",
+				DetailColor = ProjectResource.color_blue,
+				ImageSource = "audio_icon.png",
+			};
+			audioCell.Tapped += SongButton_Clicked;
+
+			var videoCell = new ImageCell
+			{
+				Text = "Video",
+				Detail = "Select a Video",
+				DetailColor = ProjectResource.color_blue,
+				ImageSource = "video_icon.png",
+			};
+
+			var youTubeCell = new ImageCell
+			{
+				Text = "YouTube",
+				Detail = "Add a YouTube Video",
+				DetailColor = ProjectResource.color_blue,
+				ImageSource = "video_icon.png",
+			};
+			youTubeCell.Tapped += YouTubeCell_Tapped;
+
+			var table = new TableView
+			{
+				Root = new TableRoot{},
+				Intent = TableIntent.Menu,
+				HasUnevenRows = true,
+				RowHeight = 60,
+			};
+			//table.BackgroundColor = Color.White;
+			var section = new TableSection("Select a Ticket Type")
+			{
+				photoCell,
+				audioCell,
+				videoCell,
+				youTubeCell
+			};
+			table.Root.Add(section);
+
+			Content = new StackLayout
+			{
+				Spacing = 12,
+				Children = 
+				{
+					//stack,
+					table,
+				}
+			};
+		}
+
+		void SongButton_Clicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new AudioRecorder());
+			Navigation.RemovePage(this);
+		}
+
+		/// <summary>
+		/// On photos button click.
+		/// </summary>
+		/// <returns>The button clicked.</returns>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		async void PhotoButton_Clicked(object sender, EventArgs e)
+		{
+			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
+			Debug.WriteLine("Action: " + action);
+			switch (action) 
+			{
+				case ("Take a Photo"):
+					TakePicture();
+					break;
+				case ("Select a Photo From Library"):
+					SelectPicture();
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Selects the picture.
+		/// </summary>
+		/// <returns>The picture.</returns>
+		private async void TakePicture()
+		{
+			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+			{
+				await DisplayAlert("No Camera", "No camera avaialble.", "OK");
+				return;
+			}
+
+			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+			{
+
+				Directory = "TicketToTalk",
+				Name = "ticket.jpg"
+			});
+
+			// App will not progress to new ticket screen on android without this...
+			await DisplayAlert("File Location", file.Path, "OK");
+
+			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
+			var page = new NewTicket("Picture", file.Path);
+
+			try
+			{
+				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(page));
+				Navigation.RemovePage(this);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+			}
+		}
+
+		/// <summary>
+		/// Selects a picture from the library.
+		/// </summary>
+		public async void SelectPicture() 
+		{
+			if (!CrossMedia.Current.IsPickPhotoSupported) 
+			{
+				await DisplayAlert("Select Photo", "Photo select not supported", "OK");
+				return;
+			}
+
+			var file = await CrossMedia.Current.PickPhotoAsync();
+			if (file == null) { return; }
+
+			// App will not progress to new ticket screen on android without this...
+			await DisplayAlert("File Location", file.Path, "OK");
+
+			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
+			var page = new NewTicket("Picture", file.Path);
+
+			try
+			{
+				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(page));
+				Navigation.RemovePage(this);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+			}
+		}
+
+		void YouTubeCell_Tapped(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new AddYoutubeLinkView());
+			Navigation.RemovePage(this);
+		}
+	}
+}
+

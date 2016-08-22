@@ -1,0 +1,57 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TicketToTalk", "TicketToTalk\TicketToTalk.shproj", "{D0DB0356-2F37-47CD-940A-4932F1D9B924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketToTalk.iOS", "iOS\TicketToTalk.iOS.csproj", "{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketToTalk.Droid", "Droid\TicketToTalk.Droid.csproj", "{BB52CBA1-6A03-4FB2-B92E-238352078CD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhone.ActiveCfg = Release|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhone.Build.0 = Release|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhone.Build.0 = Debug|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|Any CPU.ActiveCfg = Release|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|Any CPU.Build.0 = Release|iPhone
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|iPhone.Build.0 = Release|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB52CBA1-6A03-4FB2-B92E-238352078CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $2
+		$2.inheritsSet = null
+		$2.scope = application/json
+		$0.StandardHeader = $3
+		$3.Text = @Author: ${AuthorName} - ${AuthorEmail}\nCreated on: ${Date}\n\n${FileName}
+		$3.IncludeInNewFiles = True
+	EndGlobalSection
+EndGlobal
