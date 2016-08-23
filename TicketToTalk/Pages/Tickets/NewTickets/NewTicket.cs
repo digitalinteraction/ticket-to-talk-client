@@ -21,10 +21,14 @@ namespace TicketToTalk
 		public NewTicket(string mediaType, string filePath)
 		{
 
+			Debug.WriteLine("NewTicket: filepath - " + filePath);
+			Debug.WriteLine("NewTicket: mediaType - " + mediaType);
+
 			// Set title.
 			Title = "New Ticket";
 			//var mediaContent = null;
 			ContentView mediaContent = null;
+			NewTicketInfo ticketInf = null;
 
 			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
 			if (!hasPerms)
@@ -36,10 +40,13 @@ namespace TicketToTalk
 				switch (mediaType)
 				{
 					case ("Picture"):
-						mediaContent = new PictureLayout(filePath);
+						var media = MediaController.readBytesFromFile(filePath);
+						mediaContent = new PictureLayout(media);
+						ticketInf = new NewTicketInfo(mediaType, media);
 						break;
 					case ("Sound"):
 						mediaContent = new AudioPlayerLayout(new Ticket { pathToFile = filePath });
+						ticketInf = new NewTicketInfo(mediaType, filePath);
 						break;
 					case ("Video"):
 						break;
@@ -54,7 +61,7 @@ namespace TicketToTalk
 				Children =
 				{
 					mediaContent,
-					new NewTicketInfo(mediaType, filePath)
+					ticketInf
 				}
 			};
 
@@ -75,31 +82,31 @@ namespace TicketToTalk
 		{
 			Title = "New Ticket";
 
-			var url = String.Format("<!DOCTYPE html><body><iframe src='https://www.youtube.com/embed/qpJHHM9IaJM' " +
-									"frameborder='0' allowfullscreen></iframe></body></html>");
+			//var url = String.Format("<!DOCTYPE html><body><iframe src='https://www.youtube.com/embed/qpJHHM9IaJM' " +
+			//						"frameborder='0' allowfullscreen></iframe></body></html>");
 
-			Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
+			//Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
 
-			var webView = new WebView
-			{
-				Source = new HtmlWebViewSource
-				{
-					Html = url
-				},
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalOptions = LayoutOptions.Fill,
-				HeightRequest = Session.ScreenWidth / 1.6
-			};
+			//var webView = new WebView
+			//{
+			//	Source = new HtmlWebViewSource
+			//	{
+			//		Html = url
+			//	},
+			//	VerticalOptions = LayoutOptions.CenterAndExpand,
+			//	HorizontalOptions = LayoutOptions.Fill,
+			//	HeightRequest = Session.ScreenWidth / 1.6
+			//};
 
-			var webStack = new StackLayout 
-			{
-				Spacing = 0,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children = 
-				{
-					webView
-				}
-			};
+			//var webStack = new StackLayout 
+			//{
+			//	Spacing = 0,
+			//	VerticalOptions = LayoutOptions.FillAndExpand,
+			//	Children = 
+			//	{
+			//		webView
+			//	}
+			//};
 
 			var stack = new StackLayout
 			{
