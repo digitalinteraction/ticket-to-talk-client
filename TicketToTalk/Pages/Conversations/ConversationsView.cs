@@ -19,6 +19,7 @@ namespace TicketToTalk
 		/// </summary>
 		public ConversationsView()
 		{
+			Padding = new Thickness(20);
 			conversations.Clear();
 
 			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
