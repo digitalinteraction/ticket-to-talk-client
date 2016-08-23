@@ -46,6 +46,13 @@ namespace TicketToTalk
 		{
 			Title = "New Person";
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			personImage = new CircleImage
 			{
 				BorderColor = ProjectResource.color_red,
@@ -233,6 +240,14 @@ namespace TicketToTalk
 			{
 				Content = contentStack
 			};
+		}
+
+		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
 		}
 
 		/// <summary>
