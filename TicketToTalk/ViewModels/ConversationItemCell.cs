@@ -37,6 +37,7 @@ namespace TicketToTalk
 			{
 				conversationController.removeTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
 				ConversationView.conversationItems.Remove(conversationItem);
+				ConversationSelect.conversations.Remove(conversationItem.conversation);
 			}
 		}
 	}

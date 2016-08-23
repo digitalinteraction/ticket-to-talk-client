@@ -299,7 +299,7 @@ namespace TicketToTalk
 			};
 
 			string displayString;
-			string day, month, year, hour, minutes, date_suffix, time_suffix;
+			string day, month, year, hour, minutes, date_suffix;
 			int afterMid;
 
 			char[] delims = { ' ' };
@@ -343,26 +343,30 @@ namespace TicketToTalk
 			switch (Int32.Parse(day))
 			{
 				case (1):
+				case (21):
+				case (31):
 					date_suffix = "st";
 					break;
 				case (2):
+				case (22):
 					date_suffix = "nd";
 					break;
 				case (3):
+				case (23):
 					date_suffix = "rd";
 					break;
 				default:
 					date_suffix = "th";
 					break;
 			}
-
+			var time_suffix = String.Empty;
 			switch (afterMid)
 			{
 				case (0):
-					time_suffix = "AM";
+					time_suffix = "am";
 					break;
 				case (1):
-					time_suffix = "PM";
+					time_suffix = "pm";
 					break;
 				default:
 					time_suffix = "";
@@ -371,7 +375,7 @@ namespace TicketToTalk
 
 			day = day.Trim(new char[] { '0' });
 
-			displayString = String.Format("{0} {1}{2}, {3}. {4}:{5} {6}", month, day, date_suffix, year, hour, minutes, time_suffix);
+			displayString = String.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
 			Debug.WriteLine("ConversationController: Display date = " + displayString);
 			conversation.displayDate = displayString;
 

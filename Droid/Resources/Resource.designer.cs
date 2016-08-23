@@ -2257,8 +2257,8 @@ namespace TicketToTalk.Droid
 			// aapt resource value: 0x7f0200b3
 			public const int mr_ic_play_light = 2130837683;
 			
-			// aapt resource value: 0x7f0200be
-			public const int notification_template_icon_bg = 2130837694;
+			// aapt resource value: 0x7f0200bf
+			public const int notification_template_icon_bg = 2130837695;
 			
 			// aapt resource value: 0x7f0200b4
 			public const int pause_icon = 2130837684;
@@ -2276,19 +2276,22 @@ namespace TicketToTalk.Droid
 			public const int profile_placeholder = 2130837688;
 			
 			// aapt resource value: 0x7f0200b9
-			public const int red_ticket_icon = 2130837689;
+			public const int red_add = 2130837689;
 			
 			// aapt resource value: 0x7f0200ba
-			public const int settings_icon = 2130837690;
+			public const int red_ticket_icon = 2130837690;
 			
 			// aapt resource value: 0x7f0200bb
-			public const int stop_icon = 2130837691;
+			public const int settings_icon = 2130837691;
 			
 			// aapt resource value: 0x7f0200bc
-			public const int ticket_icon = 2130837692;
+			public const int stop_icon = 2130837692;
 			
 			// aapt resource value: 0x7f0200bd
-			public const int video_icon = 2130837693;
+			public const int ticket_icon = 2130837693;
+			
+			// aapt resource value: 0x7f0200be
+			public const int video_icon = 2130837694;
 			
 			static Drawable()
 			{
