@@ -37,12 +37,20 @@ namespace TicketToTalk
 			var area = areaController.getArea(ticket.area_id);
 			var location = new Label 
 			{
-				Text = String.Format("Taken in {0}, {1}", area.townCity, ticket.year),
 				FontSize = 14,
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0),
 				HorizontalTextAlignment = TextAlignment.Center
 			};
+			switch (ticket.mediaType) 
+			{
+				case ("Picture"):
+					location.Text = String.Format("Taken in {0}, {1}", area.townCity, ticket.year);
+					break;
+				default:
+					location.Text = String.Format("From {0}", ticket.year);
+					break;
+			}
 
 			Content = new StackLayout
 			{

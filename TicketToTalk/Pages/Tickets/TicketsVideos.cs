@@ -95,7 +95,7 @@ namespace TicketToTalk
 			Ticket ticket = (Ticket)e.SelectedItem;
 			ToolbarItems.Clear();
 
-			Navigation.PushAsync(new ViewPhotoTicket(ticket));
+			Navigation.PushAsync(new ViewTicket(ticket));
 
 			//Navigation.PushAsync(new ViewTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
