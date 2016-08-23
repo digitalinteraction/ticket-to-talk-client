@@ -82,7 +82,7 @@ namespace TicketToTalk
 			{
 				Text = "Select a conversation",
 				TextColor = ProjectResource.color_dark,
-				HorizontalOptions = LayoutOptions.Start,
+				HorizontalOptions = LayoutOptions.StartAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 
@@ -93,12 +93,14 @@ namespace TicketToTalk
 				WidthRequest = 30,
 				HorizontalOptions = LayoutOptions.EndAndExpand
 			};
+			add_img.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newConvo) });
 
 			var newStack = new StackLayout 
 			{
+				Padding = 20,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 0,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				HorizontalOptions = LayoutOptions.Fill,
 				Children = 
 				{
 					label,
@@ -117,6 +119,22 @@ namespace TicketToTalk
 			};
 		}
 
+		/// <summary>
+		/// Creates a new conversation.
+		/// </summary>
+		void newConvo()
+		{
+			var nav = new NavigationPage(new NewConversation());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
+		}
+
+		/// <summary>
+		/// Cancels the operation
+		/// </summary>
+		/// <param name="obj">Object.</param>
 		void cancel(object obj)
 		{
 			Navigation.PopModalAsync();

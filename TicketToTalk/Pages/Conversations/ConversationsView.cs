@@ -77,7 +77,11 @@ namespace TicketToTalk
 		/// <param name="obj">Object.</param>
 		async void addConversation(object obj)
 		{
-			await Navigation.PushAsync(new NewConversation());
+			var nav = new NavigationPage(new NewConversation());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 	}
 }

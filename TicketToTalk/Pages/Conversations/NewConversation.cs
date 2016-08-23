@@ -22,6 +22,12 @@ namespace TicketToTalk
 		/// </summary>
 		public NewConversation()
 		{
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
 
 			Title = "New Conversation";
 
@@ -110,6 +116,14 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		/// <summary>
 		/// Entries the changed.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
@@ -167,7 +181,7 @@ namespace TicketToTalk
 				await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
 			}
 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
 		}
 	}
 }
