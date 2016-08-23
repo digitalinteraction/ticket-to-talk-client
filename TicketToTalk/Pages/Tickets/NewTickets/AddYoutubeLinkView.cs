@@ -23,6 +23,13 @@ namespace TicketToTalk
 		{
 			Title = "Add a Video";
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			var description = new Label
 			{
 				Text = "Add a link to a YouTube video!",
@@ -71,6 +78,11 @@ namespace TicketToTalk
 					button
 				}
 			};
+		}
+
+		void cancel()
+		{
+			Navigation.PopModalAsync();
 		}
 
 		/// <summary>
