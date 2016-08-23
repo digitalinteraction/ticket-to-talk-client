@@ -299,7 +299,7 @@ namespace TicketToTalk
 			};
 
 			string displayString;
-			string day, month, year, hour, minutes, date_suffix, time_suffix;
+			string day, month, year, hour, minutes, date_suffix;
 			int afterMid;
 
 			char[] delims = { ' ' };
@@ -359,7 +359,7 @@ namespace TicketToTalk
 					date_suffix = "th";
 					break;
 			}
-
+			var time_suffix = String.Empty;
 			switch (afterMid)
 			{
 				case (0):
