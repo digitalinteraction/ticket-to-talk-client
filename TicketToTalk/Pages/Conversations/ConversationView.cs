@@ -113,6 +113,7 @@ namespace TicketToTalk
 									ticket.displayIcon = "photo_icon.png";
 									break;
 								case "Video":
+								case "YouTube":
 									ticket.displayIcon = "video_icon.png";
 									break;
 								case "Sound":
