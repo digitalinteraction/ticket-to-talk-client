@@ -124,16 +124,19 @@ namespace TicketToTalk
             switch (action)
             {
                 case ("Delete"):
-                var ticketController = new TicketController();
-                await Navigation.PopAsync();
-                ticketController.destroyTicket(Ticket);
-                break;
+                	var ticketController = new TicketController();
+                	await Navigation.PopAsync();
+                	ticketController.destroyTicket(Ticket);
+                	break;
                 case ("Display Information"):
-                await Navigation.PushAsync(new DisplayTicketInfo(Ticket));
-                break;
+                	await Navigation.PushAsync(new DisplayTicketInfo(Ticket));
+                	break;
                 case ("Add to Conversation"):
-                await Navigation.PushModalAsync(new ConversationSelect(Ticket));
-                break;
+					var nav = new NavigationPage(new ConversationSelect(Ticket));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+                	await Navigation.PushModalAsync(nav);
+                	break;
             }
         }
     }

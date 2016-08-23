@@ -19,6 +19,7 @@ namespace TicketToTalk
 		public ConversationSelect(Ticket ticket)
 		{
 
+			Title = "Conversations";
 			var conversationController = new ConversationController();
 			var conversations = new ObservableCollection<Conversation>();
 
@@ -30,6 +31,13 @@ namespace TicketToTalk
 				conversations.Add(conversationController.setPropertiesForDisplay(converstaion));
 			}
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			newConversation = new Button 
 			{
 				Text = "New Conversation",
@@ -37,7 +45,7 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0,0,0,10)
+				Margin = new Thickness(0,10,0,10)
 			};
 
 			var cell = new DataTemplate(typeof(ConversationCell));
@@ -70,20 +78,48 @@ namespace TicketToTalk
 				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 			};
 
+			var label = new Label 
+			{
+				Text = "Select a conversation",
+				TextColor = ProjectResource.color_dark,
+				HorizontalOptions = LayoutOptions.Start,
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+
+			var add_img = new Image() 
+			{
+				Source = "red_add.png",
+				HeightRequest = 30,
+				WidthRequest = 30,
+				HorizontalOptions = LayoutOptions.EndAndExpand
+			};
+
+			var newStack = new StackLayout 
+			{
+				Orientation = StackOrientation.Horizontal,
+				Spacing = 0,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				Children = 
+				{
+					label,
+					add_img
+				}
+			};
 
 			Content = new StackLayout
 			{
 				Spacing = 10,
 				Children = {
-					new Label {
-						Text = "Select a conversation",
-						Margin = new Thickness(0,20,0,10),
-						HorizontalOptions = LayoutOptions.CenterAndExpand
-					},
+					newStack,
 					newConversation,
 					listView
 				}
 			};
+		}
+
+		void cancel(object obj)
+		{
+			Navigation.PopModalAsync();
 		}
 	}
 }
