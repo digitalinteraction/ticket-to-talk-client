@@ -11,7 +11,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationSelect : ContentPage
 	{
-		private Button newConversation;
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 
 		/// <summary>
@@ -37,16 +36,6 @@ namespace TicketToTalk
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(cancel)
 			});
-
-			newConversation = new Button 
-			{
-				Text = "New Conversation",
-				TextColor = ProjectResource.color_white,
-				BackgroundColor = ProjectResource.color_blue,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0,10,0,10)
-			};
 
 			var cell = new DataTemplate(typeof(ConversationCell));
 			//cell.SetBinding(TextCell.TextProperty, "date");
@@ -97,7 +86,7 @@ namespace TicketToTalk
 
 			var newStack = new StackLayout 
 			{
-				Padding = 20,
+				Padding = 10,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 0,
 				HorizontalOptions = LayoutOptions.Fill,
@@ -110,10 +99,8 @@ namespace TicketToTalk
 
 			Content = new StackLayout
 			{
-				Spacing = 10,
 				Children = {
 					newStack,
-					newConversation,
 					listView
 				}
 			};
