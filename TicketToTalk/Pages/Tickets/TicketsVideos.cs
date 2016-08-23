@@ -47,6 +47,7 @@ namespace TicketToTalk
 				switch (t.mediaType)
 				{
 					case "Video":
+					case "YouTube": 
 						t.displayIcon = "video_icon.png";
 						break;
 				}
