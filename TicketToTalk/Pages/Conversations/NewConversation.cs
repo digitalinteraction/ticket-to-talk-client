@@ -156,25 +156,19 @@ namespace TicketToTalk
 			char[] delimiters = {' '};
 			string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
 
-			Debug.WriteLine("NewConversation: date = " + datepicker.Date.ToString());
-			Debug.WriteLine("NewConversation: time = " + timePicker.Time.ToString());
-
 			var dateTime = String.Format("{0} {1}", dateSplit[0], timePicker.Time);
-
-			Debug.WriteLine("NewConversation: datetime = " + dateTime);
 
 			var conversation = new Conversation();
 			conversation.person_id = Session.activePerson.id;
 			conversation.notes = notes.Text;
-			//conversation.date = DateTime.ParseExact(dateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 			conversation.date = dateTime;
-			Debug.WriteLine("NewConversation: Conversation = " + conversation);
 
 			var returned = await conversationController.storeConversationRemotely(conversation);
 			if (returned != null)
 			{
 				conversationController.storeConversationLocally(returned);
 				ConversationsView.conversations.Add(conversationController.setPropertiesForDisplay(returned));
+				ConversationSelect.conversations.Add(conversationController.setPropertiesForDisplay(returned));
 			}
 			else 
 			{

@@ -12,16 +12,16 @@ namespace TicketToTalk
 	public class ConversationSelect : ContentPage
 	{
 		private Button newConversation;
+		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationSelect"/> class.
 		/// </summary>
 		public ConversationSelect(Ticket ticket)
 		{
-
+			conversations.Clear();
 			Title = "Conversations";
 			var conversationController = new ConversationController();
-			var conversations = new ObservableCollection<Conversation>();
 
 			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
 
