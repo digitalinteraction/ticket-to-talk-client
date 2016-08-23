@@ -60,7 +60,11 @@ namespace TicketToTalk
 		/// <returns>The add article view.</returns>
 		public void launchAddArticleView() 
 		{
-			Navigation.PushAsync(new AddArticle(null));
+			var nav = new NavigationPage(new AddArticle(null));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
 		}
 
 		/// <summary>
