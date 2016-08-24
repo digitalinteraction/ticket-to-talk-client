@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
-using System.Threading.Tasks;
 using System.IO;
-using Plugin.Media;
 using System.Diagnostics;
-using TicketToTalk;
 using Plugin.Media.Abstractions;
 using ImageCircle.Forms.Plugin.Abstractions;
 
@@ -301,11 +298,6 @@ namespace TicketToTalk
 				savePersonButton.IsEnabled = false;
 			}
 		}
-
-		//void YearPicker_SelectedIndexChanged(object sender, EventArgs e)
-		//{
-
-		//}
 
 		/// <summary>
 		/// Saves the person to the database.
