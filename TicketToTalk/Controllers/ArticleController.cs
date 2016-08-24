@@ -43,12 +43,28 @@ namespace TicketToTalk
 			var jobject = networkController.sendDeleteRequest("articles/destroy", parameters);
 			if (jobject != null)
 			{
-				return false;
+				return true;
 			}
 			else 
 			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Destories the article.
+		/// </summary>
+		/// <returns><c>true</c>, if article was destoryed, <c>false</c> otherwise.</returns>
+		/// <param name="article">Article.</param>
+		public bool destoryArticle(Article article) 
+		{
+			if (deleteArticleRemotely(article))
+			{
+				deleteArticleLocally(article);
+				AllArticles.serverArticles.Remove(article);
 				return true;
 			}
+			return false;
 		}
 	}
 }

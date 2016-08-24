@@ -129,11 +129,12 @@ namespace TicketToTalk
 			{
 				case ("Delete"):
 					var articleController = new ArticleController();
+					articleController.destoryArticle(article);
 					await Navigation.PopAsync();
-					if (articleController.deleteArticleRemotely(article)) 
-					{
-						articleController.deleteArticleLocally(article);
-					}
+					//if (articleController.deleteArticleRemotely(article)) 
+					//{
+					//	articleController.deleteArticleLocally(article);
+					//}
 					break;
 				case ("Edit"):
 					var nav = new NavigationPage(new AddArticle(article));
