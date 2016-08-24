@@ -16,12 +16,12 @@ namespace TicketToTalk
 			this.Title = "Article";
 			this.article = article;
 
-			//ToolbarItems.Add(new ToolbarItem
-			//{
-			//	Text = "Edit",
-			//	Order = ToolbarItemOrder.Primary,
-			//	Command = new Command(launchEditArticleView)
-			//});
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Edit",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(launchEditArticleView)
+			});
 
 			//var titleLabel = new Label
 			//{

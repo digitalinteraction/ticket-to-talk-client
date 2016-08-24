@@ -198,7 +198,7 @@ namespace TicketToTalk
 
 			AllArticles.serverArticles.Add(article);
 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
 		}
 
 		public async void updateArticle() 
