@@ -20,6 +20,8 @@ namespace TicketToTalk
         /// <param name="ticket">Ticket.</param>
         public ViewTicket(Ticket ticket)
         {
+			NavigationPage.SetHasBackButton(this, true);
+
             Ticket = ticket;
             this.Title = ticket.title;
             

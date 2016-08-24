@@ -27,7 +27,7 @@ namespace TicketToTalk
 				Text = "Add",
 				Icon = "add_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(launchNewTicketView)
+				Command = new Command(launchNewTicketView),
 			});
 
 			BackgroundColor = ProjectResource.color_white;
@@ -44,6 +44,7 @@ namespace TicketToTalk
 						t.displayIcon = "photo_icon.png";
 						break;
 					case "Video":
+					case "YouTube":
 						t.displayIcon = "video_icon.png";
 						break;
 					case "Audio":
@@ -95,7 +96,9 @@ namespace TicketToTalk
 			Ticket ticket = (Ticket) e.SelectedItem;
 			ToolbarItems.Clear();
 
-			Navigation.PushAsync(new ViewTicket(ticket));
+			var nav = new ViewTicket(ticket);
+
+			Navigation.PushAsync(nav);
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 

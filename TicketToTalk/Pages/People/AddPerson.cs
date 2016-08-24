@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
-using System.Threading.Tasks;
 using System.IO;
-using Plugin.Media;
 using System.Diagnostics;
-using TicketToTalk;
 using Plugin.Media.Abstractions;
 using ImageCircle.Forms.Plugin.Abstractions;
 
@@ -45,6 +42,13 @@ namespace TicketToTalk
 		public AddPerson()
 		{
 			Title = "New Person";
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
 
 			personImage = new CircleImage
 			{
@@ -236,6 +240,14 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		/// <summary>
 		/// On placeholder tap, select image.
 		/// </summary>
 		/// <returns>The placeholder tap.</returns>
@@ -286,11 +298,6 @@ namespace TicketToTalk
 				savePersonButton.IsEnabled = false;
 			}
 		}
-
-		//void YearPicker_SelectedIndexChanged(object sender, EventArgs e)
-		//{
-
-		//}
 
 		/// <summary>
 		/// Saves the person to the database.

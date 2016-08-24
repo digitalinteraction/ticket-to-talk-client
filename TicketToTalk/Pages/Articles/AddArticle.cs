@@ -23,6 +23,14 @@ namespace TicketToTalk
 		/// </summary>
 		public AddArticle(Article article)
 		{
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			if (article != null) 
 			{
 				this.article = article;
@@ -133,6 +141,14 @@ namespace TicketToTalk
 			};
 		}
 
+		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+
+		}
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!String.IsNullOrEmpty(title.Text))

@@ -19,6 +19,13 @@ namespace TicketToTalk
 
 			Title = "New Ticket";
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			var photoCell = new ImageCell
 			{
 				Text = "Picture",
@@ -76,16 +83,26 @@ namespace TicketToTalk
 				Spacing = 12,
 				Children = 
 				{
-					//stack,
 					table,
 				}
 			};
 		}
 
+		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
 		void SongButton_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AudioRecorder());
-			Navigation.RemovePage(this);
+			var nav = new NavigationPage(new AudioRecorder());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+			Navigation.PushModalAsync(nav);
+			//Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -136,8 +153,11 @@ namespace TicketToTalk
 
 			try
 			{
-				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(page));
-				Navigation.RemovePage(this);
+				var nav = new NavigationPage(page);
+				nav.BarTextColor = ProjectResource.color_white;
+				nav.BarBackgroundColor = ProjectResource.color_blue;
+				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(nav));
+				//Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -167,8 +187,11 @@ namespace TicketToTalk
 
 			try
 			{
-				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(page));
-				Navigation.RemovePage(this);
+				var nav = new NavigationPage(page);
+				nav.BarTextColor = ProjectResource.color_white;
+				nav.BarBackgroundColor = ProjectResource.color_blue;
+				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
+				//Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -178,8 +201,12 @@ namespace TicketToTalk
 
 		void YouTubeCell_Tapped(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AddYoutubeLinkView());
-			Navigation.RemovePage(this);
+			var nav = new NavigationPage(new AddYoutubeLinkView());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
+			//Navigation.RemovePage(this);
 		}
 	}
 }

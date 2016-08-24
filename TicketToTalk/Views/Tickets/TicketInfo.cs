@@ -14,13 +14,15 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketInfo(Ticket ticket)
 		{
+			Padding = new Thickness(10);
+
 			var title = new Label
 			{
 				Text = ticket.title,
 				FontSize = 18,
 				FontAttributes = FontAttributes.Bold,
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0,10,0,0),
+				//Margin = new Thickness(0,10,0,0),
 				HorizontalTextAlignment = TextAlignment.Center,
 			};
 
