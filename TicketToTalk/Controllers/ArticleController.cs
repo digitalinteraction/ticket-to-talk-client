@@ -52,9 +52,9 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Destories the article.
+		/// Destory the article.
 		/// </summary>
-		/// <returns><c>true</c>, if article was destoryed, <c>false</c> otherwise.</returns>
+		/// <returns><c>true</c>, if article was destoried, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
 		public bool destoryArticle(Article article) 
 		{
@@ -65,6 +65,25 @@ namespace TicketToTalk
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// Gets the shared articles.
+		/// </summary>
+		/// <returns>The shared articles.</returns>
+		public async System.Threading.Tasks.Task<List<Article>> getSharedArticles()
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendGetRequest("articles/share/get", parameters);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("Articles");
+				return jtoken.ToObject<List<Article>>();
+			}
+
+			return null;
 		}
 	}
 }

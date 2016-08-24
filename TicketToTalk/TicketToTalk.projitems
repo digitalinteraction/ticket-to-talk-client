@@ -124,6 +124,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\Picture\UserProfileImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\AddYoutubeLinkView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Video\YouTubePlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
