@@ -193,8 +193,14 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void RejectArticle_Clicked(object sender, EventArgs e)
+		async void RejectArticle_Clicked(object sender, EventArgs e)
 		{
+			var rejected = await articleController.rejectShared(article);
+			if (rejected) 
+			{
+				ViewSharedArticles.articles.Remove(article);
+				await Navigation.PopModalAsync();
+			}
 		}
 	}
 }

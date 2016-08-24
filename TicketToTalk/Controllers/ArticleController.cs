@@ -127,6 +127,26 @@ namespace TicketToTalk
 
 			return false;
 		}
+
+		/// <summary>
+		/// Rejects the shared article.
+		/// </summary>
+		/// <returns>The shared.</returns>
+		/// <param name="article">Article.</param>
+		public async Task<bool> rejectShared(Article article) 
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["article_id"] = article.id.ToString();
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendPostRequest("articles/share/reject", parameters);
+			if (jobject != null) 
+			{
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
 
