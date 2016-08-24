@@ -184,6 +184,7 @@ namespace TicketToTalk
 			if (accepted) 
 			{
 				ViewSharedArticles.articles.Remove(article);
+				AllArticles.sharedArticles.Remove(article);
 				await Navigation.PopModalAsync();
 			}
 		}
@@ -199,6 +200,7 @@ namespace TicketToTalk
 			if (rejected) 
 			{
 				ViewSharedArticles.articles.Remove(article);
+				AllArticles.sharedArticles.Remove(article);
 				await Navigation.PopModalAsync();
 			}
 		}

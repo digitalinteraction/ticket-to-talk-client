@@ -13,7 +13,7 @@ namespace TicketToTalk
 	{
 		public static ObservableCollection<Article> serverArticles = new ObservableCollection<Article>();
 		private ArticleController articleController = new ArticleController();
-		List<Article> sharedArticles;
+		public static List<Article> sharedArticles;
 
 		/// <summary>
 		/// Creates an instance of all articles view.
