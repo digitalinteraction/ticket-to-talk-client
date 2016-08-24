@@ -85,9 +85,41 @@ namespace TicketToTalk
 			};
 			viewArticleButton.Clicked += launchBrowser;
 
+			var acceptArticle = new Button 
+			{
+				Text = "Add",
+				TextColor = ProjectResource.color_white,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				BackgroundColor = ProjectResource.color_red,
+				WidthRequest = Session.ScreenWidth * 0.3,
+				Margin = new Thickness(0, 0, 0, 10),
+			};
+
+			var rejectArticle = new Button
+			{
+				Text = "Dismiss",
+				TextColor = ProjectResource.color_white,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				BackgroundColor = ProjectResource.color_dark,
+				WidthRequest = Session.ScreenWidth * 0.3,
+				Margin = new Thickness(0, 0, 0, 10),
+			};
+
+			var shareControls = new StackLayout 
+			{
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				Children = 
+				{
+					rejectArticle,
+					acceptArticle
+				}
+			};
+
 			var buttonStack = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.EndAndExpand,
+				Padding = new Thickness(20,0),
 				Spacing = 0,
 				Children = {
 					viewArticleButton
@@ -112,7 +144,8 @@ namespace TicketToTalk
 				Children = {
 					titleStack,
 					contentStack,
-					buttonStack
+					buttonStack,
+					shareControls
 				}
 			};
 		}
