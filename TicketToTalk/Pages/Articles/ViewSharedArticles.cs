@@ -15,13 +15,14 @@ namespace TicketToTalk
 	public class ViewSharedArticles : ContentPage
 	{
 
-		private ObservableCollection<Article> articles = new ObservableCollection<Article>();
+		public static ObservableCollection<Article> articles = new ObservableCollection<Article>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ViewArticles"/> class.
 		/// </summary>
 		public ViewSharedArticles(List<Article> shared)
 		{
+			articles.Clear();
 			Title = "Shared Articles";
 
 			foreach (Article a in shared)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TicketToTalk
 {
@@ -16,6 +18,22 @@ namespace TicketToTalk
 		/// </summary>
 		public ArticleController()
 		{
+		}
+
+		/// <summary>
+		/// Adds the article locally.
+		/// </summary>
+		/// <param name="article">Article.</param>
+		public void addArticleLocally(Article article) 
+		{
+			articleDB.open();
+
+			if(articleDB.GetArticle(article.id) == null) 
+			{
+				articleDB.AddArticle(article);
+			}
+
+			articleDB.close();
 		}
 
 		/// <summary>
@@ -84,6 +102,30 @@ namespace TicketToTalk
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Adds the shared.
+		/// </summary>
+		/// <returns>The shared.</returns>
+		/// <param name="article">Article.</param>
+		public async Task<bool> addShared(Article article)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+			parameters["article_id"] = article.id.ToString();
+
+			var jobject = await networkController.sendPostRequest("articles/share/accept", parameters);
+			if (jobject != null) 
+			{
+				Debug.WriteLine("ArticleController: " + article);
+				addArticleLocally(article);
+				AllArticles.serverArticles.Add(article);
+
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

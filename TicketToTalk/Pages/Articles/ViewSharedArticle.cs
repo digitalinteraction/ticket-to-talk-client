@@ -15,6 +15,7 @@ namespace TicketToTalk
 	public class ViewSharedArticle : ContentPage
 	{
 		Article article;
+		ArticleController articleController = new ArticleController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ViewSharedArticle"/> class.
@@ -85,7 +86,7 @@ namespace TicketToTalk
 			};
 			viewArticleButton.Clicked += launchBrowser;
 
-			var acceptArticle = new Button 
+			var acceptArticle = new Button
 			{
 				Text = "Add",
 				TextColor = ProjectResource.color_white,
@@ -94,6 +95,7 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.3,
 				Margin = new Thickness(0, 0, 0, 10),
 			};
+			acceptArticle.Clicked += AcceptArticle_Clicked;
 
 			var rejectArticle = new Button
 			{
@@ -104,12 +106,13 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.3,
 				Margin = new Thickness(0, 0, 0, 10),
 			};
+			rejectArticle.Clicked += RejectArticle_Clicked;
 
-			var shareControls = new StackLayout 
+			var shareControls = new StackLayout
 			{
 				Orientation = StackOrientation.Horizontal,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				Children = 
+				Children =
 				{
 					rejectArticle,
 					acceptArticle
@@ -119,7 +122,7 @@ namespace TicketToTalk
 			var buttonStack = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Padding = new Thickness(20,0),
+				Padding = new Thickness(20, 0),
 				Spacing = 0,
 				Children = {
 					viewArticleButton
@@ -167,6 +170,31 @@ namespace TicketToTalk
 		void launchBrowser(Object sender, EventArgs ea)
 		{
 			Device.OpenUri(new Uri(article.link));
+		}
+
+
+		/// <summary>
+		/// Accepts the article clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		async void AcceptArticle_Clicked(object sender, EventArgs e)
+		{
+			var accepted = await articleController.addShared(article);
+			if (accepted) 
+			{
+				ViewSharedArticles.articles.Remove(article);
+				await Navigation.PopModalAsync();
+			}
+		}
+
+		/// <summary>
+		/// Rejects the article clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		void RejectArticle_Clicked(object sender, EventArgs e)
+		{
 		}
 	}
 }
