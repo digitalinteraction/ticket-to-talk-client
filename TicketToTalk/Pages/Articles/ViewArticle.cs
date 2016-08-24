@@ -18,18 +18,10 @@ namespace TicketToTalk
 
 			ToolbarItems.Add(new ToolbarItem
 			{
-				Text = "Edit",
+				Text = "Options",
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(editOptions)
 			});
-
-			//var titleLabel = new Label
-			//{
-			//	Text = article.title,
-			//	FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-			//	TextColor = Color.FromHex(ProjectColours.red),
-			//	FontAttributes = FontAttributes.Bold
-			//};
 
 			var titleStack = new StackLayout
 			{
@@ -114,8 +106,6 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
-
-
 		}
 
 		/// <summary>
@@ -131,10 +121,6 @@ namespace TicketToTalk
 					var articleController = new ArticleController();
 					articleController.destoryArticle(article);
 					await Navigation.PopAsync();
-					//if (articleController.deleteArticleRemotely(article)) 
-					//{
-					//	articleController.deleteArticleLocally(article);
-					//}
 					break;
 				case ("Edit"):
 					var nav = new NavigationPage(new AddArticle(article));
