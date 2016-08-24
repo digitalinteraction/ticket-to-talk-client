@@ -64,7 +64,11 @@ namespace TicketToTalk
 
 			Article a = (Article)e.SelectedItem;
 
-			Navigation.PushAsync(new ViewSharedArticle(a));
+			var nav = new NavigationPage(new ViewSharedArticle(a));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 	}
