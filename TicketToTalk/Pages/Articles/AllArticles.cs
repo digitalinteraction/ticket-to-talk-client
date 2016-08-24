@@ -17,7 +17,7 @@ namespace TicketToTalk
 		/// </summary>
 		public AllArticles()
 		{
-
+			serverArticles.Clear();
 			Title = "Articles";
 
 			serverArticles = Task.Run(() => this.checkForNewArticles()).Result;
