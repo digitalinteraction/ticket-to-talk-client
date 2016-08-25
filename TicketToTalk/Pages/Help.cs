@@ -131,6 +131,24 @@ namespace TicketToTalk
 				FontSize = 14,
 			};
 
+			var peopleTitle = new Label
+			{
+				Text = "People",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalTextAlignment = TextAlignment.Center
+			};
+
+			var peopleInf = new Label
+			{
+				Text =
+					"You can add contributors to a person from their profile. " +
+					"Select send invitation, put in their email, and select the group you want to add them to.",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
 			var content = new StackLayout 
 			{
 				Padding = new Thickness(20),
@@ -148,7 +166,9 @@ namespace TicketToTalk
 					conversationsTitle,
 					conversationsInf,
 					usefulInformationTitle,
-					usefulInformationInf
+					usefulInformationInf,
+					peopleTitle,
+					peopleInf
 				}
 			};
 
