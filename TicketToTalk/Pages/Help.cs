@@ -44,6 +44,36 @@ namespace TicketToTalk
 				FontSize = 14,
 			};
 
+			var ticketsTitle = new Label 
+			{
+				Text = "Tickets",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalTextAlignment = TextAlignment.Center
+			};
+
+			var ticketsAdding = new Label
+			{
+				Text =
+					"Add tickets by navigating to the 'Tickets' page. " +
+					"Select the add button in the top corner and select the type of ticket you want to create. " +
+					"From here you can select or take a photo, record a sound, or add a link to a youtube video. " +
+					"Once you have added the ticket fill out the information on the screen and click add!",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
+			var ticketsViewing = new Label
+			{
+				Text =
+					"If you have added a ticket you can view it from the tickets page. " +
+					"The tickets are sorted into categories of ticket type and the stages in life of the person your tickets are attached to. " +
+					"Simply click on a ticket to view it.",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
 			var content = new StackLayout 
 			{
 				Padding = new Thickness(20),
@@ -52,7 +82,10 @@ namespace TicketToTalk
 				{
 					title, 
 					summary,
-					intro
+					intro,
+					ticketsTitle,
+					ticketsAdding,
+					ticketsViewing
 				}
 			};
 
