@@ -1,15 +1,24 @@
 ﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/ISQLite.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/People/AddPerson.cs">
     <Files>
-      <File FileName="TicketToTalk/Controllers/ArticleController.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Controllers/CameraController.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Controllers/ISQLite.cs" Line="4" Column="1" />
+      <File FileName="TicketToTalk/Pages/MenuPage.cs" Line="21" Column="46" />
+      <File FileName="TicketToTalk/Pages/Articles/AllArticles.cs" Line="60" Column="47" />
+      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="32" Column="7" />
+      <File FileName="TicketToTalk/Pages/Conversations/NewConversation.cs" Line="25" Column="4" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/DisplayTicketInfo.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/DisplayTickets.cs" Line="44" Column="22" />
+      <File FileName="TicketToTalk/Pages/Tickets/ViewTickets.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="4" Column="26" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/SelectNewTicketType.cs" Line="209" Column="34" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/AudioRecorder.cs" Line="94" Column="4" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/AddYoutubeLinkView.cs" Line="75" Column="16" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/NewTicket.cs" Line="33" Column="17" />
+      <File FileName="TicketToTalk/Pages/Profiles/AllProfiles.cs" Line="130" Column="37" />
+      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="241" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
   <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.207DAD69-26C9-4786-B94D-B9341E59F029" />

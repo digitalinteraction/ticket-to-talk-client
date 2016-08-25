@@ -16,20 +16,12 @@ namespace TicketToTalk
 			this.Title = "Article";
 			this.article = article;
 
-			//ToolbarItems.Add(new ToolbarItem
-			//{
-			//	Text = "Edit",
-			//	Order = ToolbarItemOrder.Primary,
-			//	Command = new Command(launchEditArticleView)
-			//});
-
-			//var titleLabel = new Label
-			//{
-			//	Text = article.title,
-			//	FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-			//	TextColor = Color.FromHex(ProjectColours.red),
-			//	FontAttributes = FontAttributes.Bold
-			//};
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Options",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(editOptions)
+			});
 
 			var titleStack = new StackLayout
 			{
@@ -84,13 +76,6 @@ namespace TicketToTalk
 			};
 			viewArticleButton.Clicked += launchBrowser;
 
-			var deleteArticleButton = new Button
-			{
-				Text = "Delete Article",
-				TextColor = Color.Red
-			};
-			deleteArticleButton.Clicked += DeleteArticleButton_Clicked;
-
 			var buttonStack = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.EndAndExpand,
@@ -121,8 +106,39 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
+		}
 
+		/// <summary>
+		/// Displays edit options
+		/// </summary>
+		public async void editOptions()
+		{
+			var action = await DisplayActionSheet("Article Options", "Cancel", "Delete", "Edit", "Share");
 
+			switch (action)
+			{
+				case ("Delete"):
+					var articleController = new ArticleController();
+					articleController.destoryArticle(article);
+					await Navigation.PopAsync();
+					break;
+				case ("Edit"):
+					var nav = new NavigationPage(new AddArticle(article));
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
+					break;
+				case ("Share"):
+					nav = new NavigationPage(new ShareArticle(article));
+
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
+
+					break;
+			}
 		}
 
 		/// <summary>
@@ -134,26 +150,6 @@ namespace TicketToTalk
 		void launchBrowser(Object sender, EventArgs ea)
 		{
 			Device.OpenUri(new Uri(article.link));
-		}
-
-		/// <summary>
-		/// Launches the edit article view.
-		/// </summary>
-		/// <returns>The edit article view.</returns>
-		public void launchEditArticleView() 
-		{
-			Navigation.PushAsync(new AddArticle(article));
-		}
-
-		/// <summary>
-		/// Delete article button is clicked.
-		/// </summary>
-		/// <returns>The article button clicked.</returns>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		void DeleteArticleButton_Clicked(object sender, EventArgs e)
-		{
-			DisplayActionSheet("Delete Article", "Cancel", "Delete");
 		}
 	}
 }

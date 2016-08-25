@@ -70,7 +70,7 @@ namespace TicketToTalk
 
 		void NewPersonButton_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AddPerson());
+			Navigation.PushAsync(new AddPerson(null));
 			Navigation.RemovePage(this);
 		}
 

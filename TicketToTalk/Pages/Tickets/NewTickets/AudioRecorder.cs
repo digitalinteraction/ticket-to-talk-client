@@ -20,6 +20,13 @@ namespace TicketToTalk
 		{
 			Title = "New Audio Ticket";
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			inf = new Label
 			{
 				Text = "Tap the mic to start recording.",
@@ -76,6 +83,14 @@ namespace TicketToTalk
 			{
 				Navigation.PopAsync();
 			}
+		}
+
+		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
 		}
 
 		void Record_Clicked()
