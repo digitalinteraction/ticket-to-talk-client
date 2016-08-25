@@ -12,15 +12,20 @@ namespace TicketToTalk
 	public class AllArticles : ContentPage
 	{
 		public static ObservableCollection<Article> serverArticles = new ObservableCollection<Article>();
+		private ArticleController articleController = new ArticleController();
+		public static List<Article> sharedArticles;
+
 		/// <summary>
 		/// Creates an instance of all articles view.
 		/// </summary>
 		public AllArticles()
 		{
-
+			serverArticles.Clear();
 			Title = "Articles";
 
 			serverArticles = Task.Run(() => this.checkForNewArticles()).Result;
+			sharedArticles = Task.Run(() => articleController.getSharedArticles()).Result;
+
 			foreach (Article a in serverArticles) 
 			{
 				Console.WriteLine(a);
@@ -32,6 +37,13 @@ namespace TicketToTalk
 				Icon = "add_icon.png",
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(launchAddArticleView)
+			});
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "View Shared Articles",
+				Order = ToolbarItemOrder.Secondary,
+				Command = new Command(viewShared),
 			});
 
 			// Format image cell
@@ -52,6 +64,21 @@ namespace TicketToTalk
 					articleList
 				}
 			};
+		}
+
+		/// <summary>
+		/// View shared articles.
+		/// </summary>
+		void viewShared()
+		{
+			if (sharedArticles != null && sharedArticles.Count > 0)
+			{
+				Navigation.PushAsync(new ViewSharedArticles(sharedArticles));
+			}
+			else 
+			{
+				DisplayAlert("Articles", "You have not been sent any articles", "OK");
+			}
 		}
 
 		/// <summary>
