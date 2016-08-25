@@ -74,6 +74,24 @@ namespace TicketToTalk
 				FontSize = 14,
 			};
 
+			var inspirationTitle = new Label
+			{
+				Text = "Inspiration",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalTextAlignment = TextAlignment.Center
+			};
+
+			var inspirationInf = new Label
+			{
+				Text =
+					"If you need some inspiration about what ticket to add then try the inspirations feature. " +
+					"Look through the provided inspiration and use these to add your tickets!",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
 			var content = new StackLayout 
 			{
 				Padding = new Thickness(20),
@@ -85,7 +103,9 @@ namespace TicketToTalk
 					intro,
 					ticketsTitle,
 					ticketsAdding,
-					ticketsViewing
+					ticketsViewing,
+					inspirationTitle,
+					inspirationInf
 				}
 			};
 
