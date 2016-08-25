@@ -94,7 +94,15 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5),
 				Margin = new Thickness(0, 0, 0, 10)
 			};
-			saveButton.Clicked += saveArticle;
+			if (article == null)
+			{
+				saveButton.Clicked += saveArticle;
+			}
+			else 
+			{
+				saveButton.Text = "Update";
+				saveButton.Clicked += updateArticle;
+			}
 
 			if (article != null) 
 			{
@@ -198,10 +206,10 @@ namespace TicketToTalk
 
 			AllArticles.serverArticles.Add(article);
 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
 		}
 
-		public async void updateArticle() 
+		public async void updateArticle(object sender, EventArgs e) 
 		{
 			var post_link = link.Text.ToLower();
 			if (!(post_link.StartsWith("http://")))
@@ -231,7 +239,7 @@ namespace TicketToTalk
 			var idx = AllArticles.serverArticles.IndexOf(article);
 			AllArticles.serverArticles[idx] = new_article;
 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
 		}
 	}
 }
