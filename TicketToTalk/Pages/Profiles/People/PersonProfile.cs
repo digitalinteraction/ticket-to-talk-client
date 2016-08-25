@@ -36,13 +36,15 @@ namespace TicketToTalk
 
 			var nameLabel = new Label 
 			{
-				Text = person.name,
+				//Text = person.name,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
 				FontSize = 20,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			nameLabel.SetBinding(Label.TextProperty, "name");
+			nameLabel.BindingContext = person;
 
 			PersonUserDB puDB = new PersonUserDB();
 			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
@@ -50,12 +52,14 @@ namespace TicketToTalk
 
 			var relation = new Label
 			{
-				Text = personUser.relationship,
+				//Text = personUser.relationship,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			relation.SetBinding(Label.TextProperty, "relationship");
+			relation.BindingContext = personUser;
 
 			var detailsHeader = new Label
 			{
