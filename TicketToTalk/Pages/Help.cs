@@ -92,6 +92,45 @@ namespace TicketToTalk
 				FontSize = 14,
 			};
 
+			var conversationsTitle = new Label 
+			{
+				Text = "Conversations",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalTextAlignment = TextAlignment.Center
+			};
+
+			var conversationsInf = new Label
+			{
+				Text =
+					"Use your tickets by adding them to a conversation. " +
+					"When viewing a ticket tap options, select add to conversation, and then select the conversation you want to add the ticket to. " +
+					"Then when you are ready to start the conversation select it from the conversations menu and press start. " +
+					"Dont forget to add some notes about the converation when you are finished for the other contributors to see!",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
+			var usefulInformationTitle = new Label
+			{
+				Text = "Useful Information",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalTextAlignment = TextAlignment.Center
+			};
+
+			var usefulInformationInf = new Label
+			{
+				Text =
+					"If you come across an article you like then add it to the useful information page. " +
+					"You can use this to save pages you find useful. " +
+					"If you think someone else might use the information you can share the article with them by selecting share from the options menu when viewing the infomation.",
+				TextColor = ProjectResource.color_dark,
+				FontSize = 14,
+			};
+
 			var content = new StackLayout 
 			{
 				Padding = new Thickness(20),
@@ -105,7 +144,11 @@ namespace TicketToTalk
 					ticketsAdding,
 					ticketsViewing,
 					inspirationTitle,
-					inspirationInf
+					inspirationInf,
+					conversationsTitle,
+					conversationsInf,
+					usefulInformationTitle,
+					usefulInformationInf
 				}
 			};
 
