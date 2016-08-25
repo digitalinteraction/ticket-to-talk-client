@@ -39,7 +39,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Creates an instance of an add person view.
 		/// </summary>
-		public AddPerson()
+		public AddPerson(Person person)
 		{
 			Title = "New Person";
 
@@ -61,7 +61,15 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
 			};
-			personImage.Source = "person_placeholder.png";
+			if (person != null)
+			{
+				byte[] pic = MediaController.readBytesFromFile(person.pathToPhoto);
+				personImage.Source = ImageSource.FromStream(() => new MemoryStream(pic));
+			}
+			else 
+			{
+				personImage.Source = "person_placeholder.png";
+			}
 			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onPlaceholderTap) });
 
 			var nameLabel = new Label
@@ -112,7 +120,7 @@ namespace TicketToTalk
 
 			var relationLabel = new Label 
 			{
-				Text = "How do you them?",
+				Text = "How do you know them?",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
@@ -216,7 +224,6 @@ namespace TicketToTalk
 			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
-				//BackgroundColor = ProjectResource.color_blue,
 				Children =
 				{
 					savePersonButton
@@ -233,6 +240,32 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
+
+			if (person != null) 
+			{
+				Title = "Edit Person";
+
+				PersonUserDB puDB = new PersonUserDB();
+				var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
+				puDB.close();
+
+				var ridx = 0;
+				for (int i = 0; i < ProjectResource.relations.Length; i++) 
+				{
+					if (ProjectResource.relations[i].Equals(personUser.relationship)) 
+					{
+						ridx = i;
+					}
+				}
+
+				relationPicker.SelectedIndex = ridx;
+				name.Text = person.name;
+				birthPlaceEntry.Text = person.birthPlace;
+				notesEditor.Text = person.notes;
+				yearPicker.SelectedIndex = Int32.Parse(person.birthYear) - (DateTime.Now.Year - 99);
+				savePersonButton.Text = "Save Changes";
+			}
+
 			Content = new ScrollView
 			{
 				Content = contentStack
@@ -302,7 +335,6 @@ namespace TicketToTalk
 		/// <summary>
 		/// Saves the person to the database.
 		/// </summary>
-		// TODO check fields are not null.
 		public async void savePerson(Object sender, EventArgs ea)
 		{
 			byte[] image = null;
@@ -356,7 +388,8 @@ namespace TicketToTalk
 
 				personController.addStockPeriods(stored_person);
 
-				await Navigation.PushAsync(new RootPage());
+				//await Navigation.PushAsync(new RootPage());
+				App.Current.MainPage = new RootPage();
 			}
 			else
 			{

@@ -24,6 +24,14 @@ namespace TicketToTalk
 			this.person = person;
 			Title = person.name;
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "?",
+				Icon = "info_icon.png",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(editPerson)
+			});
+
 			var users = Task.Run(() => getUsers()).Result;
 
 			var nameLabel = new Label 
@@ -224,7 +232,11 @@ namespace TicketToTalk
 					}
 					break;
 				case ("Edit Person"):
-					// TODO implement edit person
+					var nav = new NavigationPage(new AddPerson(person));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			};
 		}
