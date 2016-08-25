@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace TicketToTalk
 {
@@ -105,7 +106,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Adds the shared.
+		/// Adds the shared article.
 		/// </summary>
 		/// <returns>The shared.</returns>
 		/// <param name="article">Article.</param>
@@ -122,6 +123,30 @@ namespace TicketToTalk
 				addArticleLocally(article);
 				AllArticles.serverArticles.Add(article);
 
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Shares the article.
+		/// </summary>
+		/// <returns>The article.</returns>
+		/// <param name="article">Article.</param>
+		/// <param name="email">Email.</param>
+		/// <param name="includeNotes">If set to <c>true</c> include notes.</param>
+		public async Task<bool> shareArticle(Article article, string email, bool includeNotes)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["article_id"] = article.id.ToString();
+			parameters["email"] = email;
+			parameters["includeNotes"] = includeNotes.ToString();
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendPostRequest("articles/share/send", parameters);
+			if (jobject != null) 
+			{
 				return true;
 			}
 

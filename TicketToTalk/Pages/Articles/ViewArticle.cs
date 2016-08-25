@@ -130,6 +130,13 @@ namespace TicketToTalk
 					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Share"):
+					nav = new NavigationPage(new ShareArticle(article));
+
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
+
 					break;
 			}
 		}
