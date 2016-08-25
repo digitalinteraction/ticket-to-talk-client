@@ -105,7 +105,14 @@ namespace TicketToTalk
 		void PersonCell_Tapped(object sender, EventArgs e)
 		{
 			PersonCell cell = (PersonCell)sender;
-			Navigation.PushAsync(new PersonProfile(cell.person));
+
+			foreach (Person p in people) 
+			{
+				if (p.id == cell.person.id) 
+				{
+					Navigation.PushAsync(new PersonProfile(p));
+				}
+			}
 		}
 
 		/// <summary>

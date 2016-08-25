@@ -414,7 +414,8 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void SavePersonChanges(object sender, EventArgs e)
 		{
-			var p = person;
+			var personController = new PersonController();
+			var p = personController.getPerson(person.id);
 
 			p.name = name.Text;
 			p.birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
@@ -422,7 +423,6 @@ namespace TicketToTalk
 			p.area = town_city.Text;
 			p.notes = notesEditor.Text;
 
-			var personController = new PersonController();
 			var returned = await personController.updatePersonRemotely(person);
 
 			if (returned != null) 
