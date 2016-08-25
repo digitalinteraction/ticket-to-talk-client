@@ -127,6 +127,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ShareArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\People\NewPersonInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -143,5 +144,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Views\Tickets\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Picture\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\People\" />
   </ItemGroup>
 </Project>
