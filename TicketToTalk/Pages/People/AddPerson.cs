@@ -35,12 +35,14 @@ namespace TicketToTalk
 		Picker yearPicker;
 		Picker relationPicker;
 		Button savePersonButton;
+		Person person;
 
 		/// <summary>
 		/// Creates an instance of an add person view.
 		/// </summary>
 		public AddPerson(Person person)
 		{
+			this.person = person;
 			Title = "New Person";
 
 			ToolbarItems.Add(new ToolbarItem
@@ -219,7 +221,14 @@ namespace TicketToTalk
 				IsEnabled = false,
 				Margin = new Thickness(0, 0, 0, 10),
 			};
-			savePersonButton.Clicked += savePerson;
+			if (person != null)
+			{
+				savePersonButton.Clicked += SavePersonChanges;
+			}
+			else 
+			{
+				savePersonButton.Clicked += savePerson;
+			}
 
 			var buttonStack = new StackLayout
 			{
@@ -395,6 +404,39 @@ namespace TicketToTalk
 			else
 			{
 				await DisplayAlert("Add Person", "Person could not be added.", "OK");
+			}
+		}
+
+		/// <summary>
+		/// Saves the person changes.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		private async void SavePersonChanges(object sender, EventArgs e)
+		{
+			var p = person;
+
+			p.name = name.Text;
+			p.birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
+			p.birthPlace = birthPlaceEntry.Text;
+			p.area = town_city.Text;
+			p.notes = notesEditor.Text;
+
+			var personController = new PersonController();
+			var returned = await personController.updatePersonRemotely(person);
+
+			if (returned != null) 
+			{
+				personController.updatePersonLocally(p);
+
+				var r = AllProfiles.people.IndexOf(person);
+				AllProfiles.people[r].name = returned.name;
+				AllProfiles.people[r].birthYear = returned.birthYear;
+				AllProfiles.people[r].birthPlace = returned.birthPlace;
+				AllProfiles.people[r].area = returned.area;
+				AllProfiles.people[r].notes = returned.notes;
+
+				await Navigation.PopModalAsync();
 			}
 		}
 	}
