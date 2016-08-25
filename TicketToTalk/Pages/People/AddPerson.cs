@@ -262,6 +262,7 @@ namespace TicketToTalk
 				name.Text = person.name;
 				birthPlaceEntry.Text = person.birthPlace;
 				notesEditor.Text = person.notes;
+				town_city.Text = person.area;
 				yearPicker.SelectedIndex = Int32.Parse(person.birthYear) - (DateTime.Now.Year - 99);
 				savePersonButton.Text = "Save Changes";
 			}
@@ -358,7 +359,7 @@ namespace TicketToTalk
 			parameters["relation"] = relations[relationPicker.SelectedIndex];
 			parameters["image"] = image;
 
-			NetworkController net = new NetworkController();
+			var net = new NetworkController();
 			var jobject = await net.sendGenericPostRequest("people/store", parameters);
 			Debug.WriteLine(jobject);
 			if (jobject != null)
@@ -389,7 +390,7 @@ namespace TicketToTalk
 				personController.addStockPeriods(stored_person);
 
 				//await Navigation.PushAsync(new RootPage());
-				App.Current.MainPage = new RootPage();
+				Application.Current.MainPage = new RootPage();
 			}
 			else
 			{

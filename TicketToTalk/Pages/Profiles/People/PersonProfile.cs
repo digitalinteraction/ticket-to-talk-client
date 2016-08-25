@@ -76,6 +76,10 @@ namespace TicketToTalk
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			if (!(String.IsNullOrEmpty(person.area))) 
+			{
+				birthYearLabel.Text = String.Format("Born in {0}, {1}\nSpent most of their life in {2}", person.birthPlace, person.birthYear, person.area);
+			}
 
 			var associatesLabel = new Label 
 			{

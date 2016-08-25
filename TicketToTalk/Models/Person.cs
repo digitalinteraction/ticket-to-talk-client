@@ -14,6 +14,7 @@ namespace TicketToTalk
 		public string birthYear { get; set; }
 		public string birthPlace { get; set; }
 		public string pathToPhoto { get; set; }
+		public string area { get; set;}
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
 		public string notes { get; set; }
