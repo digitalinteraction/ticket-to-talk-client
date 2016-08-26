@@ -598,7 +598,7 @@ namespace TicketToTalk
                 areaController.addAreaLocally(returned_area);
             }
             
-            await Navigation.PopAsync();
+            await Navigation.PopModalAsync();
         }
         
         /// <summary>

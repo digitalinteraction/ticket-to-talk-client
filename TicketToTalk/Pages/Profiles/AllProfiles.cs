@@ -105,7 +105,14 @@ namespace TicketToTalk
 		void PersonCell_Tapped(object sender, EventArgs e)
 		{
 			PersonCell cell = (PersonCell)sender;
-			Navigation.PushAsync(new PersonProfile(cell.person));
+
+			foreach (Person p in people) 
+			{
+				if (p.id == cell.person.id) 
+				{
+					Navigation.PushAsync(new PersonProfile(p));
+				}
+			}
 		}
 
 		/// <summary>
@@ -126,7 +133,7 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		void launchAddNewPersonView() 
 		{
-			var nav = new NavigationPage(new AddPerson());
+			var nav = new NavigationPage(new AddPerson(null));
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			nav.BarTextColor = ProjectResource.color_white;
 
