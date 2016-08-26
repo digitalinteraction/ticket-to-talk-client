@@ -11,16 +11,16 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationSelect : ContentPage
 	{
-		private Button newConversation;
+		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationSelect"/> class.
 		/// </summary>
 		public ConversationSelect(Ticket ticket)
 		{
-
+			conversations.Clear();
+			Title = "Conversations";
 			var conversationController = new ConversationController();
-			var conversations = new ObservableCollection<Conversation>();
 
 			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
 
@@ -30,15 +30,12 @@ namespace TicketToTalk
 				conversations.Add(conversationController.setPropertiesForDisplay(converstaion));
 			}
 
-			newConversation = new Button 
+			ToolbarItems.Add(new ToolbarItem
 			{
-				Text = "New Conversation",
-				TextColor = ProjectResource.color_white,
-				BackgroundColor = ProjectResource.color_blue,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0,0,0,10)
-			};
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
 
 			var cell = new DataTemplate(typeof(ConversationCell));
 			//cell.SetBinding(TextCell.TextProperty, "date");
@@ -70,20 +67,64 @@ namespace TicketToTalk
 				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 			};
 
+			var label = new Label 
+			{
+				Text = "Select a conversation",
+				TextColor = ProjectResource.color_dark,
+				HorizontalOptions = LayoutOptions.StartAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+
+			var add_img = new Image() 
+			{
+				Source = "red_add.png",
+				HeightRequest = 30,
+				WidthRequest = 30,
+				HorizontalOptions = LayoutOptions.EndAndExpand
+			};
+			add_img.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newConvo) });
+
+			var newStack = new StackLayout 
+			{
+				Padding = 10,
+				Orientation = StackOrientation.Horizontal,
+				Spacing = 0,
+				HorizontalOptions = LayoutOptions.Fill,
+				Children = 
+				{
+					label,
+					add_img
+				}
+			};
 
 			Content = new StackLayout
 			{
-				Spacing = 10,
 				Children = {
-					new Label {
-						Text = "Select a conversation",
-						Margin = new Thickness(0,20,0,10),
-						HorizontalOptions = LayoutOptions.CenterAndExpand
-					},
-					newConversation,
+					newStack,
 					listView
 				}
 			};
+		}
+
+		/// <summary>
+		/// Creates a new conversation.
+		/// </summary>
+		void newConvo()
+		{
+			var nav = new NavigationPage(new NewConversation());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
+		}
+
+		/// <summary>
+		/// Cancels the operation
+		/// </summary>
+		/// <param name="obj">Object.</param>
+		void cancel(object obj)
+		{
+			Navigation.PopModalAsync();
 		}
 	}
 }

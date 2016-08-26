@@ -19,7 +19,7 @@ namespace TicketToTalk
 		public DisplayTickets(List<Ticket> tickets, string title)
 		{
 			// Set Padding
-			//Padding = new Thickness(20);
+			Padding = new Thickness(20);
 			Title = title;
 
 			ToolbarItems.Add(new ToolbarItem
@@ -27,7 +27,7 @@ namespace TicketToTalk
 				Text = "Add",
 				Icon = "add_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(launchNewTicketView)
+				Command = new Command(launchNewTicketView),
 			});
 
 			BackgroundColor = ProjectResource.color_white;
@@ -44,6 +44,7 @@ namespace TicketToTalk
 						t.displayIcon = "photo_icon.png";
 						break;
 					case "Video":
+					case "YouTube":
 						t.displayIcon = "video_icon.png";
 						break;
 					case "Audio":
@@ -94,28 +95,10 @@ namespace TicketToTalk
 
 			Ticket ticket = (Ticket) e.SelectedItem;
 			ToolbarItems.Clear();
-			//switch (ticket.mediaType) 
-			//{
-			//	case ("Photo"):
-			//	case ("Picture"):
-			//		Navigation.PushAsync(new ViewPhotoTicket(ticket));
-			//		break;
 
-			//             // TODO: Implement type dependent views.
-			//	case ("Video"):
-			//		Navigation.PushAsync(new ViewTicket(ticket));
-			//		break;
-			//	case ("Song"):
-			//	case ("Sound"):
-			//		Navigation.PushAsync(new ViewAudioTicket(ticket));
-			//		break;
-			//	case ("Area"):
-			//		Navigation.PushAsync(new ViewTicket(ticket));
-			//		break;
-			//}
+			var nav = new ViewTicket(ticket);
 
-			Navigation.PushAsync(new ViewTicket(ticket));
-			//Navigation.PushAsync(new ViewTicket(ticket));
+			Navigation.PushAsync(nav);
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 
@@ -125,13 +108,7 @@ namespace TicketToTalk
 		/// <returns>The new ticket view.</returns>
 		public void launchNewTicketView()
 		{
-			//var nav = new NavigationPage(new SelectNewTicketType());
-			//nav.BarBackgroundColor = Color.FromHex(ProjectColours.blue);
-			//nav.BarTextColor = Color.FromHex(ProjectColours.white);
-			//Navigation.PushAsync(nav);
-
 			Navigation.PushAsync(new SelectNewTicketType());
 		}
 	}
 }
-

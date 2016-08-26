@@ -24,17 +24,27 @@ namespace TicketToTalk
 			this.person = person;
 			Title = person.name;
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "?",
+				Icon = "info_icon.png",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(editPerson)
+			});
+
 			var users = Task.Run(() => getUsers()).Result;
 
 			var nameLabel = new Label 
 			{
-				Text = person.name,
+				//Text = person.name,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
 				FontSize = 20,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			nameLabel.SetBinding(Label.TextProperty, "name");
+			nameLabel.BindingContext = person;
 
 			PersonUserDB puDB = new PersonUserDB();
 			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
@@ -42,12 +52,14 @@ namespace TicketToTalk
 
 			var relation = new Label
 			{
-				Text = personUser.relationship,
+				//Text = personUser.relationship,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			relation.SetBinding(Label.TextProperty, "relationship");
+			relation.BindingContext = personUser;
 
 			var detailsHeader = new Label
 			{
@@ -68,6 +80,10 @@ namespace TicketToTalk
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			if (!(String.IsNullOrEmpty(person.area))) 
+			{
+				birthYearLabel.Text = String.Format("Born in {0}, {1}\nSpent most of their life in {2}", person.birthPlace, person.birthYear, person.area);
+			}
 
 			var associatesLabel = new Label 
 			{
@@ -224,7 +240,11 @@ namespace TicketToTalk
 					}
 					break;
 				case ("Edit Person"):
-					// TODO implement edit person
+					var nav = new NavigationPage(new AddPerson(person));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			};
 		}

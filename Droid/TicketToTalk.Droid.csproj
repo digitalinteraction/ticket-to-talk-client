@@ -164,6 +164,7 @@
     <AndroidResource Include="Resources\drawable\icon_settings.png" />
     <AndroidResource Include="Resources\drawable\ic_videocam_white_.png" />
     <AndroidResource Include="Resources\drawable\red_ticket_icon.png" />
+    <AndroidResource Include="Resources\drawable\red_add.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />

@@ -11,6 +11,7 @@ namespace TicketToTalk
 	{
 
 		PersonDB personDB = new PersonDB();
+		NetworkController networkController = new NetworkController();
 
 		public PersonController()
 		{
@@ -103,9 +104,8 @@ namespace TicketToTalk
 				download_finished = finished;
 			});
 
-			NetworkController net = new NetworkController();
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => net.downloadImage(person.pathToPhoto, fileName)).Result;
+			var task = Task.Run(() => networkController.downloadImage(person.pathToPhoto, fileName)).Result;
 
 			person.pathToPhoto = fileName;
 
@@ -134,9 +134,8 @@ namespace TicketToTalk
 				download_finished = finished;
 			});
 
-			NetworkController net = new NetworkController();
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => net.downloadImage(person.pathToPhoto, fileName)).Result;
+			var task = Task.Run(() => networkController.downloadImage(person.pathToPhoto, fileName)).Result;
 
 			person.pathToPhoto = fileName;
 
@@ -162,8 +161,7 @@ namespace TicketToTalk
 
 			// Sending request
 			Console.WriteLine("Sending request");
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendGetRequest("user/getpeople", parameters);
+			var jobject = await networkController.sendGetRequest("user/getpeople", parameters);
 			Console.WriteLine(jobject);
 
 			// Parsing JSON to People array
@@ -259,7 +257,6 @@ namespace TicketToTalk
 			parameters["person_id"] = person.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var networkController = new NetworkController();
 			var jobject = networkController.sendDeleteRequest("people/destroy", parameters);
 
 			if (jobject == null)
@@ -325,8 +322,7 @@ namespace TicketToTalk
 
 			// Send request for all users associated with the person
 			Console.WriteLine("Sending request for all users associated with the person.");
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendGetRequest(url, parameters);
+			var jobject = await networkController.sendGetRequest(url, parameters);
 			Console.WriteLine(jobject);
 
 			var jusers = jobject.GetValue("users");
@@ -336,6 +332,33 @@ namespace TicketToTalk
 				Console.WriteLine(u);
 			}
 			return new List<User>(users);
+		}
+
+		/// <summary>
+		/// Updates the person remotely.
+		/// </summary>
+		/// <returns>The person remotely.</returns>
+		/// <param name="person">Person.</param>
+		public async Task<Person> updatePersonRemotely(Person person)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["person_id"] = person.id.ToString();
+			parameters["name"] = person.name;
+			parameters["birthPlace"] = person.birthPlace;
+			parameters["birthYear"] = person.birthYear;
+			parameters["notes"] = person.notes;
+			parameters["area"] = person.area;
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendPostRequest("people/update", parameters);
+			if (jobject != null) 
+			{
+				var jtoken = jobject.GetValue("Person");
+				var p = jtoken.ToObject<Person>();
+				return p;
+			}
+
+			return null;
 		}
 	}
 }

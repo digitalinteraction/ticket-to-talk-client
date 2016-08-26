@@ -20,11 +20,21 @@ namespace TicketToTalk
 		/// <param name="filePath">File path.</param>
 		public NewTicket(string mediaType, string filePath)
 		{
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
+			Debug.WriteLine("NewTicket: filepath - " + filePath);
+			Debug.WriteLine("NewTicket: mediaType - " + mediaType);
 
 			// Set title.
 			Title = "New Ticket";
 			//var mediaContent = null;
 			ContentView mediaContent = null;
+			NewTicketInfo ticketInf = null;
 
 			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
 			if (!hasPerms)
@@ -36,10 +46,13 @@ namespace TicketToTalk
 				switch (mediaType)
 				{
 					case ("Picture"):
-						mediaContent = new PictureLayout(filePath);
+						var media = MediaController.readBytesFromFile(filePath);
+						mediaContent = new PictureLayout(media);
+						ticketInf = new NewTicketInfo(mediaType, media);
 						break;
 					case ("Sound"):
 						mediaContent = new AudioPlayerLayout(new Ticket { pathToFile = filePath });
+						ticketInf = new NewTicketInfo(mediaType, filePath);
 						break;
 					case ("Video"):
 						break;
@@ -54,7 +67,7 @@ namespace TicketToTalk
 				Children =
 				{
 					mediaContent,
-					new NewTicketInfo(mediaType, filePath)
+					ticketInf
 				}
 			};
 
@@ -67,6 +80,14 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicket"/> class.
 		/// Used for creating new tickets that do not have data attached. (YouTube videos.)
 		/// </summary>
@@ -74,32 +95,6 @@ namespace TicketToTalk
 		public NewTicket(Ticket ticket) 
 		{
 			Title = "New Ticket";
-
-			var url = String.Format("<!DOCTYPE html><body><iframe src='https://www.youtube.com/embed/qpJHHM9IaJM' " +
-									"frameborder='0' allowfullscreen></iframe></body></html>");
-
-			Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
-
-			var webView = new WebView
-			{
-				Source = new HtmlWebViewSource
-				{
-					Html = url
-				},
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalOptions = LayoutOptions.Fill,
-				HeightRequest = Session.ScreenWidth / 1.6
-			};
-
-			var webStack = new StackLayout 
-			{
-				Spacing = 0,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children = 
-				{
-					webView
-				}
-			};
 
 			var stack = new StackLayout
 			{

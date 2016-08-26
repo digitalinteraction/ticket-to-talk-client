@@ -28,13 +28,42 @@ namespace TicketToTalk
 			Title = conversation.displayDate;
 			var dateLabel = new Label
 			{
-				Text = "Date",
+				Text = "Time",
 				TextColor = ProjectResource.color_dark
 			};
 
+			char[] del = {' '};
+			string[] dt = conversation.date.Split(del);
+			del = new char[]{ ':' };
+			string[] time = dt[1].Split(del);
+
+			string hour = (Int32.Parse(time[0]) % 12).ToString();
+			int afterMid = Int32.Parse(time[0]) / 12;
+
+			if (Int32.Parse(hour) == 0 && afterMid == 1)
+			{
+				hour = "12";
+			}
+
+			var time_suffix = String.Empty;
+			switch (afterMid)
+			{
+				case (0):
+					time_suffix = "am";
+					break;
+				case (1):
+					time_suffix = "pm";
+					break;
+				default:
+					time_suffix = "";
+					break;
+			}
+
+			var minutes = time[1];
+
 			var date = new Label
 			{
-				Text = conversation.date,
+				Text = String.Format("{0}:{1} {2}", hour, minutes, time_suffix),
 				TextColor = ProjectResource.color_red,
 			};
 
@@ -84,6 +113,7 @@ namespace TicketToTalk
 									ticket.displayIcon = "photo_icon.png";
 									break;
 								case "Video":
+								case "YouTube":
 									ticket.displayIcon = "video_icon.png";
 									break;
 								case "Sound":

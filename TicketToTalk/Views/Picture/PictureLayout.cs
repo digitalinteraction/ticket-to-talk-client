@@ -21,6 +21,13 @@ namespace TicketToTalk
 			Content = image;
 		}
 
+		public PictureLayout(byte[] media) 
+		{
+			Image image = new Image();
+			image.Source = ImageSource.FromStream(() => new MemoryStream(media));
+			Content = image;
+		}
+
 		private void loadImage(Image image, string filePath) 
 		{
 			var rawBytes = MediaController.readBytesFromFile(filePath);

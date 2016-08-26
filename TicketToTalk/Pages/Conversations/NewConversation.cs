@@ -22,6 +22,12 @@ namespace TicketToTalk
 		/// </summary>
 		public NewConversation()
 		{
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
 
 			Title = "New Conversation";
 
@@ -110,6 +116,14 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		/// <summary>
 		/// Entries the changed.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
@@ -142,32 +156,27 @@ namespace TicketToTalk
 			char[] delimiters = {' '};
 			string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
 
-			Debug.WriteLine("NewConversation: date = " + datepicker.Date.ToString());
-			Debug.WriteLine("NewConversation: time = " + timePicker.Time.ToString());
-
 			var dateTime = String.Format("{0} {1}", dateSplit[0], timePicker.Time);
-
-			Debug.WriteLine("NewConversation: datetime = " + dateTime);
 
 			var conversation = new Conversation();
 			conversation.person_id = Session.activePerson.id;
 			conversation.notes = notes.Text;
-			//conversation.date = DateTime.ParseExact(dateTime, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 			conversation.date = dateTime;
-			Debug.WriteLine("NewConversation: Conversation = " + conversation);
 
 			var returned = await conversationController.storeConversationRemotely(conversation);
 			if (returned != null)
 			{
+				Debug.WriteLine("NewConversation: conversation - " + returned);
 				conversationController.storeConversationLocally(returned);
 				ConversationsView.conversations.Add(conversationController.setPropertiesForDisplay(returned));
+				ConversationSelect.conversations.Add(conversationController.setPropertiesForDisplay(returned));
 			}
 			else 
 			{
 				await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
 			}
 
-			await Navigation.PopAsync();
+			await Navigation.PopModalAsync();
 		}
 	}
 }

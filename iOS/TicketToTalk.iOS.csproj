@@ -193,6 +193,10 @@
     <BundleResource Include="Resources\drawer_icon_%403x.png" />
     <BundleResource Include="Resources\person_placeholder.png" />
     <BundleResource Include="Resources\icon_settings.png" />
+    <BundleResource Include="red_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\red_add.png" />
   </ItemGroup>
   <Import Project="..\TicketToTalk\TicketToTalk.projitems" Label="Shared" Condition="Exists('..\TicketToTalk\TicketToTalk.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

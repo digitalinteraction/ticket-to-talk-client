@@ -128,7 +128,10 @@ namespace TicketToTalk
 					ticketStack.Children.Add(audioPlayer);
 					break;
 				case ("Video"):
-					// TODO Display web player
+				case ("YouTube"):
+					var youtubePlayer = new YouTubePlayer(ticket.pathToFile);
+					ticketStack.Children.Clear();
+					ticketStack.Children.Add(youtubePlayer);
 					break;
 			}
 

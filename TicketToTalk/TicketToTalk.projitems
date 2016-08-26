@@ -86,7 +86,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TagController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PersonController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IImageResizer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewVideoTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\UserController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Period.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Database\PeriodDB.cs" />
@@ -125,6 +124,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\Picture\UserProfileImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\AddYoutubeLinkView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Video\YouTubePlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ShareArticle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\People\NewPersonInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MenuCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -141,5 +145,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Views\Tickets\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Picture\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Views\People\" />
   </ItemGroup>
 </Project>

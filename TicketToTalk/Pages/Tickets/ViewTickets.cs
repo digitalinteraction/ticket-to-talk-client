@@ -63,6 +63,7 @@ namespace TicketToTalk
 						ticketSongs.Add(t);
 						break;
 					case ("Video"):
+					case ("YouTube"):
 						ticketVideo.Add(t);
 						break;
 				}
