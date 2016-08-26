@@ -18,14 +18,15 @@ namespace TicketToTalk
 			NavigationPage.SetHasNavigationBar(this, false);
 			Icon = "menu_icon.png";
 			Title = "Menu"; // The Title property must be set.
-			BackgroundColor = ProjectResource.color_blue;
+			BackgroundColor = ProjectResource.color_white;
 
-			Padding = new Thickness(0, 20, 0, 0);
+			//Padding = new Thickness(0, 20, 0, 0);
 
 			Menu = new MenuListView();
 
 			var menuContent = new ContentView
 			{
+				BackgroundColor = ProjectResource.color_blue,
 				Padding = new Thickness(20, 0, 0, 20),
 				Content = new StackLayout 
 				{
@@ -57,6 +58,8 @@ namespace TicketToTalk
 
 			var images = new StackLayout
 			{
+				Padding = new Thickness(0, 20, 0, 0),
+				BackgroundColor = ProjectResource.color_blue,
 				Spacing = 0,
 				Orientation = StackOrientation.Horizontal,
 				Children = 

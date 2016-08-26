@@ -20,7 +20,7 @@ namespace TicketToTalk
 			BindingContext = data;
 			VerticalOptions = LayoutOptions.FillAndExpand;
 			BackgroundColor = ProjectResource.color_white;
-			SeparatorColor = ProjectResource.color_grey;
+			//SeparatorColor = ProjectResource.color_grey;
 
 			var cell = new DataTemplate(typeof(MenuCell));
 			//cell.SetBinding(TextCell.TextProperty, "Title");
