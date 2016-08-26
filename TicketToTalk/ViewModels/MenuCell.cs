@@ -14,8 +14,8 @@ namespace TicketToTalk
 		{
 			var image = new Image
 			{
-				HeightRequest = 30,
-				WidthRequest = 30,
+				HeightRequest = 40,
+				WidthRequest = 40,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 			};
 			image.SetBinding(Image.SourceProperty, "IconSource");
@@ -29,6 +29,7 @@ namespace TicketToTalk
 
 			var content = new StackLayout
 			{
+				Padding = new Thickness(16, 0, 0, 0),
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 5,
 				Children = 

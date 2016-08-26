@@ -49,7 +49,7 @@ namespace TicketToTalk
 			{
 				user = user,
 			};
-			if (!(user.pathToPhoto.StartsWith("storage")))
+			if (!(user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal)))
 			{
 				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
 			}
@@ -68,7 +68,7 @@ namespace TicketToTalk
 			var personUserDB = new PersonUserDB();
 			foreach (Person p in people)
 			{
-				if (!(p.pathToPhoto.StartsWith("storage"))) 
+				if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
 				{
 					p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
 				}
