@@ -89,16 +89,46 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Updates the conversation remotely.
+		/// </summary>
+		/// <returns>The conversation remotely.</returns>
+		/// <param name="conversation">Conversation.</param>
+		public async Task<Conversation> updateConversationRemotely(Conversation conversation)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["conversation_id"] = conversation.id.ToString();
+			parameters["notes"] = conversation.notes;
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendPostRequest("conversations/update", parameters);
+			if (jobject != null) 
+			{
+				var jtoken = jobject.GetValue("Conversation");
+				return jtoken.ToObject<Conversation>();
+			}
+
+			return null;
+		}
+
+		/// <summary>
 		/// Updates the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
 		public void updateConversationLocally(Conversation conversation)
 		{
+			foreach (Conversation c in ConversationsView.conversations) 
+			{
+				if (c.id == conversation.id) 
+				{
+					c.notes = conversation.notes;
+				}
+			}
+
 			convDB.open();
-			ConversationsView.conversations.Remove(conversation);
+			//ConversationsView.conversations.Remove(conversation);
 			convDB.DeleteConversation(conversation.id);
 			convDB.AddConversation(conversation);
-			ConversationsView.conversations.Add(conversation);
+			//ConversationsView.conversations.Add(conversation);
 			convDB.close();
 		}
 
