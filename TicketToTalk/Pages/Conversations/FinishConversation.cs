@@ -28,7 +28,7 @@ namespace TicketToTalk
 
 			ToolbarItems.Add(new ToolbarItem
 			{
-				Text = "cancel",
+				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(cancel)
 			});
