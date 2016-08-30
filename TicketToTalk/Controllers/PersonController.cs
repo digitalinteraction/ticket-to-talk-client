@@ -105,7 +105,7 @@ namespace TicketToTalk
 			});
 
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => networkController.downloadImage(person.pathToPhoto, fileName)).Result;
+			var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
 
 			person.pathToPhoto = fileName;
 
@@ -135,7 +135,7 @@ namespace TicketToTalk
 			});
 
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => networkController.downloadImage(person.pathToPhoto, fileName)).Result;
+			var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
 
 			person.pathToPhoto = fileName;
 

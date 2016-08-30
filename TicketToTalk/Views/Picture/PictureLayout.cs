@@ -15,7 +15,6 @@ namespace TicketToTalk
 		/// </summary>
 		public PictureLayout(string filePath)
 		{
-			
 			Image image = new Image();
 			loadImage(image, filePath);//loadImage(image, filePath);
 			Content = image;
