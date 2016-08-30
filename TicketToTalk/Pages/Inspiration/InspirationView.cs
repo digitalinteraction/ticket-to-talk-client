@@ -39,7 +39,7 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//WidthRequest = Session.ScreenWidth * 0.5,
+				WidthRequest = Session.ScreenWidth * 0.5,
 				IsVisible = false,
 				IsEnabled = true,
 				Margin = new Thickness(0, 20)
@@ -225,7 +225,6 @@ namespace TicketToTalk
 
 			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
 			{
-
 				Directory = "TicketToTalk",
 				Name = "ticket.jpg"
 			});
@@ -233,7 +232,11 @@ namespace TicketToTalk
 			if (file == null)
 				return;
 
-			await Navigation.PushAsync(new NewTicket("Picture", file.Path));
+			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 
 		public async void SelectPicture()
@@ -247,7 +250,11 @@ namespace TicketToTalk
 			var file = await CrossMedia.Current.PickPhotoAsync();
 			if (file == null) { return; }
 
-			await Navigation.PushAsync(new NewTicket("Picture", file.Path));
+			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 
 		/// <summary>
@@ -276,12 +283,12 @@ namespace TicketToTalk
 			ins.question = ins.question.Replace("[name]", Session.activePerson.name);
 			ins.prompt = ins.prompt.Replace("[name]", Session.activePerson.name);
 
-			var linkIdx = ins.prompt.IndexOf("[link=\"");
+			var linkIdx = ins.prompt.IndexOf("[link=\"", StringComparison.Ordinal);
 
 			if (linkIdx != -1)
 			{
 				linkIdx += 7;
-				var linkEnd = ins.prompt.IndexOf("\"]");
+				var linkEnd = ins.prompt.IndexOf("\"]", StringComparison.Ordinal);
 				var link = ins.prompt.Substring(linkIdx, linkEnd - linkIdx);
 
 				ins.prompt = ins.prompt.Replace("HERE [link=\"" + link + "\"] ", "");
@@ -339,7 +346,11 @@ namespace TicketToTalk
 					}
 					break;
 				case ("Sound"):
-					await Navigation.PushAsync(new AudioRecorder());
+					var nav = new NavigationPage(new AudioRecorder());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Video"):
 					break;
