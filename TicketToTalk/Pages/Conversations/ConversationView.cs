@@ -76,9 +76,11 @@ namespace TicketToTalk
 
 			var notes = new Label
 			{
-				Text = conversation.notes,
+				//Text = conversation.notes,
 				TextColor = ProjectResource.color_red,
 			};
+			notes.SetBinding(Label.TextProperty, "notes");
+			notes.BindingContext = conversation;
 
 			var ticketsLabel = new Label
 			{
