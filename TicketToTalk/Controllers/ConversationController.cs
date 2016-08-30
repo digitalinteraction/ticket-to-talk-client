@@ -66,9 +66,17 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public async Task<Conversation> storeConversationRemotely(Conversation conversation) 
 		{
+			var platform = String.Empty;
+#if __IOS__
+			platform = "iOS";
+#else
+			platform = "Android";
+#endif
+
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["datetime"] = conversation.date.ToString();
+			parameters["datetime"] = conversation.date;
 			parameters["ticket_id_string"] = conversation.ticket_id_string;
+			parameters["platform"] = platform;
 			parameters["notes"] = conversation.notes;
 			parameters["person_id"] = conversation.person_id.ToString();
 			parameters["token"] = Session.Token.val;
@@ -155,7 +163,6 @@ namespace TicketToTalk
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var networkController = new NetworkController();
 			var jobject = await networkController.sendGetRequest("conversations/destroy", parameters);
 
 			if (jobject == null) 
@@ -265,7 +272,6 @@ namespace TicketToTalk
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var networkController = new NetworkController();
 			var jobject = await networkController.sendPostRequest("conversations/tickets/add", parameters);
 
 			if (jobject == null)
@@ -291,7 +297,6 @@ namespace TicketToTalk
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var networkController = new NetworkController();
 			var jobject = await networkController.sendPostRequest("conversations/tickets/remove", parameters);
 
 			if (jobject == null)
@@ -341,11 +346,23 @@ namespace TicketToTalk
 				char[] d_delims = { '/' };
 				string[] date = datetime[0].Split(d_delims);
 
-				day = date[1];
-				Debug.WriteLine("day: " + date[1]);
-				Debug.WriteLine("month: " + date[0]);
-				month = months[Int32.Parse(date[0]) - 1];
-				year = date[2];
+				#if __IOS__
+
+					day = date[0];
+					Debug.WriteLine("day: " + date[0]);
+					Debug.WriteLine("month: " + date[1]);
+					month = months[Int32.Parse(date[1]) - 1];
+					year = date[2];
+
+				#else
+
+					day = date[1];
+					Debug.WriteLine("day: " + date[1]);
+					Debug.WriteLine("month: " + date[0]);
+					month = months[Int32.Parse(date[0]) - 1];
+					year = date[2];
+
+				#endif
 			}
 			else 
 			{
@@ -404,7 +421,7 @@ namespace TicketToTalk
 					break;
 			}
 
-			day = day.Trim(new char[] { '0' });
+			day = day.TrimStart(new char[] { '0' });
 
 			displayString = String.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
 			Debug.WriteLine("ConversationController: Display date = " + displayString);
