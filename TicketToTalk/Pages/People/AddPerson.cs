@@ -427,10 +427,11 @@ namespace TicketToTalk
 			p.area = town_city.Text;
 			p.notes = notesEditor.Text;
 
-			var returned = await personController.updatePersonRemotely(person);
+			var returned = await personController.updatePersonRemotely(p);
 
 			if (returned != null)
 			{
+				Debug.WriteLine("AddPerson: returned person - " + returned);
 				personController.updatePersonLocally(p);
 
 				var r = AllProfiles.people.IndexOf(person);
@@ -439,6 +440,10 @@ namespace TicketToTalk
 				AllProfiles.people[r].birthPlace = returned.birthPlace;
 				AllProfiles.people[r].area = returned.area;
 				AllProfiles.people[r].notes = returned.notes;
+				AllProfiles.people[r].displayString = personController.getDisplayString(AllProfiles.people[r]);
+
+				PersonProfile.currentPerson.notes = p.notes;
+				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
 
 				await Navigation.PopModalAsync();
 			}
