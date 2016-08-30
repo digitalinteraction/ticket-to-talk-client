@@ -251,9 +251,9 @@ namespace TicketToTalk
 			}
 		}
 
-		public bool downloadImage(string path, string fileName) 
+		public bool downloadFile(string path, string fileName) 
 		{
-			Debug.WriteLine("Beginning Download");
+			Debug.WriteLine("NetworkController: Beginning Download");
 			var webClient = new WebClient();
 			var success = true;
 			//webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;

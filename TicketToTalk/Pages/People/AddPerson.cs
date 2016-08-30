@@ -347,6 +347,8 @@ namespace TicketToTalk
 		/// </summary>
 		public async void savePerson(Object sender, EventArgs ea)
 		{
+			savePersonButton.IsEnabled = false;
+
 			byte[] image = null;
 			if (file != null)
 			{
@@ -370,7 +372,6 @@ namespace TicketToTalk
 
 			var net = new NetworkController();
 			var jobject = await net.sendGenericPostRequest("people/store", parameters);
-			Debug.WriteLine(jobject);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("person");
@@ -404,6 +405,7 @@ namespace TicketToTalk
 			else
 			{
 				await DisplayAlert("Add Person", "Person could not be added.", "OK");
+				savePersonButton.IsEnabled = true;
 			}
 		}
 
@@ -414,6 +416,8 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void SavePersonChanges(object sender, EventArgs e)
 		{
+			savePersonButton.IsEnabled = false;
+
 			var personController = new PersonController();
 			var p = personController.getPerson(person.id);
 
@@ -423,10 +427,11 @@ namespace TicketToTalk
 			p.area = town_city.Text;
 			p.notes = notesEditor.Text;
 
-			var returned = await personController.updatePersonRemotely(person);
+			var returned = await personController.updatePersonRemotely(p);
 
-			if (returned != null) 
+			if (returned != null)
 			{
+				Debug.WriteLine("AddPerson: returned person - " + returned);
 				personController.updatePersonLocally(p);
 
 				var r = AllProfiles.people.IndexOf(person);
@@ -435,8 +440,16 @@ namespace TicketToTalk
 				AllProfiles.people[r].birthPlace = returned.birthPlace;
 				AllProfiles.people[r].area = returned.area;
 				AllProfiles.people[r].notes = returned.notes;
+				AllProfiles.people[r].displayString = personController.getDisplayString(AllProfiles.people[r]);
+
+				PersonProfile.currentPerson.notes = p.notes;
+				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
 
 				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				savePersonButton.IsEnabled = true;
 			}
 		}
 	}
