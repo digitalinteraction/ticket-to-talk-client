@@ -128,6 +128,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewSharedArticle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ShareArticle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\People\NewPersonInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MenuCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\FinishConversation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

@@ -360,8 +360,19 @@ namespace TicketToTalk
 			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
 				NetworkController net = new NetworkController();
-				var fileName = "t_" + ticket.id + ".jpg";
-				var task = Task.Run(() => net.downloadImage(ticket.pathToFile, fileName)).Result;
+
+				var fileName = String.Empty;
+				switch (ticket.mediaType) 
+				{
+					case ("Picture"):
+						fileName = "t_" + ticket.id + ".jpg";
+						break;
+					case ("Sound"):
+						fileName = "t_" + ticket.id + ".wav";
+						break;
+				} 
+
+				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
 				ticket.pathToFile = fileName;
 
 				while (!download_finished)
@@ -382,19 +393,62 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Parses you tube to ticket.
+		/// extracts video code from the url
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
 		/// <param name="link">Link.</param>
 		public Ticket parseYouTubeToTicket(string link) 
 		{
-			var idx = link.LastIndexOf("=", StringComparison.Ordinal);
-			var videoCode = link.Substring(idx + 1);
-			return new Ticket 
+
+			if (link.Contains("youtu.be"))
 			{
-				pathToFile = videoCode,
-				mediaType = "YouTube"
-			};
+				var idx = link.LastIndexOf("/", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
+			else 
+			{
+				var idx = link.LastIndexOf("=", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
+		}
+
+		/// <summary>
+		/// Downloads the content of the ticket.
+		/// </summary>
+		/// <param name="filePath">File path.</param>
+		public void downloadTicketContent(string filePath) 
+		{
+
+			var download_finished = false;
+
+			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
+			{
+				Debug.WriteLine("Image Downloaded");
+				download_finished = finished;
+			});
+
+			NetworkController net = new NetworkController();
+
+			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
+			var fileName = filePath.Substring(idx + 1);
+
+			var task = Task.Run(() => net.downloadFile(filePath, fileName)).Result;
+
+			while (!download_finished)
+			{
+			}
+
+			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 		}
 	}
 }
