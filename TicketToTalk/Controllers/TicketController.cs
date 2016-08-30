@@ -45,30 +45,36 @@ namespace TicketToTalk
 			switch (ticket.mediaType)
 			{
 				case ("Picture"):
-					TicketsPicture.pictureTickets.Remove(ticket);
-					break;
 				case ("Photo"):
 					TicketsPicture.pictureTickets.Remove(ticket);
 					break;
 				case ("Sound"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
 				case ("Song"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
 				case ("Audio"):
 					TicketsSounds.soundTickets.Remove(ticket);
 					break;
 				case ("Video"):
+				case ("YouTube"):
 					TicketsVideos.videoTickets.Remove(ticket);
 					break;
 			}
 
 			TicketsByPeriod.removeTicket(ticket);
 
+			bool inPeriodList = false;
+			foreach (Ticket t in DisplayTickets.displayTickets)
+			{
+				if (t.id == ticket.id)
+				{
+					inPeriodList = true;
+
+				}
+			}
+			if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
+
 			Debug.WriteLine("TicketCell: Deleting ticket file locally");
 
-			if (!(ticket.pathToFile.StartsWith("storage")))
+			if (!(ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal)))
 			{
 				var mediaController = new MediaController();
 				mediaController.deleteFile(ticket.pathToFile);
