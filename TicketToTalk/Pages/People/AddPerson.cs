@@ -35,12 +35,14 @@ namespace TicketToTalk
 		Picker yearPicker;
 		Picker relationPicker;
 		Button savePersonButton;
+		Person person;
 
 		/// <summary>
 		/// Creates an instance of an add person view.
 		/// </summary>
-		public AddPerson()
+		public AddPerson(Person person)
 		{
+			this.person = person;
 			Title = "New Person";
 
 			ToolbarItems.Add(new ToolbarItem
@@ -61,7 +63,15 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
 			};
-			personImage.Source = "person_placeholder.png";
+			if (person != null)
+			{
+				byte[] pic = MediaController.readBytesFromFile(person.pathToPhoto);
+				personImage.Source = ImageSource.FromStream(() => new MemoryStream(pic));
+			}
+			else 
+			{
+				personImage.Source = "person_placeholder.png";
+			}
 			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onPlaceholderTap) });
 
 			var nameLabel = new Label
@@ -112,7 +122,7 @@ namespace TicketToTalk
 
 			var relationLabel = new Label 
 			{
-				Text = "How do you them?",
+				Text = "How do you know them?",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
@@ -211,12 +221,18 @@ namespace TicketToTalk
 				IsEnabled = false,
 				Margin = new Thickness(0, 0, 0, 10),
 			};
-			savePersonButton.Clicked += savePerson;
+			if (person != null)
+			{
+				savePersonButton.Clicked += SavePersonChanges;
+			}
+			else 
+			{
+				savePersonButton.Clicked += savePerson;
+			}
 
 			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
-				//BackgroundColor = ProjectResource.color_blue,
 				Children =
 				{
 					savePersonButton
@@ -233,6 +249,33 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
+
+			if (person != null) 
+			{
+				Title = "Edit Person";
+
+				PersonUserDB puDB = new PersonUserDB();
+				var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
+				puDB.close();
+
+				var ridx = 0;
+				for (int i = 0; i < ProjectResource.relations.Length; i++) 
+				{
+					if (ProjectResource.relations[i].Equals(personUser.relationship)) 
+					{
+						ridx = i;
+					}
+				}
+
+				relationPicker.SelectedIndex = ridx;
+				name.Text = person.name;
+				birthPlaceEntry.Text = person.birthPlace;
+				notesEditor.Text = person.notes;
+				town_city.Text = person.area;
+				yearPicker.SelectedIndex = Int32.Parse(person.birthYear) - (DateTime.Now.Year - 99);
+				savePersonButton.Text = "Save Changes";
+			}
+
 			Content = new ScrollView
 			{
 				Content = contentStack
@@ -302,9 +345,10 @@ namespace TicketToTalk
 		/// <summary>
 		/// Saves the person to the database.
 		/// </summary>
-		// TODO check fields are not null.
 		public async void savePerson(Object sender, EventArgs ea)
 		{
+			savePersonButton.IsEnabled = false;
+
 			byte[] image = null;
 			if (file != null)
 			{
@@ -326,9 +370,8 @@ namespace TicketToTalk
 			parameters["relation"] = relations[relationPicker.SelectedIndex];
 			parameters["image"] = image;
 
-			NetworkController net = new NetworkController();
+			var net = new NetworkController();
 			var jobject = await net.sendGenericPostRequest("people/store", parameters);
-			Debug.WriteLine(jobject);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("person");
@@ -356,11 +399,57 @@ namespace TicketToTalk
 
 				personController.addStockPeriods(stored_person);
 
-				await Navigation.PushAsync(new RootPage());
+				//await Navigation.PushAsync(new RootPage());
+				Application.Current.MainPage = new RootPage();
 			}
 			else
 			{
 				await DisplayAlert("Add Person", "Person could not be added.", "OK");
+				savePersonButton.IsEnabled = true;
+			}
+		}
+
+		/// <summary>
+		/// Saves the person changes.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		private async void SavePersonChanges(object sender, EventArgs e)
+		{
+			savePersonButton.IsEnabled = false;
+
+			var personController = new PersonController();
+			var p = personController.getPerson(person.id);
+
+			p.name = name.Text;
+			p.birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
+			p.birthPlace = birthPlaceEntry.Text;
+			p.area = town_city.Text;
+			p.notes = notesEditor.Text;
+
+			var returned = await personController.updatePersonRemotely(p);
+
+			if (returned != null)
+			{
+				Debug.WriteLine("AddPerson: returned person - " + returned);
+				personController.updatePersonLocally(p);
+
+				var r = AllProfiles.people.IndexOf(person);
+				AllProfiles.people[r].name = returned.name;
+				AllProfiles.people[r].birthYear = returned.birthYear;
+				AllProfiles.people[r].birthPlace = returned.birthPlace;
+				AllProfiles.people[r].area = returned.area;
+				AllProfiles.people[r].notes = returned.notes;
+				AllProfiles.people[r].displayString = personController.getDisplayString(AllProfiles.people[r]);
+
+				PersonProfile.currentPerson.notes = p.notes;
+				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
+
+				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				savePersonButton.IsEnabled = true;
 			}
 		}
 	}

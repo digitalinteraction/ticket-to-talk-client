@@ -1,26 +1,79 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SQLite;
 namespace TicketToTalk
 {
 	/// <summary>
 	/// Represents a person.
 	/// </summary>
-	public class Person
+	public class Person : INotifyPropertyChanged
 	{
+		private string _name;
+		private string _notes;
+		private string _displayString;
+
 		[PrimaryKey]
 		public int id { get; set; }
 		public int admin_id { get; set; }
-		public string name { get; set; }
+
+		public string name 
+		{ 
+			get 
+			{
+				return _name;
+			}
+			set 
+			{
+				if (value != _name) 
+				{
+					_name = value;
+					NotifyPropertyChanged();
+				}
+			} 
+		}
+
 		public string birthYear { get; set; }
 		public string birthPlace { get; set; }
 		public string pathToPhoto { get; set; }
+		public string area { get; set;}
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
-		public string notes { get; set; }
+		public string notes 
+		{
+			get 
+			{
+				return _notes;
+			} 
+			set 
+			{
+				if (value != _notes) 
+				{
+					_notes = value;
+					NotifyPropertyChanged();
+				}	
+			} 
+		}
 		[Ignore]
 		public Pivot pivot { get; set; }
 		[Ignore]
 		public string relation { get; set; }
+		[Ignore]
+		public string displayString 
+		{ 
+			get 
+			{
+				return _displayString;
+			} 
+			set 
+			{
+				if (value != _displayString) 
+				{
+					_displayString = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
 		public class Pivot
 		{
@@ -39,6 +92,16 @@ namespace TicketToTalk
 		public Person()
 		{
 		}
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
 		/// Tos the string.

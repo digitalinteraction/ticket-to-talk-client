@@ -49,7 +49,7 @@ namespace TicketToTalk
 			{
 				user = user,
 			};
-			if (!(user.pathToPhoto.StartsWith("storage")))
+			if (!(user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal)))
 			{
 				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
 			}
@@ -68,7 +68,7 @@ namespace TicketToTalk
 			var personUserDB = new PersonUserDB();
 			foreach (Person p in people)
 			{
-				if (!(p.pathToPhoto.StartsWith("storage"))) 
+				if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
 				{
 					p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
 				}
@@ -105,7 +105,14 @@ namespace TicketToTalk
 		void PersonCell_Tapped(object sender, EventArgs e)
 		{
 			PersonCell cell = (PersonCell)sender;
-			Navigation.PushAsync(new PersonProfile(cell.person));
+
+			foreach (Person p in people) 
+			{
+				if (p.id == cell.person.id) 
+				{
+					Navigation.PushAsync(new PersonProfile(p));
+				}
+			}
 		}
 
 		/// <summary>
@@ -126,7 +133,7 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		void launchAddNewPersonView() 
 		{
-			var nav = new NavigationPage(new AddPerson());
+			var nav = new NavigationPage(new AddPerson(null));
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			nav.BarTextColor = ProjectResource.color_white;
 

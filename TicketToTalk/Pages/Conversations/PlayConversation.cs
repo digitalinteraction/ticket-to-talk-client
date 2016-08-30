@@ -16,6 +16,8 @@ namespace TicketToTalk
 		int currentIndex = 0;
 		Label descriptionLabel;
 
+		Conversation conversation;
+
 		TicketController ticketController = new TicketController();
 
 		/// <summary>
@@ -27,8 +29,16 @@ namespace TicketToTalk
 		{
 			tickets.Shuffle();
 			this.tickets = tickets;
+			this.conversation = conversation;
 			
 			Title = "Conversation";
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Finish",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(finishConversation)
+			});
 
 			var next = new Button
 			{
@@ -103,6 +113,20 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Finishs the conversation.
+		/// </summary>
+		/// <param name="obj">Object.</param>
+		private void finishConversation(object obj)
+		{
+			var nav = new NavigationPage(new FinishConversation(conversation));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
+			Navigation.RemovePage(this);
+		}
+
+		/// <summary>
 		/// Sets the ticket stack.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
@@ -128,7 +152,10 @@ namespace TicketToTalk
 					ticketStack.Children.Add(audioPlayer);
 					break;
 				case ("Video"):
-					// TODO Display web player
+				case ("YouTube"):
+					var youtubePlayer = new YouTubePlayer(ticket.pathToFile);
+					ticketStack.Children.Clear();
+					ticketStack.Children.Add(youtubePlayer);
 					break;
 			}
 

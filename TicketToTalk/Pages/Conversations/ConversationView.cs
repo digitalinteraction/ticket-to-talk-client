@@ -76,9 +76,11 @@ namespace TicketToTalk
 
 			var notes = new Label
 			{
-				Text = conversation.notes,
+				//Text = conversation.notes,
 				TextColor = ProjectResource.color_red,
 			};
+			notes.SetBinding(Label.TextProperty, "notes");
+			notes.BindingContext = conversation;
 
 			var ticketsLabel = new Label
 			{
@@ -189,24 +191,7 @@ namespace TicketToTalk
 			var convItem = (ConversationItem)e.SelectedItem;
 			Ticket ticket = convItem.ticket;
 
-			switch (ticket.mediaType)
-			{
-				case ("Photo"):
-					Navigation.PushAsync(new ViewPhotoTicket(ticket));
-					break;
-
-				// TODO: Implement type dependent views.
-				case ("Video"):
-					Navigation.PushAsync(new ViewTicket(ticket));
-					break;
-				case ("Song"):
-					Navigation.PushAsync(new ViewAudioTicket(ticket));
-					break;
-				case ("Area"):
-					Navigation.PushAsync(new ViewTicket(ticket));
-					break;
-			}
-			//Navigation.PushAsync(new ViewTicket(ticket));
+			Navigation.PushAsync(new ViewTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 

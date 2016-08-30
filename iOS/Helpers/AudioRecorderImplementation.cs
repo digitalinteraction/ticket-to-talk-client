@@ -73,6 +73,8 @@ namespace TicketToTalk.iOS
 
 			//Set Recorder to Prepare To Record
 			recorder.PrepareToRecord();
+
+			recorder.Record();
 		}
 
 		public string FinishRecording()

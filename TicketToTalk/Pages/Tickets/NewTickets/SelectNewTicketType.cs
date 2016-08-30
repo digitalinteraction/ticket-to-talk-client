@@ -156,7 +156,7 @@ namespace TicketToTalk
 				var nav = new NavigationPage(page);
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
-				Device.BeginInvokeOnMainThread(() => Navigation.PushAsync(nav));
+				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
 				//Navigation.RemovePage(this);
 			}
 			catch (Exception ex)

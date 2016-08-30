@@ -227,6 +227,8 @@ namespace TicketToTalk
 		/// </summary>
 		async void register(Object sender, EventArgs e)
 		{
+			savePersonButton.IsEnabled = false;
+
 			var registered = false;
 			if (string.Compare(passwordEntry.Text, confirmPasswordEntry.Text, StringComparison.Ordinal) != 0)
 			{
@@ -264,6 +266,7 @@ namespace TicketToTalk
 			else 
 			{
 				await DisplayAlert("Register", "Your profile could not be registered.", "OK");
+				savePersonButton.IsEnabled = true;
 			}
 		}
 	}

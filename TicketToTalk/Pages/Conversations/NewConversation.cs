@@ -153,6 +153,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void SaveButton_Clicked(object sender, EventArgs e)
 		{
+			saveButton.IsEnabled = false;
 			char[] delimiters = {' '};
 			string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
 
@@ -174,6 +175,7 @@ namespace TicketToTalk
 			else 
 			{
 				await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
+				saveButton.IsEnabled = true;
 			}
 
 			await Navigation.PopModalAsync();

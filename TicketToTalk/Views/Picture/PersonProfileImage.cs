@@ -45,7 +45,7 @@ namespace TicketToTalk
 			{
 				NetworkController net = new NetworkController();
 				var fileName = "p_" + person.id + ".jpg";
-				var task = Task.Run(() => net.downloadImage(person.pathToPhoto, fileName)).Result;
+				var task = Task.Run(() => net.downloadFile(person.pathToPhoto, fileName)).Result;
 				//net.downloadImage(user.pathToPhoto, fileName);
 				person.pathToPhoto = fileName;
 
