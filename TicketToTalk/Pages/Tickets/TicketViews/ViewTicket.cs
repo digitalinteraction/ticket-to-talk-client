@@ -34,6 +34,15 @@ namespace TicketToTalk
                 Command = new Command(displayInfo)
             });
             
+			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
+			{
+				var ticketController = new TicketController();
+				ticketController.downloadTicketContent(ticket.pathToFile);
+
+				ticket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
+				ticketController.updateTicketLocally(ticket);
+			}
+
             ContentView mediaContent = null;
             
             var hasPerms = Task.Run(() => checkStoragePerms()).Result;
