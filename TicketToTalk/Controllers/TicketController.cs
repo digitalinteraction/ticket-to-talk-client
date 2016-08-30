@@ -382,19 +382,33 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Parses you tube to ticket.
+		/// extracts video code from the url
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
 		/// <param name="link">Link.</param>
 		public Ticket parseYouTubeToTicket(string link) 
 		{
-			var idx = link.LastIndexOf("=", StringComparison.Ordinal);
-			var videoCode = link.Substring(idx + 1);
-			return new Ticket 
+
+			if (link.Contains("youtu.be"))
 			{
-				pathToFile = videoCode,
-				mediaType = "YouTube"
-			};
+				var idx = link.LastIndexOf("/", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
+			else 
+			{
+				var idx = link.LastIndexOf("=", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
 		}
 	}
 }
