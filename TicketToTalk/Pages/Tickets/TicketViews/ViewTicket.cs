@@ -13,6 +13,7 @@ namespace TicketToTalk
     public partial class ViewTicket : ContentPage
     {
         public Ticket Ticket { get; set;}
+		TicketController ticketController = new TicketController();
         
         /// <summary>
         /// Initializes a view of the ticket content.
@@ -36,12 +37,13 @@ namespace TicketToTalk
             
 			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
-				var ticketController = new TicketController();
 				ticketController.downloadTicketContent(ticket.pathToFile);
 
 				ticket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
 				ticketController.updateTicketLocally(ticket);
 			}
+
+			ticket.displayString = ticketController.getDisplayString(ticket);
 
             ContentView mediaContent = null;
             

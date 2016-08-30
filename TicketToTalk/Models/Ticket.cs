@@ -26,6 +26,8 @@ namespace TicketToTalk
 		public DateTime updated_at { get; set; }
 		[Ignore]
 		public Tag[] tags { get; set; }
+		[Ignore]
+		public string displayString { get; set; }
 
 		/// <summary>
 		/// Creates a new instance of a ticket.

@@ -450,6 +450,29 @@ namespace TicketToTalk
 
 			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 		}
+
+		/// <summary>
+		/// Gets the display string.
+		/// </summary>
+		/// <returns>The display string.</returns>
+		/// <param name="ticket">Ticket.</param>
+		public string getDisplayString(Ticket ticket) 
+		{
+			var displayString = String.Empty;
+			var areaController = new AreaController();
+			var area = areaController.getArea(ticket.area_id);
+
+			switch (ticket.mediaType)
+			{
+				case ("Picture"):
+					displayString = String.Format("Taken in {0}, {1}", area.townCity, ticket.year);
+					break;
+				default:
+					displayString = String.Format("From {0}", ticket.year);
+					break;
+			}
+			return displayString;
+		}
 	}
 }
 
