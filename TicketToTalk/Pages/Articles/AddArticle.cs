@@ -262,6 +262,10 @@ namespace TicketToTalk
 				var idx = AllArticles.serverArticles.IndexOf(article);
 				AllArticles.serverArticles[idx] = new_article;
 
+				ViewArticle.currentArticle.title = new_article.title;
+				ViewArticle.currentArticle.link = new_article.link;
+				ViewArticle.currentArticle.notes = new_article.notes;
+
 				await Navigation.PopModalAsync();
 			}
 			else 

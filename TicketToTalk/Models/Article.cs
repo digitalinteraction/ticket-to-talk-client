@@ -1,22 +1,70 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SQLite;
 namespace TicketToTalk
 {
 	/// <summary>
 	/// Article.
 	/// </summary>
-	public class Article
+	public class Article : INotifyPropertyChanged
 	{
+		private string _title;
+		private string _link;
+		private string _notes;
+
 		[PrimaryKey]
 		public int id { get; set;}
 
 		[NotNull]
-		public string title { get; set; }
+		public string title 
+		{
+			get 
+			{
+				return _title;
+			} 
+			set 
+			{
+				if (value != _title) 
+				{
+					_title = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
 		[NotNull]
-		public string link { get; set; }
+		public string link 
+		{ 
+			get 
+			{
+				return _link;
+			} 
+			set 
+			{
+				if (value != _link) 
+				{
+					_link = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
-		public string notes { get; set; }
+		public string notes 
+		{ 
+			get 
+			{
+				return _notes;
+			} 
+			set 
+			{
+				if (value != _notes) 
+				{
+					_notes = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
 		public DateTime created_at { get; set; }
 
@@ -26,6 +74,16 @@ namespace TicketToTalk
 
 		[Ignore]
 		public string iconFilePath { get; set;}
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Article"/> class.
