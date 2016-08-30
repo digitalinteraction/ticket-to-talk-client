@@ -360,6 +360,27 @@ namespace TicketToTalk
 
 			return null;
 		}
+
+		/// <summary>
+		/// Gets the display string.
+		/// </summary>
+		/// <returns>The display string.</returns>
+		/// <param name="person">Person.</param>
+		public string getDisplayString(Person person) 
+		{
+			var displayString = String.Empty;
+
+			if (!(String.IsNullOrEmpty(person.area)))
+			{
+				displayString = String.Format("Born in {0}, {1}\nSpent most of their life in {2}", person.birthPlace, person.birthYear, person.area);
+			}
+			else 
+			{
+				displayString = String.Format("Born in {0}, {1}", person.birthPlace, person.birthYear);
+			}
+
+			return displayString;
+		}
 	}
 }
 
