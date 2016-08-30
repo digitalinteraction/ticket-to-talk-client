@@ -85,6 +85,7 @@ namespace TicketToTalk
 				Debug.WriteLine("ConversationController: conversation = " + jtoken);
 				var conv = jtoken.ToObject<Conversation>();
 				return conv;
+
 			};
 		}
 
