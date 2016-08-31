@@ -215,6 +215,9 @@ namespace TicketToTalk
 				case ("Video"):
 					recordMediaButton.Text = "Record Video";
 					break;
+				case ("YouTube"):
+					recordMediaButton.Text = "Add YouTube Clip";
+					break;
 			}
 		}
 
@@ -360,6 +363,13 @@ namespace TicketToTalk
 					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Video"):
+					break;
+				case ("YouTube"):
+					nav = new NavigationPage(new AddYoutubeLinkView());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			}
 		}
