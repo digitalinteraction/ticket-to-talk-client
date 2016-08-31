@@ -7,7 +7,10 @@ namespace TicketToTalk
 	{
 		public Logout()
 		{
-			Navigation.PopToRootAsync();
+			Session.activeUser = null;
+			Session.activePerson = null;
+			Session.Token = null;
+			Application.Current.MainPage = new Login();
 		}
 	}
 }
