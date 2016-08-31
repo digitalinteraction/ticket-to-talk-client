@@ -1,14 +1,27 @@
 ﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Profiles/People/PersonProfile.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
     <Files>
-      <File FileName="TicketToTalk/Pages/Profiles/People/PersonProfile.cs" Line="25" Column="10" />
-      <File FileName="TicketToTalk/Models/Person.cs" Line="19" Column="43" />
-      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="342" Column="29" />
-      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="430" Column="50" />
+      <File FileName="TicketToTalk/Pages/Profiles/People/PersonProfile.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Models/Person.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Models/Article.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Models/CheckItem.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Models/Conversation.cs" Line="114" Column="4" />
+      <File FileName="TicketToTalk/Pages/Articles/ViewArticle.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Articles/EditArticle.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="1" Column="1" />
+      <File FileName="iOS/Main.cs" Line="17" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsByPeriod.cs" Line="195" Column="41" />
+      <File FileName="TicketToTalk/Pages/Tickets/DisplayTickets.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsPicture.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.TicketToTalk.Droid PreferredExecutionTarget="Android.Android_Accelerated_x86" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
