@@ -9,12 +9,12 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewArticle : ContentPage
 	{
-		Article article;
+		public static Article currentArticle;
 
 		public ViewArticle(Article article)
 		{
 			this.Title = "Article";
-			this.article = article;
+			currentArticle = article;
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -23,19 +23,22 @@ namespace TicketToTalk
 				Command = new Command(editOptions)
 			});
 
+			var articleTitle = new Label
+			{
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+				TextColor = ProjectResource.color_dark,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+			};
+			articleTitle.SetBinding(Label.TextProperty, "title");
+			articleTitle.BindingContext = currentArticle;
+
 			var titleStack = new StackLayout
 			{
 				Padding = new Thickness(20, 10),
 				Children =
 				{
-					new Label
-					{
-						Text = article.title,
-						FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-						TextColor = ProjectResource.color_dark,
-						FontAttributes = FontAttributes.Bold,
-						HorizontalOptions = LayoutOptions.CenterAndExpand
-					}
+					articleTitle
 				}
 			};
 
@@ -45,12 +48,13 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_blue
 			};
 
-
 			var notesContent = new Label 
 			{
 				Text = article.notes,
 				TextColor = ProjectResource.color_dark
 			};
+			notesContent.SetBinding(Label.TextProperty, "notes");
+			notesContent.BindingContext = currentArticle;
 
 			var linkLabel = new Label 
 			{
@@ -63,6 +67,8 @@ namespace TicketToTalk
 				Text = article.link,
 				TextColor = ProjectResource.color_dark
 			};
+			linkContent.SetBinding(Label.TextProperty, "link");
+			linkContent.BindingContext = currentArticle;
 
 			var viewArticleButton = new Button 
 			{
@@ -119,18 +125,18 @@ namespace TicketToTalk
 			{
 				case ("Delete"):
 					var articleController = new ArticleController();
-					articleController.destoryArticle(article);
+					articleController.destoryArticle(currentArticle);
 					await Navigation.PopAsync();
 					break;
 				case ("Edit"):
-					var nav = new NavigationPage(new AddArticle(article));
+					var nav = new NavigationPage(new AddArticle(currentArticle));
 					nav.BarTextColor = ProjectResource.color_white;
 					nav.BarBackgroundColor = ProjectResource.color_blue;
 
 					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Share"):
-					nav = new NavigationPage(new ShareArticle(article));
+					nav = new NavigationPage(new ShareArticle(currentArticle));
 
 					nav.BarTextColor = ProjectResource.color_white;
 					nav.BarBackgroundColor = ProjectResource.color_blue;
@@ -149,7 +155,7 @@ namespace TicketToTalk
 		/// <param name="ea">Ea.</param>
 		void launchBrowser(Object sender, EventArgs ea)
 		{
-			Device.OpenUri(new Uri(article.link));
+			Device.OpenUri(new Uri(currentArticle.link));
 		}
 	}
 }
