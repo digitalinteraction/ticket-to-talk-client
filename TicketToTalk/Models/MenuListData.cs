@@ -68,12 +68,12 @@ namespace TicketToTalk
 			//	TargetType = typeof(Settings)
 			//});
 
-			//this.Add(new NavMenuItem()
-			//{
-			//	Title = "Logout",
-			//	TargetType = typeof(Logout),
-			//	IconSource = "logout_icon.png"
-			//});
+			this.Add(new NavMenuItem()
+			{
+				Title = "Logout",
+				TargetType = typeof(Logout),
+				IconSource = "logout_icon.png"
+			});
 		}
 	}
 }

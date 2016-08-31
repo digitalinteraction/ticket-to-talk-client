@@ -444,6 +444,7 @@ namespace TicketToTalk
 
 				PersonProfile.currentPerson.notes = p.notes;
 				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
+				Session.activePerson = returned;
 
 				await Navigation.PopModalAsync();
 			}
