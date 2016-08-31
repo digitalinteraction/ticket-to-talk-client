@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -92,6 +94,14 @@ namespace TicketToTalk
 		/// <param name="password">Password.</param>
 		public async Task<bool> authenticateUser(string email, string password)
 		{
+
+			SHA256 sha = new SHA256Managed();
+			byte[] passBytes = Encoding.UTF8.GetBytes(password);
+			byte[] hash = sha.ComputeHash(passBytes);
+			string hashed = byteToHex(hash);
+
+			Debug.WriteLine("UserController: Hashed password - " + hashed);
+
 			IDictionary<string, string> credentials = new Dictionary<string, string>();
 			credentials["email"] = email;
 			credentials["password"] = password;
@@ -322,6 +332,22 @@ namespace TicketToTalk
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Bytes to hex.
+		/// Source: http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa
+		/// </summary>
+		/// <returns>The to hex.</returns>
+		/// <param name="ba">Ba.</param>
+		private string byteToHex(byte[] ba) 
+		{
+			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			foreach (byte b in ba) 
+			{
+				hex.AppendFormat("{0:X2}", b);
+			}
+			return hex.ToString();
 		}
 	}
 }
