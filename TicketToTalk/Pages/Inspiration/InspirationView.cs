@@ -13,8 +13,8 @@ namespace TicketToTalk
 	public class InspirationView : ContentPage
 	{
 		Inspiration inspiration;
-		Label question = new Label();
-		Label promptLabel = new Label();
+		Label question;
+		Label promptLabel;
 		Button recordMediaButton = new Button();
 		Button searchButton;
 		string searchLink;
@@ -24,12 +24,19 @@ namespace TicketToTalk
 		/// </summary>
 		public InspirationView()
 		{
-			question.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			question.TextColor = ProjectResource.color_dark;
-			question.FontAttributes = FontAttributes.Bold;
 
-			promptLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			promptLabel.TextColor = ProjectResource.color_dark;
+			question = new Label
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+				FontAttributes = FontAttributes.Bold,
+			};
+
+			promptLabel = new Label 
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+			};
 
 			Title = "Inspiration";
 
@@ -108,7 +115,7 @@ namespace TicketToTalk
 
 			var content = new StackLayout
 			{
-				Padding = new Thickness(10,20,20,10),
+				Padding = new Thickness(20),
 				Spacing = 12,
 				Children = {
 					question,
@@ -124,7 +131,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				Children = 
 				{
-					drawPull, 
+					//drawPull, 
 					content
 				}
 			};
@@ -207,6 +214,9 @@ namespace TicketToTalk
 					break;
 				case ("Video"):
 					recordMediaButton.Text = "Record Video";
+					break;
+				case ("YouTube"):
+					recordMediaButton.Text = "Add YouTube Clip";
 					break;
 			}
 		}
@@ -353,6 +363,13 @@ namespace TicketToTalk
 					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Video"):
+					break;
+				case ("YouTube"):
+					nav = new NavigationPage(new AddYoutubeLinkView());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			}
 		}

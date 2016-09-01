@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -92,6 +94,12 @@ namespace TicketToTalk
 		/// <param name="password">Password.</param>
 		public async Task<bool> authenticateUser(string email, string password)
 		{
+
+			SHA256 sha = new SHA256Managed();
+			byte[] passBytes = Encoding.UTF8.GetBytes(password);
+			byte[] hash = sha.ComputeHash(passBytes);
+			password = byteToHex(hash);
+
 			IDictionary<string, string> credentials = new Dictionary<string, string>();
 			credentials["email"] = email;
 			credentials["password"] = password;
@@ -146,6 +154,11 @@ namespace TicketToTalk
 		/// <param name="image">Image.</param>
 		public async Task<bool> registerNewUser(User user, byte[] image)
 		{
+			SHA256 sha = new SHA256Managed();
+			byte[] passBytes = Encoding.UTF8.GetBytes(user.password);
+			byte[] hash = sha.ComputeHash(passBytes);
+			user.password = byteToHex(hash);
+
 			// Json convert details.
 			IDictionary<string, object> content = new Dictionary<string, object>();
 			content["name"] = user.name;
@@ -208,8 +221,7 @@ namespace TicketToTalk
 			parameters["person_id"] = person_id;
 			parameters["token"] = Session.Token.val;
 
-			var net = new NetworkController();
-			var jobject = await net.sendGenericPostRequest("user/invitations/send", parameters);
+			var jobject = await networkController.sendGenericPostRequest("user/invitations/send", parameters);
 
 			if (jobject != null) 
 			{
@@ -228,7 +240,6 @@ namespace TicketToTalk
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var networkController = new NetworkController();
 			var jobject = await networkController.sendGetRequest("user/invitations/get", parameters);
 
 			if (jobject != null) 
@@ -255,9 +266,8 @@ namespace TicketToTalk
 				download_finished = finished;
 			});
 
-			NetworkController net = new NetworkController();
 			var fileName = "u_" + user.id + ".jpg";
-			var task = Task.Run(() => net.downloadFile(user.pathToPhoto, fileName)).Result;
+			var task = Task.Run(() => networkController.downloadFile(user.pathToPhoto, fileName)).Result;
 
 			user.pathToPhoto = fileName;
 
@@ -322,6 +332,22 @@ namespace TicketToTalk
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Bytes to hex.
+		/// Source: http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa
+		/// </summary>
+		/// <returns>The to hex.</returns>
+		/// <param name="ba">Ba.</param>
+		private string byteToHex(byte[] ba) 
+		{
+			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			foreach (byte b in ba) 
+			{
+				hex.AppendFormat("{0:X2}", b);
+			}
+			return hex.ToString();
 		}
 	}
 }

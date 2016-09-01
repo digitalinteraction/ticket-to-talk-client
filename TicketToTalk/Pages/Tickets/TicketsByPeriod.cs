@@ -202,7 +202,11 @@ namespace TicketToTalk
 		/// <returns>The new ticket view.</returns>
 		public void launchNewTicketView()
 		{
-			Navigation.PushAsync(new SelectNewTicketType());
+			var nav = new NavigationPage(new SelectNewTicketType());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
 		}
 
 		/// <summary>
