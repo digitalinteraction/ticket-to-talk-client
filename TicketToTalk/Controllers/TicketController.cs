@@ -233,7 +233,7 @@ namespace TicketToTalk
 			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
 			if (jobject != null) 
 			{
-				Debug.WriteLine("TicketController: Edited ticket returned - " + ticket);
+				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
 				var jtoken = jobject.GetValue("Ticket");
 				var returned = jtoken.ToObject<Ticket>();
 
