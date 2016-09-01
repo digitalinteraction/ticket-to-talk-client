@@ -206,6 +206,43 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Updates the ticket remotely.
+		/// </summary>
+		/// <returns>The ticket remotely.</returns>
+		/// <param name="ticket">Ticket.</param>
+		public async Task<Ticket> updateTicketRemotely(Ticket ticket, string area, string period)
+		{
+			IDictionary<string, string> paramters = new Dictionary<string, string>();
+			paramters["ticket_id"] = ticket.id.ToString();
+			paramters["title"] = ticket.title;
+			paramters["description"] = ticket.description;
+			paramters["year"] = ticket.year;
+			paramters["access_level"] = ticket.access_level;
+			paramters["period"] = period;
+			paramters["token"] = Session.Token.val;
+
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				paramters["area"] = area;
+			}
+			else 
+			{
+				paramters["area"] = " ";
+			}
+
+			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
+			if (jobject != null) 
+			{
+				Debug.WriteLine("TicketController: Edited ticket returned - " + ticket);
+				var jtoken = jobject.GetValue("Ticket");
+				var returned = jtoken.ToObject<Ticket>();
+				return returned;
+			}
+
+			return null;
+		}
+
+		/// <summary>
 		/// Adds the tag relations locally.
 		/// </summary>
 		/// <returns>The tag relations locally.</returns>

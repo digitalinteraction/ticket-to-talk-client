@@ -19,12 +19,15 @@ namespace TicketToTalk
 		Picker yearPicker;
 		Picker period_picker;
 
+		Ticket ticket;
+
 		/// <summary>
 		/// Initializes a new instance of the page.
 		/// </summary>
 		/// <param name="ticket">Ticket: ticket to display</param>
 		public DisplayTicketInfo(Ticket ticket)
 		{
+			this.ticket = ticket;
 			Title = "Info";
 
 			Console.WriteLine("Displaying ticket info");
@@ -87,7 +90,7 @@ namespace TicketToTalk
 			};
 
 			// Area entry
-			town_city = new Entry 
+			town_city = new Entry
 			{
 				Text = area.townCity,
 				Placeholder = "Town/City",
@@ -172,7 +175,7 @@ namespace TicketToTalk
 			foreach (string s in accessLevels)
 			{
 				access_level.Items.Add(s);
-				if (ticket.access_level.CompareTo(s) == 0) 
+				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0) 
 				{
 					access_level.SelectedIndex = j;
 					Debug.WriteLine(j);
@@ -230,6 +233,8 @@ namespace TicketToTalk
 			};
 		}
 
+		async
+
 		/// <summary>
 		/// Saves the changes.
 		/// </summary>
@@ -238,7 +243,25 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void saveChanges(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			var periodController = new PeriodController();
+			var period = periodController.getAllLocalPeriods()[period_picker.SelectedIndex];
+
+			ticket.title = title.Text;
+			ticket.description = description.Text;
+			ticket.year = (Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
+			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
+
+			var ticketController = new TicketController();
+			var returned = await ticketController.updateTicketRemotely(ticket, "", period.text);
+
+			if (returned != null)
+			{
+				ticketController.updateTicketLocally(returned);
+			}
+			else
+			{
+				await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+			}
 		}
 
 		/// <summary>
