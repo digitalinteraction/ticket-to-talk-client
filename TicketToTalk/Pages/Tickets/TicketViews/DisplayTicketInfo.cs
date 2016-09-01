@@ -27,17 +27,21 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket: ticket to display</param>
 		public DisplayTicketInfo(Ticket ticket)
 		{
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
 			this.ticket = ticket;
 			Title = "Info";
 
 			Console.WriteLine("Displaying ticket info");
 
-			// Get attached area
-			//AreaDB areaDB = new AreaDB();
 			var areaController = new AreaController();
 			var area = areaController.getArea(ticket.area_id);
-			//var area = areaDB.GetArea(ticket.area_id);
-			//areaDB.close();
 
 			Label titleLabel = new Label
 			{
@@ -185,26 +189,53 @@ namespace TicketToTalk
 
 			Console.WriteLine("Getting tags.");
 
-			var detailsStack = new StackLayout
+			StackLayout detailsStack = null;
+
+			if (ticket.mediaType.Equals("Picture"))
 			{
-				Padding = new Thickness(20, 10, 20, 20),
-				Spacing = 0,
-				Children =
+				detailsStack = new StackLayout
 				{
-					titleLabel,
-					title,
-					descriptionLabel,
-					description,
-					yearLabel,
-					yearPicker,
-					areaLabel,
-					town_city,
-					periodLabel,
-					period_picker,
-					accessLevelLabel,
-					access_level,
-				}
-			};
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						town_city,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
+			else 
+			{
+				detailsStack = new StackLayout
+				{
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
 
 			var buttonStack = new StackLayout
 			{
@@ -233,6 +264,14 @@ namespace TicketToTalk
 			};
 		}
 
+		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
 		async
 
 		/// <summary>
@@ -252,11 +291,20 @@ namespace TicketToTalk
 			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
 
 			var ticketController = new TicketController();
-			var returned = await ticketController.updateTicketRemotely(ticket, "", period.text);
+			Ticket returned = null;
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				returned = await ticketController.updateTicketRemotely(ticket, town_city.Text, period.text);
+			}
+			else 
+			{
+				returned = await ticketController.updateTicketRemotely(ticket, " ", period.text);
+			}
 
 			if (returned != null)
 			{
 				ticketController.updateTicketLocally(returned);
+				await Navigation.PopModalAsync();
 			}
 			else
 			{

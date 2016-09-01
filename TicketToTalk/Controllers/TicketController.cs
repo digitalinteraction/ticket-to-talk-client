@@ -236,7 +236,26 @@ namespace TicketToTalk
 				Debug.WriteLine("TicketController: Edited ticket returned - " + ticket);
 				var jtoken = jobject.GetValue("Ticket");
 				var returned = jtoken.ToObject<Ticket>();
+
+				// Update ticket area relationships.
+				var ticketAreaDB = new TicketAreaDB();
+				var relations = ticketAreaDB.getRelationByTicketID(returned.id);
+				foreach (TicketArea ta in relations) 
+				{
+					ticketAreaDB.DeleteTicketArea(ta.id);
+				}
+
+				jtoken = jobject.GetValue("Area");
+				var rArea = jtoken.ToObject<Area>();
+				var areaController = new AreaController();
+				if (areaController.getArea(rArea.id) == null) 
+				{
+					areaController.addAreaLocally(rArea);
+				}
+				ticketAreaDB.AddTicketArea(new TicketArea(returned.id, returned.area_id));
 				return returned;
+
+				// TODO update ticket period relationship
 			}
 
 			return null;
