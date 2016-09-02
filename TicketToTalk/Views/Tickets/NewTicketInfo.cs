@@ -87,7 +87,7 @@ namespace TicketToTalk
             yearPicker.SelectedIndexChanged += Entry_TextChanged;
             
             int startYear = Int32.Parse(Session.activePerson.birthYear);
-            for (int i = startYear; i < DateTime.Now.Year; i++)
+            for (int i = startYear; i < DateTime.Now.Year + 1; i++)
             {
                 yearPicker.Items.Add(i.ToString());
             }
@@ -322,7 +322,7 @@ namespace TicketToTalk
 			yearPicker.SelectedIndexChanged += Entry_TextChanged;
 
 			int startYear = Int32.Parse(Session.activePerson.birthYear);
-			for (int i = startYear; i < DateTime.Now.Year; i++)
+			for (int i = startYear; i < DateTime.Now.Year + 1; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
 			}
