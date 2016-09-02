@@ -133,11 +133,11 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		void launchAddNewPersonView() 
 		{
-			var nav = new NavigationPage(new AddPerson(null));
-			nav.BarBackgroundColor = ProjectResource.color_blue;
-			nav.BarTextColor = ProjectResource.color_white;
+			//var nav = new NavigationPage(new AddPersonChoice());
+			//nav.BarBackgroundColor = ProjectResource.color_blue;
+			//nav.BarTextColor = ProjectResource.color_white;
 
-			Navigation.PushModalAsync(nav);
+			Navigation.PushAsync(new AddPersonChoice());
 		}
 	}
 }

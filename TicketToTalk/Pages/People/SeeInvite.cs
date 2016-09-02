@@ -139,7 +139,7 @@ namespace TicketToTalk
 			};
 			button.Clicked += async (sender, e) =>
 			{
-				// TODO enable user to accept invitation.
+				
 				var userController = new UserController();
 				var r = ProjectResource.relations[relation.SelectedIndex];
 				await userController.acceptInvitation(invitation, r);
@@ -157,7 +157,7 @@ namespace TicketToTalk
 				AllProfiles.people.Add(invitation.person);
 
 				Session.activePerson = invitation.person;
-				await Navigation.PushAsync(new RootPage());
+				App.Current.MainPage = new RootPage();
 			};
 
 			rejectButton = new Button
