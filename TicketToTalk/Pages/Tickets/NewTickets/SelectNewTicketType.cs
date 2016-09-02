@@ -102,7 +102,7 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			Navigation.PushModalAsync(nav);
-			//Navigation.RemovePage(this);
+			Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -191,7 +191,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -206,7 +206,7 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			Navigation.PushModalAsync(nav);
-			//Navigation.RemovePage(this);
+			Navigation.RemovePage(this);
 		}
 	}
 }
