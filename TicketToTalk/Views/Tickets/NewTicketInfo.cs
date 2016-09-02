@@ -566,8 +566,20 @@ namespace TicketToTalk
 			{
 				var jtoken = jobject.GetValue("ticket");
 				var returned_ticket = jtoken.ToObject<Ticket>();
-				var ticketController = new TicketController();
 
+				jtoken = jobject.GetValue("area");
+				var returned_area = jtoken.ToObject<Area>();
+
+				var areaController = new AreaController();
+				var stored_area = areaController.getArea(returned_area.id);
+
+				if (stored_area == null)
+				{
+					areaController.addAreaLocally(returned_area);
+				}
+
+				var ticketController = new TicketController();
+				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
 				string ext = String.Empty;
 				switch (mediaType)
 				{
@@ -591,17 +603,6 @@ namespace TicketToTalk
 
 				// Add to view
 				TicketsByPeriod.addTicket(returned_ticket);
-
-				jtoken = jobject.GetValue("area");
-				var returned_area = jtoken.ToObject<Area>();
-
-				var areaController = new AreaController();
-				var stored_area = areaController.getArea(returned_area.id);
-
-				if (stored_area == null)
-				{
-					areaController.addAreaLocally(returned_area);
-				}
 
 				await Navigation.PopModalAsync();
 			}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -133,10 +132,6 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		void launchAddNewPersonView() 
 		{
-			//var nav = new NavigationPage(new AddPersonChoice());
-			//nav.BarBackgroundColor = ProjectResource.color_blue;
-			//nav.BarTextColor = ProjectResource.color_white;
-
 			Navigation.PushAsync(new AddPersonChoice());
 		}
 	}
