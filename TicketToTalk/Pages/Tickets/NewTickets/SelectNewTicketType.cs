@@ -102,7 +102,7 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			Navigation.PushModalAsync(nav);
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -199,6 +199,11 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Yous the tube cell tapped.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void YouTubeCell_Tapped(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddYoutubeLinkView());
@@ -206,7 +211,7 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			Navigation.PushModalAsync(nav);
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 	}
 }
