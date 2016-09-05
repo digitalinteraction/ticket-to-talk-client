@@ -122,8 +122,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void UserCell_Tapped(object sender, EventArgs e)
 		{
-			UserCell cell = (UserCell)sender;
-			Navigation.PushAsync(new UserProfile(cell.user));
+			Navigation.PushAsync(new UserProfile());
 		}
 
 		/// <summary>
