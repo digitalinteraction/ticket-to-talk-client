@@ -20,7 +20,6 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketController()
 		{
-			
 		}
 
 		/// <summary>

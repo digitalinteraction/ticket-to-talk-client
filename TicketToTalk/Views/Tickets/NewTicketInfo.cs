@@ -226,8 +226,7 @@ namespace TicketToTalk
                     }
                 };
                 break;
-            };
-            
+			};
             
             var buttonStack = new StackLayout
             {
@@ -261,7 +260,7 @@ namespace TicketToTalk
 			Debug.WriteLine("NewTicketInfo: constructor");
 
 			this.mediaType = mediaType;
-			this.filePath = filePath;
+			//this.filePath = filePath;
 
 			Debug.WriteLine("NewTicketInfo: Setting new ticket info");
 
@@ -521,22 +520,6 @@ namespace TicketToTalk
             {
                 area.townCity = " ";
             }
-            
-            //byte[] media;
-            //if (mediaType.Equals("Picture"))
-            //{
-            //	//media = File.ReadAllBytes(filePath);
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            //else 
-            //{
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            
-            //using (MemoryStream ms = new MemoryStream())
-            //{
-            //	file.GetStream().CopyTo(ms);
-            //	image = ms.ToArray();
             
             if (ticket.mediaType.Equals("YouTube"))
             {
