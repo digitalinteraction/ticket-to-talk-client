@@ -24,6 +24,15 @@ namespace TicketToTalk
 
 			Menu = new MenuListView();
 
+			var userName = new Label
+			{
+				FontSize = 14,
+				TextColor = ProjectResource.color_white,
+				FontAttributes = FontAttributes.Bold
+			};
+			userName.SetBinding(Label.TextProperty, "name");
+			userName.BindingContext = Session.activeUser;
+
 			var menuContent = new ContentView
 			{
 				BackgroundColor = ProjectResource.color_blue,
@@ -32,13 +41,7 @@ namespace TicketToTalk
 				{
 					Children = 
 					{
-						new Label
-						{
-							Text = Session.activeUser.name,
-							FontSize = 14,
-							TextColor = ProjectResource.color_white,
-							FontAttributes = FontAttributes.Bold
-						},
+						userName,
 						new Label
 						{
 							Text = Session.activeUser.email,

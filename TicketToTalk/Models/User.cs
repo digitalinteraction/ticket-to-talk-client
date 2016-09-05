@@ -1,18 +1,80 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SQLite;
 namespace TicketToTalk
 {
 	/// <summary>
 	/// Models a User.
 	/// </summary>
-	public class User
+	public class User : INotifyPropertyChanged
 	{
+		private string _name;
+		private string _email;
+		private string _password;
+		private string _pathToPhoto;
+
 		[PrimaryKey]
 		public int id { get; set;}
-		public string name { get; set; }
-		public string email { get; set; }
-		public string password { get; set;}
-		public string pathToPhoto { get; set; }
+		public string name 
+		{
+			get 
+			{
+				return _name;
+			} 
+			set 
+			{
+				if (value != _name) 
+				{
+					_name = value;
+					NotifyPropertyChanged();
+				}
+			} 
+		}
+		public string email 
+		{ 
+			get 
+			{
+				return _email;
+			} 
+			set 
+			{
+				if (value != _email) 
+				{
+					_email = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+		public string password 
+		{ 
+			get 
+			{
+				return _password;
+			} 
+			set 
+			{
+				if (value != _password) 
+				{
+					_password = value;
+				}
+			}
+		}
+		public string pathToPhoto 
+		{
+			get 
+			{
+				return _pathToPhoto;
+			} 
+			set 
+			{
+				if (value != _pathToPhoto) 
+				{
+					_pathToPhoto = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
 		[Ignore]
@@ -34,6 +96,16 @@ namespace TicketToTalk
 			this.name = Name;
 			this.email = Email;
 		}
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
 		/// User to string.
