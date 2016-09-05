@@ -101,7 +101,7 @@ namespace TicketToTalk
 
 			setTicketStack(tickets[currentIndex]);
 
-			Content = new StackLayout
+			var content = new StackLayout
 			{
 				Children = {
 					ticketStack,
@@ -109,6 +109,11 @@ namespace TicketToTalk
 					descriptionLabel,
 					buttonStack
 				}
+			};
+
+			Content = new ScrollView
+			{
+				Content = content
 			};
 		}
 

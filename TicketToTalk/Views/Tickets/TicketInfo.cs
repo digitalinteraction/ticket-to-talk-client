@@ -22,7 +22,6 @@ namespace TicketToTalk
 				FontSize = 18,
 				FontAttributes = FontAttributes.Bold,
 				TextColor = ProjectResource.color_dark,
-				//Margin = new Thickness(0,10,0,0),
 				HorizontalTextAlignment = TextAlignment.Center,
 			};
 
@@ -35,8 +34,6 @@ namespace TicketToTalk
 				HorizontalTextAlignment = TextAlignment.Center
 			};
 
-			var areaController = new AreaController();
-			var area = areaController.getArea(ticket.area_id);
 			var location = new Label 
 			{
 				FontSize = 14,
@@ -44,15 +41,8 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0),
 				HorizontalTextAlignment = TextAlignment.Center
 			};
-			switch (ticket.mediaType) 
-			{
-				case ("Picture"):
-					location.Text = String.Format("Taken in {0}, {1}", area.townCity, ticket.year);
-					break;
-				default:
-					location.Text = String.Format("From {0}", ticket.year);
-					break;
-			}
+			location.SetBinding(Label.TextProperty, "displayString");
+			location.BindingContext = ticket;
 
 			Content = new StackLayout
 			{

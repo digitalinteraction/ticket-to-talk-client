@@ -157,6 +157,12 @@ namespace TicketToTalk
 			Navigation.PopModalAsync();
 
 		}
+
+		/// <summary>
+		/// Entries the text changed.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!String.IsNullOrEmpty(title.Text))
@@ -181,6 +187,8 @@ namespace TicketToTalk
 		/// <returns>The article.</returns>
 		public async void saveArticle(object sender, EventArgs e) 
 		{
+			saveButton.IsEnabled = false;
+
 			var post_link = link.Text.ToLower();
 			if (!(post_link.StartsWith("http://"))) 
 			{
@@ -195,20 +203,33 @@ namespace TicketToTalk
 
 			NetworkController net = new NetworkController();
 			var jobject = await net.sendPostRequest("articles/store", parameters);
-			var jtoken = jobject.GetValue("article");
-			var article = jtoken.ToObject<Article>();
-			Debug.WriteLine("Saved Article: " + article);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("article");
+				var article = jtoken.ToObject<Article>();
+				Debug.WriteLine("Saved Article: " + article);
 
-			ArticleDB aDB = new ArticleDB();
-			aDB.open();
-			aDB.AddArticle(article);
-			aDB.close();
+				ArticleDB aDB = new ArticleDB();
+				aDB.open();
+				aDB.AddArticle(article);
+				aDB.close();
 
-			AllArticles.serverArticles.Add(article);
+				AllArticles.serverArticles.Add(article);
 
-			await Navigation.PopModalAsync();
+				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				await DisplayAlert("Articles", "Article could not be saved." ,"OK");
+				saveButton.IsEnabled = true;
+			}
 		}
 
+		/// <summary>
+		/// Updates the article.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		public async void updateArticle(object sender, EventArgs e) 
 		{
 			var post_link = link.Text.ToLower();
@@ -226,20 +247,32 @@ namespace TicketToTalk
 
 			NetworkController net = new NetworkController();
 			var jobject = await net.sendPostRequest("articles/update", parameters);
-			var jtoken = jobject.GetValue("article");
-			var new_article = jtoken.ToObject<Article>();
-			Debug.WriteLine("Saved Article: " + new_article);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("article");
+				var new_article = jtoken.ToObject<Article>();
+				Debug.WriteLine("Saved Article: " + new_article);
 
-			ArticleDB aDB = new ArticleDB();
-			aDB.open();
-			aDB.DeleteArticle(article.id);
-			aDB.AddArticle(new_article);
-			aDB.close();
+				ArticleDB aDB = new ArticleDB();
+				aDB.open();
+				aDB.DeleteArticle(article.id);
+				aDB.AddArticle(new_article);
+				aDB.close();
 
-			var idx = AllArticles.serverArticles.IndexOf(article);
-			AllArticles.serverArticles[idx] = new_article;
+				var idx = AllArticles.serverArticles.IndexOf(article);
+				AllArticles.serverArticles[idx] = new_article;
 
-			await Navigation.PopModalAsync();
+				ViewArticle.currentArticle.title = new_article.title;
+				ViewArticle.currentArticle.link = new_article.link;
+				ViewArticle.currentArticle.notes = new_article.notes;
+
+				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				await DisplayAlert("Articles", "Article could not updated.", "OK");
+				saveButton.IsEnabled = true;
+			}
 		}
 	}
 }
