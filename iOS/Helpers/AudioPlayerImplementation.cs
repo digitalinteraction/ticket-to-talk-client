@@ -30,6 +30,7 @@ namespace TicketToTalk.iOS
 			Debug.WriteLine(url);
 
 			_player = AVAudioPlayer.FromUrl(url);
+			_player.Volume = 100;
 
 			_player.FinishedPlaying += PlayerFinishedPlaying;
 			_player.PrepareToPlay();
