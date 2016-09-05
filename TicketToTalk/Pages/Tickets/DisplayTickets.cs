@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Xamarin.Forms;
 
@@ -11,6 +12,8 @@ namespace TicketToTalk
 	public partial class DisplayTickets : ContentPage
 	{
 
+		public static ObservableCollection<Ticket> displayTickets = new ObservableCollection<Ticket>();
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.DisplayTickets"/> class.
 		/// </summary>
@@ -18,6 +21,11 @@ namespace TicketToTalk
 		/// <param name="title">Title.</param>
 		public DisplayTickets(List<Ticket> tickets, string title)
 		{
+			displayTickets.Clear();
+			foreach (Ticket t in tickets) 
+			{
+				displayTickets.Add(t);
+			}
 			// Set Padding
 			Padding = new Thickness(20);
 			Title = title;
@@ -65,7 +73,8 @@ namespace TicketToTalk
 			cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
 			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
 
-			ticketsListView.ItemsSource = tickets;
+			ticketsListView.SetBinding(ListView.ItemsSourceProperty, ".");
+			ticketsListView.BindingContext = displayTickets;
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
@@ -108,7 +117,11 @@ namespace TicketToTalk
 		/// <returns>The new ticket view.</returns>
 		public void launchNewTicketView()
 		{
-			Navigation.PushAsync(new SelectNewTicketType());
+			var nav = new NavigationPage(new SelectNewTicketType());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
 		}
 	}
 }

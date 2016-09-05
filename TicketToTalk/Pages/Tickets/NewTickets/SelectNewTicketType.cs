@@ -146,7 +146,7 @@ namespace TicketToTalk
 			});
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
@@ -157,7 +157,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -180,7 +180,7 @@ namespace TicketToTalk
 			if (file == null) { return; }
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
@@ -191,7 +191,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -199,6 +199,11 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Yous the tube cell tapped.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void YouTubeCell_Tapped(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddYoutubeLinkView());

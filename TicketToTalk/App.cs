@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -16,6 +17,11 @@ namespace TicketToTalk
 			//var nav = new NavigationPage(new NewAudioTicket());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			NetworkController net = new NetworkController();
+			var content = Task.Run(() => net.sendGetRequest("home", new Dictionary<string, string>())).Result;
+
+			Debug.WriteLine(content);
 
 			MainPage = nav;
 		}

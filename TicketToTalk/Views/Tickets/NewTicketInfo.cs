@@ -87,7 +87,7 @@ namespace TicketToTalk
             yearPicker.SelectedIndexChanged += Entry_TextChanged;
             
             int startYear = Int32.Parse(Session.activePerson.birthYear);
-            for (int i = startYear; i < DateTime.Now.Year; i++)
+            for (int i = startYear; i < DateTime.Now.Year + 1; i++)
             {
                 yearPicker.Items.Add(i.ToString());
             }
@@ -226,8 +226,7 @@ namespace TicketToTalk
                     }
                 };
                 break;
-            };
-            
+			};
             
             var buttonStack = new StackLayout
             {
@@ -261,7 +260,7 @@ namespace TicketToTalk
 			Debug.WriteLine("NewTicketInfo: constructor");
 
 			this.mediaType = mediaType;
-			this.filePath = filePath;
+			//this.filePath = filePath;
 
 			Debug.WriteLine("NewTicketInfo: Setting new ticket info");
 
@@ -322,7 +321,7 @@ namespace TicketToTalk
 			yearPicker.SelectedIndexChanged += Entry_TextChanged;
 
 			int startYear = Int32.Parse(Session.activePerson.birthYear);
-			for (int i = startYear; i < DateTime.Now.Year; i++)
+			for (int i = startYear; i < DateTime.Now.Year + 1; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
 			}
@@ -522,22 +521,6 @@ namespace TicketToTalk
                 area.townCity = " ";
             }
             
-            //byte[] media;
-            //if (mediaType.Equals("Picture"))
-            //{
-            //	//media = File.ReadAllBytes(filePath);
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            //else 
-            //{
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            
-            //using (MemoryStream ms = new MemoryStream())
-            //{
-            //	file.GetStream().CopyTo(ms);
-            //	image = ms.ToArray();
-            
             if (ticket.mediaType.Equals("YouTube"))
             {
                 media = null;
@@ -566,8 +549,20 @@ namespace TicketToTalk
 			{
 				var jtoken = jobject.GetValue("ticket");
 				var returned_ticket = jtoken.ToObject<Ticket>();
-				var ticketController = new TicketController();
 
+				jtoken = jobject.GetValue("area");
+				var returned_area = jtoken.ToObject<Area>();
+
+				var areaController = new AreaController();
+				var stored_area = areaController.getArea(returned_area.id);
+
+				if (stored_area == null)
+				{
+					areaController.addAreaLocally(returned_area);
+				}
+
+				var ticketController = new TicketController();
+				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
 				string ext = String.Empty;
 				switch (mediaType)
 				{
@@ -591,17 +586,6 @@ namespace TicketToTalk
 
 				// Add to view
 				TicketsByPeriod.addTicket(returned_ticket);
-
-				jtoken = jobject.GetValue("area");
-				var returned_area = jtoken.ToObject<Area>();
-
-				var areaController = new AreaController();
-				var stored_area = areaController.getArea(returned_area.id);
-
-				if (stored_area == null)
-				{
-					areaController.addAreaLocally(returned_area);
-				}
 
 				await Navigation.PopModalAsync();
 			}
