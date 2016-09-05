@@ -146,7 +146,7 @@ namespace TicketToTalk
 			});
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
@@ -180,7 +180,7 @@ namespace TicketToTalk
 			if (file == null) { return; }
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
