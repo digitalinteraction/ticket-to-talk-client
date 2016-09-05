@@ -166,6 +166,10 @@ namespace TicketToTalk
 			content["password"] = user.password;
 			content["image"] = image;
 
+			Debug.WriteLine("UserController: name = " + user.name);
+			Debug.WriteLine("UserController: email = " + user.email);
+			Debug.WriteLine("UserController: password = " + user.password);
+
 			// post to server.
 			var net = new NetworkController();
 			var jobject = await net.sendGenericPostRequest("auth/register", content);
