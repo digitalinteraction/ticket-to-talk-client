@@ -18,6 +18,8 @@ namespace TicketToTalk
 		Article article = null;
 		Button saveButton;
 
+		ArticleController articleController = new ArticleController();
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ticket_to_Talk.AddArticle"/> class.
 		/// </summary>
@@ -214,6 +216,7 @@ namespace TicketToTalk
 				aDB.AddArticle(article);
 				aDB.close();
 
+				article.favicon = articleController.getFaviconURL(article.link);
 				AllArticles.serverArticles.Add(article);
 
 				await Navigation.PopModalAsync();
@@ -233,7 +236,7 @@ namespace TicketToTalk
 		public async void updateArticle(object sender, EventArgs e) 
 		{
 			var post_link = link.Text.ToLower();
-			if (!(post_link.StartsWith("http://")))
+			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)))
 			{
 				post_link = "http://" + post_link;
 			}
@@ -253,13 +256,10 @@ namespace TicketToTalk
 				var new_article = jtoken.ToObject<Article>();
 				Debug.WriteLine("Saved Article: " + new_article);
 
-				ArticleDB aDB = new ArticleDB();
-				aDB.open();
-				aDB.DeleteArticle(article.id);
-				aDB.AddArticle(new_article);
-				aDB.close();
+				new_article.favicon = articleController.getFaviconURL(new_article.link);
+				articleController.updateArticleLocally(new_article);
 
-				var idx = AllArticles.serverArticles.IndexOf(article);
+				var idx = AllArticles.serverArticles.IndexOf(new_article);
 				AllArticles.serverArticles[idx] = new_article;
 
 				ViewArticle.currentArticle.title = new_article.title;
