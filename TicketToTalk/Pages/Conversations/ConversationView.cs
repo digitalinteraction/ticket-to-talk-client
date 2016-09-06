@@ -252,7 +252,7 @@ namespace TicketToTalk
 			if (!(String.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
 				var nav = new NavigationPage(new PlayConversation(conversation, tickets));
-				nav.BackgroundColor = ProjectResource.color_blue;
+				nav.BarBackgroundColor = ProjectResource.color_blue;
 				nav.BarTextColor = ProjectResource.color_white;
 
 				await Navigation.PushModalAsync(nav);

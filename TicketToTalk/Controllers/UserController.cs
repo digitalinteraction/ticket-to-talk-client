@@ -87,6 +87,38 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Updates the user remotely.
+		/// </summary>
+		/// <param name="user">User.</param>
+		public async Task<User> updateUserRemotely(User user)
+		{
+			SHA256 sha = new SHA256Managed();
+			byte[] passBytes = Encoding.UTF8.GetBytes(user.password);
+			byte[] hash = sha.ComputeHash(passBytes);
+			user.password = byteToHex(hash);
+
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["name"] = user.name;
+			parameters["email"] = user.email;
+			parameters["password"] = user.password;
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await networkController.sendPostRequest("user/update", parameters);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("User");
+				var returned = jtoken.ToObject<User>();
+				updateUserLocally(user);
+
+				return returned;
+			}
+			else 
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Authenticates the user.
 		/// </summary>
 		/// <returns>Is authenticated.</returns>

@@ -190,7 +190,7 @@ namespace TicketToTalk
 			saveButton.IsEnabled = false;
 
 			var post_link = link.Text.ToLower();
-			if (!(post_link.StartsWith("http://"))) 
+			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)) && !(post_link.StartsWith("https://", StringComparison.Ordinal))) 
 			{
 				post_link = "http://" + post_link;
 			}

@@ -127,7 +127,7 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
-			Navigation.PushModalAsync(nav);
+			Navigation.PushAsync(nav);
 			Navigation.RemovePage(this);
 		}
 
