@@ -73,7 +73,7 @@ namespace TicketToTalk
 		/// <param name="ticketID">Ticket identifier.</param>
 		public List<TicketArea> getRelationByTicketID(int ticketID)
 		{
-			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE TicketID = ?", ticketID);
+			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE ticket_id = ?", ticketID);
 			List<TicketArea> relations = new List<TicketArea>();
 
 			foreach (TicketArea r in results)
@@ -90,7 +90,7 @@ namespace TicketToTalk
 		/// <param name="areaID">Area identifier.</param>
 		public List<TicketArea> getRelationByAreaID(int areaID)
 		{
-			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE AreaID = ?", areaID);
+			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE area_id = ?", areaID);
 			List<TicketArea> relations = new List<TicketArea>();
 
 			foreach (TicketArea r in results)
