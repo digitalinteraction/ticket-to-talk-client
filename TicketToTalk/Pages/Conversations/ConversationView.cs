@@ -14,6 +14,7 @@ namespace TicketToTalk
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
 		List<Ticket> tickets;
 		Conversation conversation;
+		ConversationController conversationController = new ConversationController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationView"/> class.
@@ -24,6 +25,18 @@ namespace TicketToTalk
 			this.conversation = conversation;
 			conversationItems.Clear();
 			Debug.WriteLine("ConversationView: Conversation = " + conversation);
+
+			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
+			{
+				var item = new ConversationItem(conversation, returned_ticket);
+
+				var added = await conversationController.addTicketToConversationRemotely(conversation, returned_ticket);
+				if (added) 
+				{
+					conversationController.addTicketToConversation(conversation, returned_ticket);
+					conversationController.addTicketToDisplayedConversation(conversation, returned_ticket);
+				}
+			});
 
 			Title = conversation.displayDate;
 			var dateLabel = new Label
@@ -208,7 +221,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// News the ticket.
+		/// Add a new ticket to the conversation.
 		/// </summary>
 		async void newTicket()
 		{
@@ -217,8 +230,19 @@ namespace TicketToTalk
 			switch (action) 
 			{
 				case "Create a New Ticket":
+					var nav = new NavigationPage(new SelectNewTicketType());
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
+
 					break;
 				case "Add an Existing Ticket":
+					nav = new NavigationPage(new SelectTicket(conversation));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			}
 		}
@@ -261,6 +285,17 @@ namespace TicketToTalk
 			{
 				await DisplayAlert("Start Conversation", "You need to add tickets to the conversation before starting.", "OK");
 			}
+		}
+
+		/// <summary>
+		/// On back button pressed.
+		/// </summary>
+		/// <returns><c>true</c>, if back button pressed was oned, <c>false</c> otherwise.</returns>
+		protected override bool OnBackButtonPressed()
+		{
+			MessagingCenter.Unsubscribe<NewTicketInfo, Ticket>(this, "ticket_added");
+
+			return base.OnBackButtonPressed();
 		}
 	}
 }

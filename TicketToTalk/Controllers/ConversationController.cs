@@ -450,6 +450,26 @@ namespace TicketToTalk
 
 			return conversation;
 		}
+
+		/// <summary>
+		/// Adds the ticket to displayed conversation.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
+		public void addTicketToDisplayedConversation(Conversation conversation, Ticket ticket) 
+		{
+			var item = new ConversationItem(conversation, ticket);
+
+			ConversationView.conversationItems.Add(item);
+
+			foreach (Conversation c in ConversationsView.conversations)
+			{
+				if (c.id == conversation.id)
+				{
+					conversation.ticketCount++;
+					break;
+				}
+			}
+		}
 	}
 }
 

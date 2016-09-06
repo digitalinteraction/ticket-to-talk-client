@@ -103,7 +103,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the tickets.
+		/// Gets the tickets attached to the active person.
 		/// </summary>
 		/// <returns>The tickets.</returns>
 		public List<Ticket> getTickets() 
