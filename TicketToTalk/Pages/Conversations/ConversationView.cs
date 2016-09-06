@@ -104,7 +104,7 @@ namespace TicketToTalk
 			var newTicketLabel = new Label
 			{
 				Text = "Add a Ticket",
-				TextColor = ProjectResource.color_dark,
+				TextColor = ProjectResource.color_grey,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
