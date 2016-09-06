@@ -25,6 +25,8 @@ namespace TicketToTalk
 
             displayedTicket = ticket;
             this.Title = ticket.title;
+			this.SetBinding(TitleProperty, "title");
+			this.BindingContext = displayedTicket;
             
             // Add button to navigation bar.
             ToolbarItems.Add(new ToolbarItem
