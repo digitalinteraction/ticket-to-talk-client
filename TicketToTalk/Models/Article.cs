@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Article.
 	/// </summary>
-	public class Article : INotifyPropertyChanged
+	public class Article : INotifyPropertyChanged, IComparable
 	{
 		private string _title;
 		private string _link;
@@ -66,6 +66,13 @@ namespace TicketToTalk
 			}
 		}
 
+		[Ignore]
+		public string favicon 
+		{
+			get;
+			set;
+		}
+
 		public DateTime created_at { get; set; }
 
 		public DateTime updated_at { get; set; }
@@ -119,7 +126,26 @@ namespace TicketToTalk
 		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Article"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]", id, title, link, notes, created_at, updated_at);
+			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]", 
+			                     id, title, link, notes, created_at, updated_at);
+		}
+
+		/// <summary>
+		/// Compare two articles
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="obj">Object.</param>
+		public int CompareTo(object obj)
+		{
+			Article lhs = obj as Article;
+
+			var comp = _title.CompareTo(lhs.title);
+			if (comp == 0) 
+			{
+				comp = _link.CompareTo(lhs.link);
+			}
+
+			return comp;
 		}
 	}
 }

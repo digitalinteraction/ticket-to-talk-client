@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Article cell.
 	/// </summary>
-	public class ArticleCell : TextCell
+	public class ArticleCell : ImageCell
 	{
 		ArticleController articleController = new ArticleController();
 
@@ -24,6 +24,10 @@ namespace TicketToTalk
 			deleteCell.Clicked += DeleteCell_Clicked;
 
 			ContextActions.Add(deleteCell);
+
+			this.SetBinding(TextProperty, "title");
+			this.SetBinding(DetailProperty, "link");
+			this.SetBinding(ImageSourceProperty, "favicon");
 		}
 
 		/// <summary>
