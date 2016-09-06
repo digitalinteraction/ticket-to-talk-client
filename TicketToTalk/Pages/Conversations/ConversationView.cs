@@ -26,10 +26,9 @@ namespace TicketToTalk
 			conversationItems.Clear();
 			Debug.WriteLine("ConversationView: Conversation = " + conversation);
 
+			// Wait for new ticket to be returned if added through this view.
 			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
 			{
-				var item = new ConversationItem(conversation, returned_ticket);
-
 				var added = await conversationController.addTicketToConversationRemotely(conversation, returned_ticket);
 				if (added) 
 				{

@@ -1,4 +1,5 @@
 ﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Articles/AddArticle.cs">
     <Files>
       <File FileName="TicketToTalk/Pages/Conversations/ConversationSelect.cs" Line="70" Column="4" />
@@ -17,6 +18,30 @@
       <File FileName="TicketToTalk/Pages/Conversations/NewConversation.cs" Line="147" Column="4" />
       <File FileName="TicketToTalk/Pages/MenuPage.cs" Line="1" Column="1" />
       <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="1" Column="1" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
+    <Files>
+      <File FileName="TicketToTalk/Pages/Profiles/People/PersonProfile.cs" Line="125" Column="6" />
+      <File FileName="TicketToTalk/Models/Person.cs" Line="19" Column="1" />
+      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="342" Column="29" />
+      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="53" Column="7" />
+      <File FileName="iOS/Helpers/AudioRecorderImplementation.cs" Line="7" Column="74" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/SelectNewTicketType.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Resources/Session.cs" Line="20" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsByAgePage.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/DisplayTickets.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsPicture.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsSounds.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsVideos.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketsByPeriod.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/DisplayTicketInfo.cs" Line="42" Column="4" />
+      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="242" Column="69" />
+      <File FileName="TicketToTalk/Views/Tickets/NewTicketInfo.cs" Line="511" Column="82" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="154" Column="6" />
+      <File FileName="iOS/Main.cs" Line="17" Column="1" />
+      <File FileName="TicketToTalk/Database/TicketAreaDB.cs" Line="93" Column="87" />
+      <File FileName="TicketToTalk/Models/TicketArea.cs" Line="1" Column="1" />
+>>>>>>> tickets
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />

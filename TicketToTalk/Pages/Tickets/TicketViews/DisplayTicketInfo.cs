@@ -19,22 +19,29 @@ namespace TicketToTalk
 		Picker yearPicker;
 		Picker period_picker;
 
+		Ticket ticket;
+
 		/// <summary>
 		/// Initializes a new instance of the page.
 		/// </summary>
 		/// <param name="ticket">Ticket: ticket to display</param>
 		public DisplayTicketInfo(Ticket ticket)
 		{
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
+			this.ticket = ticket;
 			Title = "Info";
 
 			Console.WriteLine("Displaying ticket info");
 
-			// Get attached area
-			//AreaDB areaDB = new AreaDB();
 			var areaController = new AreaController();
 			var area = areaController.getArea(ticket.area_id);
-			//var area = areaDB.GetArea(ticket.area_id);
-			//areaDB.close();
 
 			Label titleLabel = new Label
 			{
@@ -87,7 +94,7 @@ namespace TicketToTalk
 			};
 
 			// Area entry
-			town_city = new Entry 
+			town_city = new Entry
 			{
 				Text = area.townCity,
 				Placeholder = "Town/City",
@@ -172,7 +179,7 @@ namespace TicketToTalk
 			foreach (string s in accessLevels)
 			{
 				access_level.Items.Add(s);
-				if (ticket.access_level.CompareTo(s) == 0) 
+				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0) 
 				{
 					access_level.SelectedIndex = j;
 					Debug.WriteLine(j);
@@ -182,26 +189,53 @@ namespace TicketToTalk
 
 			Console.WriteLine("Getting tags.");
 
-			var detailsStack = new StackLayout
+			StackLayout detailsStack = null;
+
+			if (ticket.mediaType.Equals("Picture"))
 			{
-				Padding = new Thickness(20, 10, 20, 20),
-				Spacing = 0,
-				Children =
+				detailsStack = new StackLayout
 				{
-					titleLabel,
-					title,
-					descriptionLabel,
-					description,
-					yearLabel,
-					yearPicker,
-					areaLabel,
-					town_city,
-					periodLabel,
-					period_picker,
-					accessLevelLabel,
-					access_level,
-				}
-			};
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						town_city,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
+			else 
+			{
+				detailsStack = new StackLayout
+				{
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
 
 			var buttonStack = new StackLayout
 			{
@@ -231,6 +265,16 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		async
+
+		/// <summary>
 		/// Saves the changes.
 		/// </summary>
 		/// <returns>The changes.</returns>
@@ -238,7 +282,34 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void saveChanges(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			var periodController = new PeriodController();
+			var period = periodController.getAllLocalPeriods()[period_picker.SelectedIndex];
+
+			ticket.title = title.Text;
+			ticket.description = description.Text;
+			ticket.year = (Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
+			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
+
+			var ticketController = new TicketController();
+			Ticket returned = null;
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				returned = await ticketController.updateTicketRemotely(ticket, town_city.Text, period.text);
+			}
+			else 
+			{
+				returned = await ticketController.updateTicketRemotely(ticket, " ", period.text);
+			}
+
+			if (returned != null)
+			{
+				ticketController.updateTicketLocally(returned);
+				await Navigation.PopModalAsync();
+			}
+			else
+			{
+				await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+			}
 		}
 
 		/// <summary>
