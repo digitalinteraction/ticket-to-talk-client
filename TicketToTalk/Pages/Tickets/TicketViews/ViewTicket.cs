@@ -140,9 +140,9 @@ namespace TicketToTalk
                 	await Navigation.PopAsync();
                 	ticketController.destroyTicket(displayedTicket);
                 	break;
-				case ("Display Information"):
+				case ("Edit Ticket"):
 
-					var nav = new NavigationPage(new DisplayTicketInfo(displayedTicket));
+					var nav = new NavigationPage(new EditTicket(displayedTicket));
 					nav.BarBackgroundColor = ProjectResource.color_blue;
 					nav.BarTextColor = ProjectResource.color_white;
 

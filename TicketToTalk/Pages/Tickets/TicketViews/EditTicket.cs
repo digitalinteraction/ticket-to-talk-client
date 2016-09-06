@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Display ticket info.
 	/// </summary>
-	public partial class DisplayTicketInfo : ContentPage
+	public partial class EditTicket : ContentPage
 	{
 		string[] accessLevels = ProjectResource.groups;
 
@@ -25,7 +25,7 @@ namespace TicketToTalk
 		/// Initializes a new instance of the page.
 		/// </summary>
 		/// <param name="ticket">Ticket: ticket to display</param>
-		public DisplayTicketInfo(Ticket ticket)
+		public EditTicket(Ticket ticket)
 		{
 
 			ToolbarItems.Add(new ToolbarItem
@@ -304,6 +304,8 @@ namespace TicketToTalk
 			if (returned != null)
 			{
 				ticketController.updateTicketLocally(returned);
+				ticketController.updateDisplayTicket(returned);
+
 				await Navigation.PopModalAsync();
 			}
 			else

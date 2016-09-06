@@ -67,7 +67,7 @@ namespace TicketToTalk
 					ticketController.destroyTicket(Ticket);
 					break;
 				case ("Display Information"):
-					await Navigation.PushAsync(new DisplayTicketInfo(Ticket));
+					await Navigation.PushAsync(new EditTicket(Ticket));
 					break;
 				case ("Add to Conversation"):
 					await Navigation.PushModalAsync(new ConversationSelect(Ticket));
