@@ -100,9 +100,29 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		public async void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
-			throw new NotImplementedException();
+			if (e.SelectedItem == null)
+			{
+				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
+			}
+
+			var conversationController = new ConversationController();
+			Ticket ticket = (Ticket)e.SelectedItem;
+
+			var added = await conversationController.addTicketToConversationRemotely(conversation, ticket);
+			if (added)
+			{
+				conversationController.addTicketToConversation(conversation, ticket);
+				conversationController.updateConversationLocally(conversation);
+				conversationController.addTicketToDisplayedConversation(conversation, ticket);
+				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				await DisplayAlert("Conversation", "Ticket could not be added to the conversation", "OK");
+				await Navigation.PopModalAsync();
+			}
 		}
 	}
 }
