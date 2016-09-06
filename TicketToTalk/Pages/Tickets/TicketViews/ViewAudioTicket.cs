@@ -71,7 +71,7 @@ namespace TicketToTalk
 			{
 				Children = {
 					new AudioPlayerLayout(ticket),
-					new TicketInfo(ticket),
+					new TicketInfo(),
 				}
 			};
 

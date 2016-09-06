@@ -41,7 +41,7 @@ namespace TicketToTalk
 				Children = 
 				{
 					ticket_photo,
-					new TicketInfo(ticket)
+					new TicketInfo()
 				}
 			};
 

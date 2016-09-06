@@ -12,27 +12,29 @@ namespace TicketToTalk
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.TicketInfo"/> class.
 		/// </summary>
-		public TicketInfo(Ticket ticket)
+		public TicketInfo()
 		{
 			Padding = new Thickness(10);
 
 			var title = new Label
 			{
-				Text = ticket.title,
 				FontSize = 18,
 				FontAttributes = FontAttributes.Bold,
 				TextColor = ProjectResource.color_dark,
 				HorizontalTextAlignment = TextAlignment.Center,
 			};
+			title.SetBinding(Label.TextProperty, "title");
+			title.BindingContext = ViewTicket.displayedTicket;
 
 			var description = new Label 
 			{
-				Text = ticket.description,
 				FontSize = 14,
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0),
 				HorizontalTextAlignment = TextAlignment.Center
 			};
+			description.SetBinding(Label.TextProperty, "description");
+			description.BindingContext = ViewTicket.displayedTicket;
 
 			var location = new Label 
 			{
@@ -42,7 +44,7 @@ namespace TicketToTalk
 				HorizontalTextAlignment = TextAlignment.Center
 			};
 			location.SetBinding(Label.TextProperty, "displayString");
-			location.BindingContext = ticket;
+			location.BindingContext = ViewTicket.displayedTicket;
 
 			Content = new StackLayout
 			{

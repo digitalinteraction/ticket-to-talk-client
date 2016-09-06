@@ -12,7 +12,7 @@ namespace TicketToTalk
     /// </summary>
     public partial class ViewTicket : ContentPage
     {
-        public Ticket Ticket { get; set;}
+		public static Ticket displayedTicket { get; set;}
 		TicketController ticketController = new TicketController();
         
         /// <summary>
@@ -23,7 +23,7 @@ namespace TicketToTalk
         {
 			NavigationPage.SetHasBackButton(this, true);
 
-            Ticket = ticket;
+            displayedTicket = ticket;
             this.Title = ticket.title;
             
             // Add button to navigation bar.
@@ -35,15 +35,15 @@ namespace TicketToTalk
                 Command = new Command(displayInfo)
             });
             
-			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
+			if (displayedTicket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
 				ticketController.downloadTicketContent(ticket.pathToFile);
 
-				ticket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
+				displayedTicket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
 				ticketController.updateTicketLocally(ticket);
 			}
 
-			ticket.displayString = ticketController.getDisplayString(ticket);
+			displayedTicket.displayString = ticketController.getDisplayString(displayedTicket);
 
             ContentView mediaContent = null;
             
@@ -54,7 +54,7 @@ namespace TicketToTalk
             }
             else
             {
-                switch (ticket.mediaType)
+                switch (displayedTicket.mediaType)
                 {
                     case ("Picture"):
                     mediaContent = new PictureLayout(ticket.pathToFile);
@@ -78,7 +78,7 @@ namespace TicketToTalk
                 Children =
                 {
                     mediaContent,
-                    new TicketInfo(ticket)
+                    new TicketInfo()
                 }
             };
             
@@ -132,17 +132,17 @@ namespace TicketToTalk
         /// <returns>The info.</returns>
         public async void displayInfo()
         {
-            var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Display Information", "Add to Conversation");
+            var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Edit Ticket", "Add to Conversation");
             
             switch (action)
             {
 				case ("Delete"):
                 	await Navigation.PopAsync();
-                	ticketController.destroyTicket(Ticket);
+                	ticketController.destroyTicket(displayedTicket);
                 	break;
 				case ("Display Information"):
 
-					var nav = new NavigationPage(new DisplayTicketInfo(Ticket));
+					var nav = new NavigationPage(new DisplayTicketInfo(displayedTicket));
 					nav.BarBackgroundColor = ProjectResource.color_blue;
 					nav.BarTextColor = ProjectResource.color_white;
 
@@ -151,7 +151,7 @@ namespace TicketToTalk
                 	break;
                 case ("Add to Conversation"):
 					
-					nav = new NavigationPage(new ConversationSelect(Ticket));
+					nav = new NavigationPage(new ConversationSelect(displayedTicket));
 					nav.BarBackgroundColor = ProjectResource.color_blue;
 					nav.BarTextColor = ProjectResource.color_white;
 
