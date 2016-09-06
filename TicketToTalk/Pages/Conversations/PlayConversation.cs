@@ -101,7 +101,7 @@ namespace TicketToTalk
 
 			setTicketStack(tickets[currentIndex]);
 
-			Content = new StackLayout
+			var content = new StackLayout
 			{
 				Children = {
 					ticketStack,
@@ -109,6 +109,11 @@ namespace TicketToTalk
 					descriptionLabel,
 					buttonStack
 				}
+			};
+
+			Content = new ScrollView
+			{
+				Content = content
 			};
 		}
 
@@ -122,7 +127,7 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
-			Navigation.PushModalAsync(nav);
+			Navigation.PushAsync(nav);
 			Navigation.RemovePage(this);
 		}
 

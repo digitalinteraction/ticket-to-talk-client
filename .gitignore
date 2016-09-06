@@ -31,3 +31,5 @@ Droid/obj/Debug/android/bin/resources_and_assemblies
 *.props
 
 *.cache
+
+/TicketToTalk.userprefs

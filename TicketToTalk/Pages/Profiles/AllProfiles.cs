@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -123,8 +122,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void UserCell_Tapped(object sender, EventArgs e)
 		{
-			UserCell cell = (UserCell)sender;
-			Navigation.PushAsync(new UserProfile(cell.user));
+			Navigation.PushAsync(new UserProfile());
 		}
 
 		/// <summary>
@@ -133,11 +131,7 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		void launchAddNewPersonView() 
 		{
-			var nav = new NavigationPage(new AddPerson(null));
-			nav.BarBackgroundColor = ProjectResource.color_blue;
-			nav.BarTextColor = ProjectResource.color_white;
-
-			Navigation.PushModalAsync(nav);
+			Navigation.PushAsync(new AddPersonChoice());
 		}
 	}
 }

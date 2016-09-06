@@ -177,7 +177,7 @@ namespace TicketToTalk
 		public async Task<JObject> sendGenericPostRequest(string URL, IDictionary<string, Object> parameters)
 		{
 			var uri = new Uri(URLBase + URL);
-
+			Debug.WriteLine("NetworkController: " + uri);
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
 			//Console.WriteLine(jsonCredentials);
@@ -196,11 +196,20 @@ namespace TicketToTalk
 			}
 			else
 			{
+				//string jsonString = await response.Content.ReadAsStringAsync();
+				//JObject jobject = JObject.Parse(jsonString);
+				//Debug.WriteLine("NetworkController: " + jobject);
 				Console.WriteLine("Request:" + response.StatusCode);
 				return null;
 			}
 		}
 
+		/// <summary>
+		/// Sends the delete request.
+		/// </summary>
+		/// <returns>The delete request.</returns>
+		/// <param name="URL">URL.</param>
+		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> sendDeleteRequest(string URL, IDictionary<string, string> parameters) 
 		{
 			URL += "?";
