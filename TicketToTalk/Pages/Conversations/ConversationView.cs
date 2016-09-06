@@ -208,7 +208,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// News the ticket.
+		/// Add a new ticket to the conversation.
 		/// </summary>
 		async void newTicket()
 		{
@@ -217,8 +217,16 @@ namespace TicketToTalk
 			switch (action) 
 			{
 				case "Create a New Ticket":
+					// Launch new ticket type page.
+					// Use messaging centre to get new ticket.
 					break;
 				case "Add an Existing Ticket":
+					// Get a list of all current tickets.
+					var nav = new NavigationPage(new SelectTicket(conversation));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			}
 		}
