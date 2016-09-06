@@ -58,7 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\NewTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewPhotoTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewTicket.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\DisplayTicketInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\SelectNewTicketType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Logout.cs" />

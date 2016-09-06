@@ -534,6 +534,17 @@ namespace TicketToTalk
 			}
 			return displayString;
 		}
+
+		/// <summary>
+		/// Updates the display ticket.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
+		public void updateDisplayTicket(Ticket ticket) 
+		{
+			ViewTicket.displayedTicket.title = ticket.title;
+			ViewTicket.displayedTicket.description = ticket.description;
+			ViewTicket.displayedTicket.displayString = getDisplayString(ticket);
+		}
 	}
 }
 
