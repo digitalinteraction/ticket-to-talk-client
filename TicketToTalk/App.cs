@@ -19,6 +19,9 @@ namespace TicketToTalk
 			var periodController = new PeriodController();
 			periodController.initStockPeriods();
 
+			var articleController = new ArticleController();
+			articleController.getFaviconURL("http://tickettotalk.app/api/home");
+
 			var nav = new NavigationPage(new Login());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;

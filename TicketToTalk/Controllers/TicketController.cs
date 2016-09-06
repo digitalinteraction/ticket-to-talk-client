@@ -103,7 +103,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the tickets.
+		/// Gets the tickets attached to the active person.
 		/// </summary>
 		/// <returns>The tickets.</returns>
 		public List<Ticket> getTickets() 
@@ -202,6 +202,62 @@ namespace TicketToTalk
 			ticketDB.DeleteTicket(ticket.id);
 			ticketDB.AddTicket(ticket);
 			ticketDB.close();
+		}
+
+		/// <summary>
+		/// Updates the ticket remotely.
+		/// </summary>
+		/// <returns>The ticket remotely.</returns>
+		/// <param name="ticket">Ticket.</param>
+		public async Task<Ticket> updateTicketRemotely(Ticket ticket, string area, string period)
+		{
+			IDictionary<string, string> paramters = new Dictionary<string, string>();
+			paramters["ticket_id"] = ticket.id.ToString();
+			paramters["title"] = ticket.title;
+			paramters["description"] = ticket.description;
+			paramters["year"] = ticket.year;
+			paramters["access_level"] = ticket.access_level;
+			paramters["period"] = period;
+			paramters["token"] = Session.Token.val;
+
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				paramters["area"] = area;
+			}
+			else 
+			{
+				paramters["area"] = " ";
+			}
+
+			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
+			if (jobject != null) 
+			{
+				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
+				var jtoken = jobject.GetValue("Ticket");
+				var returned = jtoken.ToObject<Ticket>();
+
+				// Update ticket area relationships.
+				var ticketAreaDB = new TicketAreaDB();
+				var relations = ticketAreaDB.getRelationByTicketID(returned.id);
+				foreach (TicketArea ta in relations) 
+				{
+					ticketAreaDB.DeleteTicketArea(ta.id);
+				}
+
+				jtoken = jobject.GetValue("Area");
+				var rArea = jtoken.ToObject<Area>();
+				var areaController = new AreaController();
+				if (areaController.getArea(rArea.id) == null) 
+				{
+					areaController.addAreaLocally(rArea);
+				}
+				ticketAreaDB.AddTicketArea(new TicketArea(returned.id, returned.area_id));
+				return returned;
+
+				// TODO update ticket period relationship
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -477,6 +533,17 @@ namespace TicketToTalk
 					break;
 			}
 			return displayString;
+		}
+
+		/// <summary>
+		/// Updates the display ticket.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
+		public void updateDisplayTicket(Ticket ticket) 
+		{
+			ViewTicket.displayedTicket.title = ticket.title;
+			ViewTicket.displayedTicket.description = ticket.description;
+			ViewTicket.displayedTicket.displayString = getDisplayString(ticket);
 		}
 	}
 }

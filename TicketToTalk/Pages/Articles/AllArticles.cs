@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -47,14 +48,10 @@ namespace TicketToTalk
 			});
 
 			// Format image cell
-			var cell = new DataTemplate(typeof(ArticleCell));
-			cell.SetBinding(TextCell.TextProperty, new Binding("title"));
-			cell.SetBinding(TextCell.DetailProperty, new Binding("link"));
-
 			ListView articleList = new ListView();
 			articleList.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			articleList.BindingContext = serverArticles;
-			articleList.ItemTemplate = cell;
+			articleList.ItemTemplate = new DataTemplate(typeof(ArticleCell));
 			articleList.SeparatorColor = Color.Transparent;
 			articleList.ItemSelected += OnSelection;
 
@@ -113,6 +110,8 @@ namespace TicketToTalk
 			ObservableCollection<Article> list = new ObservableCollection<Article>();
 			foreach (Article a in articles)
 			{
+				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
+				a.favicon = articleController.getFaviconURL(a.link);
 				list.Add(a);
 			}
 

@@ -587,6 +587,8 @@ namespace TicketToTalk
 				// Add to view
 				TicketsByPeriod.addTicket(returned_ticket);
 
+				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
+
 				await Navigation.PopModalAsync();
 			}
 
