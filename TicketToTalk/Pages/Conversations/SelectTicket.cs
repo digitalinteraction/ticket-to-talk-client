@@ -117,15 +117,6 @@ namespace TicketToTalk
 				conversationController.updateConversationLocally(conversation);
 				conversationController.addTicketToDisplayedConversation(conversation, ticket);
 
-				foreach (Conversation c in ConversationsView.conversations) 
-				{
-					if (c.id == conversation.id) 
-					{
-						conversation.ticketCount++;
-						break;
-					}
-				}
-
 				await Navigation.PopModalAsync();
 			}
 			else 

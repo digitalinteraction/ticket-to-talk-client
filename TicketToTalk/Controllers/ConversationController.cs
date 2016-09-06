@@ -460,6 +460,15 @@ namespace TicketToTalk
 			var item = new ConversationItem(conversation, ticket);
 
 			ConversationView.conversationItems.Add(item);
+
+			foreach (Conversation c in ConversationsView.conversations)
+			{
+				if (c.id == conversation.id)
+				{
+					conversation.ticketCount++;
+					break;
+				}
+			}
 		}
 	}
 }
