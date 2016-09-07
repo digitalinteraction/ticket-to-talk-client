@@ -25,6 +25,8 @@ namespace TicketToTalk
 		public InspirationView()
 		{
 
+			Debug.WriteLine("InspirationView: Active Person - " + Session.activePerson);
+
 			question = new Label
 			{
 				HorizontalOptions = LayoutOptions.Start,

@@ -12,6 +12,9 @@ namespace TicketToTalk
 	/// </summary>
 	public class PersonDB
 	{
+
+		public static bool locked = false;
+
 		private SQLiteConnection _connection;
 		string dbPath;
 
@@ -30,6 +33,10 @@ namespace TicketToTalk
 		/// </summary>
 		public void open() 
 		{
+			while (locked) 
+			{ }
+
+			locked = true;
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Person>();
 		}
@@ -92,6 +99,7 @@ namespace TicketToTalk
 		public void close()
 		{
 			_connection.Close();
+			locked = false;
 		}
 	}
 }

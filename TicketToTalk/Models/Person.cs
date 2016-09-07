@@ -2,76 +2,139 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
 	/// <summary>
-	/// Represents a person.
+	/// Person.
 	/// </summary>
 	public class Person : INotifyPropertyChanged
 	{
 		private string _name;
+		private string _birthYear;
+		private string _birthPlace;
+		private string _pathToPhoto;
 		private string _notes;
 		private string _displayString;
+		private ImageSource _imageSource;
 
 		[PrimaryKey]
 		public int id { get; set; }
 		public int admin_id { get; set; }
 
-		public string name 
-		{ 
-			get 
+		public string name
+		{
+			get
 			{
 				return _name;
 			}
-			set 
+			set
 			{
-				if (value != _name) 
+				if (value != _name)
 				{
 					_name = value;
 					NotifyPropertyChanged();
 				}
-			} 
+			}
 		}
 
-		public string birthYear { get; set; }
-		public string birthPlace { get; set; }
-		public string pathToPhoto { get; set; }
-		public string area { get; set;}
+		public string birthYear
+		{
+			get
+			{
+				return _birthYear;
+			}
+			set
+			{
+				if (value != _birthYear)
+				{
+					_birthYear = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string birthPlace
+		{
+			get
+			{
+				return _birthPlace;
+			}
+			set
+			{
+				if (value != _birthPlace)
+				{
+					_birthPlace = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string pathToPhoto
+		{
+			get
+			{
+				return _pathToPhoto;
+			}
+			set
+			{
+				if (value != _pathToPhoto)
+				{
+					_pathToPhoto = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string area { get; set; }
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
-		public string notes 
+		public string notes
 		{
-			get 
+			get
 			{
 				return _notes;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _notes) 
+				if (value != _notes)
 				{
 					_notes = value;
 					NotifyPropertyChanged();
-				}	
-			} 
+				}
+			}
 		}
 		[Ignore]
 		public Pivot pivot { get; set; }
 		[Ignore]
 		public string relation { get; set; }
 		[Ignore]
-		public string displayString 
-		{ 
-			get 
+		public string displayString
+		{
+			get
 			{
 				return _displayString;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _displayString) 
+				if (value != _displayString)
 				{
 					_displayString = value;
 					NotifyPropertyChanged();
 				}
+			}
+		}
+		[Ignore]
+		public ImageSource imageSource
+		{
+			get
+			{
+				return _imageSource;
+			}
+			set
+			{
+				_imageSource = value;
 			}
 		}
 
@@ -104,12 +167,12 @@ namespace TicketToTalk
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
-		/// Tos the string.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Person"/>.
 		/// </summary>
-		/// <returns>The string.</returns>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Person"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Person: id={0}, name={1}, birthYear={2}, birthPlace={3}, pathToPhoto={4}, created_at={5}, updated_at={6}, notes={7}, pivot={8}]", id, name, birthYear, birthPlace, pathToPhoto, created_at, updated_at, notes, pivot);
+			return string.Format("[Person: id={0}, admin_id={1}, name={2}, birthYear={3}, birthPlace={4}, pathToPhoto={5}, area={6}, created_at={7}, updated_at={8}, notes={9}, pivot={10}, relation={11}, displayString={12}]", id, admin_id, name, birthYear, birthPlace, pathToPhoto, area, created_at, updated_at, notes, pivot, relation, displayString);
 		}
 
 		/// <summary>

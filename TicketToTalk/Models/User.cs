@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
 	/// <summary>
@@ -13,6 +15,7 @@ namespace TicketToTalk
 		private string _email;
 		private string _password;
 		private string _pathToPhoto;
+		private ImageSource _imageSource;
 
 		[PrimaryKey]
 		public int id { get; set;}
@@ -77,6 +80,20 @@ namespace TicketToTalk
 		}
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
+
+		[Ignore]
+		public ImageSource imageSource 
+		{
+			get 
+			{
+				return _imageSource;
+			}
+			set 
+			{
+				_imageSource = value;;
+			}
+		}
+
 		[Ignore]
 		public Pivot pivot { get; set;}
 

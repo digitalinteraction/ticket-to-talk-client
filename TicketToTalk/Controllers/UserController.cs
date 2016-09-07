@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -157,13 +158,16 @@ namespace TicketToTalk
 				var returned_user = jtoken.ToObject<User>();
 
 				var userController = new UserController();
-				if (userController.getLocalUserByEmail(returned_user.email) == null)
+				var local_user = userController.getLocalUserByEmail(returned_user.email);
+				if (local_user == null)
 				{
 					userController.addUserLocally(returned_user);
 					Session.activeUser = returned_user;
 				}
 				else 
 				{
+					// TODO: compare user image hashcodes.
+					returned_user.pathToPhoto = local_user.pathToPhoto;
 					Session.activeUser = returned_user;
 					userController.updateUserLocally(returned_user);
 				}
@@ -196,7 +200,13 @@ namespace TicketToTalk
 			content["name"] = user.name;
 			content["email"] = user.email.ToLower();
 			content["password"] = user.password;
+			content["pathToPhoto"] = null;
 			content["image"] = image;
+
+			if (image == null) 
+			{
+				content["pathToPhoto"] = "default_profile.png";
+			}
 
 			Debug.WriteLine("UserController: name = " + user.name);
 			Debug.WriteLine("UserController: email = " + user.email);
@@ -218,16 +228,16 @@ namespace TicketToTalk
 				jToken = jobject.GetValue("user");
 				user = jToken.ToObject<User>();
 
-				var fileName = "u_" + user.id + ".jpg";
-				MediaController.writeImageToFile(fileName, image);
-
 				if (image != null && image.Length > 0)
 				{
+					var fileName = "u_" + user.id + ".jpg";
+					MediaController.writeImageToFile(fileName, image);
 					user.pathToPhoto = fileName;
 				}
 				else
 				{
-					user.pathToPhoto = "default_profile_pic.png";
+					Debug.WriteLine("UserController: Set to default photo");
+					user.pathToPhoto = "default_profile.png";
 				}
 				Debug.WriteLine("Registered User: " + user);
 				addUserLocally(user);
@@ -288,11 +298,39 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Gets the user profile picture.
+		/// </summary>
+		/// <returns>The user profile picture.</returns>
+		/// <param name="user">User.</param>
+		public ImageSource getUserProfilePicture(User user)
+		{
+			ImageSource imageSource;
+			if (user.pathToPhoto.Equals("default_profile.png"))
+			{
+				Debug.WriteLine("UserController: Getting default image.");
+				imageSource = ImageSource.FromFile(user.pathToPhoto);
+			}
+			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			{
+				Debug.WriteLine("UserController: Getting image from server.");
+				imageSource = ImageSource.FromStream(() => new MemoryStream(downloadUserProfilePicture(user)));
+			}
+			else
+			{
+				Debug.WriteLine("UserController: Getting image from storage");
+				var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
+				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
+				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			}
+			return imageSource;
+		}
+
+		/// <summary>
 		/// Downloads the user profile picture.
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
 		/// <param name="user">User.</param>
-		public string downloadUserProfilePicture(User user)
+		public byte[] downloadUserProfilePicture(User user)
 		{
 			var download_finished = false;
 
@@ -315,14 +353,15 @@ namespace TicketToTalk
 
 			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
-			return fileName;
+			return MediaController.readBytesFromFile(user.pathToPhoto);
 		}
 
 		/// <summary>
 		/// Accepts the invitation.
 		/// </summary>
 		/// <returns>The invitation.</returns>
-		/// <param name="p">P.</param>
+		/// <param name="i">The index.</param>
+		/// <param name="relation">Relation.</param>
 		public async Task<bool> acceptInvitation(Invitation i, string relation) 
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();

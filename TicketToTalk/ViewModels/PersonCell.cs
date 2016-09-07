@@ -31,7 +31,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 			};
-			personProfileImage.SetBinding(Image.SourceProperty, "pathToPhoto");
+			personProfileImage.SetBinding(Image.SourceProperty, "imageSource");
 
 			nameLabel = new Label
 			{

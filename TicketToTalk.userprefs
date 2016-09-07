@@ -1,62 +1,16 @@
 ﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Articles/AddArticle.cs">
-=======
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Articles/AddArticle.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/UserController.cs">
     <Files>
-      <File FileName="TicketToTalk/Pages/Conversations/ConversationSelect.cs" Line="70" Column="4" />
-      <File FileName="TicketToTalk/Pages/Conversations/ConversationView.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Resources/Session.cs" Line="21" Column="71" />
-      <File FileName="TicketToTalk/Pages/Auth/Register.cs" Line="258" Column="44" />
-      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Main.cs" Line="17" Column="1" />
-      <File FileName="TicketToTalk/App.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Profiles/User/UserProfile.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Models/User.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Models/Person.cs" Line="104" Column="60" />
-      <File FileName="TicketToTalk/Pages/Profiles/AllProfiles.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/NewConversation.cs" Line="147" Column="4" />
-      <File FileName="TicketToTalk/Pages/MenuPage.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="1" Column="1" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
->>>>>>> dev
-    <Files>
-      <File FileName="TicketToTalk/Pages/Conversations/ConversationSelect.cs" Line="70" Column="4" />
-      <File FileName="TicketToTalk/Pages/Conversations/ConversationView.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Resources/Session.cs" Line="21" Column="71" />
-      <File FileName="TicketToTalk/Pages/Auth/Register.cs" Line="258" Column="44" />
-      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="1" Column="1" />
-      <File FileName="iOS/Main.cs" Line="17" Column="1" />
-<<<<<<< HEAD
-      <File FileName="TicketToTalk/App.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Profiles/User/UserProfile.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Models/User.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Models/Person.cs" Line="104" Column="60" />
-      <File FileName="TicketToTalk/Pages/Profiles/AllProfiles.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/NewConversation.cs" Line="147" Column="4" />
-      <File FileName="TicketToTalk/Pages/MenuPage.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
-=======
-      <File FileName="TicketToTalk/Database/TicketAreaDB.cs" Line="93" Column="87" />
-      <File FileName="TicketToTalk/Models/TicketArea.cs" Line="1" Column="1" />
->>>>>>> tickets
+      <File FileName="TicketToTalk/ExtensionMethods.cs" Line="13" Column="2" />
+      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="371" Column="32" />
+      <File FileName="TicketToTalk/Pages/Auth/Register.cs" Line="258" Column="48" />
+      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="185" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
->>>>>>> dev
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
   <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.207DAD69-26C9-4786-B94D-B9341E59F029" />

@@ -163,6 +163,7 @@
     <AndroidResource Include="Resources\drawable\ic_videocam_white_.png" />
     <AndroidResource Include="Resources\drawable\red_ticket_icon.png" />
     <AndroidResource Include="Resources\drawable\red_add.png" />
+    <AndroidResource Include="Resources\drawable\default_profile.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />

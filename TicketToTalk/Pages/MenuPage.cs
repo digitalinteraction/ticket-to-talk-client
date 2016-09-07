@@ -20,8 +20,6 @@ namespace TicketToTalk
 			Title = "Menu"; // The Title property must be set.
 			BackgroundColor = ProjectResource.color_white;
 
-			//Padding = new Thickness(0, 20, 0, 0);
-
 			Menu = new MenuListView();
 
 			var userName = new Label
@@ -67,7 +65,7 @@ namespace TicketToTalk
 				Orientation = StackOrientation.Horizontal,
 				Children = 
 				{
-					new UserProfileImage(Session.activeUser, (Session.ScreenWidth * 0.2), "left", ProjectResource.color_white),
+					new UserProfileImage((Session.ScreenWidth * 0.2), "left", ProjectResource.color_white),
 				}
 			};
 
