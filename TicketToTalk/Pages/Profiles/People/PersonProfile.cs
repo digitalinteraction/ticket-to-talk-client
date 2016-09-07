@@ -22,7 +22,9 @@ namespace TicketToTalk
 		public PersonProfile(Person person)
 		{
 			currentPerson = person;
-			Title = person.name;
+
+			this.SetBinding(TitleProperty, currentPerson.name);
+			this.BindingContext = currentPerson;
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -38,7 +40,6 @@ namespace TicketToTalk
 
 			var nameLabel = new Label 
 			{
-				//Text = person.name,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
 				FontSize = 20,
@@ -54,7 +55,6 @@ namespace TicketToTalk
 
 			var relation = new Label
 			{
-				//Text = personUser.relationship,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,

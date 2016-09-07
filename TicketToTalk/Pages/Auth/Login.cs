@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using TicketToTalk;
-using System.Diagnostics;
 
 namespace TicketToTalk
 {

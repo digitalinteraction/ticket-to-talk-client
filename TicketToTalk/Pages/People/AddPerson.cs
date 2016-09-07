@@ -378,14 +378,17 @@ namespace TicketToTalk
 				var stored_person = jtoken.ToObject<Person>();
 
 				var personController = new PersonController();
+				stored_person.pathToPhoto = "default_profile.png";
 
-				//var personDB = new PersonDB();
-				var fileName = "p_" + stored_person.id + ".jpg";
-				stored_person.pathToPhoto = fileName;
+				if (image != null)
+				{
+					var fileName = "p_" + stored_person.id + ".jpg";
+					stored_person.pathToPhoto = fileName;
+					MediaController.writeImageToFile(fileName, image);
+				}
+
 				personController.addPersonLocally(stored_person);
 				Session.activePerson = stored_person;
-
-				MediaController.writeImageToFile(fileName, image);
 
 				var personUserDB = new PersonUserDB();
 				var pu = new PersonUser
@@ -399,7 +402,6 @@ namespace TicketToTalk
 
 				personController.addStockPeriods(stored_person);
 
-				//await Navigation.PushAsync(new RootPage());
 				Application.Current.MainPage = new RootPage();
 			}
 			else

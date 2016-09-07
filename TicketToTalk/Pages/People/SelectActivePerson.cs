@@ -7,11 +7,18 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Select active person.
+	/// </summary>
 	public class SelectActivePerson : ContentPage
 	{
 		PersonController personController = new PersonController();
 		ObservableCollection<Person> people = new ObservableCollection<Person>();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectActivePerson"/> class.
+		/// </summary>
 		public SelectActivePerson()
 		{
 			Padding = new Thickness(20);
@@ -26,22 +33,27 @@ namespace TicketToTalk
 			};
 
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-
+			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
 			foreach (Person p in people) 
 			{
-				if (p.pathToPhoto.StartsWith("storage", StringComparison.CurrentCulture)) 
-				{
-					personController.downloadPersonProfilePicture(p);
-				}
-				Debug.WriteLine(p.pathToPhoto);
-				p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
+				//var imgS = personController.getPersonProfilePicture(p);
+				p.imageSource = personController.getPersonProfilePicture(p);
+
+				//if (p.pathToPhoto.StartsWith("storage", StringComparison.CurrentCulture)) 
+				//{
+				//	personController.downloadPersonProfilePicture(p);
+				//}
+				//Debug.WriteLine(p.pathToPhoto);
+				//p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
+
+				Debug.WriteLine("SelectActivePerson: Got image");
+
 				p.relation = personController.getRelationship(p.id);
 			}
-
+			Debug.WriteLine("PersonController: Finished block");
 			var peopleListView = new ListView
 			{
 				ItemTemplate = new DataTemplate(typeof(PersonCell)),
-				//BindingContext = people,
 				SeparatorColor = ProjectResource.color_grey,
 				HasUnevenRows = true,
 				RowHeight = 90
@@ -102,6 +114,11 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Peoples the list view item selected.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void PeopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			Person p = (Person)e.SelectedItem;

@@ -52,7 +52,11 @@ namespace TicketToTalk
 			{
 				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
 			}
-			else 
+			else if (user.pathToPhoto.Equals("default_profile.png")) 
+			{
+				
+			}
+			else
 			{
 				userController.downloadUserProfilePicture(user);
 				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
@@ -64,14 +68,15 @@ namespace TicketToTalk
 
 			Debug.WriteLine("AllProfiles: Adding people cells");
 			var tableSection = new TableSection("Your People");
-			var personUserDB = new PersonUserDB();
+			//var personUserDB = new PersonUserDB();
 			foreach (Person p in people)
 			{
-				if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
-				{
-					p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
-				}
-				p.relation = personUserDB.getRelationByUserAndPersonID(user.id, p.id).relationship;
+				p.imageSource = personController.getPersonProfilePicture(p);
+				//if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
+				//{
+				//	p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
+				//}
+				//p.relation = personUserDB.getRelationByUserAndPersonID(user.id, p.id).relationship;
 
 				Debug.WriteLine("AllProfiles: Adding person: " + p);
 

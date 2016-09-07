@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
 	/// <summary>
@@ -10,8 +12,12 @@ namespace TicketToTalk
 	public class Person : INotifyPropertyChanged
 	{
 		private string _name;
+		private string _birthYear;
+		private string _birthPlace;
+		private string _pathToPhoto;
 		private string _notes;
 		private string _displayString;
+		private ImageSource _imageSource;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -33,9 +39,54 @@ namespace TicketToTalk
 			} 
 		}
 
-		public string birthYear { get; set; }
-		public string birthPlace { get; set; }
-		public string pathToPhoto { get; set; }
+		public string birthYear 
+		{ 
+			get
+			{
+				return _birthYear;
+			} 
+			set 
+			{
+				if (value != _birthYear) 
+				{
+					_birthYear = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string birthPlace 
+		{ 
+			get 
+			{
+				return _birthPlace;
+			}
+			set 
+			{
+				if (value != _birthYear) 
+				{
+					_birthYear = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string pathToPhoto 
+		{ 
+			get 
+			{
+				return _pathToPhoto;
+			} 
+			set 
+			{
+				if (value != _pathToPhoto) 
+				{
+					_pathToPhoto = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		public string area { get; set;}
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
@@ -72,6 +123,18 @@ namespace TicketToTalk
 					_displayString = value;
 					NotifyPropertyChanged();
 				}
+			}
+		}
+		[Ignore]
+		public ImageSource imageSource 
+		{
+			get 
+			{
+				return _imageSource;
+			}
+			set 
+			{
+				_imageSource = value;
 			}
 		}
 

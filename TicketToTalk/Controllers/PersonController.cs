@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -12,6 +13,7 @@ namespace TicketToTalk
 
 		PersonDB personDB = new PersonDB();
 		NetworkController networkController = new NetworkController();
+		MediaController mediaController = new MediaController();
 
 		public PersonController()
 		{
@@ -87,6 +89,34 @@ namespace TicketToTalk
 		{
 			deletePersonLocally(p.id);
 			addPersonLocally(p);
+		}
+
+		/// <summary>
+		/// Gets the person profile picture.
+		/// </summary>
+		/// <returns>The person profile picture.</returns>
+		/// <param name="person">Person.</param>
+		public ImageSource getPersonProfilePicture(Person person) 
+		{
+			ImageSource imageSource;
+			if (person.pathToPhoto.Equals("default_profile.png"))
+			{
+				Debug.WriteLine("PersonController: Getting default image.");
+				imageSource = person.pathToPhoto;
+			}
+			else if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			{
+				Debug.WriteLine("PersonController: Getting image from server.");
+				imageSource = ImageSource.FromStream(() => new MemoryStream(downloadPersonProfilePicture(person)));
+			}
+			else 
+			{
+				Debug.WriteLine("PersonController: Getting image from storage");
+				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
+				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
+				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			}
+			return imageSource;
 		}
 
 		/// <summary>

@@ -218,16 +218,15 @@ namespace TicketToTalk
 				jToken = jobject.GetValue("user");
 				user = jToken.ToObject<User>();
 
-				var fileName = "u_" + user.id + ".jpg";
-				MediaController.writeImageToFile(fileName, image);
-
 				if (image != null && image.Length > 0)
 				{
+					var fileName = "u_" + user.id + ".jpg";
+					MediaController.writeImageToFile(fileName, image);
 					user.pathToPhoto = fileName;
 				}
 				else
 				{
-					user.pathToPhoto = "default_profile_pic.png";
+					user.pathToPhoto = "default_profile.png";
 				}
 				Debug.WriteLine("Registered User: " + user);
 				addUserLocally(user);
