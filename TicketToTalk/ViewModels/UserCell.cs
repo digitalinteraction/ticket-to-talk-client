@@ -6,8 +6,6 @@ namespace TicketToTalk
 {
 	public class UserCell : ViewCell
 	{
-		//public User user { get; set;}
-
 		public UserCell()
 		{
 			var personProfileImage = new CircleImage

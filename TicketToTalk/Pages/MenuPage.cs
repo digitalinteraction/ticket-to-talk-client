@@ -20,8 +20,6 @@ namespace TicketToTalk
 			Title = "Menu"; // The Title property must be set.
 			BackgroundColor = ProjectResource.color_white;
 
-			//Padding = new Thickness(0, 20, 0, 0);
-
 			Menu = new MenuListView();
 
 			var userName = new Label

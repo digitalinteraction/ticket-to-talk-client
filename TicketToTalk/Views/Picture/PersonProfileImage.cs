@@ -16,7 +16,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class PersonProfileImage : ContentView
 	{
-		bool download_finished;
 		public CircleImage profilePic;
 		PersonController personController = new PersonController();
 

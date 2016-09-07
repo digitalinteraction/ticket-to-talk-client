@@ -32,7 +32,7 @@ namespace TicketToTalk
 
 			var personController = new PersonController();
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-			Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
+			//Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
 
 			var tableView = new TableView
 			{
