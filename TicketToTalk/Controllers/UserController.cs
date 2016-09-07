@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -287,11 +288,39 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Gets the user profile picture.
+		/// </summary>
+		/// <returns>The user profile picture.</returns>
+		/// <param name="user">User.</param>
+		public ImageSource getUserProfilePicture(User user)
+		{
+			ImageSource imageSource;
+			if (user.pathToPhoto.Equals("default_profile.png"))
+			{
+				Debug.WriteLine("UserController: Getting default image.");
+				imageSource = user.pathToPhoto;
+			}
+			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			{
+				Debug.WriteLine("UserController: Getting image from server.");
+				imageSource = ImageSource.FromStream(() => new MemoryStream(downloadUserProfilePicture(user)));
+			}
+			else
+			{
+				Debug.WriteLine("UserController: Getting image from storage");
+				var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
+				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
+				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			}
+			return imageSource;
+		}
+
+		/// <summary>
 		/// Downloads the user profile picture.
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
 		/// <param name="user">User.</param>
-		public string downloadUserProfilePicture(User user)
+		public byte[] downloadUserProfilePicture(User user)
 		{
 			var download_finished = false;
 
@@ -314,7 +343,7 @@ namespace TicketToTalk
 
 			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
-			return fileName;
+			return MediaController.readBytesFromFile(user.pathToPhoto);
 		}
 
 		/// <summary>

@@ -32,7 +32,7 @@ namespace TicketToTalk
 
 			var personController = new PersonController();
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-			User user = Session.activeUser;
+			Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
 
 			var tableView = new TableView
 			{
@@ -44,23 +44,8 @@ namespace TicketToTalk
 
 			Debug.WriteLine("AllProfiles: Adding user cell.");
 			var userSection = new TableSection("Your Profile");
-			var userCell = new UserCell
-			{
-				user = user,
-			};
-			if (!(user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal)))
-			{
-				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
-			}
-			else if (user.pathToPhoto.Equals("default_profile.png")) 
-			{
-				
-			}
-			else
-			{
-				userController.downloadUserProfilePicture(user);
-				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
-			}
+
+			var userCell = new UserCell();
 			userCell.BindingContext = Session.activeUser;
 			userCell.Tapped += UserCell_Tapped;
 			userSection.Add(userCell);
@@ -68,17 +53,9 @@ namespace TicketToTalk
 
 			Debug.WriteLine("AllProfiles: Adding people cells");
 			var tableSection = new TableSection("Your People");
-			//var personUserDB = new PersonUserDB();
 			foreach (Person p in people)
 			{
 				p.imageSource = personController.getPersonProfilePicture(p);
-				//if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
-				//{
-				//	p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
-				//}
-				//p.relation = personUserDB.getRelationByUserAndPersonID(user.id, p.id).relationship;
-
-				Debug.WriteLine("AllProfiles: Adding person: " + p);
 
 				var personCell = new PersonCell(p);
 		
