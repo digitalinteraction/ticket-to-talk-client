@@ -24,8 +24,10 @@ namespace TicketToTalk
 			currentPerson = person;
 
 			// TODO: Fix name 
-			this.SetBinding(TitleProperty, currentPerson.name);
-			this.BindingContext = currentPerson;
+			//this.SetBinding(Page.TitleProperty, currentPerson.name);
+			//BindingContext = currentPerson;
+
+			Title = "Profile";
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -105,7 +107,7 @@ namespace TicketToTalk
 			{
 				var label = new Label 
 				{
-					Text = String.Format("{0} ({1})", u.name, u.pivot.user_type),
+					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
 					HorizontalTextAlignment = TextAlignment.Center,
 					TextColor = ProjectResource.color_blue,
 					FontSize = 14,
@@ -247,7 +249,7 @@ namespace TicketToTalk
 
 					await Navigation.PushModalAsync(nav);
 					break;
-			};
+			}
 		}
 
 		/// <summary>
