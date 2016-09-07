@@ -200,7 +200,13 @@ namespace TicketToTalk
 			content["name"] = user.name;
 			content["email"] = user.email.ToLower();
 			content["password"] = user.password;
+			content["pathToPhoto"] = null;
 			content["image"] = image;
+
+			if (image == null) 
+			{
+				content["pathToPhoto"] = "default_profile.png";
+			}
 
 			Debug.WriteLine("UserController: name = " + user.name);
 			Debug.WriteLine("UserController: email = " + user.email);
@@ -230,6 +236,7 @@ namespace TicketToTalk
 				}
 				else
 				{
+					Debug.WriteLine("UserController: Set to default photo");
 					user.pathToPhoto = "default_profile.png";
 				}
 				Debug.WriteLine("Registered User: " + user);
@@ -301,7 +308,8 @@ namespace TicketToTalk
 			if (user.pathToPhoto.Equals("default_profile.png"))
 			{
 				Debug.WriteLine("UserController: Getting default image.");
-				imageSource = user.pathToPhoto;
+				//imageSource = user.pathToPhoto;
+				imageSource = ImageSource.FromFile(user.pathToPhoto);
 			}
 			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
 			{
@@ -353,7 +361,8 @@ namespace TicketToTalk
 		/// Accepts the invitation.
 		/// </summary>
 		/// <returns>The invitation.</returns>
-		/// <param name="p">P.</param>
+		/// <param name="i">The index.</param>
+		/// <param name="relation">Relation.</param>
 		public async Task<bool> acceptInvitation(Invitation i, string relation) 
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();

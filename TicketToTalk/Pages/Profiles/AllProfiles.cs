@@ -13,7 +13,6 @@ namespace TicketToTalk
 	public class AllProfiles : ContentPage
 	{
 		public static ObservableCollection<Person> people = new ObservableCollection<Person>();
-		UserController userController = new UserController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ticket_to_Talk.AllProfiles"/> class.
@@ -32,7 +31,6 @@ namespace TicketToTalk
 
 			var personController = new PersonController();
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-			//Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
 
 			var tableView = new TableView
 			{

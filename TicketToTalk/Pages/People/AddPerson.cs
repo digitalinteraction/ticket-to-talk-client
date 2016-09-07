@@ -368,7 +368,14 @@ namespace TicketToTalk
 			parameters["townCity"] = town_city.Text;
 			parameters["notes"] = notesEditor.Text;
 			parameters["relation"] = relations[relationPicker.SelectedIndex];
+			parameters["pathToPhoto"] = null;
 			parameters["image"] = image;
+
+			if (image == null) 
+			{
+				parameters["pathToPhoto"] = "default_profile.png";
+				Debug.WriteLine("AddPerson: set image to default.");
+			}
 
 			var net = new NetworkController();
 			var jobject = await net.sendGenericPostRequest("people/store", parameters);
