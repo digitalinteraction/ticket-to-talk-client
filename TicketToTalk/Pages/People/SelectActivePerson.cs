@@ -36,18 +36,10 @@ namespace TicketToTalk
 			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
 			foreach (Person p in people) 
 			{
-				//var imgS = personController.getPersonProfilePicture(p);
+				personController.addPersonLocally(p);
+
 				p.imageSource = personController.getPersonProfilePicture(p);
-
-				//if (p.pathToPhoto.StartsWith("storage", StringComparison.CurrentCulture)) 
-				//{
-				//	personController.downloadPersonProfilePicture(p);
-				//}
-				//Debug.WriteLine(p.pathToPhoto);
-				//p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
-
 				Debug.WriteLine("SelectActivePerson: Got image");
-
 				p.relation = personController.getRelationship(p.id);
 			}
 			Debug.WriteLine("PersonController: Finished block");

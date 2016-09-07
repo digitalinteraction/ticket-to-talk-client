@@ -308,7 +308,6 @@ namespace TicketToTalk
 			if (user.pathToPhoto.Equals("default_profile.png"))
 			{
 				Debug.WriteLine("UserController: Getting default image.");
-				//imageSource = user.pathToPhoto;
 				imageSource = ImageSource.FromFile(user.pathToPhoto);
 			}
 			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))

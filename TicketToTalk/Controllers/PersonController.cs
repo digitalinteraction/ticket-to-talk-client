@@ -8,13 +8,18 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+	/// <summary>
+	/// Person controller.
+	/// </summary>
 	public class PersonController
 	{
 
 		PersonDB personDB = new PersonDB();
 		NetworkController networkController = new NetworkController();
-		MediaController mediaController = new MediaController();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.PersonController"/> class.
+		/// </summary>
 		public PersonController()
 		{
 		}
@@ -75,9 +80,17 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void addPersonLocally(Person p) 
 		{
-			personDB.open();
-			personDB.AddPerson(p);
-			personDB.close();
+			Debug.WriteLine("PersonController: adding person " + p);
+
+			if (getPerson(p.id) == null) 
+			{
+			//Debug.WriteLine("Open");
+				personDB.open();
+				personDB.AddPerson(p);
+				personDB.close();
+			}
+			//Debug.WriteLine("Close");
+
 		}
 
 		/// <summary>
@@ -102,7 +115,7 @@ namespace TicketToTalk
 			if (person.pathToPhoto.Equals("default_profile.png"))
 			{
 				Debug.WriteLine("PersonController: Getting default image.");
-				imageSource = person.pathToPhoto;
+				imageSource = ImageSource.FromFile(person.pathToPhoto);
 			}
 			else if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
 			{
