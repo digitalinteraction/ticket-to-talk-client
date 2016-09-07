@@ -23,6 +23,7 @@ namespace TicketToTalk
 		{
 			currentPerson = person;
 
+			// TODO: Fix name 
 			this.SetBinding(TitleProperty, currentPerson.name);
 			this.BindingContext = currentPerson;
 

@@ -55,6 +55,12 @@ namespace TicketToTalk
 			var tableSection = new TableSection("Your People");
 			foreach (Person p in people)
 			{
+				// TODO: Compare image hashcodes
+				var stored_person = personController.getPerson(p.id);
+				if (stored_person != null) 
+				{
+					p.pathToPhoto = stored_person.pathToPhoto;
+				}
 				p.imageSource = personController.getPersonProfilePicture(p);
 
 				var personCell = new PersonCell(p);

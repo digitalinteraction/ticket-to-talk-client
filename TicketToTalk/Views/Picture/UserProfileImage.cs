@@ -21,13 +21,13 @@ namespace TicketToTalk
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.UserProfileImage"/> class.
 		/// </summary>
-		public UserProfileImage(User user, double size, string alignment, Color borderColour)
+		public UserProfileImage(double size, string alignment, Color borderColour)
 		{
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
+			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
+			//{
+			//	Debug.WriteLine("Image Downloaded");
+			//	download_finished = finished;
+			//});
 
 			CircleImage profilePic = new CircleImage
 			{
@@ -40,10 +40,11 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
 			};
+			profilePic.SetBinding(Image.SourceProperty, "imageSource");
+			profilePic.BindingContext = Session.activeUser;
 
 			if (size > 0.1)
 			{
-
 				profilePic.HeightRequest = size;
 				profilePic.WidthRequest = size;
 			}
@@ -62,38 +63,35 @@ namespace TicketToTalk
 						break;
 				}
 			}
-			if (borderColour != null) 
-			{
-				profilePic.BorderColor = borderColour;
-			}
+			profilePic.BorderColor = borderColour;
 
-			if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
-			{
-				NetworkController net = new NetworkController();
-				var fileName = "u_" + user.id + ".jpg";
-				var task = Task.Run(() => net.downloadFile(user.pathToPhoto, fileName)).Result;
-				user.pathToPhoto = fileName;
+			//if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			//{
+			//	NetworkController net = new NetworkController();
+			//	var fileName = "u_" + user.id + ".jpg";
+			//	var task = Task.Run(() => net.downloadFile(user.pathToPhoto, fileName)).Result;
+			//	user.pathToPhoto = fileName;
 
-				while (!download_finished)
-				{
-				}
+			//	while (!download_finished)
+			//	{
+			//	}
 
-				var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			//	var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
+			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 
-				var userController = new UserController();
-				userController.updateUserLocally(user);
-				Session.activeUser = user;
+			//	var userController = new UserController();
+			//	userController.updateUserLocally(user);
+			//	Session.activeUser = user;
 
-				MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-			}
-			else
-			{
-				var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-			}
+			//	//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+			//}
+			//else
+			//{
+			//	var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
+			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			//}
 
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+			//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
 			Content = profilePic;
 		}

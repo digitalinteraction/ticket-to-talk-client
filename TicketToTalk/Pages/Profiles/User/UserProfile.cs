@@ -56,7 +56,7 @@ namespace TicketToTalk
 			{
 				Spacing = 0,
 				Children = {
-					new UserProfileImage(Session.activeUser, (Session.ScreenWidth * 0.8), null, ProjectResource.color_red),
+					new UserProfileImage((Session.ScreenWidth * 0.8), null, ProjectResource.color_red),
 					nameLabel,
 					email
 				}

@@ -158,13 +158,16 @@ namespace TicketToTalk
 				var returned_user = jtoken.ToObject<User>();
 
 				var userController = new UserController();
-				if (userController.getLocalUserByEmail(returned_user.email) == null)
+				var local_user = userController.getLocalUserByEmail(returned_user.email);
+				if (local_user == null)
 				{
 					userController.addUserLocally(returned_user);
 					Session.activeUser = returned_user;
 				}
 				else 
 				{
+					// TODO: compare user image hashcodes.
+					returned_user.pathToPhoto = local_user.pathToPhoto;
 					Session.activeUser = returned_user;
 					userController.updateUserLocally(returned_user);
 				}
