@@ -20,6 +20,7 @@ namespace TicketToTalk
 		Entry password;
 		Button saveButton;
 		byte[] image;
+		UserProfileImage profile;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.EditProfile"/> class.
@@ -36,7 +37,7 @@ namespace TicketToTalk
 				Command = new Command(cancel)
 			});
 
-			var profile = new UserProfileImage((Session.ScreenWidth * 0.8), null, ProjectResource.color_red);
+			profile = new UserProfileImage((Session.ScreenWidth * 0.8), null, ProjectResource.color_red);
 			profile.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onImageTap) });
 
 			var nameLabel = new Label
@@ -165,7 +166,7 @@ namespace TicketToTalk
 			if (file != null)
 			{
 				var bytes = MediaController.readBytesFromFile(file.Path);
-				Session.activeUser.imageSource = ImageSource.FromFile(file.Path);
+				profile.profilePic.Source = ImageSource.FromFile(file.Path);
 				image = bytes;
 			}
 		}

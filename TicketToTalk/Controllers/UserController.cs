@@ -116,7 +116,17 @@ namespace TicketToTalk
 				Session.activeUser.name = returned.name;
 				Session.activeUser.email = returned.email;
 
-				MediaController.writeImageToFile(Session.activeUser.pathToPhoto, image);
+				if (Session.activeUser.imageHash == null)
+				{
+					user.pathToPhoto = "u_" + Session.activeUser.id + ".jpg";
+				}
+
+				if (image != null)
+				{
+					Session.activeUser.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+					Session.activeUser.imageHash = image.HashArray();
+					MediaController.writeImageToFile(Session.activeUser.pathToPhoto, image);
+				}
 
 				updateUserLocally(user);
 
@@ -180,6 +190,7 @@ namespace TicketToTalk
 						{
 							downloadUserProfilePicture(returned_user);
 						}
+						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;

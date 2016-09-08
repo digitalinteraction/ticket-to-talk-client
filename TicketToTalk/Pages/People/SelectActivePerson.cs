@@ -21,6 +21,7 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectActivePerson()
 		{
+			Debug.WriteLine("SelectActivePerson: User " + Session.activeUser);
 			Padding = new Thickness(20);
 
 			Title = "Select a Person";
