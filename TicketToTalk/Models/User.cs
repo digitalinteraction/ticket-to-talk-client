@@ -91,7 +91,8 @@ namespace TicketToTalk
 			}
 			set
 			{
-				_imageSource = value; ;
+				_imageSource = value;
+				NotifyPropertyChanged();
 			}
 		}
 

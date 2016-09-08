@@ -91,24 +91,33 @@ namespace TicketToTalk
 		/// Updates the user remotely.
 		/// </summary>
 		/// <param name="user">User.</param>
-		public async Task<User> updateUserRemotely(User user)
+		public async Task<User> updateUserRemotely(User user, byte[] image)
 		{
-			SHA256 sha = new SHA256Managed();
-			byte[] passBytes = Encoding.UTF8.GetBytes(user.password);
-			byte[] hash = sha.ComputeHash(passBytes);
-			user.password = byteToHex(hash);
-
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["name"] = user.name;
 			parameters["email"] = user.email;
-			parameters["password"] = user.password;
+			parameters["password"] = user.password.HashString();
+			parameters["image"] = null;
+			parameters["imageHash"] = null;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendPostRequest("user/update", parameters);
+			if (image != null)
+			{
+				parameters["image"] = image;
+				parameters["imageHash"] = image.HashArray();
+			}
+
+			var jobject = await networkController.sendGenericPostRequest("user/update", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("User");
 				var returned = jtoken.ToObject<User>();
+
+				Session.activeUser.name = returned.name;
+				Session.activeUser.email = returned.email;
+
+				MediaController.writeImageToFile(Session.activeUser.pathToPhoto, image);
+
 				updateUserLocally(user);
 
 				return returned;
@@ -127,15 +136,9 @@ namespace TicketToTalk
 		/// <param name="password">Password.</param>
 		public async Task<bool> authenticateUser(string email, string password)
 		{
-
-			SHA256 sha = new SHA256Managed();
-			byte[] passBytes = Encoding.UTF8.GetBytes(password);
-			byte[] hash = sha.ComputeHash(passBytes);
-			password = byteToHex(hash);
-
 			IDictionary<string, string> credentials = new Dictionary<string, string>();
 			credentials["email"] = email;
-			credentials["password"] = password;
+			credentials["password"] = password.HashString();
 
 			NetworkController net = new NetworkController();
 			var jobject = await net.sendPostRequest("auth/login", credentials);
