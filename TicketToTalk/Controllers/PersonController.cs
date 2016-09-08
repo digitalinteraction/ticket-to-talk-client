@@ -84,12 +84,10 @@ namespace TicketToTalk
 
 			if (getPerson(p.id) == null)
 			{
-				//Debug.WriteLine("Open");
 				personDB.open();
 				personDB.AddPerson(p);
 				personDB.close();
 			}
-			//Debug.WriteLine("Close");
 
 			Debug.WriteLine("PersonController: person added");
 
@@ -218,11 +216,7 @@ namespace TicketToTalk
 			var peopleRaw = jpeople.ToObject<Person[]>();
 
 			// Getting all people
-			Console.WriteLine("Getting all people");
-			//PersonDB personDB = new PersonDB();
-			//var personController = new PersonController();
 			List<Person> savedPeople = new List<Person>();
-			//savedPeople = personDB.GetPersons();
 			savedPeople = getPeople();
 
 			// Checking if existing people have been updated externally.
@@ -246,11 +240,17 @@ namespace TicketToTalk
 							p.imageHash = s.imageHash;
 							updatePersonLocally(p);
 						}
-
-						//if (p.imageHash.Equals(s.imageHash))
-						//{
-						//	downloadPersonProfilePicture(p);
-						//}
+						if (p.imageHash != null)
+						{
+							if (s.imageHash == null)
+							{
+								downloadPersonProfilePicture(p);
+							}
+							else if (!(p.imageHash.Equals(s.imageHash)))
+							{
+								downloadPersonProfilePicture(p);
+							}
+						}
 					}
 				}
 
