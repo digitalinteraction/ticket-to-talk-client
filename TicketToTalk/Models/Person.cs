@@ -9,7 +9,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Person.
 	/// </summary>
-	public class Person : INotifyPropertyChanged
+	public class Person : INotifyPropertyChanged, IComparable
 	{
 		private string _name;
 		private string _birthYear;
@@ -18,6 +18,7 @@ namespace TicketToTalk
 		private string _notes;
 		private string _displayString;
 		private ImageSource _imageSource;
+		private string _imageHash;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -138,6 +139,22 @@ namespace TicketToTalk
 			}
 		}
 
+		public string imageHash
+		{
+			get
+			{
+				return _imageHash;
+			}
+			set
+			{
+				if (value != _imageHash)
+				{
+					_imageHash = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		public class Pivot
 		{
 			public string user_type { get; set; }
@@ -172,7 +189,8 @@ namespace TicketToTalk
 		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Person"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Person: id={0}, admin_id={1}, name={2}, birthYear={3}, birthPlace={4}, pathToPhoto={5}, area={6}, created_at={7}, updated_at={8}, notes={9}, pivot={10}, relation={11}, displayString={12}]", id, admin_id, name, birthYear, birthPlace, pathToPhoto, area, created_at, updated_at, notes, pivot, relation, displayString);
+			return string.Format("[Person: id={0}, admin_id={1}, name={2}, birthYear={3}, birthPlace={4}, pathToPhoto={5}, area={6}, created_at={7}, updated_at={8}, notes={9}, pivot={10}, relation={11}, displayString={12}, imageHash={13}]",
+				id, admin_id, name, birthYear, birthPlace, pathToPhoto, area, created_at, updated_at, notes, pivot, relation, displayString, imageHash);
 		}
 
 		/// <summary>
@@ -193,9 +211,33 @@ namespace TicketToTalk
 			return hash;
 		}
 
+		/// <summary>
+		/// Determines whether the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Person"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to compare with the current <see cref="T:TicketToTalk.Person"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Person"/>;
+		/// otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
 			return base.Equals(obj);
+		}
+
+		/// <summary>
+		/// Compares to.
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="obj">Object.</param>
+		public int CompareTo(object obj)
+		{
+			var lhs = obj as Person;
+			var comp = string.Compare(name, lhs.name, StringComparison.Ordinal);
+
+			if (comp == 0)
+			{
+				comp = string.Compare(birthYear, lhs.birthYear, StringComparison.Ordinal);
+			}
+
+			return comp;
 		}
 	}
 }

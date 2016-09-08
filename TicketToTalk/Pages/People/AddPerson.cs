@@ -8,11 +8,14 @@ using ImageCircle.Forms.Plugin.Abstractions;
 
 namespace TicketToTalk
 {
+
 	/// <summary>
 	/// A page to add a person.
 	/// </summary>
 	public class AddPerson : ContentPage
 	{
+
+		PersonController personController = new PersonController();
 
 		Entry name;
 		Image personImage;
@@ -21,7 +24,7 @@ namespace TicketToTalk
 		MediaFile file;
 		Editor notesEditor;
 
-		string[] relations = 
+		string[] relations =
 		{
 			"Father",
 			"Mother",
@@ -68,7 +71,7 @@ namespace TicketToTalk
 				byte[] pic = MediaController.readBytesFromFile(person.pathToPhoto);
 				personImage.Source = ImageSource.FromStream(() => new MemoryStream(pic));
 			}
-			else 
+			else
 			{
 				personImage.Source = "person_placeholder.png";
 			}
@@ -78,17 +81,17 @@ namespace TicketToTalk
 			{
 				Text = "What is their name?",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0,10,0,2)
+				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			name = new Entry 
+			name = new Entry
 			{
 				Placeholder = "Name",
 				TextColor = ProjectResource.color_red
 			};
 			name.TextChanged += Entry_TextChanged;
 
-			var birthPlace = new Label 
+			var birthPlace = new Label
 			{
 				Text = "Where were they born?",
 				TextColor = ProjectResource.color_dark,
@@ -102,7 +105,7 @@ namespace TicketToTalk
 			};
 			birthPlaceEntry.TextChanged += Entry_TextChanged;
 
-			var DOBLabel = new Label 
+			var DOBLabel = new Label
 			{
 				Text = "When were they born (approximately)",
 				TextColor = ProjectResource.color_dark,
@@ -120,7 +123,7 @@ namespace TicketToTalk
 				yearPicker.Items.Add((i + 1).ToString());
 			}
 
-			var relationLabel = new Label 
+			var relationLabel = new Label
 			{
 				Text = "How do you know them?",
 				TextColor = ProjectResource.color_dark,
@@ -133,32 +136,33 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red
 			};
 			relationPicker.SelectedIndexChanged += Entry_TextChanged;
-			foreach (string r in relations) 
+			foreach (string r in relations)
 			{
 				relationPicker.Items.Add(r);
 			}
 
-			Label area = new Label 
+			Label area = new Label
 			{
 				Text = "Where have they lived most of their life?",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			town_city = new Entry { 
+			town_city = new Entry
+			{
 				Placeholder = "Town or City",
 				TextColor = ProjectResource.color_red
 			};
 			town_city.TextChanged += Entry_TextChanged;
 
-			var notesLabel = new Label 
+			var notesLabel = new Label
 			{
 				Text = "Write some notes about their condition",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			notesEditor = new Editor 
+			notesEditor = new Editor
 			{
 				TextColor = ProjectResource.color_red,
 				Text = "Add some notes..."
@@ -225,7 +229,7 @@ namespace TicketToTalk
 			{
 				savePersonButton.Clicked += SavePersonChanges;
 			}
-			else 
+			else
 			{
 				savePersonButton.Clicked += savePerson;
 			}
@@ -250,7 +254,7 @@ namespace TicketToTalk
 				}
 			};
 
-			if (person != null) 
+			if (person != null)
 			{
 				Title = "Edit Person";
 
@@ -259,9 +263,9 @@ namespace TicketToTalk
 				puDB.close();
 
 				var ridx = 0;
-				for (int i = 0; i < ProjectResource.relations.Length; i++) 
+				for (int i = 0; i < ProjectResource.relations.Length; i++)
 				{
-					if (ProjectResource.relations[i].Equals(personUser.relationship)) 
+					if (ProjectResource.relations[i].Equals(personUser.relationship))
 					{
 						ridx = i;
 					}
@@ -308,7 +312,7 @@ namespace TicketToTalk
 					break;
 			}
 
-			if (file != null) 
+			if (file != null)
 			{
 				personImage.Source = ImageSource.FromFile(file.Path);
 				this.file = file;
@@ -349,6 +353,16 @@ namespace TicketToTalk
 		{
 			savePersonButton.IsEnabled = false;
 
+			Person tempPerson = new Person
+			{
+				name = name.Text,
+				birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString(),
+				birthPlace = birthPlaceEntry.Text,
+				area = town_city.Text,
+				notes = notesEditor.Text,
+				pathToPhoto = null,
+			};
+
 			byte[] image = null;
 			if (file != null)
 			{
@@ -360,55 +374,10 @@ namespace TicketToTalk
 				}
 			}
 
-			IDictionary<string, object> parameters = new Dictionary<string, object>();
-			parameters["token"] = Session.Token.val;
-			parameters["name"] = name.Text;
-			parameters["birthYear"] = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
-			parameters["birthPlace"] = birthPlaceEntry.Text;
-			parameters["townCity"] = town_city.Text;
-			parameters["notes"] = notesEditor.Text;
-			parameters["relation"] = relations[relationPicker.SelectedIndex];
-			parameters["pathToPhoto"] = null;
-			parameters["image"] = image;
+			bool saved = await personController.addPersonRemotely(tempPerson, relations[relationPicker.SelectedIndex], image);
 
-			if (image == null) 
+			if (saved)
 			{
-				parameters["pathToPhoto"] = "default_profile.png";
-				Debug.WriteLine("AddPerson: set image to default.");
-			}
-
-			var net = new NetworkController();
-			var jobject = await net.sendGenericPostRequest("people/store", parameters);
-			if (jobject != null)
-			{
-				var jtoken = jobject.GetValue("person");
-				var stored_person = jtoken.ToObject<Person>();
-
-				var personController = new PersonController();
-				stored_person.pathToPhoto = "default_profile.png";
-
-				if (image != null)
-				{
-					var fileName = "p_" + stored_person.id + ".jpg";
-					stored_person.pathToPhoto = fileName;
-					MediaController.writeImageToFile(fileName, image);
-				}
-
-				personController.addPersonLocally(stored_person);
-				Session.activePerson = stored_person;
-
-				var personUserDB = new PersonUserDB();
-				var pu = new PersonUser
-				{
-					user_id = Session.activeUser.id,
-					person_id = stored_person.id,
-					relationship = relations[relationPicker.SelectedIndex],
-					user_type = "Admin"
-				};
-				personUserDB.AddPersonUser(pu);
-
-				personController.addStockPeriods(stored_person);
-
 				Application.Current.MainPage = new RootPage();
 			}
 			else
@@ -416,6 +385,64 @@ namespace TicketToTalk
 				await DisplayAlert("Add Person", "Person could not be added.", "OK");
 				savePersonButton.IsEnabled = true;
 			}
+
+
+			//IDictionary<string, object> parameters = new Dictionary<string, object>();
+			//parameters["token"] = Session.Token.val;
+			//parameters["name"] = name.Text;
+			//parameters["birthYear"] = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
+			//parameters["birthPlace"] = birthPlaceEntry.Text;
+			//parameters["townCity"] = town_city.Text;
+			//parameters["notes"] = notesEditor.Text;
+			//parameters["relation"] = relations[relationPicker.SelectedIndex];
+			//parameters["pathToPhoto"] = null;
+			//parameters["image"] = image;
+
+			//if (image == null) 
+			//{
+			//	parameters["pathToPhoto"] = "default_profile.png";
+			//	Debug.WriteLine("AddPerson: set image to default.");
+			//}
+
+			//var net = new NetworkController();
+			//var jobject = await net.sendGenericPostRequest("people/store", parameters);
+			//if (jobject != null)
+			//{
+			//	var jtoken = jobject.GetValue("person");
+			//	var stored_person = jtoken.ToObject<Person>();
+
+			//	var personController = new PersonController();
+			//	stored_person.pathToPhoto = "default_profile.png";
+
+			//	if (image != null)
+			//	{
+			//		var fileName = "p_" + stored_person.id + ".jpg";
+			//		stored_person.pathToPhoto = fileName;
+			//		MediaController.writeImageToFile(fileName, image);
+			//	}
+
+			//	personController.addPersonLocally(stored_person);
+			//	Session.activePerson = stored_person;
+
+			//	var personUserDB = new PersonUserDB();
+			//	var pu = new PersonUser
+			//	{
+			//		user_id = Session.activeUser.id,
+			//		person_id = stored_person.id,
+			//		relationship = relations[relationPicker.SelectedIndex],
+			//		user_type = "Admin"
+			//	};
+			//	personUserDB.AddPersonUser(pu);
+
+			//	personController.addStockPeriods(stored_person);
+
+			//	Application.Current.MainPage = new RootPage();
+			//}
+			//else
+			//{
+			//	await DisplayAlert("Add Person", "Person could not be added.", "OK");
+			//	savePersonButton.IsEnabled = true;
+			//}
 		}
 
 		/// <summary>
@@ -457,7 +484,7 @@ namespace TicketToTalk
 
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
 				savePersonButton.IsEnabled = true;
 			}
