@@ -7,71 +7,72 @@ using Xamarin.Forms;
 namespace TicketToTalk
 {
 	/// <summary>
-	/// Models a User.
+	/// User.
 	/// </summary>
-	public class User : INotifyPropertyChanged
+	public class User : INotifyPropertyChanged, IComparable
 	{
 		private string _name;
 		private string _email;
 		private string _password;
 		private string _pathToPhoto;
 		private ImageSource _imageSource;
+		private string _imageHash;
 
 		[PrimaryKey]
-		public int id { get; set;}
-		public string name 
+		public int id { get; set; }
+		public string name
 		{
-			get 
+			get
 			{
 				return _name;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _name) 
+				if (value != _name)
 				{
 					_name = value;
 					NotifyPropertyChanged();
 				}
-			} 
+			}
 		}
-		public string email 
-		{ 
-			get 
+		public string email
+		{
+			get
 			{
 				return _email;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _email) 
+				if (value != _email)
 				{
 					_email = value;
 					NotifyPropertyChanged();
 				}
 			}
 		}
-		public string password 
-		{ 
-			get 
+		public string password
+		{
+			get
 			{
 				return _password;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _password) 
+				if (value != _password)
 				{
 					_password = value;
 				}
 			}
 		}
-		public string pathToPhoto 
+		public string pathToPhoto
 		{
-			get 
+			get
 			{
 				return _pathToPhoto;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _pathToPhoto) 
+				if (value != _pathToPhoto)
 				{
 					_pathToPhoto = value;
 					NotifyPropertyChanged();
@@ -82,20 +83,36 @@ namespace TicketToTalk
 		public DateTime updated_at { get; set; }
 
 		[Ignore]
-		public ImageSource imageSource 
+		public ImageSource imageSource
 		{
-			get 
+			get
 			{
 				return _imageSource;
 			}
-			set 
+			set
 			{
-				_imageSource = value;;
+				_imageSource = value; ;
+			}
+		}
+
+		public string imageHash
+		{
+			get
+			{
+				return _imageHash;
+			}
+			set
+			{
+				if (value != _imageHash)
+				{
+					_imageHash = value;
+					NotifyPropertyChanged();
+				}
 			}
 		}
 
 		[Ignore]
-		public Pivot pivot { get; set;}
+		public Pivot pivot { get; set; }
 
 		/// <summary>
 		/// Creates a new instance of a user.
@@ -114,6 +131,10 @@ namespace TicketToTalk
 			this.email = Email;
 		}
 
+		/// <summary>
+		/// Notifies the property changed.
+		/// </summary>
+		/// <param name="propertyName">Property name.</param>
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -125,18 +146,36 @@ namespace TicketToTalk
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
-		/// User to string.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.User"/>.
 		/// </summary>
-		/// <returns>The string.</returns>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.User"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[User: id={0}, name={1}, email={2}, password={3}, pathToPhoto={4}, created_at={5}, updated_at={6}, pivot={7}]", id, name, email, password, pathToPhoto, created_at, updated_at, pivot);
+			return string.Format("[User: id={0}, name={1}, email={2}, password={3}, pathToPhoto={4}, created_at={5}, updated_at={6}, imageHash={7}, pivot={8}]",
+								id, name, email, password, pathToPhoto, created_at, updated_at, imageHash, pivot);
+		}
+
+		/// <summary>
+		/// Compares to.
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="obj">Object.</param>
+		public int CompareTo(object obj)
+		{
+			var rhs = obj as User;
+			var comp = name.CompareTo(rhs.name);
+
+			if (comp == 0)
+			{
+				comp = email.CompareTo(rhs.email);
+			}
+			return _name.CompareTo(obj);
 		}
 
 		/// <summary>
 		/// Class to hold pivot table information from api calls.
 		/// </summary>
-		public class Pivot 
+		public class Pivot
 		{
 			public string user_type { get; set; }
 
