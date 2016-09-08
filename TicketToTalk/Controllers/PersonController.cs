@@ -91,6 +91,8 @@ namespace TicketToTalk
 			}
 			//Debug.WriteLine("Close");
 
+			Debug.WriteLine("PersonController: person added");
+
 		}
 
 		/// <summary>
@@ -155,7 +157,10 @@ namespace TicketToTalk
 			while (!download_finished)
 			{
 			}
+			while (PersonDB.locked) { }
+			PersonDB.locked = true;
 			updatePersonLocally(person);
+			PersonDB.locked = false;
 
 			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
@@ -233,13 +238,19 @@ namespace TicketToTalk
 					if (p.id == s.id)
 					{
 						inSet = true;
+
 						if (!(p.updated_at.Equals(s.updated_at)))
 						{
 							Console.WriteLine("Updating person:" + s.id);
-							//personDB.DeletePerson(s.id);
-							//personDB.AddPerson(s);
-							updatePersonLocally(s);
+							p.pathToPhoto = s.pathToPhoto;
+							p.imageHash = s.imageHash;
+							updatePersonLocally(p);
 						}
+
+						//if (p.imageHash.Equals(s.imageHash))
+						//{
+						//	downloadPersonProfilePicture(p);
+						//}
 					}
 				}
 

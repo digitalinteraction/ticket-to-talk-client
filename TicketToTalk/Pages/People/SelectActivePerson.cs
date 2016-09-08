@@ -34,10 +34,9 @@ namespace TicketToTalk
 
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
 			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
-			foreach (Person p in people) 
+			foreach (Person p in people)
 			{
 				personController.addPersonLocally(p);
-
 				p.imageSource = personController.getPersonProfilePicture(p);
 				Debug.WriteLine("SelectActivePerson: Got image");
 				p.relation = personController.getRelationship(p.id);
@@ -55,7 +54,7 @@ namespace TicketToTalk
 			peopleListView.ItemSelected += PeopleListView_ItemSelected;
 
 			// Layout if the user does not contribute to any people.
-			var incompleteRegistration = new Label 
+			var incompleteRegistration = new Label
 			{
 				Text = "You have not yet completed the registration process. Select next to continue",
 				TextColor = ProjectResource.color_dark,
@@ -63,7 +62,7 @@ namespace TicketToTalk
 				HorizontalTextAlignment = TextAlignment.Center,
 			};
 
-			var continueButton = new Button 
+			var continueButton = new Button
 			{
 				Text = "Next",
 				TextColor = ProjectResource.color_white,
@@ -72,13 +71,13 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				VerticalOptions = LayoutOptions.End
 			};
-			continueButton.Clicked += (sender, e) => 
+			continueButton.Clicked += (sender, e) =>
 			{
 				Navigation.PushAsync(new AllProfiles());
 				Navigation.RemovePage(this);
 			};
 
-			var compRegLayout = new StackLayout 
+			var compRegLayout = new StackLayout
 			{
 				Spacing = 10,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -100,7 +99,7 @@ namespace TicketToTalk
 				}
 				};
 			}
-			else 
+			else
 			{
 				Content = compRegLayout;
 			}
@@ -115,7 +114,7 @@ namespace TicketToTalk
 		{
 			Person p = (Person)e.SelectedItem;
 			Session.activePerson = p;
-			Debug.WriteLine("Setting active person: "+ p);
+			Debug.WriteLine("Setting active person: " + p);
 
 			App.Current.MainPage = new RootPage();
 		}

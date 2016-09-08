@@ -219,7 +219,18 @@ namespace TicketToTalk
 		/// otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			return base.Equals(obj);
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+
+			var rhs = obj as Person;
+
+			return id == rhs.id
+				&& admin_id == rhs.admin_id
+				&& name.Equals(rhs.name)
+				&& birthYear.Equals(rhs.birthYear)
+				&& birthPlace.Equals(rhs.birthPlace)
+				&& area.Equals(rhs.area)
+				&& notes.Equals(rhs.notes);
 		}
 
 		/// <summary>

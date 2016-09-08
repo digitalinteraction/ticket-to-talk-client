@@ -385,64 +385,6 @@ namespace TicketToTalk
 				await DisplayAlert("Add Person", "Person could not be added.", "OK");
 				savePersonButton.IsEnabled = true;
 			}
-
-
-			//IDictionary<string, object> parameters = new Dictionary<string, object>();
-			//parameters["token"] = Session.Token.val;
-			//parameters["name"] = name.Text;
-			//parameters["birthYear"] = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
-			//parameters["birthPlace"] = birthPlaceEntry.Text;
-			//parameters["townCity"] = town_city.Text;
-			//parameters["notes"] = notesEditor.Text;
-			//parameters["relation"] = relations[relationPicker.SelectedIndex];
-			//parameters["pathToPhoto"] = null;
-			//parameters["image"] = image;
-
-			//if (image == null) 
-			//{
-			//	parameters["pathToPhoto"] = "default_profile.png";
-			//	Debug.WriteLine("AddPerson: set image to default.");
-			//}
-
-			//var net = new NetworkController();
-			//var jobject = await net.sendGenericPostRequest("people/store", parameters);
-			//if (jobject != null)
-			//{
-			//	var jtoken = jobject.GetValue("person");
-			//	var stored_person = jtoken.ToObject<Person>();
-
-			//	var personController = new PersonController();
-			//	stored_person.pathToPhoto = "default_profile.png";
-
-			//	if (image != null)
-			//	{
-			//		var fileName = "p_" + stored_person.id + ".jpg";
-			//		stored_person.pathToPhoto = fileName;
-			//		MediaController.writeImageToFile(fileName, image);
-			//	}
-
-			//	personController.addPersonLocally(stored_person);
-			//	Session.activePerson = stored_person;
-
-			//	var personUserDB = new PersonUserDB();
-			//	var pu = new PersonUser
-			//	{
-			//		user_id = Session.activeUser.id,
-			//		person_id = stored_person.id,
-			//		relationship = relations[relationPicker.SelectedIndex],
-			//		user_type = "Admin"
-			//	};
-			//	personUserDB.AddPersonUser(pu);
-
-			//	personController.addStockPeriods(stored_person);
-
-			//	Application.Current.MainPage = new RootPage();
-			//}
-			//else
-			//{
-			//	await DisplayAlert("Add Person", "Person could not be added.", "OK");
-			//	savePersonButton.IsEnabled = true;
-			//}
 		}
 
 		/// <summary>
