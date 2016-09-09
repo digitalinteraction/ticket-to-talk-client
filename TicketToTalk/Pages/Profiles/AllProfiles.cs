@@ -12,6 +12,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class AllProfiles : ContentPage
 	{
+		public static bool promptShown = false;
 		public static ObservableCollection<Person> people = new ObservableCollection<Person>();
 
 		/// <summary>
@@ -121,16 +122,14 @@ namespace TicketToTalk
 			Navigation.PushAsync(new AddPersonChoice());
 		}
 
-		/// <summary>
-		/// On page appearing
-		/// </summary>
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
 
-			if (Session.activeUser.firstLogin)
+			if (Session.activeUser.firstLogin && !promptShown)
 			{
-				DisplayAlert("Help", "Click 'add' to create a profile of who you're collecting tickets for!", "OK");
+				Navigation.PushModalAsync(new AddNewPersonPrompt());
+				promptShown = true;
 			}
 		}
 	}

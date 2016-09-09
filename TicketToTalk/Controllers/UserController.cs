@@ -186,11 +186,11 @@ namespace TicketToTalk
 					{
 						if (local_user.imageHash == null)
 						{
-							downloadUserProfilePicture();
+							await downloadUserProfilePicture();
 						}
 						else if (!returned_user.imageHash.Equals(local_user.imageHash))
 						{
-							downloadUserProfilePicture();
+							await downloadUserProfilePicture();
 						}
 						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
