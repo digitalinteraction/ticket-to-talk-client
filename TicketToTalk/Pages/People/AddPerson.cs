@@ -436,6 +436,8 @@ namespace TicketToTalk
 				PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 				Session.activePerson = returned;
 
+				MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
+
 				await Navigation.PopModalAsync();
 			}
 			else
