@@ -1,9 +1,9 @@
 ﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/PersonController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/People/AddPerson.cs">
     <Files>
-      <File FileName="TicketToTalk/Models/Person.cs" Line="14" Column="24" />
-      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="379" Column="32" />
-      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="316" Column="4" />
+      <File FileName="TicketToTalk/Pages/Profiles/People/PersonProfile.cs" Line="246" Column="46" />
+      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="417" Column="42" />
+      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="483" Column="48" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />

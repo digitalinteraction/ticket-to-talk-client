@@ -464,18 +464,26 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person remotely.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<Person> updatePersonRemotely(Person person)
+		public async Task<Person> updatePersonRemotely(Person person, byte[] image)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["person_id"] = person.id.ToString();
 			parameters["name"] = person.name;
 			parameters["birthPlace"] = person.birthPlace;
 			parameters["birthYear"] = person.birthYear;
 			parameters["notes"] = person.notes;
 			parameters["area"] = person.area;
+			parameters["image"] = null;
+			parameters["imageHash"] = null;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendPostRequest("people/update", parameters);
+			if (image != null)
+			{
+				parameters["image"] = image;
+				parameters["imageHash"] = image.HashArray();
+			}
+
+			var jobject = await networkController.sendGenericPostRequest("people/update", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("Person");

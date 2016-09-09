@@ -41,7 +41,7 @@ namespace TicketToTalk
 
 			var users = Task.Run(() => getUsers()).Result;
 
-			var nameLabel = new Label 
+			var nameLabel = new Label
 			{
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
@@ -74,7 +74,7 @@ namespace TicketToTalk
 				FontSize = 18,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var birthYearLabel = new Label
@@ -87,7 +87,7 @@ namespace TicketToTalk
 			birthYearLabel.SetBinding(Label.TextProperty, "displayString");
 			birthYearLabel.BindingContext = currentPerson;
 
-			var associatesLabel = new Label 
+			var associatesLabel = new Label
 			{
 				Text = "Contributors to This Person:",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -103,9 +103,9 @@ namespace TicketToTalk
 				Spacing = 4
 			};
 
-			foreach (User u in users) 
+			foreach (User u in users)
 			{
-				var label = new Label 
+				var label = new Label
 				{
 					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
 					HorizontalTextAlignment = TextAlignment.Center,
@@ -116,7 +116,7 @@ namespace TicketToTalk
 				viewersStack.Children.Add(label);
 			}
 
-			var notesLabel = new Label 
+			var notesLabel = new Label
 			{
 				Text = "Notes on Their Condition",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -127,7 +127,7 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			var notes = new Label 
+			var notes = new Label
 			{
 				Text = person.notes,
 				WidthRequest = Session.ScreenWidth * 0.75,
@@ -139,7 +139,7 @@ namespace TicketToTalk
 			notes.SetBinding(Label.TextProperty, "notes");
 			notes.BindingContext = currentPerson;
 
-			var button = new Button 
+			var button = new Button
 			{
 				Text = "Send an Invitation",
 				BackgroundColor = ProjectResource.color_red,
@@ -152,31 +152,34 @@ namespace TicketToTalk
 				await Navigation.PushAsync(new SendInvitation(person));
 			};
 
+			var profileImage = new PersonProfileImage(currentPerson);
+			profileImage.profilePic.SetBinding(Image.SourceProperty, "imageSource");
+			profileImage.BindingContext = currentPerson;
 			var imageStack = new StackLayout()
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
-					new PersonProfileImage(person)
+					profileImage
 				}
 			};
 
 			var infStack = new StackLayout()
 			{
 				Spacing = 4,
-				Children = 
+				Children =
 				{
 					nameLabel,
 					relation,
 					detailsHeader,
-					birthYearLabel, 
+					birthYearLabel,
 				}
 			};
 
 			var stack = new StackLayout
 			{
 				Spacing = 12,
-				Padding = new Thickness(0,0,0,20),
+				Padding = new Thickness(0, 0, 0, 20),
 				Children = {
 					imageStack,
 					infStack,
@@ -188,7 +191,7 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new ScrollView 
+			Content = new ScrollView
 			{
 				Content = stack
 			};
@@ -202,11 +205,11 @@ namespace TicketToTalk
 			var action = await DisplayActionSheet("Edit Person", "Cancel", "Delete Person", "Edit Person");
 			Debug.WriteLine("PersonProfile: Action sheet selection - " + action);
 
-			switch(action) 
+			switch (action)
 			{
 				case ("Delete Person"):
 					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
-					if (confirm) 
+					if (confirm)
 					{
 						Debug.WriteLine("PersonProfile: Person to be deleted.");
 						Debug.WriteLine("PersonProfile: Deleting person locally.");
@@ -219,7 +222,7 @@ namespace TicketToTalk
 						Debug.WriteLine("PersonProfile: Getting all of the person's tickets.");
 						var tickets = ticketController.getTicketsByPerson(currentPerson.id);
 						Debug.WriteLine("PersonProfile: Deleting ticket files.");
-						foreach (Ticket t in tickets) 
+						foreach (Ticket t in tickets)
 						{
 							ticketController.deleteTicketLocally(t);
 							mediaController.deleteFile(t.pathToFile);
@@ -236,7 +239,7 @@ namespace TicketToTalk
 							Session.activePerson = null;
 							await Navigation.PushAsync(new SelectActivePerson());
 						}
-						else 
+						else
 						{
 							await Navigation.PopAsync();
 						}
@@ -256,7 +259,7 @@ namespace TicketToTalk
 		/// Gets the users associated with this person.
 		/// </summary>
 		/// <returns>The users.</returns>
-		public async Task<List<User>> getUsers() 
+		public async Task<List<User>> getUsers()
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
@@ -271,7 +274,7 @@ namespace TicketToTalk
 
 			var jusers = jobject.GetValue("users");
 			var users = jusers.ToObject<User[]>();
-			foreach (User u in users) 
+			foreach (User u in users)
 			{
 				Console.WriteLine(u);
 			}

@@ -405,7 +405,17 @@ namespace TicketToTalk
 			p.area = town_city.Text;
 			p.notes = notesEditor.Text;
 
-			var returned = await personController.updatePersonRemotely(p);
+			byte[] image = null;
+			if (file != null)
+			{
+				using (MemoryStream ms = new MemoryStream())
+				{
+					file.GetStream().CopyTo(ms);
+					image = ms.ToArray();
+				}
+			}
+
+			var returned = await personController.updatePersonRemotely(p, image);
 
 			if (returned != null)
 			{
@@ -419,9 +429,11 @@ namespace TicketToTalk
 				AllProfiles.people[r].area = returned.area;
 				AllProfiles.people[r].notes = returned.notes;
 				AllProfiles.people[r].displayString = personController.getDisplayString(AllProfiles.people[r]);
+				AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 
 				PersonProfile.currentPerson.notes = p.notes;
 				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
+				PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 				Session.activePerson = returned;
 
 				await Navigation.PopModalAsync();

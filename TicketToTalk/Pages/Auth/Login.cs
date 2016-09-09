@@ -80,7 +80,7 @@ namespace TicketToTalk
 			};
 			password.TextChanged += Entry_TextChanged;
 
-			register = new Button 
+			register = new Button
 			{
 				Text = "Register",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -94,13 +94,13 @@ namespace TicketToTalk
 			{
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				Spacing = 12,
-				Children = 
+				Children =
 				{
-					title, 
-					loadTime, 
-					email, 
-					password, 
-					login, 
+					title,
+					loadTime,
+					email,
+					password,
+					login,
 					register
 				}
 			};
@@ -117,7 +117,7 @@ namespace TicketToTalk
 		/// <returns>The login.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleLogin(Object sender, EventArgs ea)
+		private async void HandleLogin(Object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -132,7 +132,7 @@ namespace TicketToTalk
 				await Navigation.PushAsync(new SelectActivePerson());
 				Navigation.RemovePage(this);
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Login", "Incorrect email or password", "OK");
 
@@ -149,7 +149,7 @@ namespace TicketToTalk
 		/// <returns>The register.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleRegister(Object sender, EventArgs ea) 
+		async void HandleRegister(Object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
