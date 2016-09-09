@@ -42,33 +42,7 @@ namespace TicketToTalk
 				Margin = new Thickness(20),
 				Source = personController.getPersonProfilePicture(person)
 			};
-			//if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
-			//{
-			//	NetworkController net = new NetworkController();
-			//	var fileName = "p_" + person.id + ".jpg";
-			//	var task = Task.Run(() => net.downloadFile(person.pathToPhoto, fileName)).Result;
-			//	//net.downloadImage(user.pathToPhoto, fileName);
-			//	person.pathToPhoto = fileName;
-
-			//	while (!download_finished)
-			//	{
-			//	}
-
-			//	var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-
-			//	var personController = new PersonController();
-			//	personController.updatePersonLocally(person);
-
-			//	MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-			//}
-			//else
-			//{
-			//	var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-			//}
-
-			//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+			//profilePic.SetBinding(Image.SourceProperty, "imageSource");
 
 			Content = profilePic;
 		}

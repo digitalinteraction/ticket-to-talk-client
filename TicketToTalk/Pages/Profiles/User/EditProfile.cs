@@ -3,6 +3,7 @@
 //
 // EditProfile.cs
 using System;
+using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -18,6 +19,8 @@ namespace TicketToTalk
 		Entry name;
 		Entry password;
 		Button saveButton;
+		byte[] image;
+		UserProfileImage profile;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.EditProfile"/> class.
@@ -34,16 +37,17 @@ namespace TicketToTalk
 				Command = new Command(cancel)
 			});
 
-			Padding = new Thickness(20);
+			profile = new UserProfileImage((Session.ScreenWidth * 0.8), null, ProjectResource.color_red);
+			profile.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onImageTap) });
 
-			var nameLabel = new Label 
+			var nameLabel = new Label
 			{
 				Text = "Name",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			name = new Entry 
+			name = new Entry
 			{
 				Text = Session.activeUser.name,
 				TextColor = ProjectResource.color_red,
@@ -106,11 +110,13 @@ namespace TicketToTalk
 			};
 			saveButton.Clicked += SaveButton_Clicked;
 
-			Content = new StackLayout 
+			var meta_content = new StackLayout
 			{
+				Padding = new Thickness(20),
 				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children =  
+				Children =
 				{
+					profile,
 					nameLabel,
 					name,
 					emailLabel,
@@ -122,6 +128,47 @@ namespace TicketToTalk
 					saveButton
 				}
 			};
+
+			var content = new StackLayout
+			{
+				VerticalOptions = LayoutOptions.FillAndExpand,
+				Children =
+				{
+					profile,
+					meta_content
+				}
+			};
+
+			Content = new ScrollView
+			{
+				Content = content
+			};
+		}
+
+		/// <summary>
+		/// Ons the image tap.
+		/// </summary>
+		/// <param name="obj">Object.</param>
+		private async void onImageTap(object obj)
+		{
+			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
+			MediaFile file = null;
+			switch (action)
+			{
+				case ("Take a Photo"):
+					file = await CameraController.TakePicture("temp_profile");
+					break;
+				case ("Select a Photo From Library"):
+					file = await CameraController.SelectPicture();
+					break;
+			}
+
+			if (file != null)
+			{
+				var bytes = MediaController.readBytesFromFile(file.Path);
+				profile.profilePic.Source = ImageSource.FromFile(file.Path);
+				image = bytes;
+			}
 		}
 
 		/// <summary>
@@ -176,7 +223,7 @@ namespace TicketToTalk
 			user.email = email.Text;
 			user.password = password.Text;
 
-			var returned = await userController.updateUserRemotely(user);
+			var returned = await userController.updateUserRemotely(user, image);
 			if (returned != null)
 			{
 				Session.activeUser.name = returned.name;
@@ -184,7 +231,7 @@ namespace TicketToTalk
 
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Edit Profile", "Profile could not be updated.", "OK");
 			}

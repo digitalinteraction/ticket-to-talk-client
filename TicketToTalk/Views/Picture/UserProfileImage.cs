@@ -16,20 +16,16 @@ namespace TicketToTalk
 	/// </summary>
 	public class UserProfileImage : ContentView
 	{
-		bool download_finished;
+
+		public CircleImage profilePic;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.UserProfileImage"/> class.
 		/// </summary>
 		public UserProfileImage(double size, string alignment, Color borderColour)
 		{
-			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			//{
-			//	Debug.WriteLine("Image Downloaded");
-			//	download_finished = finished;
-			//});
 
-			CircleImage profilePic = new CircleImage
+			profilePic = new CircleImage
 			{
 				BorderColor = ProjectResource.color_red,
 				BorderThickness = 2,
@@ -48,9 +44,9 @@ namespace TicketToTalk
 				profilePic.HeightRequest = size;
 				profilePic.WidthRequest = size;
 			}
-			if (!(String.IsNullOrEmpty(alignment))) 
+			if (!(String.IsNullOrEmpty(alignment)))
 			{
-				switch (alignment) 
+				switch (alignment)
 				{
 					case ("left"):
 						profilePic.HorizontalOptions = LayoutOptions.Start;
@@ -64,34 +60,6 @@ namespace TicketToTalk
 				}
 			}
 			profilePic.BorderColor = borderColour;
-
-			//if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
-			//{
-			//	NetworkController net = new NetworkController();
-			//	var fileName = "u_" + user.id + ".jpg";
-			//	var task = Task.Run(() => net.downloadFile(user.pathToPhoto, fileName)).Result;
-			//	user.pathToPhoto = fileName;
-
-			//	while (!download_finished)
-			//	{
-			//	}
-
-			//	var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
-			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-
-			//	var userController = new UserController();
-			//	userController.updateUserLocally(user);
-			//	Session.activeUser = user;
-
-			//	//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-			//}
-			//else
-			//{
-			//	var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
-			//	profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-			//}
-
-			//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
 			Content = profilePic;
 		}
