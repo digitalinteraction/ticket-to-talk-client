@@ -13,8 +13,8 @@ namespace TicketToTalk
 	public class InspirationView : ContentPage
 	{
 		Inspiration inspiration;
-		Label question = new Label();
-		Label promptLabel = new Label();
+		Label question;
+		Label promptLabel;
 		Button recordMediaButton = new Button();
 		Button searchButton;
 		string searchLink;
@@ -24,12 +24,21 @@ namespace TicketToTalk
 		/// </summary>
 		public InspirationView()
 		{
-			question.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			question.TextColor = ProjectResource.color_dark;
-			question.FontAttributes = FontAttributes.Bold;
 
-			promptLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			promptLabel.TextColor = ProjectResource.color_dark;
+			Debug.WriteLine("InspirationView: Active Person - " + Session.activePerson);
+
+			question = new Label
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+				FontAttributes = FontAttributes.Bold,
+			};
+
+			promptLabel = new Label 
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+			};
 
 			Title = "Inspiration";
 
@@ -39,7 +48,7 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//WidthRequest = Session.ScreenWidth * 0.5,
+				WidthRequest = Session.ScreenWidth * 0.5,
 				IsVisible = false,
 				IsEnabled = true,
 				Margin = new Thickness(0, 20)
@@ -108,7 +117,7 @@ namespace TicketToTalk
 
 			var content = new StackLayout
 			{
-				Padding = new Thickness(10,20,20,10),
+				Padding = new Thickness(20),
 				Spacing = 12,
 				Children = {
 					question,
@@ -124,7 +133,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				Children = 
 				{
-					drawPull, 
+					//drawPull, 
 					content
 				}
 			};
@@ -208,6 +217,9 @@ namespace TicketToTalk
 				case ("Video"):
 					recordMediaButton.Text = "Record Video";
 					break;
+				case ("YouTube"):
+					recordMediaButton.Text = "Add YouTube Clip";
+					break;
 			}
 		}
 
@@ -225,7 +237,6 @@ namespace TicketToTalk
 
 			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
 			{
-
 				Directory = "TicketToTalk",
 				Name = "ticket.jpg"
 			});
@@ -233,7 +244,11 @@ namespace TicketToTalk
 			if (file == null)
 				return;
 
-			await Navigation.PushAsync(new NewTicket("Picture", file.Path));
+			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 
 		public async void SelectPicture()
@@ -247,7 +262,11 @@ namespace TicketToTalk
 			var file = await CrossMedia.Current.PickPhotoAsync();
 			if (file == null) { return; }
 
-			await Navigation.PushAsync(new NewTicket("Picture", file.Path));
+			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 
 		/// <summary>
@@ -276,12 +295,12 @@ namespace TicketToTalk
 			ins.question = ins.question.Replace("[name]", Session.activePerson.name);
 			ins.prompt = ins.prompt.Replace("[name]", Session.activePerson.name);
 
-			var linkIdx = ins.prompt.IndexOf("[link=\"");
+			var linkIdx = ins.prompt.IndexOf("[link=\"", StringComparison.Ordinal);
 
 			if (linkIdx != -1)
 			{
 				linkIdx += 7;
-				var linkEnd = ins.prompt.IndexOf("\"]");
+				var linkEnd = ins.prompt.IndexOf("\"]", StringComparison.Ordinal);
 				var link = ins.prompt.Substring(linkIdx, linkEnd - linkIdx);
 
 				ins.prompt = ins.prompt.Replace("HERE [link=\"" + link + "\"] ", "");
@@ -339,9 +358,20 @@ namespace TicketToTalk
 					}
 					break;
 				case ("Sound"):
-					await Navigation.PushAsync(new AudioRecorder());
+					var nav = new NavigationPage(new AudioRecorder());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 				case ("Video"):
+					break;
+				case ("YouTube"):
+					nav = new NavigationPage(new AddYoutubeLinkView());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
 					break;
 			}
 		}

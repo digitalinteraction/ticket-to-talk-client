@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -12,15 +13,20 @@ namespace TicketToTalk
 	public class AllArticles : ContentPage
 	{
 		public static ObservableCollection<Article> serverArticles = new ObservableCollection<Article>();
+		private ArticleController articleController = new ArticleController();
+		public static List<Article> sharedArticles;
+
 		/// <summary>
 		/// Creates an instance of all articles view.
 		/// </summary>
 		public AllArticles()
 		{
-
+			serverArticles.Clear();
 			Title = "Articles";
 
 			serverArticles = Task.Run(() => this.checkForNewArticles()).Result;
+			sharedArticles = Task.Run(() => articleController.getSharedArticles()).Result;
+
 			foreach (Article a in serverArticles) 
 			{
 				Console.WriteLine(a);
@@ -34,15 +40,18 @@ namespace TicketToTalk
 				Command = new Command(launchAddArticleView)
 			});
 
-			// Format image cell
-			var cell = new DataTemplate(typeof(ArticleCell));
-			cell.SetBinding(TextCell.TextProperty, new Binding("title"));
-			cell.SetBinding(TextCell.DetailProperty, new Binding("link"));
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "View Shared Articles",
+				Order = ToolbarItemOrder.Secondary,
+				Command = new Command(viewShared),
+			});
 
+			// Format image cell
 			ListView articleList = new ListView();
 			articleList.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			articleList.BindingContext = serverArticles;
-			articleList.ItemTemplate = cell;
+			articleList.ItemTemplate = new DataTemplate(typeof(ArticleCell));
 			articleList.SeparatorColor = Color.Transparent;
 			articleList.ItemSelected += OnSelection;
 
@@ -52,6 +61,21 @@ namespace TicketToTalk
 					articleList
 				}
 			};
+		}
+
+		/// <summary>
+		/// View shared articles.
+		/// </summary>
+		void viewShared()
+		{
+			if (sharedArticles != null && sharedArticles.Count > 0)
+			{
+				Navigation.PushAsync(new ViewSharedArticles(sharedArticles));
+			}
+			else 
+			{
+				DisplayAlert("Articles", "You have not been sent any articles", "OK");
+			}
 		}
 
 		/// <summary>
@@ -86,6 +110,8 @@ namespace TicketToTalk
 			ObservableCollection<Article> list = new ObservableCollection<Article>();
 			foreach (Article a in articles)
 			{
+				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
+				a.favicon = articleController.getFaviconURL(a.link);
 				list.Add(a);
 			}
 

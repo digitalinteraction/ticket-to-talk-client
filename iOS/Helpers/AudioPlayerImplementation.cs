@@ -25,10 +25,12 @@ namespace TicketToTalk.iOS
 		public void SetupPlayer(string fileName)
 		{
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
+			Debug.WriteLine("AudioPlayer: Path - " + path);
 			var url = NSUrl.FromString(path);
 			Debug.WriteLine(url);
 
 			_player = AVAudioPlayer.FromUrl(url);
+			_player.Volume = 100;
 
 			_player.FinishedPlaying += PlayerFinishedPlaying;
 			_player.PrepareToPlay();

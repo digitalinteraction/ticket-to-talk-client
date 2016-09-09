@@ -70,7 +70,11 @@ namespace TicketToTalk
 
 		void NewPersonButton_Clicked(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new AddPerson());
+			var nav = new NavigationPage(new AddPerson(null));
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+			nav.BarTextColor = ProjectResource.color_white;
+
+			Navigation.PushModalAsync(nav);
 			Navigation.RemovePage(this);
 		}
 

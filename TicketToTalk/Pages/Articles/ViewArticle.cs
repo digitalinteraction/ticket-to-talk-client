@@ -9,41 +9,38 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewArticle : ContentPage
 	{
-		Article article;
+		public static Article currentArticle;
 
 		public ViewArticle(Article article)
 		{
-			this.Title = "Article";
-			this.article = article;
+			currentArticle = article;
 
-			//ToolbarItems.Add(new ToolbarItem
-			//{
-			//	Text = "Edit",
-			//	Order = ToolbarItemOrder.Primary,
-			//	Command = new Command(launchEditArticleView)
-			//});
+			this.SetBinding(TitleProperty, "title");
+			this.BindingContext = currentArticle;
 
-			//var titleLabel = new Label
-			//{
-			//	Text = article.title,
-			//	FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-			//	TextColor = Color.FromHex(ProjectColours.red),
-			//	FontAttributes = FontAttributes.Bold
-			//};
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Options",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(editOptions)
+			});
+
+			var articleTitle = new Label
+			{
+				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+				TextColor = ProjectResource.color_dark,
+				FontAttributes = FontAttributes.Bold,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+			};
+			articleTitle.SetBinding(Label.TextProperty, "title");
+			articleTitle.BindingContext = currentArticle;
 
 			var titleStack = new StackLayout
 			{
 				Padding = new Thickness(20, 10),
 				Children =
 				{
-					new Label
-					{
-						Text = article.title,
-						FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-						TextColor = ProjectResource.color_dark,
-						FontAttributes = FontAttributes.Bold,
-						HorizontalOptions = LayoutOptions.CenterAndExpand
-					}
+					articleTitle
 				}
 			};
 
@@ -53,12 +50,13 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_blue
 			};
 
-
 			var notesContent = new Label 
 			{
 				Text = article.notes,
 				TextColor = ProjectResource.color_dark
 			};
+			notesContent.SetBinding(Label.TextProperty, "notes");
+			notesContent.BindingContext = currentArticle;
 
 			var linkLabel = new Label 
 			{
@@ -71,6 +69,8 @@ namespace TicketToTalk
 				Text = article.link,
 				TextColor = ProjectResource.color_dark
 			};
+			linkContent.SetBinding(Label.TextProperty, "link");
+			linkContent.BindingContext = currentArticle;
 
 			var viewArticleButton = new Button 
 			{
@@ -78,24 +78,31 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				BackgroundColor = ProjectResource.color_blue,
-				WidthRequest = Session.ScreenWidth * 0.5,
+				WidthRequest = Session.ScreenWidth * 0.4,
 				Margin = new Thickness(0,0,0,10),
 				BorderRadius = 5
 			};
 			viewArticleButton.Clicked += launchBrowser;
 
-			var deleteArticleButton = new Button
+			var shareArticleButton = new Button 
 			{
-				Text = "Delete Article",
-				TextColor = Color.Red
+				Text = "Share Article",
+				TextColor = ProjectResource.color_white,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				BackgroundColor = ProjectResource.color_dark,
+				WidthRequest = Session.ScreenWidth * 0.4,
+				Margin = new Thickness(0, 0, 0, 10),
+				BorderRadius = 5
 			};
-			deleteArticleButton.Clicked += DeleteArticleButton_Clicked;
+			shareArticleButton.Clicked += ShareArticleButton_Clicked;
 
 			var buttonStack = new StackLayout
 			{
+				Orientation = StackOrientation.Horizontal,
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Spacing = 0,
+				Spacing = 5,
 				Children = {
+					shareArticleButton,
 					viewArticleButton
 				}
 			};
@@ -121,8 +128,30 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
+		}
 
+		/// <summary>
+		/// Displays edit options
+		/// </summary>
+		public async void editOptions()
+		{
+			var action = await DisplayActionSheet("Article Options", "Cancel", "Delete", "Edit");
 
+			switch (action)
+			{
+				case ("Delete"):
+					var articleController = new ArticleController();
+					articleController.destoryArticle(currentArticle);
+					await Navigation.PopAsync();
+					break;
+				case ("Edit"):
+					var nav = new NavigationPage(new AddArticle(currentArticle));
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
+					break;
+			}
 		}
 
 		/// <summary>
@@ -133,27 +162,22 @@ namespace TicketToTalk
 		/// <param name="ea">Ea.</param>
 		void launchBrowser(Object sender, EventArgs ea)
 		{
-			Device.OpenUri(new Uri(article.link));
+			Device.OpenUri(new Uri(currentArticle.link));
 		}
 
 		/// <summary>
-		/// Launches the edit article view.
+		/// Shares the article button clicked.
 		/// </summary>
-		/// <returns>The edit article view.</returns>
-		public void launchEditArticleView() 
-		{
-			Navigation.PushAsync(new AddArticle(article));
-		}
-
-		/// <summary>
-		/// Delete article button is clicked.
-		/// </summary>
-		/// <returns>The article button clicked.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void DeleteArticleButton_Clicked(object sender, EventArgs e)
+		public async void ShareArticleButton_Clicked(object sender, EventArgs e)
 		{
-			DisplayActionSheet("Delete Article", "Cancel", "Delete");
+			var nav = new NavigationPage(new ShareArticle(currentArticle));
+
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			await Navigation.PushModalAsync(nav);
 		}
 	}
 }

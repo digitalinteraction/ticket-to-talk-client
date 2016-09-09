@@ -20,7 +20,6 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketController()
 		{
-			
 		}
 
 		/// <summary>
@@ -45,30 +44,36 @@ namespace TicketToTalk
 			switch (ticket.mediaType)
 			{
 				case ("Picture"):
-					TicketsPicture.pictureTickets.Remove(ticket);
-					break;
 				case ("Photo"):
 					TicketsPicture.pictureTickets.Remove(ticket);
 					break;
 				case ("Sound"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
 				case ("Song"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
 				case ("Audio"):
 					TicketsSounds.soundTickets.Remove(ticket);
 					break;
 				case ("Video"):
+				case ("YouTube"):
 					TicketsVideos.videoTickets.Remove(ticket);
 					break;
 			}
 
 			TicketsByPeriod.removeTicket(ticket);
 
+			bool inPeriodList = false;
+			foreach (Ticket t in DisplayTickets.displayTickets)
+			{
+				if (t.id == ticket.id)
+				{
+					inPeriodList = true;
+
+				}
+			}
+			if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
+
 			Debug.WriteLine("TicketCell: Deleting ticket file locally");
 
-			if (!(ticket.pathToFile.StartsWith("storage")))
+			if (!(ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal)))
 			{
 				var mediaController = new MediaController();
 				mediaController.deleteFile(ticket.pathToFile);
@@ -98,7 +103,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the tickets.
+		/// Gets the tickets attached to the active person.
 		/// </summary>
 		/// <returns>The tickets.</returns>
 		public List<Ticket> getTickets() 
@@ -197,6 +202,62 @@ namespace TicketToTalk
 			ticketDB.DeleteTicket(ticket.id);
 			ticketDB.AddTicket(ticket);
 			ticketDB.close();
+		}
+
+		/// <summary>
+		/// Updates the ticket remotely.
+		/// </summary>
+		/// <returns>The ticket remotely.</returns>
+		/// <param name="ticket">Ticket.</param>
+		public async Task<Ticket> updateTicketRemotely(Ticket ticket, string area, string period)
+		{
+			IDictionary<string, string> paramters = new Dictionary<string, string>();
+			paramters["ticket_id"] = ticket.id.ToString();
+			paramters["title"] = ticket.title;
+			paramters["description"] = ticket.description;
+			paramters["year"] = ticket.year;
+			paramters["access_level"] = ticket.access_level;
+			paramters["period"] = period;
+			paramters["token"] = Session.Token.val;
+
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				paramters["area"] = area;
+			}
+			else 
+			{
+				paramters["area"] = " ";
+			}
+
+			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
+			if (jobject != null) 
+			{
+				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
+				var jtoken = jobject.GetValue("Ticket");
+				var returned = jtoken.ToObject<Ticket>();
+
+				// Update ticket area relationships.
+				var ticketAreaDB = new TicketAreaDB();
+				var relations = ticketAreaDB.getRelationByTicketID(returned.id);
+				foreach (TicketArea ta in relations) 
+				{
+					ticketAreaDB.DeleteTicketArea(ta.id);
+				}
+
+				jtoken = jobject.GetValue("Area");
+				var rArea = jtoken.ToObject<Area>();
+				var areaController = new AreaController();
+				if (areaController.getArea(rArea.id) == null) 
+				{
+					areaController.addAreaLocally(rArea);
+				}
+				ticketAreaDB.AddTicketArea(new TicketArea(returned.id, returned.area_id));
+				return returned;
+
+				// TODO update ticket period relationship
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -360,8 +421,19 @@ namespace TicketToTalk
 			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
 				NetworkController net = new NetworkController();
-				var fileName = "t_" + ticket.id + ".jpg";
-				var task = Task.Run(() => net.downloadImage(ticket.pathToFile, fileName)).Result;
+
+				var fileName = String.Empty;
+				switch (ticket.mediaType) 
+				{
+					case ("Picture"):
+						fileName = "t_" + ticket.id + ".jpg";
+						break;
+					case ("Sound"):
+						fileName = "t_" + ticket.id + ".wav";
+						break;
+				} 
+
+				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
 				ticket.pathToFile = fileName;
 
 				while (!download_finished)
@@ -382,19 +454,96 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Parses you tube to ticket.
+		/// extracts video code from the url
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
 		/// <param name="link">Link.</param>
 		public Ticket parseYouTubeToTicket(string link) 
 		{
-			var idx = link.LastIndexOf("=", StringComparison.Ordinal);
-			var videoCode = link.Substring(idx + 1);
-			return new Ticket 
+
+			if (link.Contains("youtu.be"))
 			{
-				pathToFile = videoCode,
-				mediaType = "YouTube"
-			};
+				var idx = link.LastIndexOf("/", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
+			else 
+			{
+				var idx = link.LastIndexOf("=", StringComparison.Ordinal);
+				var videoCode = link.Substring(idx + 1);
+				return new Ticket
+				{
+					pathToFile = videoCode,
+					mediaType = "YouTube"
+				};
+			}
+		}
+
+		/// <summary>
+		/// Downloads the content of the ticket.
+		/// </summary>
+		/// <param name="filePath">File path.</param>
+		public void downloadTicketContent(string filePath) 
+		{
+
+			var download_finished = false;
+
+			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
+			{
+				Debug.WriteLine("Image Downloaded");
+				download_finished = finished;
+			});
+
+			NetworkController net = new NetworkController();
+
+			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
+			var fileName = filePath.Substring(idx + 1);
+
+			var task = Task.Run(() => net.downloadFile(filePath, fileName)).Result;
+
+			while (!download_finished)
+			{
+			}
+
+			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+		}
+
+		/// <summary>
+		/// Gets the display string.
+		/// </summary>
+		/// <returns>The display string.</returns>
+		/// <param name="ticket">Ticket.</param>
+		public string getDisplayString(Ticket ticket) 
+		{
+			var displayString = String.Empty;
+			var areaController = new AreaController();
+			var area = areaController.getArea(ticket.area_id);
+
+			switch (ticket.mediaType)
+			{
+				case ("Picture"):
+					displayString = String.Format("Taken in {0}, {1}", area.townCity, ticket.year);
+					break;
+				default:
+					displayString = String.Format("From {0}", ticket.year);
+					break;
+			}
+			return displayString;
+		}
+
+		/// <summary>
+		/// Updates the display ticket.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
+		public void updateDisplayTicket(Ticket ticket) 
+		{
+			ViewTicket.displayedTicket.title = ticket.title;
+			ViewTicket.displayedTicket.description = ticket.description;
+			ViewTicket.displayedTicket.displayString = getDisplayString(ticket);
 		}
 	}
 }

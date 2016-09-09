@@ -12,7 +12,8 @@ namespace TicketToTalk
 	public class PersonProfile : ContentPage
 	{
 
-		public Person person;
+		public static Person currentPerson;
+		PersonController personController = new PersonController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ticket_to_Talk.PersonProfile"/> class.
@@ -20,34 +21,50 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public PersonProfile(Person person)
 		{
+			currentPerson = person;
 
-			this.person = person;
-			Title = person.name;
+			// TODO: Fix name 
+			//this.SetBinding(Page.TitleProperty, currentPerson.name);
+			//BindingContext = currentPerson;
+
+			Title = "Profile";
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "?",
+				Icon = "info_icon.png",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(editPerson)
+			});
+
+			person.displayString = personController.getDisplayString(person);
 
 			var users = Task.Run(() => getUsers()).Result;
 
-			var nameLabel = new Label 
+			var nameLabel = new Label
 			{
-				Text = person.name,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
 				FontSize = 20,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			nameLabel.SetBinding(Label.TextProperty, "name");
+			nameLabel.BindingContext = currentPerson;
 
 			PersonUserDB puDB = new PersonUserDB();
-			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
+			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, currentPerson.id);
 			puDB.close();
 
 			var relation = new Label
 			{
-				Text = personUser.relationship,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			relation.SetBinding(Label.TextProperty, "relationship");
+			relation.BindingContext = personUser;
 
 			var detailsHeader = new Label
 			{
@@ -57,19 +74,20 @@ namespace TicketToTalk
 				FontSize = 18,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var birthYearLabel = new Label
 			{
-				Text = String.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			birthYearLabel.SetBinding(Label.TextProperty, "displayString");
+			birthYearLabel.BindingContext = currentPerson;
 
-			var associatesLabel = new Label 
+			var associatesLabel = new Label
 			{
 				Text = "Contributors to This Person:",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -85,11 +103,11 @@ namespace TicketToTalk
 				Spacing = 4
 			};
 
-			foreach (User u in users) 
+			foreach (User u in users)
 			{
-				var label = new Label 
+				var label = new Label
 				{
-					Text = String.Format("{0} ({1})", u.name, u.pivot.user_type),
+					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
 					HorizontalTextAlignment = TextAlignment.Center,
 					TextColor = ProjectResource.color_blue,
 					FontSize = 14,
@@ -98,7 +116,7 @@ namespace TicketToTalk
 				viewersStack.Children.Add(label);
 			}
 
-			var notesLabel = new Label 
+			var notesLabel = new Label
 			{
 				Text = "Notes on Their Condition",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -109,7 +127,7 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			var notes = new Label 
+			var notes = new Label
 			{
 				Text = person.notes,
 				WidthRequest = Session.ScreenWidth * 0.75,
@@ -118,8 +136,10 @@ namespace TicketToTalk
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+			notes.SetBinding(Label.TextProperty, "notes");
+			notes.BindingContext = currentPerson;
 
-			var button = new Button 
+			var button = new Button
 			{
 				Text = "Send an Invitation",
 				BackgroundColor = ProjectResource.color_red,
@@ -132,31 +152,34 @@ namespace TicketToTalk
 				await Navigation.PushAsync(new SendInvitation(person));
 			};
 
+			var profileImage = new PersonProfileImage(currentPerson);
+			profileImage.profilePic.SetBinding(Image.SourceProperty, "imageSource");
+			profileImage.BindingContext = currentPerson;
 			var imageStack = new StackLayout()
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
-					new PersonProfileImage(person)
+					profileImage
 				}
 			};
 
 			var infStack = new StackLayout()
 			{
 				Spacing = 4,
-				Children = 
+				Children =
 				{
 					nameLabel,
 					relation,
 					detailsHeader,
-					birthYearLabel, 
+					birthYearLabel,
 				}
 			};
 
 			var stack = new StackLayout
 			{
 				Spacing = 12,
-				Padding = new Thickness(0,0,0,20),
+				Padding = new Thickness(0, 0, 0, 20),
 				Children = {
 					imageStack,
 					infStack,
@@ -168,7 +191,7 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new ScrollView 
+			Content = new ScrollView
 			{
 				Content = stack
 			};
@@ -182,62 +205,65 @@ namespace TicketToTalk
 			var action = await DisplayActionSheet("Edit Person", "Cancel", "Delete Person", "Edit Person");
 			Debug.WriteLine("PersonProfile: Action sheet selection - " + action);
 
-			switch(action) 
+			switch (action)
 			{
 				case ("Delete Person"):
-					var confirm = await DisplayAlert("Delete " + person.name, "Are you sure you want to delete " + person.name + "'s profile?", "Yes", "Cancel");
-					if (confirm) 
+					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
+					if (confirm)
 					{
 						Debug.WriteLine("PersonProfile: Person to be deleted.");
-						var personController = new PersonController();
 						Debug.WriteLine("PersonProfile: Deleting person locally.");
-						personController.deletePersonLocally(person.id);
+						personController.deletePersonLocally(currentPerson.id);
 						Debug.WriteLine("PersonProfile: Deleting person remotely.");
-						personController.deletePersonRemotely(person);
+						personController.deletePersonRemotely(currentPerson);
 
 						var ticketController = new TicketController();
 						var mediaController = new MediaController();
 						Debug.WriteLine("PersonProfile: Getting all of the person's tickets.");
-						var tickets = ticketController.getTicketsByPerson(person.id);
+						var tickets = ticketController.getTicketsByPerson(currentPerson.id);
 						Debug.WriteLine("PersonProfile: Deleting ticket files.");
-						foreach (Ticket t in tickets) 
+						foreach (Ticket t in tickets)
 						{
 							ticketController.deleteTicketLocally(t);
 							mediaController.deleteFile(t.pathToFile);
 						}
 
-						var relation = personController.getRelation(person.id);
+						var relation = personController.getRelation(currentPerson.id);
 						var personUserDB = new PersonUserDB();
 						personUserDB.DeleteRelation(relation.id);
 
 						Debug.WriteLine("PersonProfile: Removing person from views.");
-						AllProfiles.people.Remove(person);
-						if (Session.activePerson.id == person.id)
+						AllProfiles.people.Remove(currentPerson);
+						if (Session.activePerson.id == currentPerson.id)
 						{
 							Session.activePerson = null;
 							await Navigation.PushAsync(new SelectActivePerson());
 						}
-						else 
+						else
 						{
 							await Navigation.PopAsync();
 						}
 					}
 					break;
 				case ("Edit Person"):
-					// TODO implement edit person
+					var nav = new NavigationPage(new AddPerson(currentPerson));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
 					break;
-			};
+			}
 		}
 
 		/// <summary>
 		/// Gets the users associated with this person.
 		/// </summary>
 		/// <returns>The users.</returns>
-		public async Task<List<User>> getUsers() 
+		public async Task<List<User>> getUsers()
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
-			parameters["person_id"] = person.id.ToString();
+			parameters["person_id"] = currentPerson.id.ToString();
 			string url = "people/getusers";
 
 			// Send request for all users associated with the person
@@ -248,7 +274,7 @@ namespace TicketToTalk
 
 			var jusers = jobject.GetValue("users");
 			var users = jusers.ToObject<User[]>();
-			foreach (User u in users) 
+			foreach (User u in users)
 			{
 				Console.WriteLine(u);
 			}

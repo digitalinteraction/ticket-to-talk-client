@@ -7,13 +7,21 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Select active person.
+	/// </summary>
 	public class SelectActivePerson : ContentPage
 	{
 		PersonController personController = new PersonController();
 		ObservableCollection<Person> people = new ObservableCollection<Person>();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectActivePerson"/> class.
+		/// </summary>
 		public SelectActivePerson()
 		{
+			Debug.WriteLine("SelectActivePerson: User " + Session.activeUser);
 			Padding = new Thickness(20);
 
 			Title = "Select a Person";
@@ -26,22 +34,18 @@ namespace TicketToTalk
 			};
 
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-
-			foreach (Person p in people) 
+			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
+			foreach (Person p in people)
 			{
-				if (p.pathToPhoto.StartsWith("storage", StringComparison.CurrentCulture)) 
-				{
-					personController.downloadPersonProfilePicture(p);
-				}
-				Debug.WriteLine(p.pathToPhoto);
-				p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
+				personController.addPersonLocally(p);
+				p.imageSource = personController.getPersonProfilePicture(p);
+				Debug.WriteLine("SelectActivePerson: Got image");
 				p.relation = personController.getRelationship(p.id);
 			}
-
+			Debug.WriteLine("PersonController: Finished block");
 			var peopleListView = new ListView
 			{
 				ItemTemplate = new DataTemplate(typeof(PersonCell)),
-				//BindingContext = people,
 				SeparatorColor = ProjectResource.color_grey,
 				HasUnevenRows = true,
 				RowHeight = 90
@@ -51,7 +55,7 @@ namespace TicketToTalk
 			peopleListView.ItemSelected += PeopleListView_ItemSelected;
 
 			// Layout if the user does not contribute to any people.
-			var incompleteRegistration = new Label 
+			var incompleteRegistration = new Label
 			{
 				Text = "You have not yet completed the registration process. Select next to continue",
 				TextColor = ProjectResource.color_dark,
@@ -59,7 +63,7 @@ namespace TicketToTalk
 				HorizontalTextAlignment = TextAlignment.Center,
 			};
 
-			var continueButton = new Button 
+			var continueButton = new Button
 			{
 				Text = "Next",
 				TextColor = ProjectResource.color_white,
@@ -68,13 +72,13 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				VerticalOptions = LayoutOptions.End
 			};
-			continueButton.Clicked += (sender, e) => 
+			continueButton.Clicked += (sender, e) =>
 			{
 				Navigation.PushAsync(new AllProfiles());
 				Navigation.RemovePage(this);
 			};
 
-			var compRegLayout = new StackLayout 
+			var compRegLayout = new StackLayout
 			{
 				Spacing = 10,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -96,17 +100,22 @@ namespace TicketToTalk
 				}
 				};
 			}
-			else 
+			else
 			{
 				Content = compRegLayout;
 			}
 		}
 
+		/// <summary>
+		/// Peoples the list view item selected.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void PeopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			Person p = (Person)e.SelectedItem;
 			Session.activePerson = p;
-			Debug.WriteLine("Setting active person: "+ p);
+			Debug.WriteLine("Setting active person: " + p);
 
 			App.Current.MainPage = new RootPage();
 		}

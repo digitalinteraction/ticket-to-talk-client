@@ -87,7 +87,7 @@ namespace TicketToTalk
             yearPicker.SelectedIndexChanged += Entry_TextChanged;
             
             int startYear = Int32.Parse(Session.activePerson.birthYear);
-            for (int i = startYear; i < DateTime.Now.Year; i++)
+            for (int i = startYear; i < DateTime.Now.Year + 1; i++)
             {
                 yearPicker.Items.Add(i.ToString());
             }
@@ -226,8 +226,7 @@ namespace TicketToTalk
                     }
                 };
                 break;
-            };
-            
+			};
             
             var buttonStack = new StackLayout
             {
@@ -261,7 +260,7 @@ namespace TicketToTalk
 			Debug.WriteLine("NewTicketInfo: constructor");
 
 			this.mediaType = mediaType;
-			this.filePath = filePath;
+			//this.filePath = filePath;
 
 			Debug.WriteLine("NewTicketInfo: Setting new ticket info");
 
@@ -322,7 +321,7 @@ namespace TicketToTalk
 			yearPicker.SelectedIndexChanged += Entry_TextChanged;
 
 			int startYear = Int32.Parse(Session.activePerson.birthYear);
-			for (int i = startYear; i < DateTime.Now.Year; i++)
+			for (int i = startYear; i < DateTime.Now.Year + 1; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
 			}
@@ -497,6 +496,9 @@ namespace TicketToTalk
         /// <param name="e">E.</param>
         private async void uploadTicket(object sender, EventArgs e)
         {
+
+			saveButton.IsEnabled = false;
+
             var year = Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex;
             Ticket ticket = new Ticket
             {
@@ -518,22 +520,6 @@ namespace TicketToTalk
             {
                 area.townCity = " ";
             }
-            
-            //byte[] media;
-            //if (mediaType.Equals("Picture"))
-            //{
-            //	//media = File.ReadAllBytes(filePath);
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            //else 
-            //{
-            //	media = MediaController.readBytesFromFile(filePath);
-            //}
-            
-            //using (MemoryStream ms = new MemoryStream())
-            //{
-            //	file.GetStream().CopyTo(ms);
-            //	image = ms.ToArray();
             
             if (ticket.mediaType.Equals("YouTube"))
             {
@@ -558,61 +544,72 @@ namespace TicketToTalk
             parameters["period"] = selected_period;
             
             var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
-            
-            var jtoken = jobject.GetValue("ticket");
-            var returned_ticket = jtoken.ToObject<Ticket>();
-            var ticketController = new TicketController();
-            
-            string ext = String.Empty;
-            switch (mediaType) 
-            {
-                case ("Picture"):
-                returned_ticket.displayIcon = "photo_icon.png";
-                ext = ".jpg";
-                returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-                TicketsPicture.pictureTickets.Add(returned_ticket);
-                break;
-                case ("Sound"):
-                returned_ticket.displayIcon = "audio_icon.png";
-                ext = ".wav";
-                returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-                TicketsSounds.soundTickets.Add(returned_ticket);
-                break;
-            }
-            
-            MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
-            
-            ticketController.addTicketLocally(returned_ticket);
-            
-            // Add to view
-            TicketsByPeriod.addTicket(returned_ticket);
-            
-            jtoken = jobject.GetValue("area");
-            var returned_area = jtoken.ToObject<Area>();
-            
-            var areaController = new AreaController();
-            var stored_area = areaController.getArea(returned_area.id);
-            
-            if (stored_area == null)
-            {
-                areaController.addAreaLocally(returned_area);
-            }
-            
-            await Navigation.PopAsync();
-        }
-        
-        /// <summary>
-        /// Entries the text changed.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">E.</param>
-        private void Entry_TextChanged(object sender, EventArgs e)
-        {
-            var entriesNotNull = false;
-            
-            if (mediaType.Equals("Picture"))
-            {
-                entriesNotNull = (!String.IsNullOrEmpty(title.Text))
+
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("ticket");
+				var returned_ticket = jtoken.ToObject<Ticket>();
+
+				jtoken = jobject.GetValue("area");
+				var returned_area = jtoken.ToObject<Area>();
+
+				var areaController = new AreaController();
+				var stored_area = areaController.getArea(returned_area.id);
+
+				if (stored_area == null)
+				{
+					areaController.addAreaLocally(returned_area);
+				}
+
+				var ticketController = new TicketController();
+				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
+				string ext = String.Empty;
+				switch (mediaType)
+				{
+					case ("Picture"):
+						returned_ticket.displayIcon = "photo_icon.png";
+						ext = ".jpg";
+						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+						TicketsPicture.pictureTickets.Add(returned_ticket);
+						break;
+					case ("Sound"):
+						returned_ticket.displayIcon = "audio_icon.png";
+						ext = ".wav";
+						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+						TicketsSounds.soundTickets.Add(returned_ticket);
+						break;
+				}
+
+				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
+
+				ticketController.addTicketLocally(returned_ticket);
+
+				// Add to view
+				TicketsByPeriod.addTicket(returned_ticket);
+
+				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
+
+				await Navigation.PopModalAsync();
+			}
+
+			else 
+			{ 
+				saveButton.IsEnabled = true;
+			}
+		}
+
+		/// <summary>
+		/// Entries the text changed.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		private void Entry_TextChanged(object sender, EventArgs e)
+		{
+			var entriesNotNull = false;
+
+			if (mediaType.Equals("Picture"))
+			{
+				entriesNotNull = (!String.IsNullOrEmpty(title.Text))
                 && (!String.IsNullOrEmpty(description.Text))
                 && (!String.IsNullOrEmpty(town_city.Text))
                 && (yearPicker.SelectedIndex != -1)

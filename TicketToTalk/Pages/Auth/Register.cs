@@ -20,6 +20,8 @@ namespace TicketToTalk
 		Button savePersonButton;
 		MediaFile file;
 
+		UserController userController = new UserController();
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Register"/> class.
 		/// </summary>
@@ -227,6 +229,8 @@ namespace TicketToTalk
 		/// </summary>
 		async void register(Object sender, EventArgs e)
 		{
+			savePersonButton.IsEnabled = false;
+
 			var registered = false;
 			if (string.Compare(passwordEntry.Text, confirmPasswordEntry.Text, StringComparison.Ordinal) != 0)
 			{
@@ -258,12 +262,15 @@ namespace TicketToTalk
 
 			if (registered)
 			{
+				Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
+
 				await Navigation.PushAsync(new AllProfiles());
 				Navigation.RemovePage(this);
 			}
 			else 
 			{
 				await DisplayAlert("Register", "Your profile could not be registered.", "OK");
+				savePersonButton.IsEnabled = true;
 			}
 		}
 	}

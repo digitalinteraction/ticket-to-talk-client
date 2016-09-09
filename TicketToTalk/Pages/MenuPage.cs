@@ -18,26 +18,28 @@ namespace TicketToTalk
 			NavigationPage.SetHasNavigationBar(this, false);
 			Icon = "menu_icon.png";
 			Title = "Menu"; // The Title property must be set.
-			BackgroundColor = ProjectResource.color_blue;
-
-			Padding = new Thickness(0, 20, 0, 0);
+			BackgroundColor = ProjectResource.color_white;
 
 			Menu = new MenuListView();
 
+			var userName = new Label
+			{
+				FontSize = 14,
+				TextColor = ProjectResource.color_white,
+				FontAttributes = FontAttributes.Bold
+			};
+			userName.SetBinding(Label.TextProperty, "name");
+			userName.BindingContext = Session.activeUser;
+
 			var menuContent = new ContentView
 			{
+				BackgroundColor = ProjectResource.color_blue,
 				Padding = new Thickness(20, 0, 0, 20),
 				Content = new StackLayout 
 				{
 					Children = 
 					{
-						new Label
-						{
-							Text = Session.activeUser.name,
-							FontSize = 14,
-							TextColor = ProjectResource.color_white,
-							FontAttributes = FontAttributes.Bold
-						},
+						userName,
 						new Label
 						{
 							Text = Session.activeUser.email,
@@ -57,11 +59,13 @@ namespace TicketToTalk
 
 			var images = new StackLayout
 			{
+				Padding = new Thickness(0, 20, 0, 0),
+				BackgroundColor = ProjectResource.color_blue,
 				Spacing = 0,
 				Orientation = StackOrientation.Horizontal,
 				Children = 
 				{
-					new UserProfileImage(Session.activeUser, (Session.ScreenWidth * 0.2), "left", ProjectResource.color_white),
+					new UserProfileImage((Session.ScreenWidth * 0.2), "left", ProjectResource.color_white),
 				}
 			};
 

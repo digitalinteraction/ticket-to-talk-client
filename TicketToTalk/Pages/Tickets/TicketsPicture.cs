@@ -97,7 +97,7 @@ namespace TicketToTalk
 			Ticket ticket = (Ticket)e.SelectedItem;
 			ToolbarItems.Clear();
 				
-			Navigation.PushAsync(new ViewPhotoTicket(ticket));
+			Navigation.PushAsync(new ViewTicket(ticket));
 
 			//Navigation.PushAsync(new ViewTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
@@ -109,7 +109,11 @@ namespace TicketToTalk
 		/// <returns>The new ticket view.</returns>
 		public void launchNewTicketView()
 		{
-			Navigation.PushAsync(new SelectNewTicketType());
+			var nav = new NavigationPage(new SelectNewTicketType());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Navigation.PushModalAsync(nav);
 		}
 	}
 }

@@ -12,6 +12,9 @@ namespace TicketToTalk
 	/// </summary>
 	public class PersonDB
 	{
+
+		public static bool locked = false;
+
 		private SQLiteConnection _connection;
 		string dbPath;
 
@@ -28,7 +31,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Open a database connection.
 		/// </summary>
-		public void open() 
+		public void open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Person>();
@@ -41,8 +44,8 @@ namespace TicketToTalk
 		public List<Person> GetPersons()
 		{
 			List<Person> people = new List<Person>();
-			var query =  _connection.Query<Person>("SELECT * FROM Person");
-			for (int i = 0; i < query.Count; i++) 
+			var query = _connection.Query<Person>("SELECT * FROM Person");
+			for (int i = 0; i < query.Count; i++)
 			{
 				people.Add(query[i]);
 			}
@@ -81,7 +84,7 @@ namespace TicketToTalk
 			_connection.Insert(person);
 		}
 
-		public void clearTable() 
+		public void clearTable()
 		{
 			_connection.Query<Person>("DELETE FROM Person");
 		}
