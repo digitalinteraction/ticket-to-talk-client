@@ -38,7 +38,8 @@ namespace TicketToTalk
 			foreach (Person p in people)
 			{
 				personController.addPersonLocally(p);
-				p.imageSource = personController.getPersonProfilePicture(p);
+				//p.imageSource = personController.getPersonProfilePicture(p);
+				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
 				Debug.WriteLine("SelectActivePerson: Got image");
 				p.relation = personController.getRelationship(p.id);
 			}

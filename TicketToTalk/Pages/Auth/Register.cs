@@ -31,8 +31,8 @@ namespace TicketToTalk
 			// Set title.
 			this.Title = "Register";
 
-			personImage = new CircleImage 
-			{ 
+			personImage = new CircleImage
+			{
 				BorderColor = ProjectResource.color_red,
 				BorderThickness = 2,
 				HeightRequest = (Session.ScreenWidth * 0.8),
@@ -50,33 +50,37 @@ namespace TicketToTalk
 			{
 				Text = "Name",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
-			nameEntry = new Entry 
-			{	
+			nameEntry = new Entry
+			{
 				Placeholder = "Enter your name",
 				TextColor = ProjectResource.color_red
 			};
 			nameEntry.Focus();
 			nameEntry.TextChanged += Entry_TextChanged;
 
-			var emailLabel = new Label { 
+			var emailLabel = new Label
+			{
 				Text = "Email",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
-			emailEntry = new Entry { 
+			emailEntry = new Entry
+			{
 				Placeholder = "Enter your email...",
 				TextColor = ProjectResource.color_red
 			};
 			emailEntry.TextChanged += Entry_TextChanged;
 
-			var passwordLabel = new Label { 
+			var passwordLabel = new Label
+			{
 				Text = "Password",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
-			passwordEntry = new Entry { 
+			passwordEntry = new Entry
+			{
 				Placeholder = "Enter your password...",
 				IsPassword = true,
 				TextColor = ProjectResource.color_red,
@@ -147,7 +151,7 @@ namespace TicketToTalk
 				FontAttributes = FontAttributes.Bold,
 				Text = "Save",
 				IsEnabled = false,
-				Margin = new Thickness(0,0,0,10)
+				Margin = new Thickness(0, 0, 0, 10)
 			};
 			savePersonButton.Clicked += register;
 			var buttonStack = new StackLayout
@@ -192,7 +196,7 @@ namespace TicketToTalk
 				savePersonButton.BackgroundColor = ProjectResource.color_blue;
 				savePersonButton.IsEnabled = true;
 			}
-			else 
+			else
 			{
 				savePersonButton.BackgroundColor = ProjectResource.color_grey;
 				savePersonButton.IsEnabled = false;
@@ -237,7 +241,7 @@ namespace TicketToTalk
 				await DisplayAlert("Register", "Password and Confirm Password do not match.", "OK");
 				return;
 			}
-			else 
+			else
 			{
 				// Create new user.
 				User user = new User();
@@ -262,12 +266,12 @@ namespace TicketToTalk
 
 			if (registered)
 			{
-				Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
+				Session.activeUser.imageSource = await userController.getUserProfilePicture();
 
 				await Navigation.PushAsync(new AllProfiles());
 				Navigation.RemovePage(this);
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Register", "Your profile could not be registered.", "OK");
 				savePersonButton.IsEnabled = true;

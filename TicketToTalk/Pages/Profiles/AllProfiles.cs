@@ -30,6 +30,7 @@ namespace TicketToTalk
 			});
 
 			var personController = new PersonController();
+			// TODO: delete this
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
 
 			var tableView = new TableView
@@ -55,20 +56,20 @@ namespace TicketToTalk
 			{
 				// TODO: Compare image hashcodes
 				var stored_person = personController.getPerson(p.id);
-				if (stored_person != null) 
+				if (stored_person != null)
 				{
 					p.pathToPhoto = stored_person.pathToPhoto;
 				}
-				p.imageSource = personController.getPersonProfilePicture(p);
+				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
 
 				var personCell = new PersonCell(p);
-		
+
 				personCell.BindingContext = p;
 				personCell.Tapped += PersonCell_Tapped;
 				tableSection.Add(personCell);
 			}
 
-			if (people.Count != 0) 
+			if (people.Count != 0)
 			{
 				tableView.Root.Add(tableSection);
 			}
@@ -91,9 +92,9 @@ namespace TicketToTalk
 		{
 			PersonCell cell = (PersonCell)sender;
 
-			foreach (Person p in people) 
+			foreach (Person p in people)
 			{
-				if (p.id == cell.person.id) 
+				if (p.id == cell.person.id)
 				{
 					Navigation.PushAsync(new PersonProfile(p));
 				}
@@ -115,9 +116,22 @@ namespace TicketToTalk
 		/// Launchs the add new person view.
 		/// </summary>
 		/// <returns>The add new person view.</returns>
-		void launchAddNewPersonView() 
+		void launchAddNewPersonView()
 		{
 			Navigation.PushAsync(new AddPersonChoice());
+		}
+
+		/// <summary>
+		/// On page appearing
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin)
+			{
+				DisplayAlert("Help", "Click 'add' to create a profile of who you're collecting tickets for!", "OK");
+			}
 		}
 	}
 }

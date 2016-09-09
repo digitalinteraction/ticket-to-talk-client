@@ -98,7 +98,7 @@ namespace TicketToTalk
 			}
 
 			// Check for success.
-			if (response == null) 
+			if (response == null)
 			{
 				return null;
 			}
@@ -143,14 +143,14 @@ namespace TicketToTalk
 				Console.WriteLine("Network Timeout");
 				Debug.WriteLine(ex);
 			}
-			catch (TaskCanceledException ex) 
+			catch (TaskCanceledException ex)
 			{
 				Console.WriteLine("Network Timeout");
 				Debug.WriteLine(ex);
 			}
 
 			// Check for success.
-			if (response == null) 
+			if (response == null)
 			{
 				return null;
 			}
@@ -210,7 +210,7 @@ namespace TicketToTalk
 		/// <returns>The delete request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> sendDeleteRequest(string URL, IDictionary<string, string> parameters) 
+		public async Task<JObject> sendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
@@ -260,39 +260,47 @@ namespace TicketToTalk
 			}
 		}
 
-		public bool downloadFile(string path, string fileName) 
+		public async Task<bool> downloadFile(string path, string fileName)
 		{
 			Debug.WriteLine("NetworkController: Beginning Download");
 			var webClient = new WebClient();
-			var success = true;
+			//var success = true;
 			//webClient.DownloadDataCompleted += WebClient_DownloadDataCompleted;
-			webClient.DownloadDataCompleted += (s, e) =>
-			{
-				try
-				{
-					var bytes = e.Result; // get the downloaded data
-					string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-					string localPath = Path.Combine(documentsPath, fileName);
-					Debug.WriteLine(localPath);
-					File.WriteAllBytes(localPath, bytes); // writes to local storage
+			//webClient.DownloadDataCompleted += (s, e) =>
+			//{
+			//	try
+			//	{
+			//		var bytes = e.Result; // get the downloaded data
+			//		string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			//		string localPath = Path.Combine(documentsPath, fileName);
+			//		Debug.WriteLine(localPath);
+			//		File.WriteAllBytes(localPath, bytes); // writes to local storage
 
-					var finished = true;
-					MessagingCenter.Send<NetworkController, bool>(this, "download_image", finished);
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine("NetworkController: Image not downloaded.");
-					Debug.WriteLine(String.Format("NetworkController: {0}", ex));
-					success = false;
-				}
-			};
+			//		var finished = true;
+			//		MessagingCenter.Send<NetworkController, bool>(this, "download_image", finished);
+			//	}
+			//	catch (Exception ex)
+			//	{
+			//		Debug.WriteLine("NetworkController: Image not downloaded.");
+			//		Debug.WriteLine(String.Format("NetworkController: {0}", ex));
+			//		success = false;
+			//	}
+			//};
 
 			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val);
 			Debug.WriteLine(url);
 			//await Task.Run(() => webClient.DownloadData(url));
-			webClient.DownloadDataAsync(url);
-
-			return success;
+			var returned = await webClient.DownloadDataTaskAsync(url);
+			if (returned != null)
+			{
+				Debug.WriteLine("NetworkController: Downloaded image - " + returned.HashArray());
+				MediaController.writeImageToFile(fileName, returned);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

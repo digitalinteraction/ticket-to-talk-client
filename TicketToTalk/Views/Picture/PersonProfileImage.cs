@@ -40,7 +40,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
-				Source = personController.getPersonProfilePicture(person)
+				//Source = personController.getPersonProfilePicture(person)
+				Source = Task.Run(() => personController.getPersonProfilePicture(person)).Result
 			};
 			//profilePic.SetBinding(Image.SourceProperty, "imageSource");
 
