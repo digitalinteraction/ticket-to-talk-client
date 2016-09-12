@@ -595,7 +595,7 @@ namespace TicketToTalk
 				if (isInTutorial)
 				{
 					isInTutorial = false;
-					//App.Current.MainPage = new FinishTutorialPage();
+					App.Current.MainPage = new FinishTutorialPage();
 				}
 				else
 				{

@@ -129,6 +129,7 @@ namespace TicketToTalk
 				var nav = new NavigationPage(page);
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
+				NewTicketInfo.isInTutorial = true;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
 				Navigation.RemovePage(this);
 			}
@@ -162,6 +163,7 @@ namespace TicketToTalk
 				var nav = new NavigationPage(page);
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
+				NewTicketInfo.isInTutorial = true;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
 				Navigation.RemovePage(this);
 			}

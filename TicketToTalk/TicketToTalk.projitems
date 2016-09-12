@@ -134,6 +134,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\SelectTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddNewPersonPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddTicketPrompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\FinishTutorialPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
