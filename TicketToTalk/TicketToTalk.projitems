@@ -135,6 +135,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddNewPersonPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddTicketPrompt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\FinishTutorialPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\HelpPopup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

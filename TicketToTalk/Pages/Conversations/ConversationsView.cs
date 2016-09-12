@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationsView : ContentPage
 	{
-
+		public static bool tutorialShown = false;
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 		ConversationController conversationController = new ConversationController();
 
@@ -33,7 +33,7 @@ namespace TicketToTalk
 				Command = new Command(addConversation)
 			});
 
-			foreach (Conversation c in cs) 
+			foreach (Conversation c in cs)
 			{
 				conversations.Add(conversationController.setPropertiesForDisplay(c));
 			}
@@ -48,7 +48,7 @@ namespace TicketToTalk
 			listView.RowHeight = 50;
 			listView.BindingContext = conversations;
 			listView.SeparatorColor = Color.Transparent;
-			listView.ItemTemplate = new DataTemplate(typeof (ConversationCell));
+			listView.ItemTemplate = new DataTemplate(typeof(ConversationCell));
 			listView.ItemSelected += async (sender, e) =>
 			{
 				if (e.SelectedItem == null)
@@ -75,13 +75,27 @@ namespace TicketToTalk
 		/// Adds the conversation.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		async void addConversation(object obj)
+		private async void addConversation(object obj)
 		{
 			var nav = new NavigationPage(new NewConversation());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			await Navigation.PushModalAsync(nav);
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "Conversations lets you gather tickets into a group and make notes before you have an physical conversation with the person you want to talk to.\n\nClick the 'Add' button to add a new conversation.";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
+				tutorialShown = true;
+			}
 		}
 	}
 }

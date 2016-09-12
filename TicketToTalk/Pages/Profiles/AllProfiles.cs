@@ -122,6 +122,9 @@ namespace TicketToTalk
 			Navigation.PushAsync(new AddPersonChoice());
 		}
 
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

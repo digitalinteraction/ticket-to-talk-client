@@ -27,9 +27,6 @@ namespace TicketToTalk
 
 			var icon = new Image
 			{
-				//BackgroundColor = ProjectResource.color_white,
-				//BorderColor = ProjectResource.color_white,
-				//BorderThickness = 2,
 				Source = "ticket_icon.png",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
