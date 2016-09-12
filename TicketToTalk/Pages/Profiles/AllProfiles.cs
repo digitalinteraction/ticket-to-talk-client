@@ -129,9 +129,9 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-			if (Session.activeUser.firstLogin && !promptShown)
+			if (!promptShown)
 			{
-				Navigation.PushModalAsync(new AddNewPersonPrompt());
+				App.Current.MainPage = new AddNewPersonPrompt();
 				promptShown = true;
 			}
 		}

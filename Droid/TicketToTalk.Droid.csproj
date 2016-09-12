@@ -166,6 +166,7 @@
     <AndroidResource Include="Resources\drawable\default_profile.png" />
     <AndroidResource Include="Resources\drawable\face_white_icon.png" />
     <AndroidResource Include="Resources\drawable\chat_white_icon.png" />
+    <AndroidResource Include="Resources\drawable\file_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />
