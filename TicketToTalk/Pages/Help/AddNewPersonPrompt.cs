@@ -15,8 +15,6 @@ namespace TicketToTalk
 	public class AddNewPersonPrompt : ContentPage
 	{
 
-		UIController ui = new UIController();
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.AddNewPersonPrompt"/> class.
 		/// </summary>
@@ -46,6 +44,7 @@ namespace TicketToTalk
 				Text = "Skip Tutorial"
 			};
 			skipTutorialButton.setButtonStyle(ProjectResource.color_blue);
+			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
 
 			Content = new StackLayout
 			{
@@ -71,10 +70,18 @@ namespace TicketToTalk
 			var nav = new NavigationPage(new AddPerson(null));
 			nav.setNavHeaders();
 
-			//nav.BarTextColor = ProjectResource.color_white;
-			//nav.BackgroundColor = ProjectResource.color_blue;
+			//Application.Current.MainPage = nav;
+			Navigation.PushModalAsync(nav);
+		}
 
-			Application.Current.MainPage = nav;
+		/// <summary>
+		/// Skips the tutorial button clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		private void SkipTutorialButton_Clicked(object sender, EventArgs e)
+		{
+			Application.Current.MainPage = new RootPage();
 		}
 	}
 }

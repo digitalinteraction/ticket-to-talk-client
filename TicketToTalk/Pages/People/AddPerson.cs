@@ -16,6 +16,7 @@ namespace TicketToTalk
 	{
 
 		PersonController personController = new PersonController();
+		public static bool isInTutorial = false;
 
 		Entry name;
 		Image personImage;
@@ -292,6 +293,8 @@ namespace TicketToTalk
 		void cancel()
 		{
 			Navigation.PopModalAsync();
+
+
 		}
 
 		/// <summary>

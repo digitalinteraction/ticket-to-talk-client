@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Register.
 	/// </summary>
-	public partial class Register : ContentPage
+	public class Register : ContentPage
 	{
 		Image personImage;
 		Entry nameEntry;
@@ -29,7 +29,7 @@ namespace TicketToTalk
 		{
 
 			// Set title.
-			this.Title = "Register";
+			Title = "Register";
 
 			personImage = new CircleImage
 			{
@@ -187,10 +187,10 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(nameEntry.Text))
-				&& (!String.IsNullOrEmpty(emailEntry.Text))
-				&& (!String.IsNullOrEmpty(passwordEntry.Text))
-				&& (!String.IsNullOrEmpty(confirmPasswordEntry.Text));
+			var entriesNotNull = (!string.IsNullOrEmpty(nameEntry.Text))
+				&& (!string.IsNullOrEmpty(emailEntry.Text))
+				&& (!string.IsNullOrEmpty(passwordEntry.Text))
+				&& (!string.IsNullOrEmpty(confirmPasswordEntry.Text));
 			if (entriesNotNull)
 			{
 				savePersonButton.BackgroundColor = ProjectResource.color_blue;
@@ -244,7 +244,7 @@ namespace TicketToTalk
 			else
 			{
 				// Create new user.
-				User user = new User();
+				var user = new User();
 				user.name = nameEntry.Text;
 				user.email = emailEntry.Text;
 				user.password = passwordEntry.Text;
@@ -260,7 +260,6 @@ namespace TicketToTalk
 					}
 				}
 
-				var userController = new UserController();
 				registered = await userController.registerNewUser(user, image);
 			}
 
