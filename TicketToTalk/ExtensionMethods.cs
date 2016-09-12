@@ -91,6 +91,18 @@ namespace TicketToTalk
 			button.WidthRequest = (Session.ScreenWidth * 0.5);
 			button.HorizontalOptions = LayoutOptions.CenterAndExpand;
 		}
+
+		/// <summary>
+		/// Sets the label style.
+		/// </summary>
+		/// <param name="label">Label.</param>
+		public static void setLabelStyleInversreCenter(this Label label)
+		{
+			label.TextColor = ProjectResource.color_white;
+			label.HorizontalTextAlignment = TextAlignment.Center;
+			label.HorizontalOptions = LayoutOptions.Center;
+			label.WidthRequest = Session.ScreenWidth * 0.8;
+		}
 	}
 }
 

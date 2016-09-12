@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Xamarin.Forms;
 using System.IO;
 using System.Diagnostics;
@@ -142,7 +141,7 @@ namespace TicketToTalk
 				relationPicker.Items.Add(r);
 			}
 
-			Label area = new Label
+			var area = new Label
 			{
 				Text = "Where have they lived most of their life?",
 				TextColor = ProjectResource.color_dark,
@@ -189,7 +188,7 @@ namespace TicketToTalk
 					{
 						Text = "Details",
 						HorizontalOptions = LayoutOptions.CenterAndExpand,
-						TextColor = ProjectResource.color_white,
+						TextColor = ProjectResource.color_white
 					}
 				}
 			};
@@ -224,7 +223,7 @@ namespace TicketToTalk
 				FontAttributes = FontAttributes.Bold,
 				Text = "Save",
 				IsEnabled = false,
-				Margin = new Thickness(0, 0, 0, 10),
+				Margin = new Thickness(0, 0, 0, 10)
 			};
 			if (person != null)
 			{
@@ -259,7 +258,7 @@ namespace TicketToTalk
 			{
 				Title = "Edit Person";
 
-				PersonUserDB puDB = new PersonUserDB();
+				var puDB = new PersonUserDB();
 				var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
 				puDB.close();
 
@@ -277,7 +276,7 @@ namespace TicketToTalk
 				birthPlaceEntry.Text = person.birthPlace;
 				notesEditor.Text = person.notes;
 				town_city.Text = person.area;
-				yearPicker.SelectedIndex = Int32.Parse(person.birthYear) - (DateTime.Now.Year - 99);
+				yearPicker.SelectedIndex = int.Parse(person.birthYear) - (DateTime.Now.Year - 99);
 				savePersonButton.Text = "Save Changes";
 			}
 
@@ -330,10 +329,10 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(name.Text))
-				&& (!String.IsNullOrEmpty(birthPlaceEntry.Text))
-				&& (!String.IsNullOrEmpty(town_city.Text))
-				&& (!String.IsNullOrEmpty(notesEditor.Text))
+			var entriesNotNull = (!string.IsNullOrEmpty(name.Text))
+				&& (!string.IsNullOrEmpty(birthPlaceEntry.Text))
+				&& (!string.IsNullOrEmpty(town_city.Text))
+				&& (!string.IsNullOrEmpty(notesEditor.Text))
 				&& (relationPicker.SelectedIndex != -1)
 				&& (yearPicker.SelectedIndex != -1);
 
@@ -352,7 +351,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Saves the person to the database.
 		/// </summary>
-		public async void savePerson(Object sender, EventArgs ea)
+		public async void savePerson(object sender, EventArgs ea)
 		{
 			savePersonButton.IsEnabled = false;
 
@@ -381,7 +380,15 @@ namespace TicketToTalk
 
 			if (saved)
 			{
-				Application.Current.MainPage = new RootPage();
+				if (isInTutorial)
+				{
+					Application.Current.MainPage = new AddTicketPrompt();
+					isInTutorial = false;
+				}
+				else
+				{
+					Application.Current.MainPage = new RootPage();
+				}
 			}
 			else
 			{
@@ -399,7 +406,6 @@ namespace TicketToTalk
 		{
 			savePersonButton.IsEnabled = false;
 
-			var personController = new PersonController();
 			var p = personController.getPerson(person.id);
 
 			p.name = name.Text;

@@ -17,7 +17,7 @@ namespace TicketToTalk
 		//public static string DB = "ttt3_server_test.4.db3";
 		//public static readonly string baseUrl = "http://52.35.119.74/api/";
 
-		public static string DB = "tickettotalk.40.db3";
+		public static string DB = "tickettotalk.57.db3";
 		public static readonly string baseUrl = "http://tickettotalk.app/api/";
 
 		public Session()

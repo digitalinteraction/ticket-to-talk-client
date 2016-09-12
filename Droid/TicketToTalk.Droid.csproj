@@ -164,6 +164,7 @@
     <AndroidResource Include="Resources\drawable\red_ticket_icon.png" />
     <AndroidResource Include="Resources\drawable\red_add.png" />
     <AndroidResource Include="Resources\drawable\default_profile.png" />
+    <AndroidResource Include="Resources\drawable\face_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />

@@ -195,6 +195,7 @@
     <BundleResource Include="Resources\icon_settings.png" />
     <BundleResource Include="red_add.png" />
     <BundleResource Include="Resources\default_profile.png" />
+    <BundleResource Include="Resources\face_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />
