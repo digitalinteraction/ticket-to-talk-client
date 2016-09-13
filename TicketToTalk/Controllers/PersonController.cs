@@ -109,7 +109,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture.</returns>
 		/// <param name="person">Person.</param>
-		public ImageSource getPersonProfilePicture(Person person)
+		public async Task<ImageSource> getPersonProfilePicture(Person person)
 		{
 			ImageSource imageSource;
 			if (person.pathToPhoto.Equals("default_profile.png"))
@@ -120,7 +120,9 @@ namespace TicketToTalk
 			else if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
 			{
 				Debug.WriteLine("PersonController: Getting image from server.");
-				imageSource = ImageSource.FromStream(() => new MemoryStream(downloadPersonProfilePicture(person)));
+				var image = await downloadPersonProfilePicture(person);
+				//imageSource = ImageSource.FromStream(() => new MemoryStream(downloadPersonProfilePicture(person)));
+				imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 			}
 			else
 			{
@@ -137,7 +139,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture.</returns>
 		/// <param name="person">Person.</param>
-		public byte[] downloadPersonProfilePicture(Person person)
+		public async Task<byte[]> downloadPersonProfilePicture(Person person)
 		{
 			var download_finished = false;
 
@@ -148,17 +150,22 @@ namespace TicketToTalk
 			});
 
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
 
-			person.pathToPhoto = fileName;
+			//var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
+			var downloaded = await networkController.downloadFile(person.pathToPhoto, fileName);
 
-			while (!download_finished)
+			if (downloaded)
 			{
+				person.pathToPhoto = fileName;
+
+				//while (!download_finished)
+				//{
+				//}
+				while (PersonDB.locked) { }
+				PersonDB.locked = true;
+				updatePersonLocally(person);
+				PersonDB.locked = false;
 			}
-			while (PersonDB.locked) { }
-			PersonDB.locked = true;
-			updatePersonLocally(person);
-			PersonDB.locked = false;
 
 			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 

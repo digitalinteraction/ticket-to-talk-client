@@ -132,6 +132,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\FinishConversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\User\EditProfile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\SelectTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddNewPersonPrompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddTicketPrompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\FinishTutorialPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\HelpPopup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -149,5 +153,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Views\Picture\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\People\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Help\" />
   </ItemGroup>
 </Project>

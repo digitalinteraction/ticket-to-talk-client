@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Xamarin.Forms;
 
 namespace TicketToTalk
 {
@@ -66,6 +67,41 @@ namespace TicketToTalk
 				hex.AppendFormat("{0:X2}", b);
 			}
 			return hex.ToString();
+		}
+
+		/// <summary>
+		/// Sets header on navigation page.
+		/// </summary>
+		/// <param name="nav">Nav.</param>
+		public static void setNavHeaders(this NavigationPage nav)
+		{
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+		}
+
+		/// <summary>
+		/// Sets the button style.
+		/// </summary>
+		/// <param name="button">Button.</param>
+		/// <param name="color">Color.</param>
+		public static void setButtonStyle(this Button button, Color color)
+		{
+			button.TextColor = ProjectResource.color_white;
+			button.BackgroundColor = color;
+			button.WidthRequest = (Session.ScreenWidth * 0.5);
+			button.HorizontalOptions = LayoutOptions.CenterAndExpand;
+		}
+
+		/// <summary>
+		/// Sets the label style.
+		/// </summary>
+		/// <param name="label">Label.</param>
+		public static void setLabelStyleInversreCenter(this Label label)
+		{
+			label.TextColor = ProjectResource.color_white;
+			label.HorizontalTextAlignment = TextAlignment.Center;
+			label.HorizontalOptions = LayoutOptions.Center;
+			label.WidthRequest = Session.ScreenWidth * 0.8;
 		}
 	}
 }

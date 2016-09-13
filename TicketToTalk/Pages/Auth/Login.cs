@@ -128,7 +128,7 @@ namespace TicketToTalk
 			var authed = await userController.authenticateUser(email.Text, password.Text);
 			if (authed)
 			{
-				Session.activeUser.imageSource = userController.getUserProfilePicture(Session.activeUser);
+				Session.activeUser.imageSource = await userController.getUserProfilePicture();
 				await Navigation.PushAsync(new SelectActivePerson());
 				Navigation.RemovePage(this);
 			}

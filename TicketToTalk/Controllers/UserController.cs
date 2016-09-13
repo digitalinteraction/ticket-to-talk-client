@@ -118,7 +118,7 @@ namespace TicketToTalk
 
 				if (Session.activeUser.imageHash == null)
 				{
-					user.pathToPhoto = "u_" + Session.activeUser.id + ".jpg";
+					user.pathToPhoto = "default_profile.png";
 				}
 
 				if (image != null)
@@ -174,21 +174,23 @@ namespace TicketToTalk
 				var local_user = userController.getLocalUserByEmail(returned_user.email);
 				if (local_user == null)
 				{
+					returned_user.firstLogin = true;
 					userController.addUserLocally(returned_user);
 					Session.activeUser = returned_user;
 				}
 				else
 				{
-					// TODO: compare user image hashcodes.
+					returned_user.firstLogin = false;
+
 					if (returned_user.imageHash != null)
 					{
 						if (local_user.imageHash == null)
 						{
-							downloadUserProfilePicture(returned_user);
+							await downloadUserProfilePicture();
 						}
 						else if (!returned_user.imageHash.Equals(local_user.imageHash))
 						{
-							downloadUserProfilePicture(returned_user);
+							await downloadUserProfilePicture();
 						}
 						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
@@ -330,8 +332,9 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
 		/// <param name="user">User.</param>
-		public ImageSource getUserProfilePicture(User user)
+		public async Task<ImageSource> getUserProfilePicture()
 		{
+			var user = Session.activeUser;
 			ImageSource imageSource;
 			if (user.pathToPhoto.Equals("default_profile.png"))
 			{
@@ -341,7 +344,8 @@ namespace TicketToTalk
 			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
 			{
 				Debug.WriteLine("UserController: Getting image from server.");
-				imageSource = ImageSource.FromStream(() => new MemoryStream(downloadUserProfilePicture(user)));
+				var imgBytes = await downloadUserProfilePicture();
+				imageSource = ImageSource.FromStream(() => new MemoryStream(imgBytes));
 			}
 			else
 			{
@@ -358,28 +362,17 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
 		/// <param name="user">User.</param>
-		public byte[] downloadUserProfilePicture(User user)
+		public async Task<byte[]> downloadUserProfilePicture()
 		{
-			var download_finished = false;
-
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
+			var user = Session.activeUser;
 
 			var fileName = "u_" + user.id + ".jpg";
-			var task = Task.Run(() => networkController.downloadFile(user.pathToPhoto, fileName)).Result;
+			Debug.WriteLine("UserController: Downloading profile picture with path - " + user.pathToPhoto);
+			var task = await networkController.downloadFile(user.pathToPhoto, fileName);
 
 			user.pathToPhoto = fileName;
 
-			while (!download_finished)
-			{
-			}
-
 			updateUserLocally(user);
-
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 
 			return MediaController.readBytesFromFile(user.pathToPhoto);
 		}

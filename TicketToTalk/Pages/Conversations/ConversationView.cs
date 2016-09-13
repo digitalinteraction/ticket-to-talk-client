@@ -11,6 +11,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationView : ContentPage
 	{
+		public static bool tutorialShown = false;
+
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
 		List<Ticket> tickets;
 		Conversation conversation;
@@ -30,7 +32,7 @@ namespace TicketToTalk
 			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
 			{
 				var added = await conversationController.addTicketToConversationRemotely(conversation, returned_ticket);
-				if (added) 
+				if (added)
 				{
 					conversationController.addTicketToConversation(conversation, returned_ticket);
 					conversationController.addTicketToDisplayedConversation(conversation, returned_ticket);
@@ -44,9 +46,9 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark
 			};
 
-			char[] del = {' '};
+			char[] del = { ' ' };
 			string[] dt = conversation.date.Split(del);
-			del = new char[]{ ':' };
+			del = new char[] { ':' };
 			string[] time = dt[1].Split(del);
 
 			string hour = (Int32.Parse(time[0]) % 12).ToString();
@@ -153,7 +155,7 @@ namespace TicketToTalk
 							switch (ticket.mediaType)
 							{
 								case "Photo":
-								case "Picture": 
+								case "Picture":
 									ticket.displayIcon = "photo_icon.png";
 									break;
 								case "Video":
@@ -191,7 +193,7 @@ namespace TicketToTalk
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
 
-			var startConversation = new Button 
+			var startConversation = new Button
 			{
 				Text = "Start Conversation",
 				TextColor = ProjectResource.color_white,
@@ -205,7 +207,7 @@ namespace TicketToTalk
 			{
 				Padding = new Thickness(20),
 				Spacing = 5,
-				Children = 
+				Children =
 				{
 					dateLabel,
 					date,
@@ -226,7 +228,7 @@ namespace TicketToTalk
 		{
 			var action = await DisplayActionSheet("Add a New Ticket", "Cancel", null, "Create a New Ticket", "Add an Existing Ticket");
 
-			switch (action) 
+			switch (action)
 			{
 				case "Create a New Ticket":
 					var nav = new NavigationPage(new SelectNewTicketType());
@@ -280,7 +282,7 @@ namespace TicketToTalk
 
 				await Navigation.PushModalAsync(nav);
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Start Conversation", "You need to add tickets to the conversation before starting.", "OK");
 			}
@@ -295,6 +297,23 @@ namespace TicketToTalk
 			MessagingCenter.Unsubscribe<NewTicketInfo, Ticket>(this, "ticket_added");
 
 			return base.OnBackButtonPressed();
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "This is a conversation, you can add tickets by pressing the add ticket button and view more options by pressing the 'i' button.\n\nStart a conversation by pressing start!";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
+				tutorialShown = true;
+			}
 		}
 	}
 }

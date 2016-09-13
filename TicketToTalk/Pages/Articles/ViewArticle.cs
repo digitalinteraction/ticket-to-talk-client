@@ -10,6 +10,7 @@ namespace TicketToTalk
 	public class ViewArticle : ContentPage
 	{
 		public static Article currentArticle;
+		public static bool tutorialShown;
 
 		public ViewArticle(Article article)
 		{
@@ -50,7 +51,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_blue
 			};
 
-			var notesContent = new Label 
+			var notesContent = new Label
 			{
 				Text = article.notes,
 				TextColor = ProjectResource.color_dark
@@ -58,13 +59,13 @@ namespace TicketToTalk
 			notesContent.SetBinding(Label.TextProperty, "notes");
 			notesContent.BindingContext = currentArticle;
 
-			var linkLabel = new Label 
+			var linkLabel = new Label
 			{
 				Text = "Link",
 				TextColor = ProjectResource.color_blue
 			};
 
-			var linkContent = new Label 
+			var linkContent = new Label
 			{
 				Text = article.link,
 				TextColor = ProjectResource.color_dark
@@ -72,19 +73,19 @@ namespace TicketToTalk
 			linkContent.SetBinding(Label.TextProperty, "link");
 			linkContent.BindingContext = currentArticle;
 
-			var viewArticleButton = new Button 
+			var viewArticleButton = new Button
 			{
 				Text = "View Article",
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				BackgroundColor = ProjectResource.color_blue,
 				WidthRequest = Session.ScreenWidth * 0.4,
-				Margin = new Thickness(0,0,0,10),
+				Margin = new Thickness(0, 0, 0, 10),
 				BorderRadius = 5
 			};
 			viewArticleButton.Clicked += launchBrowser;
 
-			var shareArticleButton = new Button 
+			var shareArticleButton = new Button
 			{
 				Text = "Share Article",
 				TextColor = ProjectResource.color_white,
@@ -107,7 +108,7 @@ namespace TicketToTalk
 				}
 			};
 
-			var contentStack = new StackLayout 
+			var contentStack = new StackLayout
 			{
 				Padding = new Thickness(20),
 				Children = {
@@ -178,6 +179,23 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			await Navigation.PushModalAsync(nav);
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "View your article, or, you can share articles by pressing the 'Options' button.";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "file_white_icon.png"));
+				tutorialShown = true;
+			}
 		}
 	}
 }

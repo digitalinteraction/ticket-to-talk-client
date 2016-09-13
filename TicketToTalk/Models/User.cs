@@ -17,6 +17,7 @@ namespace TicketToTalk
 		private string _pathToPhoto;
 		private ImageSource _imageSource;
 		private string _imageHash;
+		private bool _firstLogin;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -112,6 +113,22 @@ namespace TicketToTalk
 			}
 		}
 
+		public bool firstLogin
+		{
+			get
+			{
+				return _firstLogin;
+			}
+			set
+			{
+				if (value != _firstLogin)
+				{
+					_firstLogin = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		[Ignore]
 		public Pivot pivot { get; set; }
 
@@ -164,11 +181,11 @@ namespace TicketToTalk
 		public int CompareTo(object obj)
 		{
 			var rhs = obj as User;
-			var comp = name.CompareTo(rhs.name);
+			var comp = string.Compare(name, rhs.name, StringComparison.Ordinal);
 
 			if (comp == 0)
 			{
-				comp = email.CompareTo(rhs.email);
+				comp = string.Compare(email, rhs.email, StringComparison.Ordinal);
 			}
 			return _name.CompareTo(obj);
 		}

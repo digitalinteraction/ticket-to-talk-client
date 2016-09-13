@@ -12,6 +12,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class AllProfiles : ContentPage
 	{
+		public static bool promptShown = false;
 		public static ObservableCollection<Person> people = new ObservableCollection<Person>();
 
 		/// <summary>
@@ -30,6 +31,7 @@ namespace TicketToTalk
 			});
 
 			var personController = new PersonController();
+			// TODO: delete this
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
 
 			var tableView = new TableView
@@ -55,20 +57,20 @@ namespace TicketToTalk
 			{
 				// TODO: Compare image hashcodes
 				var stored_person = personController.getPerson(p.id);
-				if (stored_person != null) 
+				if (stored_person != null)
 				{
 					p.pathToPhoto = stored_person.pathToPhoto;
 				}
-				p.imageSource = personController.getPersonProfilePicture(p);
+				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
 
 				var personCell = new PersonCell(p);
-		
+
 				personCell.BindingContext = p;
 				personCell.Tapped += PersonCell_Tapped;
 				tableSection.Add(personCell);
 			}
 
-			if (people.Count != 0) 
+			if (people.Count != 0)
 			{
 				tableView.Root.Add(tableSection);
 			}
@@ -91,9 +93,9 @@ namespace TicketToTalk
 		{
 			PersonCell cell = (PersonCell)sender;
 
-			foreach (Person p in people) 
+			foreach (Person p in people)
 			{
-				if (p.id == cell.person.id) 
+				if (p.id == cell.person.id)
 				{
 					Navigation.PushAsync(new PersonProfile(p));
 				}
@@ -115,9 +117,23 @@ namespace TicketToTalk
 		/// Launchs the add new person view.
 		/// </summary>
 		/// <returns>The add new person view.</returns>
-		void launchAddNewPersonView() 
+		void launchAddNewPersonView()
 		{
 			Navigation.PushAsync(new AddPersonChoice());
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (!promptShown)
+			{
+				App.Current.MainPage = new AddNewPersonPrompt();
+				promptShown = true;
+			}
 		}
 	}
 }
