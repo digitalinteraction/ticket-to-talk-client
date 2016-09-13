@@ -506,14 +506,18 @@ namespace TicketToTalk
 				AllProfiles.people[r].area = p.area;
 				AllProfiles.people[r].notes = p.notes;
 				AllProfiles.people[r].displayString = getDisplayString(AllProfiles.people[r]);
-				AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 
 				PersonProfile.currentPerson.notes = p.notes;
 				PersonProfile.currentPerson.displayString = getDisplayString(p);
-				PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+
 				Session.activePerson = p;
 
-				MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
+				if (image != null)
+				{
+					AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+					PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+					MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
+				}
 
 				return p;
 			}
