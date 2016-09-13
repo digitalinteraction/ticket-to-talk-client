@@ -257,6 +257,7 @@ namespace TicketToTalk
 
 				jToken = jobject.GetValue("user");
 				user = jToken.ToObject<User>();
+				user.firstLogin = true;
 
 				if (image != null && image.Length > 0)
 				{
