@@ -16,19 +16,19 @@ namespace TicketToTalk
 	/// </summary>
 	public class PersonProfileImage : ContentView
 	{
-		bool download_finished;
 		public CircleImage profilePic;
+		PersonController personController = new PersonController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ProfileImage"/> class.
 		/// </summary>
 		public PersonProfileImage(Person person)
 		{
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
+			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
+			//{
+			//	Debug.WriteLine("Image Downloaded");
+			//	download_finished = finished;
+			//});
 
 			profilePic = new CircleImage
 			{
@@ -40,34 +40,10 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
+				//Source = personController.getPersonProfilePicture(person)
+				Source = Task.Run(() => personController.getPersonProfilePicture(person)).Result
 			};
-			if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
-			{
-				NetworkController net = new NetworkController();
-				var fileName = "p_" + person.id + ".jpg";
-				var task = Task.Run(() => net.downloadFile(person.pathToPhoto, fileName)).Result;
-				//net.downloadImage(user.pathToPhoto, fileName);
-				person.pathToPhoto = fileName;
-
-				while (!download_finished)
-				{
-				}
-
-				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-
-				var personController = new PersonController();
-				personController.updatePersonLocally(person);
-
-				MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-			}
-			else
-			{
-				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
-			}
-
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+			//profilePic.SetBinding(Image.SourceProperty, "imageSource");
 
 			Content = profilePic;
 		}

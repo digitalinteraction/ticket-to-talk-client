@@ -172,6 +172,62 @@ namespace TicketToTalk
 
 			return false;
 		}
+
+		/// <summary>
+		/// Gets the favicon URL of an article link.
+		/// </summary>
+		/// <returns>The favicon URL.</returns>
+		/// <param name="url">URL.</param>
+		public string getFaviconURL(string url) 
+		{
+			var idx = getBaseURLIndex(url);
+			var baseURL = url.Substring(0, idx + 1);
+			if (!(baseURL.EndsWith("/", StringComparison.Ordinal))) 
+			{
+				baseURL += "/";
+			}
+
+			Debug.WriteLine("ArticleController: baseURL - " + baseURL);
+
+			return baseURL + "/favicon.ico";
+		}
+
+		/// <summary>
+		/// Gets the base URL Index.
+		/// </summary>
+		/// <returns>The base URL Index.</returns>
+		/// <param name="url">URL.</param>
+		private int getBaseURLIndex(string url) 
+		{
+			int count = 0;
+			char key = '/';
+
+			for (int i = 0; i < url.Length; i++)
+			{
+				if (url[i] == key)
+				{
+					count++;
+					if (count == 3)
+					{
+						return i;
+					}
+				}
+				else if (i == (url.Length - 1)) 
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		public void updateArticleLocally(Article article)
+		{
+			articleDB.open();
+			articleDB.DeleteArticle(article.id);
+			articleDB.AddArticle(article);
+			articleDB.close();
+		}
 	}
 }
 

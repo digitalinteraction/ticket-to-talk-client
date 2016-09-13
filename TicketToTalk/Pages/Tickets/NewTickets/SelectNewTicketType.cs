@@ -37,7 +37,7 @@ namespace TicketToTalk
 
 			var audioCell = new ImageCell
 			{
-				Text = "Sound", 
+				Text = "Sound",
 				Detail = "Record a Sound",
 				DetailColor = ProjectResource.color_blue,
 				ImageSource = "audio_icon.png",
@@ -63,7 +63,7 @@ namespace TicketToTalk
 
 			var table = new TableView
 			{
-				Root = new TableRoot{},
+				Root = new TableRoot { },
 				Intent = TableIntent.Menu,
 				HasUnevenRows = true,
 				RowHeight = 60,
@@ -81,7 +81,7 @@ namespace TicketToTalk
 			Content = new StackLayout
 			{
 				Spacing = 12,
-				Children = 
+				Children =
 				{
 					table,
 				}
@@ -91,12 +91,12 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void cancel()
 		{
 			Navigation.PopModalAsync();
 		}
 
-		void SongButton_Clicked(object sender, EventArgs e)
+		private void SongButton_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AudioRecorder());
 			nav.BarTextColor = ProjectResource.color_white;
@@ -111,11 +111,11 @@ namespace TicketToTalk
 		/// <returns>The button clicked.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void PhotoButton_Clicked(object sender, EventArgs e)
+		private async void PhotoButton_Clicked(object sender, EventArgs e)
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			Debug.WriteLine("Action: " + action);
-			switch (action) 
+			switch (action)
 			{
 				case ("Take a Photo"):
 					TakePicture();
@@ -146,7 +146,7 @@ namespace TicketToTalk
 			});
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
@@ -157,7 +157,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -168,9 +168,9 @@ namespace TicketToTalk
 		/// <summary>
 		/// Selects a picture from the library.
 		/// </summary>
-		public async void SelectPicture() 
+		public async void SelectPicture()
 		{
-			if (!CrossMedia.Current.IsPickPhotoSupported) 
+			if (!CrossMedia.Current.IsPickPhotoSupported)
 			{
 				await DisplayAlert("Select Photo", "Photo select not supported", "OK");
 				return;
@@ -180,7 +180,7 @@ namespace TicketToTalk
 			if (file == null) { return; }
 
 			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", file.Path, "OK");
+			await DisplayAlert("File Location", "Photo Added!", "OK");
 
 			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
@@ -191,7 +191,7 @@ namespace TicketToTalk
 				nav.BarTextColor = ProjectResource.color_white;
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+				Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{
@@ -199,6 +199,11 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Yous the tube cell tapped.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void YouTubeCell_Tapped(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddYoutubeLinkView());

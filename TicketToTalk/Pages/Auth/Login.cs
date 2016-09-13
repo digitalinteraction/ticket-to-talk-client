@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using TicketToTalk;
-using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -84,7 +80,7 @@ namespace TicketToTalk
 			};
 			password.TextChanged += Entry_TextChanged;
 
-			register = new Button 
+			register = new Button
 			{
 				Text = "Register",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -98,13 +94,13 @@ namespace TicketToTalk
 			{
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				Spacing = 12,
-				Children = 
+				Children =
 				{
-					title, 
-					loadTime, 
-					email, 
-					password, 
-					login, 
+					title,
+					loadTime,
+					email,
+					password,
+					login,
 					register
 				}
 			};
@@ -121,7 +117,7 @@ namespace TicketToTalk
 		/// <returns>The login.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleLogin(Object sender, EventArgs ea)
+		private async void HandleLogin(Object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -132,10 +128,11 @@ namespace TicketToTalk
 			var authed = await userController.authenticateUser(email.Text, password.Text);
 			if (authed)
 			{
+				Session.activeUser.imageSource = await userController.getUserProfilePicture();
 				await Navigation.PushAsync(new SelectActivePerson());
 				Navigation.RemovePage(this);
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Login", "Incorrect email or password", "OK");
 
@@ -152,7 +149,7 @@ namespace TicketToTalk
 		/// <returns>The register.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleRegister(Object sender, EventArgs ea) 
+		async void HandleRegister(Object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);

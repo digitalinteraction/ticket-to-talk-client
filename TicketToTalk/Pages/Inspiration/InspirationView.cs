@@ -13,23 +13,30 @@ namespace TicketToTalk
 	public class InspirationView : ContentPage
 	{
 		Inspiration inspiration;
-		Label question = new Label();
-		Label promptLabel = new Label();
+		Label question;
+		Label promptLabel;
 		Button recordMediaButton = new Button();
 		Button searchButton;
 		string searchLink;
+		public static bool tutorialShown;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.InspirationView"/> class.
 		/// </summary>
 		public InspirationView()
 		{
-			question.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			question.TextColor = ProjectResource.color_dark;
-			question.FontAttributes = FontAttributes.Bold;
+			question = new Label
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+				FontAttributes = FontAttributes.Bold,
+			};
 
-			promptLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
-			promptLabel.TextColor = ProjectResource.color_dark;
+			promptLabel = new Label
+			{
+				HorizontalOptions = LayoutOptions.Start,
+				TextColor = ProjectResource.color_dark,
+			};
 
 			Title = "Inspiration";
 
@@ -88,7 +95,7 @@ namespace TicketToTalk
 				}
 			};
 
-			var img = new Image 
+			var img = new Image
 			{
 				Source = "drawer_icon_.png",
 				WidthRequest = 10,
@@ -96,19 +103,9 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 
-			var drawPull = new StackLayout
-			{
-				WidthRequest = 10,
-				BackgroundColor = ProjectResource.color_blue,
-				Children = 
-				{
-					img
-				}
-			};
-
 			var content = new StackLayout
 			{
-				Padding = new Thickness(10,20,20,10),
+				Padding = new Thickness(20),
 				Spacing = 12,
 				Children = {
 					question,
@@ -122,9 +119,8 @@ namespace TicketToTalk
 			{
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 0,
-				Children = 
+				Children =
 				{
-					drawPull, 
 					content
 				}
 			};
@@ -175,7 +171,7 @@ namespace TicketToTalk
 			InspirationDB insDB = new InspirationDB();
 			var newIns = insDB.getRandomInspiration();
 
-			while (newIns.Equals(inspiration)) 
+			while (newIns.Equals(inspiration))
 			{
 				newIns = insDB.getRandomInspiration();
 			}
@@ -190,7 +186,7 @@ namespace TicketToTalk
 		/// Sets the view to inspiration.
 		/// </summary>
 		/// <returns>The view to inspiration.</returns>
-		public void setViewToInspiration() 
+		public void setViewToInspiration()
 		{
 			question.Text = inspiration.question;
 			promptLabel.Text = inspiration.prompt;
@@ -207,6 +203,9 @@ namespace TicketToTalk
 					break;
 				case ("Video"):
 					recordMediaButton.Text = "Record Video";
+					break;
+				case ("YouTube"):
+					recordMediaButton.Text = "Add YouTube Clip";
 					break;
 			}
 		}
@@ -262,12 +261,12 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The variables.</returns>
 		/// <param name="ins">Ins.</param>
-		private Inspiration populateVariables(Inspiration ins) 
+		private Inspiration populateVariables(Inspiration ins)
 		{
 			var asChars = ins.question.ToCharArray();
 			var ageIdx = ins.question.LastIndexOf("[age=");
 
-			if (ageIdx != -1) 
+			if (ageIdx != -1)
 			{
 				ageIdx += 5;
 				var age = "" + asChars[ageIdx] + asChars[ageIdx + 1];
@@ -302,7 +301,7 @@ namespace TicketToTalk
 				searchButton.IsVisible = true;
 				searchButton.IsEnabled = true;
 			}
-			else 
+			else
 			{
 				Debug.WriteLine("Inspirations: setting button as false");
 				searchButton.IsVisible = false;
@@ -329,9 +328,9 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void RecordMediaButton_Clicked(object sender, EventArgs e)
+		private async void RecordMediaButton_Clicked(object sender, EventArgs e)
 		{
-			switch (inspiration.mediaType.Trim()) 
+			switch (inspiration.mediaType.Trim())
 			{
 				case ("Picture"):
 					var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
@@ -354,6 +353,30 @@ namespace TicketToTalk
 					break;
 				case ("Video"):
 					break;
+				case ("YouTube"):
+					nav = new NavigationPage(new AddYoutubeLinkView());
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+
+					await Navigation.PushModalAsync(nav);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "Use Inspirations to help you add tickets. Here you'll find prompts to help you build up a collection.";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "light_white_icon.png"));
+				tutorialShown = true;
 			}
 		}
 	}

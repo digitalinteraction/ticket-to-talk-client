@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -14,6 +15,7 @@ namespace TicketToTalk
 		public static ObservableCollection<Article> serverArticles = new ObservableCollection<Article>();
 		private ArticleController articleController = new ArticleController();
 		public static List<Article> sharedArticles;
+		public static bool tutorialShown = false;
 
 		/// <summary>
 		/// Creates an instance of all articles view.
@@ -26,7 +28,7 @@ namespace TicketToTalk
 			serverArticles = Task.Run(() => this.checkForNewArticles()).Result;
 			sharedArticles = Task.Run(() => articleController.getSharedArticles()).Result;
 
-			foreach (Article a in serverArticles) 
+			foreach (Article a in serverArticles)
 			{
 				Console.WriteLine(a);
 			}
@@ -47,14 +49,10 @@ namespace TicketToTalk
 			});
 
 			// Format image cell
-			var cell = new DataTemplate(typeof(ArticleCell));
-			cell.SetBinding(TextCell.TextProperty, new Binding("title"));
-			cell.SetBinding(TextCell.DetailProperty, new Binding("link"));
-
 			ListView articleList = new ListView();
 			articleList.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			articleList.BindingContext = serverArticles;
-			articleList.ItemTemplate = cell;
+			articleList.ItemTemplate = new DataTemplate(typeof(ArticleCell));
 			articleList.SeparatorColor = Color.Transparent;
 			articleList.ItemSelected += OnSelection;
 
@@ -75,7 +73,7 @@ namespace TicketToTalk
 			{
 				Navigation.PushAsync(new ViewSharedArticles(sharedArticles));
 			}
-			else 
+			else
 			{
 				DisplayAlert("Articles", "You have not been sent any articles", "OK");
 			}
@@ -85,7 +83,7 @@ namespace TicketToTalk
 		/// Launchs the add article view.
 		/// </summary>
 		/// <returns>The add article view.</returns>
-		public void launchAddArticleView() 
+		public void launchAddArticleView()
 		{
 			var nav = new NavigationPage(new AddArticle(null));
 			nav.BarTextColor = ProjectResource.color_white;
@@ -113,6 +111,8 @@ namespace TicketToTalk
 			ObservableCollection<Article> list = new ObservableCollection<Article>();
 			foreach (Article a in articles)
 			{
+				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
+				a.favicon = articleController.getFaviconURL(a.link);
 				list.Add(a);
 			}
 
@@ -132,10 +132,27 @@ namespace TicketToTalk
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
-			Article a = (Article) e.SelectedItem;
+			Article a = (Article)e.SelectedItem;
 
 			Navigation.PushAsync(new ViewArticle(a));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "Use Articles to store useful information about the person you're collecting tickets for. Click '+' to get started!";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "file_white_icon.png"));
+				tutorialShown = true;
+			}
 		}
 	}
 }

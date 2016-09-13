@@ -1,22 +1,77 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SQLite;
 namespace TicketToTalk
 {
 	/// <summary>
 	/// Article.
 	/// </summary>
-	public class Article
+	public class Article : INotifyPropertyChanged, IComparable
 	{
+		private string _title;
+		private string _link;
+		private string _notes;
+
 		[PrimaryKey]
 		public int id { get; set;}
 
 		[NotNull]
-		public string title { get; set; }
+		public string title 
+		{
+			get 
+			{
+				return _title;
+			} 
+			set 
+			{
+				if (value != _title) 
+				{
+					_title = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
 		[NotNull]
-		public string link { get; set; }
+		public string link 
+		{ 
+			get 
+			{
+				return _link;
+			} 
+			set 
+			{
+				if (value != _link) 
+				{
+					_link = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
-		public string notes { get; set; }
+		public string notes 
+		{ 
+			get 
+			{
+				return _notes;
+			} 
+			set 
+			{
+				if (value != _notes) 
+				{
+					_notes = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		[Ignore]
+		public string favicon 
+		{
+			get;
+			set;
+		}
 
 		public DateTime created_at { get; set; }
 
@@ -26,6 +81,16 @@ namespace TicketToTalk
 
 		[Ignore]
 		public string iconFilePath { get; set;}
+
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Article"/> class.
@@ -61,7 +126,26 @@ namespace TicketToTalk
 		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Article"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]", id, title, link, notes, created_at, updated_at);
+			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]", 
+			                     id, title, link, notes, created_at, updated_at);
+		}
+
+		/// <summary>
+		/// Compare two articles
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="obj">Object.</param>
+		public int CompareTo(object obj)
+		{
+			Article lhs = obj as Article;
+
+			var comp = _title.CompareTo(lhs.title);
+			if (comp == 0) 
+			{
+				comp = _link.CompareTo(lhs.link);
+			}
+
+			return comp;
 		}
 	}
 }

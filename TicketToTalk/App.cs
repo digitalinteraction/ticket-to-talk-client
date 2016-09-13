@@ -1,19 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+	/// <summary>
+	/// App
+	/// </summary>
 	public partial class App : Application
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.App"/> class.
+		/// </summary>
 		public App()
 		{
 			var periodController = new PeriodController();
 			periodController.initStockPeriods();
 
+			var articleController = new ArticleController();
+			articleController.getFaviconURL("http://tickettotalk.app/api/home");
+
 			var nav = new NavigationPage(new Login());
-			//var nav = new NavigationPage(new NewAudioTicket());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 

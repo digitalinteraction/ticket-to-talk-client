@@ -91,7 +91,7 @@ namespace TicketToTalk
 
 			Ticket ticket = (Ticket) e.SelectedItem;
 
-			Navigation.PushAsync(new DisplayTicketInfo(ticket));
+			Navigation.PushAsync(new EditTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 	}
