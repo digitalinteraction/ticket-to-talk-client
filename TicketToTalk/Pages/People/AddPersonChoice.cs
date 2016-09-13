@@ -50,7 +50,7 @@ namespace TicketToTalk
 				invite.person_name = invite.person.name;
 			}
 
-			if (rawInvites.Count > 0 ) 
+			if (rawInvites.Count > 0)
 			{
 				joinPersonButton.Text = String.Format("See Invitations({0})", rawInvites.Count);
 				joinPersonButton.BackgroundColor = ProjectResource.color_red;
@@ -60,7 +60,7 @@ namespace TicketToTalk
 			Content = new StackLayout
 			{
 				Spacing = 12,
-				Children = 
+				Children =
 				{
 					newPersonButton,
 					joinPersonButton
@@ -75,13 +75,13 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 
 			Navigation.PushModalAsync(nav);
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 
 		void JoinPersonButton_Clicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new SeeInvitations(rawInvites));
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 	}
 }

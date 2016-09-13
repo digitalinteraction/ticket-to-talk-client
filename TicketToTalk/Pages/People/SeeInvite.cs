@@ -18,6 +18,8 @@ namespace TicketToTalk
 		Button rejectButton;
 		Picker relation;
 
+		public static bool isInTutorial = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SeeInvite"/> class.
 		/// </summary>
@@ -42,8 +44,8 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_grey
 			};
 
-				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
+			profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 
 			var nameLabel = new Label
 			{
@@ -139,7 +141,7 @@ namespace TicketToTalk
 			};
 			button.Clicked += async (sender, e) =>
 			{
-				
+
 				var userController = new UserController();
 				var r = ProjectResource.relations[relation.SelectedIndex];
 				await userController.acceptInvitation(invitation, r);
@@ -147,9 +149,9 @@ namespace TicketToTalk
 				Debug.WriteLine("SeeInvite: accepting person - " + person);
 
 				var personController = new PersonController();
-				if (personController.getPerson(invitation.person.id) == null) 
+				if (personController.getPerson(invitation.person.id) == null)
 				{
-					personController.addPersonLocally(invitation.person);	
+					personController.addPersonLocally(invitation.person);
 				}
 
 				SeeInvitations.invitations.Remove(invitation);
@@ -157,7 +159,16 @@ namespace TicketToTalk
 				AllProfiles.people.Add(invitation.person);
 
 				Session.activePerson = invitation.person;
-				App.Current.MainPage = new RootPage();
+
+				if (isInTutorial)
+				{
+					Application.Current.MainPage = new AddTicketPrompt();
+					isInTutorial = false;
+				}
+				else
+				{
+					App.Current.MainPage = new RootPage();
+				}
 			};
 
 			rejectButton = new Button
@@ -168,19 +179,19 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 			};
-			rejectButton.Clicked += async (sender, e) => 
+			rejectButton.Clicked += async (sender, e) =>
 			{
 				var userController = new UserController();
 				var rejected = await userController.rejectInvitation(invitation.person);
 
-				if (rejected) 
+				if (rejected)
 				{
 					SeeInvitations.invitations.Remove(invitation);
 					await Navigation.PopAsync();
 				}
 			};
 
-			var relationLabel = new Label 
+			var relationLabel = new Label
 			{
 				Text = "Select a relation to accept the invitation.",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -191,25 +202,25 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			relation = new Picker 
+			relation = new Picker
 			{
 				Title = "Relation",
 				TextColor = ProjectResource.color_red,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
-			foreach (string s in ProjectResource.relations) 
+			foreach (string s in ProjectResource.relations)
 			{
 				relation.Items.Add(s);
 			}
-			relation.SelectedIndexChanged += (sender, e) => 
+			relation.SelectedIndexChanged += (sender, e) =>
 			{
 				if (relation.SelectedIndex != -1)
 				{
 					button.BackgroundColor = ProjectResource.color_blue;
 					button.IsEnabled = true;
 				}
-				else 
+				else
 				{
 					button.BackgroundColor = ProjectResource.color_grey;
 					button.IsEnabled = false;
