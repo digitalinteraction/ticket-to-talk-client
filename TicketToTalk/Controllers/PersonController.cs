@@ -496,6 +496,25 @@ namespace TicketToTalk
 			{
 				var jtoken = jobject.GetValue("Person");
 				var p = jtoken.ToObject<Person>();
+
+				updatePersonLocally(p);
+
+				var r = AllProfiles.people.IndexOf(person);
+				AllProfiles.people[r].name = p.name;
+				AllProfiles.people[r].birthYear = p.birthYear;
+				AllProfiles.people[r].birthPlace = p.birthPlace;
+				AllProfiles.people[r].area = p.area;
+				AllProfiles.people[r].notes = p.notes;
+				AllProfiles.people[r].displayString = getDisplayString(AllProfiles.people[r]);
+				AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+
+				PersonProfile.currentPerson.notes = p.notes;
+				PersonProfile.currentPerson.displayString = getDisplayString(p);
+				PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
+				Session.activePerson = p;
+
+				MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
+
 				return p;
 			}
 

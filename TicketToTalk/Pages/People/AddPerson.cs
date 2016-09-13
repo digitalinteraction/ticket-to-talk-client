@@ -429,29 +429,14 @@ namespace TicketToTalk
 			if (returned != null)
 			{
 				Debug.WriteLine("AddPerson: returned person - " + returned);
-				personController.updatePersonLocally(p);
 
-				var r = AllProfiles.people.IndexOf(person);
-				AllProfiles.people[r].name = returned.name;
-				AllProfiles.people[r].birthYear = returned.birthYear;
-				AllProfiles.people[r].birthPlace = returned.birthPlace;
-				AllProfiles.people[r].area = returned.area;
-				AllProfiles.people[r].notes = returned.notes;
-				AllProfiles.people[r].displayString = personController.getDisplayString(AllProfiles.people[r]);
-				AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
-
-				PersonProfile.currentPerson.notes = p.notes;
-				PersonProfile.currentPerson.displayString = personController.getDisplayString(returned);
-				PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
-				Session.activePerson = returned;
-
-				MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
 
 				await Navigation.PopModalAsync();
 			}
 			else
 			{
 				savePersonButton.IsEnabled = true;
+				await DisplayAlert("Update Person", "Person could not be updated.", "OK");
 			}
 		}
 	}
