@@ -181,6 +181,9 @@ namespace TicketToTalk
 			await Navigation.PushModalAsync(nav);
 		}
 
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

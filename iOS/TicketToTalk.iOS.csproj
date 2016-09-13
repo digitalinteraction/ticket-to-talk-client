@@ -198,6 +198,8 @@
     <BundleResource Include="Resources\face_white_icon.png" />
     <BundleResource Include="Resources\chat_white_icon.png" />
     <BundleResource Include="Resources\file_white_icon.png" />
+    <BundleResource Include="Resources\white_ticket_icon.png" />
+    <BundleResource Include="Resources\light_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />
