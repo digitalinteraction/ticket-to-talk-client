@@ -221,6 +221,7 @@ namespace TicketToTalk
 			Console.WriteLine("Parsing JSON to People array");
 			var jpeople = jobject.GetValue("people");
 			var peopleRaw = jpeople.ToObject<Person[]>();
+			Array.Sort(peopleRaw);
 
 			// Getting all people
 			List<Person> savedPeople = new List<Person>();

@@ -33,7 +33,6 @@ namespace TicketToTalk
 			var personController = new PersonController();
 			// TODO: delete this
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-
 			var tableView = new TableView
 			{
 				Intent = TableIntent.Form,
