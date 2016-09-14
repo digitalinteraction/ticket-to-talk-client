@@ -14,11 +14,11 @@ namespace TicketToTalk
 		public static int ScreenWidth;
 		public static int ScreenHeight;
 
-		public static string DB = "tickettotalk_server.2.db3";
-		public static readonly string baseUrl = "http://52.35.119.74/api/";
+		//public static string DB = "tickettotalk_server.2.db3";
+		//public static readonly string baseUrl = "http://52.35.119.74/api/";
 
-		//public static string DB = "tickettotalk.72.db3";
-		//public static readonly string baseUrl = "http://tickettotalk.app/api/";
+		public static string DB = "tickettotalk.76.db3";
+		public static readonly string baseUrl = "http://tickettotalk.app/api/";
 
 		public Session()
 		{

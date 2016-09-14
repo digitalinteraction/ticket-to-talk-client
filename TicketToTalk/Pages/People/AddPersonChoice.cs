@@ -42,17 +42,17 @@ namespace TicketToTalk
 
 			// Get invitations
 			rawInvites = Task.Run(() => userController.getInvitations()).Result;
-			foreach (Invitation invite in rawInvites)
-			{
-				invite.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-														 personController.downloadPersonProfilePictureForInvite(invite.person));
-				Debug.WriteLine("PersonPath: " + invite.person.pathToPhoto);
-				invite.person_name = invite.person.name;
-			}
+			//foreach (Invitation invite in rawInvites)
+			//{
+			//var path = Task.Run(() => personController.downloadPersonProfilePictureForInvite(invite.person)).Result;
+			//invite.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), path);
+			//Debug.WriteLine("PersonPath: " + invite.person.pathToPhoto);
+			//invite.person_name = invite.person.name;
+			//}
 
 			if (rawInvites.Count > 0)
 			{
-				joinPersonButton.Text = String.Format("See Invitations({0})", rawInvites.Count);
+				joinPersonButton.Text = string.Format("See Invitations({0})", rawInvites.Count);
 				joinPersonButton.BackgroundColor = ProjectResource.color_red;
 				joinPersonButton.IsEnabled = true;
 			}

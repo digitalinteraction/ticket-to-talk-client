@@ -26,7 +26,7 @@ namespace TicketToTalk
 		/// Adds the ticket locally.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void addTicketLocally(Ticket ticket) 
+		public void addTicketLocally(Ticket ticket)
 		{
 			ticketDB.open();
 			ticketDB.AddTicket(ticket);
@@ -96,7 +96,7 @@ namespace TicketToTalk
 			{
 				return false;
 			}
-			else 
+			else
 			{
 				return true;
 			}
@@ -106,7 +106,7 @@ namespace TicketToTalk
 		/// Gets the tickets attached to the active person.
 		/// </summary>
 		/// <returns>The tickets.</returns>
-		public List<Ticket> getTickets() 
+		public List<Ticket> getTickets()
 		{
 			ticketDB.open();
 			var raw_tickets = ticketDB.getTicketsByPerson(Session.activePerson.id);
@@ -120,7 +120,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets for user type.</returns>
 		/// <param name="input">Input.</param>
-		public List<Ticket> filterTicketsForUserType(List<Ticket> input) 
+		public List<Ticket> filterTicketsForUserType(List<Ticket> input)
 		{
 			var output = new List<Ticket>();
 
@@ -158,7 +158,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by person.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public List<Ticket> getTicketsByPerson(int person_id) 
+		public List<Ticket> getTicketsByPerson(int person_id)
 		{
 			ticketDB.open();
 			var tickets = ticketDB.getTicketsByPerson(person_id);
@@ -171,7 +171,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket.</returns>
 		/// <param name="id">Identifier.</param>
-		public Ticket getTicket(int id) 
+		public Ticket getTicket(int id)
 		{
 			ticketDB.open();
 			var ticket = ticketDB.GetTicket(id);
@@ -184,7 +184,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public void deleteTicketLocally(Ticket ticket) 
+		public void deleteTicketLocally(Ticket ticket)
 		{
 			ticketDB.open();
 			ticketDB.DeleteTicket(ticket.id);
@@ -196,7 +196,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket locally.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public void updateTicketLocally(Ticket ticket) 
+		public void updateTicketLocally(Ticket ticket)
 		{
 			ticketDB.open();
 			ticketDB.DeleteTicket(ticket.id);
@@ -224,13 +224,13 @@ namespace TicketToTalk
 			{
 				paramters["area"] = area;
 			}
-			else 
+			else
 			{
 				paramters["area"] = " ";
 			}
 
 			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
-			if (jobject != null) 
+			if (jobject != null)
 			{
 				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
 				var jtoken = jobject.GetValue("Ticket");
@@ -239,7 +239,7 @@ namespace TicketToTalk
 				// Update ticket area relationships.
 				var ticketAreaDB = new TicketAreaDB();
 				var relations = ticketAreaDB.getRelationByTicketID(returned.id);
-				foreach (TicketArea ta in relations) 
+				foreach (TicketArea ta in relations)
 				{
 					ticketAreaDB.DeleteTicketArea(ta.id);
 				}
@@ -247,7 +247,7 @@ namespace TicketToTalk
 				jtoken = jobject.GetValue("Area");
 				var rArea = jtoken.ToObject<Area>();
 				var areaController = new AreaController();
-				if (areaController.getArea(rArea.id) == null) 
+				if (areaController.getArea(rArea.id) == null)
 				{
 					areaController.addAreaLocally(rArea);
 				}
@@ -266,7 +266,7 @@ namespace TicketToTalk
 		/// <returns>The tag relations locally.</returns>
 		/// <param name="tags">Tags.</param>
 		/// <param name="ticket">Ticket.</param>
-		public void addTagRelationsLocally(List<Tag> tags, Ticket ticket) 
+		public void addTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
 			TicketTagDB ttDB = new TicketTagDB();
 			ttDB.open();
@@ -414,7 +414,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket image.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public Image getTicketImage(Ticket ticket) 
+		public Image getTicketImage(Ticket ticket)
 		{
 			bool download_finished = false;
 			Image ticket_photo = new Image();
@@ -423,7 +423,7 @@ namespace TicketToTalk
 				NetworkController net = new NetworkController();
 
 				var fileName = String.Empty;
-				switch (ticket.mediaType) 
+				switch (ticket.mediaType)
 				{
 					case ("Picture"):
 						fileName = "t_" + ticket.id + ".jpg";
@@ -431,7 +431,7 @@ namespace TicketToTalk
 					case ("Sound"):
 						fileName = "t_" + ticket.id + ".wav";
 						break;
-				} 
+				}
 
 				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
 				ticket.pathToFile = fileName;
@@ -458,7 +458,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
 		/// <param name="link">Link.</param>
-		public Ticket parseYouTubeToTicket(string link) 
+		public Ticket parseYouTubeToTicket(string link)
 		{
 
 			if (link.Contains("youtu.be"))
@@ -471,7 +471,7 @@ namespace TicketToTalk
 					mediaType = "YouTube"
 				};
 			}
-			else 
+			else
 			{
 				var idx = link.LastIndexOf("=", StringComparison.Ordinal);
 				var videoCode = link.Substring(idx + 1);
@@ -486,30 +486,31 @@ namespace TicketToTalk
 		/// <summary>
 		/// Downloads the content of the ticket.
 		/// </summary>
+		/// <returns>The ticket content.</returns>
 		/// <param name="filePath">File path.</param>
-		public void downloadTicketContent(string filePath) 
+		public async Task downloadTicketContent(string filePath)
 		{
 
-			var download_finished = false;
+			//var download_finished = false;
 
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
+			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
+			//{
+			//	Debug.WriteLine("Image Downloaded");
+			//	download_finished = finished;
+			//});
 
 			NetworkController net = new NetworkController();
 
 			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
 			var fileName = filePath.Substring(idx + 1);
 
-			var task = Task.Run(() => net.downloadFile(filePath, fileName)).Result;
+			await net.downloadFile(filePath, fileName);
 
-			while (!download_finished)
-			{
-			}
+			//while (!download_finished)
+			//{
+			//}
 
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
+			//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 		}
 
 		/// <summary>
@@ -517,7 +518,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The display string.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public string getDisplayString(Ticket ticket) 
+		public string getDisplayString(Ticket ticket)
 		{
 			var displayString = String.Empty;
 			var areaController = new AreaController();
@@ -539,7 +540,7 @@ namespace TicketToTalk
 		/// Updates the display ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void updateDisplayTicket(Ticket ticket) 
+		public void updateDisplayTicket(Ticket ticket)
 		{
 			ViewTicket.displayedTicket.title = ticket.title;
 			ViewTicket.displayedTicket.description = ticket.description;

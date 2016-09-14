@@ -26,8 +26,8 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public SeeInvite(Invitation invitation)
 		{
-			this.person = invitation.person;
-			this.Title = person.name;
+			person = invitation.person;
+			Title = person.name;
 
 			var users = Task.Run(() => personController.getUsers(person.id)).Result;
 
@@ -43,9 +43,10 @@ namespace TicketToTalk
 				Margin = new Thickness(20),
 				BackgroundColor = ProjectResource.color_grey
 			};
+			profilePic.SetBinding(Image.SourceProperty, "imageSource");
+			profilePic.BindingContext = invitation;
 
-			var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-			profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			Debug.WriteLine("SeeInvite: Viewing person - " + person);
 
 			var nameLabel = new Label
 			{
@@ -71,7 +72,7 @@ namespace TicketToTalk
 
 			var birthYearLabel = new Label
 			{
-				Text = String.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
+				Text = string.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
@@ -100,7 +101,7 @@ namespace TicketToTalk
 				//var userDetail = u.name + "(" + u.pivot.user_type + ")";
 				var label = new Label
 				{
-					Text = String.Format("{0} ({1})", u.name, u.pivot.user_type),
+					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
 					HorizontalTextAlignment = TextAlignment.Center,
 					TextColor = ProjectResource.color_blue,
 					FontSize = 14,
@@ -148,10 +149,9 @@ namespace TicketToTalk
 
 				Debug.WriteLine("SeeInvite: accepting person - " + person);
 
-				var personController = new PersonController();
-				if (personController.getPerson(invitation.person.id) == null)
+				if (new PersonController().getPerson(invitation.person.id) == null)
 				{
-					personController.addPersonLocally(invitation.person);
+					new PersonController().addPersonLocally(invitation.person);
 				}
 
 				SeeInvitations.invitations.Remove(invitation);
@@ -167,7 +167,7 @@ namespace TicketToTalk
 				}
 				else
 				{
-					App.Current.MainPage = new RootPage();
+					Application.Current.MainPage = new RootPage();
 				}
 			};
 

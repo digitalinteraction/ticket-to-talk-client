@@ -141,35 +141,37 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public async Task<byte[]> downloadPersonProfilePicture(Person person)
 		{
-			var download_finished = false;
-
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
-
 			var fileName = "p_" + person.id + ".jpg";
-
-			//var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
 			var downloaded = await networkController.downloadFile(person.pathToPhoto, fileName);
 
 			if (downloaded)
 			{
 				person.pathToPhoto = fileName;
 
-				//while (!download_finished)
-				//{
-				//}
 				while (PersonDB.locked) { }
 				PersonDB.locked = true;
 				updatePersonLocally(person);
 				PersonDB.locked = false;
 			}
 
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-
 			return MediaController.readBytesFromFile(person.pathToPhoto);
+		}
+
+		/// <summary>
+		/// Gets the person profile picture for invite.
+		/// </summary>
+		/// <returns>The person profile picture for invite.</returns>
+		/// <param name="person">Person.</param>
+		public async Task<ImageSource> getPersonProfilePictureForInvite(Person person)
+		{
+			if (person.pathToPhoto.Equals("default_profile.png"))
+			{
+				return ImageSource.FromFile(person.pathToPhoto);
+			}
+			else
+			{
+				return await downloadPersonProfilePictureForInvite(person);
+			}
 		}
 
 		/// <summary>
@@ -177,28 +179,15 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture for invite.</returns>
 		/// <param name="person">Person.</param>
-		public string downloadPersonProfilePictureForInvite(Person person)
+		public async Task<ImageSource> downloadPersonProfilePictureForInvite(Person person)
 		{
-			var download_finished = false;
-
-			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			{
-				Debug.WriteLine("Image Downloaded");
-				download_finished = finished;
-			});
-
 			var fileName = "p_" + person.id + ".jpg";
-			var task = Task.Run(() => networkController.downloadFile(person.pathToPhoto, fileName)).Result;
+			await networkController.downloadFile(person.pathToPhoto, fileName);
 
 			person.pathToPhoto = fileName;
 
-			while (!download_finished)
-			{
-			}
-
-			MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
-
-			return fileName;
+			return ImageSource.FromStream(() => new MemoryStream(MediaController.readBytesFromFile(fileName)));
+			//return fileName;
 		}
 
 		/// <summary>

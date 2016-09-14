@@ -323,6 +323,14 @@ namespace TicketToTalk
 			{
 				var jtoken = jobject.GetValue("invites");
 				var invitations = jtoken.ToObject<List<Invitation>>();
+
+				var personController = new PersonController();
+
+				foreach (Invitation i in invitations)
+				{
+					i.imageSource = await personController.getPersonProfilePictureForInvite(i.person);
+				}
+
 				return invitations;
 			}
 			return null;
@@ -369,7 +377,7 @@ namespace TicketToTalk
 
 			var fileName = "u_" + user.id + ".jpg";
 			Debug.WriteLine("UserController: Downloading profile picture with path - " + user.pathToPhoto);
-			var task = await networkController.downloadFile(user.pathToPhoto, fileName);
+			await networkController.downloadFile(user.pathToPhoto, fileName);
 
 			user.pathToPhoto = fileName;
 

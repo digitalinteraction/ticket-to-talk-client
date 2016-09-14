@@ -1,14 +1,16 @@
-﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/People/AddPerson.cs">
+﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
     <Files>
-      <File FileName="TicketToTalk/Pages/Profiles/People/PersonProfile.cs" Line="246" Column="46" />
-      <File FileName="TicketToTalk/Pages/People/AddPerson.cs" Line="417" Column="42" />
-      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="483" Column="48" />
+      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="28" Column="48" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="42" Column="28" />
+      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="495" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
-  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.207DAD69-26C9-4786-B94D-B9341E59F029" />
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.9847D0AE-764D-4CAC-B73A-FEA7161A7A1C" />
 </Properties>
