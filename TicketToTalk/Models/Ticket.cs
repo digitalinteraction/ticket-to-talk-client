@@ -14,36 +14,37 @@ namespace TicketToTalk
 		private string _description;
 		private string _year;
 		private string _pathToFile;
+		private string _area;
 		private string _access_level;
 		private int _period_id;
 		private string _displayString;
 
 		[PrimaryKey]
 		public int id { get; set; }
-		public string title 
-		{ 
-			get 
+		public string title
+		{
+			get
 			{
 				return _title;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _title) 
+				if (value != _title)
 				{
 					_title = value;
 					NotifyPropertyChanged();
 				}
 			}
 		}
-		public string description 
+		public string description
 		{
-			get 
+			get
 			{
 				return _description;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _description) 
+				if (value != _description)
 				{
 					_description = value;
 					NotifyPropertyChanged();
@@ -51,30 +52,30 @@ namespace TicketToTalk
 			}
 		}
 		public string mediaType { get; set; }
-		public string year 
+		public string year
 		{
-			get 
+			get
 			{
 				return _year;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _year) 
+				if (value != _year)
 				{
 					_year = value;
 					NotifyPropertyChanged();
 				}
 			}
 		}
-		public string pathToFile 
+		public string pathToFile
 		{
-			get 
+			get
 			{
 				return _pathToFile;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _pathToFile) 
+				if (value != _pathToFile)
 				{
 					_pathToFile = value;
 					NotifyPropertyChanged();
@@ -83,32 +84,49 @@ namespace TicketToTalk
 		}
 		[Ignore]
 		public string displayIcon { get; set; }
-		public string access_level 
+		public string access_level
 		{
-			get 
+			get
 			{
 				return _access_level;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _access_level) 
+				if (value != _access_level)
 				{
 					_access_level = value;
 					NotifyPropertyChanged();
 				}
 			}
 		}
-		public int area_id { get; set; }
-		public int person_id { get; set;}
-		public int period_id 
+
+		public string area
 		{
-			get 
+			get
+			{
+				return _area;
+			}
+			set
+			{
+				if (value != _area)
+				{
+					_area = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		//public int area_id { get; set; }
+		public int person_id { get; set; }
+		public int period_id
+		{
+			get
 			{
 				return _period_id;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _period_id) 
+				if (value != _period_id)
 				{
 					_period_id = value;
 					NotifyPropertyChanged();
@@ -120,15 +138,15 @@ namespace TicketToTalk
 		[Ignore]
 		public Tag[] tags { get; set; }
 		[Ignore]
-		public string displayString 
-		{ 
-			get 
+		public string displayString
+		{
+			get
 			{
 				return _displayString;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _displayString) 
+				if (value != _displayString)
 				{
 					_displayString = value;
 					NotifyPropertyChanged();
@@ -181,11 +199,11 @@ namespace TicketToTalk
 		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Ticket"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Ticket: id={0}, title={1}, description={2}, mediaType={3}, year={4}, " +
-			                     "pathToFile={5}, displayIcon={6}, access_level={7}, area_id={8}, person_id={9}, " +
-			                     "period_id={10}, created_at={11}, updated_at={12}, tags={13}]", 
-			                     id, title, description, mediaType, year, pathToFile, displayIcon, access_level, 
-			                     area_id, person_id, period_id, created_at, updated_at, tags);
+			return string.Format("[Ticket: id={0}, title={1}, description={2}, mediaType={3}, year={4}, pathToFile={5}, " +
+								 "displayIcon={6}, access_level={7}, area={8}, person_id={9}, period_id={10}, " +
+								 "created_at={11}, updated_at={12}, displayString={13}]", id, title, description,
+								 mediaType, year, pathToFile, displayIcon, access_level, area, person_id, period_id,
+								 created_at, updated_at, displayString);
 		}
 
 		/// <summary>
@@ -227,7 +245,7 @@ namespace TicketToTalk
 			Ticket lhs = obj as Ticket;
 
 			var comp = string.Compare(title, lhs.title, StringComparison.Ordinal);
-			if (comp == 0) 
+			if (comp == 0)
 			{
 				comp = string.Compare(year, lhs.year, StringComparison.Ordinal);
 			}
