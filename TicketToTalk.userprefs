@@ -1,9 +1,16 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/NetworkController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/ConversationController.cs">
     <Files>
       <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="271" Column="6" />
       <File FileName="TicketToTalk/Models/Article.cs" Line="158" Column="4" />
-      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="280" Column="39" />
+      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="140" Column="5" />
+      <File FileName="TicketToTalk/Pages/Conversations/SelectTicket.cs" Line="52" Column="9" />
+      <File FileName="TicketToTalk/Pages/RootPage.cs" Line="42" Column="1" />
+      <File FileName="iOS/Main.cs" Line="17" Column="1" />
+      <File FileName="TicketToTalk/Pages/Conversations/ConversationView.cs" Line="37" Column="36" />
+      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="30" Column="1" />
+      <File FileName="TicketToTalk/Pages/Conversations/FinishConversation.cs" Line="23" Column="10" />
+      <File FileName="TicketToTalk/Controllers/ConversationController.cs" Line="227" Column="12" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />

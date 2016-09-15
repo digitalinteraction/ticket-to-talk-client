@@ -30,7 +30,7 @@ namespace TicketToTalk
 			tickets.Shuffle();
 			this.tickets = tickets;
 			this.conversation = conversation;
-			
+
 			Title = "Conversation";
 
 			ToolbarItems.Add(new ToolbarItem
@@ -68,16 +68,16 @@ namespace TicketToTalk
 				Spacing = 0,
 			};
 
-			ticketTitleLabel = new Label 
+			ticketTitleLabel = new Label
 			{
 				Text = tickets[currentIndex].title,
 				TextColor = ProjectResource.color_dark,
 				FontSize = 18,
 				HorizontalTextAlignment = TextAlignment.Center,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			descriptionLabel = new Label 
+			descriptionLabel = new Label
 			{
 				Text = tickets[currentIndex].description,
 				TextColor = ProjectResource.color_dark,
@@ -86,15 +86,15 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			var buttonStack = new StackLayout 
+			var buttonStack = new StackLayout
 			{
 				Padding = new Thickness(10),
 				Spacing = 5,
 				Orientation = StackOrientation.Horizontal,
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Children = 
+				Children =
 				{
-					previous, 
+					previous,
 					next
 				}
 			};
@@ -121,13 +121,13 @@ namespace TicketToTalk
 		/// Finishs the conversation.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		private void finishConversation(object obj)
+		private async void finishConversation(object obj)
 		{
 			var nav = new NavigationPage(new FinishConversation(conversation));
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
-			Navigation.PushAsync(nav);
+			await Navigation.PushModalAsync(nav);
 			Navigation.RemovePage(this);
 		}
 
@@ -135,10 +135,10 @@ namespace TicketToTalk
 		/// Sets the ticket stack.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		private void setTicketStack(Ticket ticket) 
+		private void setTicketStack(Ticket ticket)
 		{
 			Debug.WriteLine("PlayConversation: Ticket to display = " + ticket);
-			switch (ticket.mediaType) 
+			switch (ticket.mediaType)
 			{
 				case ("Picture"):
 				case ("Photo"):
@@ -148,10 +148,10 @@ namespace TicketToTalk
 					ticketStack.Children.Clear();
 					ticketStack.Children.Add(image);
 					break;
-				case ("Sound"): 
+				case ("Sound"):
 				case ("Song"):
 				case ("Audio"):
-					
+
 					var audioPlayer = new AudioPlayerLayout(ticket);
 					ticketStack.Children.Clear();
 					ticketStack.Children.Add(audioPlayer);

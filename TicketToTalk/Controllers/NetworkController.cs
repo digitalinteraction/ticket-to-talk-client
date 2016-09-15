@@ -128,7 +128,7 @@ namespace TicketToTalk
 			Debug.WriteLine(uri);
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
-			Console.WriteLine(jsonCredentials);
+			Debug.WriteLine("NetworkController: " + jsonCredentials);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
 			//var response = null;

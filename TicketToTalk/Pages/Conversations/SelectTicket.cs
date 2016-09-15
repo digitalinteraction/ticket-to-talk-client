@@ -52,6 +52,7 @@ namespace TicketToTalk
 						break;
 					case "Audio":
 					case "Song":
+					case "Sound":
 						t.displayIcon = "audio_icon.png";
 						break;
 					case "Area":
@@ -82,7 +83,7 @@ namespace TicketToTalk
 			{
 				Padding = new Thickness(20),
 				Children = {
-					listView			
+					listView
 				}
 			};
 		}
@@ -119,7 +120,7 @@ namespace TicketToTalk
 
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Conversation", "Ticket could not be added to the conversation", "OK");
 				await Navigation.PopModalAsync();
