@@ -521,15 +521,15 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public string getDisplayString(Person person)
 		{
-			var displayString = String.Empty;
+			var displayString = string.Empty;
 
-			if (!(String.IsNullOrEmpty(person.area)))
+			if (!(string.IsNullOrEmpty(person.area)))
 			{
-				displayString = String.Format("Born in {0}, {1}\nSpent most of their life in {2}", person.birthPlace, person.birthYear, person.area);
+				displayString = string.Format("Born in {0}, {1}\nSpent most of their life in {2}", person.birthPlace, person.birthYear, person.area);
 			}
 			else
 			{
-				displayString = String.Format("Born in {0}, {1}", person.birthPlace, person.birthYear);
+				displayString = string.Format("Born in {0}, {1}", person.birthPlace, person.birthYear);
 			}
 
 			return displayString;

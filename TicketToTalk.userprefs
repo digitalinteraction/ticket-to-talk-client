@@ -1,21 +1,14 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
     <Files>
-      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="28" Column="47" />
-      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="34" Column="16" />
+      <File FileName="TicketToTalk/Views/Audio/AudioPlayerLayout.cs" Line="55" Column="83" />
+      <File FileName="TicketToTalk/Services/IAudioPlayer.cs" Line="18" Column="8" />
+      <File FileName="iOS/Helpers/AudioPlayerImplementation.cs" Line="86" Column="37" />
+      <File FileName="Droid/Helpers/AudioPlayerImplementation.cs" Line="132" Column="7" />
+      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="280" Column="39" />
+      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="378" Column="2" />
+      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="527" Column="5" />
       <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="286" Column="21" />
-      <File FileName="../../../../../../Library/Frameworks/Xamarin.iOS.framework/Versions/10.0.0.6/lib/mono/2.1/Xamarin.iOS.Common.targets" Line="450" Column="28" />
-      <File FileName="TicketToTalk/Pages/Inspiration/InspirationView.cs" Line="98" Column="8" />
-      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="248" Column="9" />
-      <File FileName="TicketToTalk/Resources/Session.cs" Line="17" Column="49" />
-      <File FileName="iOS/Main.cs" Line="15" Column="4" />
-      <File FileName="TicketToTalk/Views/Tickets/TicketInfo.cs" Line="46" Column="49" />
-      <File FileName="TicketToTalk/Models/Ticket.cs" Line="3" Column="2" />
-      <File FileName="TicketToTalk/Pages/RootPage.cs" Line="42" Column="1" />
-      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/EditTicket.cs" Line="301" Column="41" />
-      <File FileName="TicketToTalk/Database/TicketAreaDB.cs" Line="54" Column="15" />
-      <File FileName="TicketToTalk/Views/Tickets/NewTicketInfo.cs" Line="517" Column="12" />
-      <File FileName="TicketToTalk/Pages/Tickets/ViewTickets.cs" Line="25" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />

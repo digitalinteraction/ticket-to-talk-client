@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Android.Media;
 using TicketToTalk.Droid;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(AudioPlayerImplementation))]
 namespace TicketToTalk.Droid
@@ -12,13 +13,13 @@ namespace TicketToTalk.Droid
 	public class AudioPlayerImplementation : IAudioPlayer
 	{
 		MediaPlayer player = new MediaPlayer();
-
+		private bool finished = false;
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Droid.AudioPlayerImplementation"/> class.
 		/// </summary>
 		public AudioPlayerImplementation()
 		{
-			
+
 		}
 
 		/// <summary>
@@ -116,6 +117,10 @@ namespace TicketToTalk.Droid
 		void Player_Completion(object sender, EventArgs e)
 		{
 			player.Stop();
+
+			finished = true;
+
+			MessagingCenter.Send<AudioPlayerImplementation, bool>(this, "finished_playback", finished);
 		}
 
 		/// <summary>
@@ -125,6 +130,15 @@ namespace TicketToTalk.Droid
 		public int GetCurrentTime()
 		{
 			return player.CurrentPosition;
+		}
+
+		/// <summary>
+		/// Hases the finished playing.
+		/// </summary>
+		/// <returns><c>true</c>, if finished playing was hased, <c>false</c> otherwise.</returns>
+		public bool HasFinishedPlaying()
+		{
+			return finished;
 		}
 	}
 }

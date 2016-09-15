@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
@@ -185,7 +184,7 @@ namespace TicketToTalk
 		/// Notifies the property changed.
 		/// </summary>
 		/// <param name="propertyName">Property name.</param>
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{

@@ -19,7 +19,7 @@ namespace TicketToTalk
 			NavigationPage.SetHasNavigationBar(this, false);
 
 			// Set title
-			this.Title = "Tickets";
+			Title = "Tickets";
 
 			var ticketController = new TicketController();
 			Task.Run(() => ticketController.updateTicketsFromAPI()).Wait();
@@ -88,7 +88,6 @@ namespace TicketToTalk
 			nav.Icon = "ic_videocam_white_.png";
 			nav.Title = "Video";
 			this.Children.Add(nav);
-
 		}
 
 		/// <summary>
