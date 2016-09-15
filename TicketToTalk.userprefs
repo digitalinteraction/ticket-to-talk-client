@@ -1,14 +1,9 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/NetworkController.cs">
     <Files>
-      <File FileName="TicketToTalk/Views/Audio/AudioPlayerLayout.cs" Line="55" Column="83" />
-      <File FileName="TicketToTalk/Services/IAudioPlayer.cs" Line="18" Column="8" />
-      <File FileName="iOS/Helpers/AudioPlayerImplementation.cs" Line="86" Column="37" />
-      <File FileName="Droid/Helpers/AudioPlayerImplementation.cs" Line="132" Column="7" />
+      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="271" Column="6" />
+      <File FileName="TicketToTalk/Models/Article.cs" Line="158" Column="4" />
       <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="280" Column="39" />
-      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="378" Column="2" />
-      <File FileName="TicketToTalk/Controllers/PersonController.cs" Line="527" Column="5" />
-      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="286" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />

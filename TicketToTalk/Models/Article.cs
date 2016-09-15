@@ -14,18 +14,18 @@ namespace TicketToTalk
 		private string _notes;
 
 		[PrimaryKey]
-		public int id { get; set;}
+		public int id { get; set; }
 
 		[NotNull]
-		public string title 
+		public string title
 		{
-			get 
+			get
 			{
 				return _title;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _title) 
+				if (value != _title)
 				{
 					_title = value;
 					NotifyPropertyChanged();
@@ -34,15 +34,15 @@ namespace TicketToTalk
 		}
 
 		[NotNull]
-		public string link 
-		{ 
-			get 
+		public string link
+		{
+			get
 			{
 				return _link;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _link) 
+				if (value != _link)
 				{
 					_link = value;
 					NotifyPropertyChanged();
@@ -50,15 +50,15 @@ namespace TicketToTalk
 			}
 		}
 
-		public string notes 
-		{ 
-			get 
+		public string notes
+		{
+			get
 			{
 				return _notes;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _notes) 
+				if (value != _notes)
 				{
 					_notes = value;
 					NotifyPropertyChanged();
@@ -67,7 +67,7 @@ namespace TicketToTalk
 		}
 
 		[Ignore]
-		public string favicon 
+		public string favicon
 		{
 			get;
 			set;
@@ -80,7 +80,7 @@ namespace TicketToTalk
 		//public int user_id { get; set;}
 
 		[Ignore]
-		public string iconFilePath { get; set;}
+		public string iconFilePath { get; set; }
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
@@ -126,8 +126,8 @@ namespace TicketToTalk
 		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Article"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]", 
-			                     id, title, link, notes, created_at, updated_at);
+			return string.Format("[Article: id={0}, title={1}, link={2}, notes={3}, created_at={4}, updated_at={5}]",
+								 id, title, link, notes, created_at, updated_at);
 		}
 
 		/// <summary>
@@ -139,13 +139,33 @@ namespace TicketToTalk
 		{
 			Article lhs = obj as Article;
 
-			var comp = _title.CompareTo(lhs.title);
-			if (comp == 0) 
+			var comp = string.Compare(_title, lhs.title, StringComparison.Ordinal);
+			if (comp == 0)
 			{
-				comp = _link.CompareTo(lhs.link);
+				comp = string.Compare(_link, lhs.link, StringComparison.Ordinal);
 			}
 
 			return comp;
+		}
+
+		/// <summary>
+		/// Determines whether the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Article"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to compare with the current <see cref="T:TicketToTalk.Article"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Article"/>;
+		/// otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+
+		/// <summary>
+		/// Serves as a hash function for a <see cref="T:TicketToTalk.Article"/> object.
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 	}
 }

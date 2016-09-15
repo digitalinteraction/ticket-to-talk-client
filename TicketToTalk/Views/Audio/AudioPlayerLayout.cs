@@ -222,6 +222,8 @@ namespace TicketToTalk
 				DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
 				progressBar.ProgressTo(0, 250, Easing.Linear);
 
+				MessagingCenter.Unsubscribe<TicketToTalk.iOS.AudioPlayerImplementation, bool>(this, "finshed_playback");
+
 			});
 #else
 			MessagingCenter.Subscribe<TicketToTalk.Droid.AudioPlayerImplementation, bool>(this, "finished_playback", (sender, finished) =>
@@ -241,6 +243,8 @@ namespace TicketToTalk
 
 				DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
 				progressBar.ProgressTo(0, 250, Easing.Linear);
+
+				MessagingCenter.Unsubscribe<TicketToTalk.Droid.AudioPlayerImplementation, bool>(this, "finshed_playback");
 
 			});
 #endif
