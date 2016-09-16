@@ -135,7 +135,7 @@ namespace TicketToTalk
 				{
 					canSkip = false;
 				}
-				App.Current.MainPage = new AddNewPersonPrompt(canSkip);
+				Application.Current.MainPage = new AddNewPersonPrompt(canSkip);
 				promptShown = true;
 			}
 		}

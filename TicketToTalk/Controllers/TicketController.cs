@@ -33,6 +33,73 @@ namespace TicketToTalk
 			ticketDB.close();
 		}
 
+		/// <summary>
+		/// Adds the ticket remotely.
+		/// </summary>
+		/// <returns>The new ticket.</returns>
+		/// <param name="ticket">Ticket.</param>
+		/// <param name="media">Media.</param>
+		/// <param name="period">Period.</param>
+		public async Task<Ticket> addTicketRemotely(Ticket ticket, byte[] media, Period period)
+		{
+
+			NetworkController net = new NetworkController();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
+			parameters["token"] = Session.Token.val;
+			parameters["ticket"] = ticket;
+			parameters["media"] = media;
+			parameters["period"] = period;
+
+			var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
+
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("ticket");
+				var returned_ticket = jtoken.ToObject<Ticket>();
+
+				var ticketController = new TicketController();
+				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
+				string ext = string.Empty;
+				switch (ticket.mediaType)
+				{
+					case ("Picture"):
+						returned_ticket.displayIcon = "photo_icon.png";
+						ext = ".jpg";
+						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+						TicketsPicture.pictureTickets.Add(returned_ticket);
+						break;
+					case ("Sound"):
+						returned_ticket.displayIcon = "audio_icon.png";
+						ext = ".wav";
+						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+						TicketsSounds.soundTickets.Add(returned_ticket);
+						break;
+					case ("Video"):
+					case ("YouTube"):
+						returned_ticket.displayIcon = "video_icon.png";
+						TicketsVideos.videoTickets.Add(returned_ticket);
+						break;
+				}
+
+				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
+
+				ticketController.addTicketLocally(returned_ticket);
+
+				// Add to view
+				TicketsByPeriod.addTicket(returned_ticket);
+
+				return returned_ticket;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Destroies the ticket.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
 		public void destroyTicket(Ticket ticket)
 		{
 			Debug.WriteLine("TicketCell: Deleting ticket locally");
@@ -418,7 +485,7 @@ namespace TicketToTalk
 		public Image getTicketImage(Ticket ticket)
 		{
 			bool download_finished = false;
-			Image ticket_photo = new Image();
+			var ticket_photo = new Image();
 			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
 				NetworkController net = new NetworkController();

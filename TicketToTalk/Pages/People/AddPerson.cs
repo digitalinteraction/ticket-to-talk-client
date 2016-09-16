@@ -424,7 +424,7 @@ namespace TicketToTalk
 				}
 			}
 
-			var returned = await personController.updatePersonRemotely(p, image);
+			var returned = await personController.updatePersonRemotely(p, relations[relationPicker.SelectedIndex], image);
 
 			if (returned != null)
 			{

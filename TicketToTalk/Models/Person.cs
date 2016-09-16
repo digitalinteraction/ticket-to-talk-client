@@ -19,6 +19,7 @@ namespace TicketToTalk
 		private string _displayString;
 		private ImageSource _imageSource;
 		private string _imageHash;
+		private PersonPivot _personPivot;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -156,10 +157,71 @@ namespace TicketToTalk
 			}
 		}
 
-		public class Pivot
+		[Ignore]
+		public PersonPivot personPivot
 		{
-			public string user_type { get; set; }
-			public string relation { get; set; }
+			get
+			{
+				return _personPivot;
+			}
+			set
+			{
+				if (value != _personPivot)
+				{
+					_personPivot = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Pivot.
+		/// </summary>
+		public class Pivot : INotifyPropertyChanged
+		{
+			private string _user_type;
+			private string _relation;
+
+			public string user_type
+			{
+				get
+				{
+					return _user_type;
+				}
+				set
+				{
+					if (value != _user_type)
+					{
+						_user_type = value;
+						NotifyPropertyChanged();
+					}
+				}
+			}
+			public string relation
+			{
+				get
+				{
+					return _relation;
+				}
+				set
+				{
+					if (value != _relation)
+					{
+						_relation = value;
+						NotifyPropertyChanged();
+					}
+				}
+			}
+
+			private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+			{
+				if (PropertyChanged != null)
+				{
+					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				}
+			}
+
+			public event PropertyChangedEventHandler PropertyChanged;
 
 			public override string ToString()
 			{
@@ -174,6 +236,10 @@ namespace TicketToTalk
 		{
 		}
 
+		/// <summary>
+		/// Notifies the property changed.
+		/// </summary>
+		/// <param name="propertyName">Property name.</param>
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -182,6 +248,9 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Occurs when property changed.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>

@@ -538,58 +538,61 @@ namespace TicketToTalk
 
 			var selected_period = periods[period.SelectedIndex];
 
-			NetworkController net = new NetworkController();
-			IDictionary<string, object> parameters = new Dictionary<string, object>();
-			parameters["token"] = Session.Token.val;
-			parameters["ticket"] = ticket;
-			//parameters["area"] = area;
-			parameters["media"] = media;
-			parameters["period"] = selected_period;
+			//NetworkController net = new NetworkController();
+			//IDictionary<string, object> parameters = new Dictionary<string, object>();
+			//parameters["token"] = Session.Token.val;
+			//parameters["ticket"] = ticket;
+			////parameters["area"] = area;
+			//parameters["media"] = media;
+			//parameters["period"] = selected_period;
 
-			var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
+			//var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
 
-			if (jobject != null)
+			//if (jobject != null)
+			//{
+			//	var jtoken = jobject.GetValue("ticket");
+			//	var returned_ticket = jtoken.ToObject<Ticket>();
+
+			//	//jtoken = jobject.GetValue("area");
+			//	//var returned_area = jtoken.ToObject<Area>();
+
+			//	//var areaController = new AreaController();
+			//	//var stored_area = areaController.getArea(returned_area.id);
+
+			//	//if (stored_area == null)
+			//	//{
+			//	//	areaController.addAreaLocally(returned_area);
+			//	//}
+
+			//	var ticketController = new TicketController();
+			//	returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
+			//	string ext = string.Empty;
+			//	switch (mediaType)
+			//	{
+			//		case ("Picture"):
+			//			returned_ticket.displayIcon = "photo_icon.png";
+			//			ext = ".jpg";
+			//			returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+			//			TicketsPicture.pictureTickets.Add(returned_ticket);
+			//			break;
+			//		case ("Sound"):
+			//			returned_ticket.displayIcon = "audio_icon.png";
+			//			ext = ".wav";
+			//			returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+			//			TicketsSounds.soundTickets.Add(returned_ticket);
+			//			break;
+			//	}
+
+			//	MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
+
+			//	ticketController.addTicketLocally(returned_ticket);
+
+			//	// Add to view
+			//	TicketsByPeriod.addTicket(returned_ticket);
+			var ticketController = new TicketController();
+			var returned_ticket = await ticketController.addTicketRemotely(ticket, media, selected_period);
+			if (returned_ticket != null)
 			{
-				var jtoken = jobject.GetValue("ticket");
-				var returned_ticket = jtoken.ToObject<Ticket>();
-
-				//jtoken = jobject.GetValue("area");
-				//var returned_area = jtoken.ToObject<Area>();
-
-				//var areaController = new AreaController();
-				//var stored_area = areaController.getArea(returned_area.id);
-
-				//if (stored_area == null)
-				//{
-				//	areaController.addAreaLocally(returned_area);
-				//}
-
-				var ticketController = new TicketController();
-				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
-				string ext = String.Empty;
-				switch (mediaType)
-				{
-					case ("Picture"):
-						returned_ticket.displayIcon = "photo_icon.png";
-						ext = ".jpg";
-						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsPicture.pictureTickets.Add(returned_ticket);
-						break;
-					case ("Sound"):
-						returned_ticket.displayIcon = "audio_icon.png";
-						ext = ".wav";
-						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsSounds.soundTickets.Add(returned_ticket);
-						break;
-				}
-
-				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
-
-				ticketController.addTicketLocally(returned_ticket);
-
-				// Add to view
-				TicketsByPeriod.addTicket(returned_ticket);
-
 				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
 
 				if (isInTutorial)
