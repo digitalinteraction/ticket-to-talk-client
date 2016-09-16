@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -21,7 +19,17 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectActivePerson()
 		{
-			Debug.WriteLine("SelectActivePerson: User " + Session.activeUser);
+			people = Task.Run(() => personController.getPeopleFromServer()).Result;
+			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
+
+			foreach (Person p in people)
+			{
+				personController.addPersonLocally(p);
+				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
+				Debug.WriteLine("SelectActivePerson: Got image");
+				p.relation = personController.getRelationship(p.id);
+			}
+
 			Padding = new Thickness(20);
 
 			Title = "Select a Person";
@@ -33,17 +41,6 @@ namespace TicketToTalk
 				HorizontalTextAlignment = TextAlignment.Center
 			};
 
-			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
-			foreach (Person p in people)
-			{
-				personController.addPersonLocally(p);
-				//p.imageSource = personController.getPersonProfilePicture(p);
-				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
-				Debug.WriteLine("SelectActivePerson: Got image");
-				p.relation = personController.getRelationship(p.id);
-			}
-			Debug.WriteLine("PersonController: Finished block");
 			var peopleListView = new ListView
 			{
 				ItemTemplate = new DataTemplate(typeof(PersonCell)),
@@ -114,11 +111,11 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void PeopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
-			Person p = (Person)e.SelectedItem;
+			var p = (Person)e.SelectedItem;
 			Session.activePerson = p;
 			Debug.WriteLine("Setting active person: " + p);
 
-			App.Current.MainPage = new RootPage();
+			Application.Current.MainPage = new RootPage();
 		}
 	}
 }

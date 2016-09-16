@@ -33,7 +33,7 @@ namespace TicketToTalk
 				Command = new Command(cancel)
 			});
 
-			if (article != null) 
+			if (article != null)
 			{
 				this.article = article;
 			}
@@ -47,7 +47,7 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			title = new Entry 
+			title = new Entry
 			{
 				Placeholder = "Title",
 				TextColor = ProjectResource.color_red,
@@ -70,14 +70,14 @@ namespace TicketToTalk
 			};
 			notes.TextChanged += Entry_TextChanged;
 
-			var linkLabel = new Label 
+			var linkLabel = new Label
 			{
 				Text = "Link",
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			link = new Entry 
+			link = new Entry
 			{
 				Placeholder = "Add a link to the article.",
 				TextColor = ProjectResource.color_red,
@@ -100,13 +100,13 @@ namespace TicketToTalk
 			{
 				saveButton.Clicked += saveArticle;
 			}
-			else 
+			else
 			{
 				saveButton.Text = "Update";
 				saveButton.Clicked += updateArticle;
 			}
 
-			if (article != null) 
+			if (article != null)
 			{
 				title.Text = article.title;
 				link.Text = article.link;
@@ -114,11 +114,11 @@ namespace TicketToTalk
 				Title = article.title;
 			}
 
-			var detailsStack = new StackLayout 
+			var detailsStack = new StackLayout
 			{
 				Padding = new Thickness(20, 10, 20, 20),
 				Spacing = 0,
-				Children = 
+				Children =
 				{
 					titleLabel,
 					title,
@@ -145,7 +145,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				//VerticalOptions = LayoutOptions.FillAndExpand,
 				Children = {
-					detailsStack, 
+					detailsStack,
 					buttonStack
 				}
 			};
@@ -176,7 +176,7 @@ namespace TicketToTalk
 				saveButton.BackgroundColor = ProjectResource.color_blue;
 				saveButton.IsEnabled = true;
 			}
-			else 
+			else
 			{
 				saveButton.BackgroundColor = ProjectResource.color_grey;
 				saveButton.IsEnabled = false;
@@ -187,12 +187,12 @@ namespace TicketToTalk
 		/// Saves the article.
 		/// </summary>
 		/// <returns>The article.</returns>
-		public async void saveArticle(object sender, EventArgs e) 
+		public async void saveArticle(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 
 			var post_link = link.Text.ToLower();
-			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)) && !(post_link.StartsWith("https://", StringComparison.Ordinal))) 
+			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)) && !(post_link.StartsWith("https://", StringComparison.Ordinal)))
 			{
 				post_link = "http://" + post_link;
 			}
@@ -221,9 +221,9 @@ namespace TicketToTalk
 
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
-				await DisplayAlert("Articles", "Article could not be saved." ,"OK");
+				await DisplayAlert("Articles", "Article could not be saved.", "OK");
 				saveButton.IsEnabled = true;
 			}
 		}
@@ -233,7 +233,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void updateArticle(object sender, EventArgs e) 
+		public async void updateArticle(object sender, EventArgs e)
 		{
 			var post_link = link.Text.ToLower();
 			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)))
@@ -259,16 +259,25 @@ namespace TicketToTalk
 				new_article.favicon = articleController.getFaviconURL(new_article.link);
 				articleController.updateArticleLocally(new_article);
 
-				var idx = AllArticles.serverArticles.IndexOf(new_article);
-				AllArticles.serverArticles[idx] = new_article;
+				//var idx = AllArticles.serverArticles.IndexOf(new_article);
+				var idx = -1;
+				for (int i = 0; i < AllArticles.serverArticles.Count; i++)
+				{
+					if (new_article.id == AllArticles.serverArticles[i].id)
+					{
+						idx = i;
+						break;
+					}
+				}
 
+				AllArticles.serverArticles[idx] = new_article;
 				ViewArticle.currentArticle.title = new_article.title;
 				ViewArticle.currentArticle.link = new_article.link;
 				ViewArticle.currentArticle.notes = new_article.notes;
 
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Articles", "Article could not updated.", "OK");
 				saveButton.IsEnabled = true;

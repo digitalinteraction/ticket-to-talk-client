@@ -19,7 +19,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.AddNewPersonPrompt"/> class.
 		/// </summary>
-		public AddNewPersonPrompt()
+		public AddNewPersonPrompt(bool canSkip)
 		{
 
 			Padding = new Thickness(20);
@@ -59,6 +59,7 @@ namespace TicketToTalk
 			};
 			skipTutorialButton.setButtonStyle(ProjectResource.color_red);
 			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
+			skipTutorialButton.IsVisible = canSkip;
 
 			Content = new StackLayout
 			{
@@ -82,7 +83,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void Button_Clicked(object sender, EventArgs e)
 		{
-			var nav = new NavigationPage(new AddPerson(null));
+			var nav = new NavigationPage(new AddPersonChoice());
 			nav.setNavHeaders();
 			AddPerson.isInTutorial = true;
 

@@ -14,7 +14,7 @@ namespace TicketToTalk
 		public static bool tutorialShown = false;
 
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
-		List<Ticket> tickets;
+		public static List<Ticket> tickets = new List<Ticket>();
 		Conversation conversation;
 		ConversationController conversationController = new ConversationController();
 
@@ -26,6 +26,7 @@ namespace TicketToTalk
 		{
 			this.conversation = conversation;
 			conversationItems.Clear();
+			tickets.Clear();
 			Debug.WriteLine("ConversationView: Conversation = " + conversation);
 
 			// Wait for new ticket to be returned if added through this view.
@@ -280,7 +281,7 @@ namespace TicketToTalk
 				nav.BarBackgroundColor = ProjectResource.color_blue;
 				nav.BarTextColor = ProjectResource.color_white;
 
-				await Navigation.PushModalAsync(nav);
+				await Navigation.PushAsync(new PlayConversation(conversation, tickets));
 			}
 			else
 			{

@@ -33,7 +33,6 @@ namespace TicketToTalk
 			var personController = new PersonController();
 			// TODO: delete this
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-
 			var tableView = new TableView
 			{
 				Intent = TableIntent.Form,
@@ -129,9 +128,14 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-			if (!promptShown)
+			if (Session.activeUser.firstLogin && !promptShown)
 			{
-				App.Current.MainPage = new AddNewPersonPrompt();
+				var canSkip = true;
+				if (people.Count == 0)
+				{
+					canSkip = false;
+				}
+				Application.Current.MainPage = new AddNewPersonPrompt(canSkip);
 				promptShown = true;
 			}
 		}

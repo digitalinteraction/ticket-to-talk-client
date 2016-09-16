@@ -16,7 +16,7 @@ namespace TicketToTalk
 		public PersonUserDB()
 		{
 
-			Console.WriteLine("Establishing DB connection");
+			Console.WriteLine("PersonUserDB: Establishing DB connection");
 			string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 			_connection = new SQLiteConnection(dbPath);
 
@@ -94,26 +94,26 @@ namespace TicketToTalk
 			{
 				return null;
 			}
-			else 
+			else
 			{
 				return results;
 			}
 		}
 
-		public PersonUser getRelationByUserAndPersonID(int user_id, int person_id) 
+		public PersonUser getRelationByUserAndPersonID(int user_id, int person_id)
 		{
 			var results = _connection.Query<PersonUser>(String.Format("SELECT * FROM PersonUser WHERE user_id = {0} AND person_id = {1}", user_id, person_id));
 			if (results.Count > 0)
 			{
 				return results[0];
 			}
-			else 
+			else
 			{
 				return null;
 			}
 		}
 
-		public void clearTable() 
+		public void clearTable()
 		{
 			_connection.Query<PersonUser>("DELETE FROM PersonUser");
 		}

@@ -23,6 +23,9 @@ namespace TicketToTalk
 		public AddTicketPrompt()
 		{
 
+			AddPerson.isInTutorial = false;
+			SeeInvite.isInTutorial = false;
+
 			BackgroundColor = ProjectResource.color_red;
 
 			var icon = new Image

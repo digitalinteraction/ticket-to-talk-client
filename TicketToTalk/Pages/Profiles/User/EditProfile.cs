@@ -211,9 +211,11 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void SaveButton_Clicked(object sender, EventArgs e)
 		{
+			saveButton.IsEnabled = false;
 			if (!(password.Text.Equals(confirmPassword.Text)))
 			{
 				await DisplayAlert("Edit Profile", "The passwords do not match", "OK");
+				saveButton.IsEnabled = true;
 				return;
 			}
 
@@ -234,6 +236,7 @@ namespace TicketToTalk
 			else
 			{
 				await DisplayAlert("Edit Profile", "Profile could not be updated.", "OK");
+				saveButton.IsEnabled = true;
 			}
 		}
 	}

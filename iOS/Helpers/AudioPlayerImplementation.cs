@@ -6,12 +6,13 @@ using Foundation;
 using TicketToTalk.iOS;
 using Xamarin.Forms;
 
-[assembly: Dependency (typeof (AudioPlayerImplementation))]
+[assembly: Dependency(typeof(AudioPlayerImplementation))]
 namespace TicketToTalk.iOS
 {
 	public class AudioPlayerImplementation : IAudioPlayer
 	{
 		AVAudioPlayer _player;
+		bool finished = false;
 
 		public AudioPlayerImplementation()
 		{
@@ -82,11 +83,15 @@ namespace TicketToTalk.iOS
 		/// <returns>The finished playing.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public void PlayerFinishedPlaying(object sender, AVStatusEventArgs e) 
+		public void PlayerFinishedPlaying(object sender, AVStatusEventArgs e)
 		{
 			//_player = null;
 			_player.Stop();
-			Debug.WriteLine("Audio Finished");
+			finished = true;
+
+			MessagingCenter.Send<AudioPlayerImplementation, bool>(this, "finished_playback", finished);
+
+			Debug.WriteLine("AudioPlayer: Audio Finished");
 		}
 
 		/// <summary>
@@ -99,7 +104,7 @@ namespace TicketToTalk.iOS
 			{
 				return false;
 			}
-			else 
+			else
 			{
 				return _player.Playing;
 			}
@@ -111,7 +116,7 @@ namespace TicketToTalk.iOS
 		/// <returns>The duration.</returns>
 		public int GetDuration()
 		{
-			return (int) _player.Duration;
+			return (int)_player.Duration;
 		}
 
 		/// <summary>
@@ -120,7 +125,16 @@ namespace TicketToTalk.iOS
 		/// <returns>The current time.</returns>
 		public int GetCurrentTime()
 		{
-			return (int) _player.CurrentTime;
+			return (int)_player.CurrentTime;
+		}
+
+		/// <summary>
+		/// Hases the finished playing.
+		/// </summary>
+		/// <returns><c>true</c>, if finished playing was hased, <c>false</c> otherwise.</returns>
+		public bool HasFinishedPlaying()
+		{
+			return finished;
 		}
 	}
 }

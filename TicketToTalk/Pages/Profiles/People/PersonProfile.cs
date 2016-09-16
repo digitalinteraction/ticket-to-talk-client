@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -14,6 +11,7 @@ namespace TicketToTalk
 
 		public static Person currentPerson;
 		PersonController personController = new PersonController();
+		public static PersonPivot pivot;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ticket_to_Talk.PersonProfile"/> class.
@@ -22,10 +20,6 @@ namespace TicketToTalk
 		public PersonProfile(Person person)
 		{
 			currentPerson = person;
-
-			// TODO: Fix name 
-			//this.SetBinding(Page.TitleProperty, currentPerson.name);
-			//BindingContext = currentPerson;
 
 			Title = "Profile";
 
@@ -39,7 +33,7 @@ namespace TicketToTalk
 
 			person.displayString = personController.getDisplayString(person);
 
-			var users = Task.Run(() => getUsers()).Result;
+			var users = Task.Run(() => personController.getUsers(person.id)).Result;
 
 			var nameLabel = new Label
 			{
@@ -56,6 +50,10 @@ namespace TicketToTalk
 			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, currentPerson.id);
 			puDB.close();
 
+			pivot = new PersonPivot();
+			pivot.relation = personUser.relationship;
+			currentPerson.personPivot = pivot;
+
 			var relation = new Label
 			{
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -63,8 +61,8 @@ namespace TicketToTalk
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
-			relation.SetBinding(Label.TextProperty, "relationship");
-			relation.BindingContext = personUser;
+			relation.SetBinding(Label.TextProperty, "relation");
+			relation.BindingContext = pivot;
 
 			var detailsHeader = new Label
 			{
@@ -200,49 +198,74 @@ namespace TicketToTalk
 		/// <summary>
 		/// Edits the person.
 		/// </summary>
-		async void editPerson()
+		private async void editPerson()
 		{
-			var action = await DisplayActionSheet("Edit Person", "Cancel", "Delete Person", "Edit Person");
-			Debug.WriteLine("PersonProfile: Action sheet selection - " + action);
 
+			// Display the action sheet.
+			var action = string.Empty;
+			if (currentPerson.admin_id == Session.activeUser.id)
+			{
+				action = await DisplayActionSheet("Edit Person", "Cancel", "Delete Person", "Edit Person");
+			}
+			else
+			{
+				action = await DisplayActionSheet("Edit Person", "Cancel", "Delete Person");
+			}
+
+			// Handle the action.
 			switch (action)
 			{
 				case ("Delete Person"):
 					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
 					if (confirm)
 					{
-						Debug.WriteLine("PersonProfile: Person to be deleted.");
-						Debug.WriteLine("PersonProfile: Deleting person locally.");
-						personController.deletePersonLocally(currentPerson.id);
-						Debug.WriteLine("PersonProfile: Deleting person remotely.");
-						personController.deletePersonRemotely(currentPerson);
+						//// TODO: Move to controller.
+						//Debug.WriteLine("PersonProfile: Person to be deleted.");
+						//Debug.WriteLine("PersonProfile: Deleting person locally.");
+						//personController.deletePersonLocally(currentPerson.id);
+						//Debug.WriteLine("PersonProfile: Deleting person remotely.");
+						//personController.deletePersonRemotely(currentPerson);
 
-						var ticketController = new TicketController();
-						var mediaController = new MediaController();
-						Debug.WriteLine("PersonProfile: Getting all of the person's tickets.");
-						var tickets = ticketController.getTicketsByPerson(currentPerson.id);
-						Debug.WriteLine("PersonProfile: Deleting ticket files.");
-						foreach (Ticket t in tickets)
+						//var ticketController = new TicketController();
+						//var mediaController = new MediaController();
+						//Debug.WriteLine("PersonProfile: Getting all of the person's tickets.");
+						//var tickets = ticketController.getTicketsByPerson(currentPerson.id);
+						//Debug.WriteLine("PersonProfile: Deleting ticket files.");
+						//foreach (Ticket t in tickets)
+						//{
+						//	ticketController.deleteTicketLocally(t);
+						//	mediaController.deleteFile(t.pathToFile);
+						//}
+
+						//var relation = personController.getRelation(currentPerson.id);
+						//var personUserDB = new PersonUserDB();
+						//personUserDB.DeleteRelation(relation.id);
+
+						//Debug.WriteLine("PersonProfile: Removing person from views.");
+						//AllProfiles.people.Remove(currentPerson);
+
+						var deleted = await personController.destroyPerson(currentPerson);
+
+						if (deleted)
 						{
-							ticketController.deleteTicketLocally(t);
-							mediaController.deleteFile(t.pathToFile);
-						}
-
-						var relation = personController.getRelation(currentPerson.id);
-						var personUserDB = new PersonUserDB();
-						personUserDB.DeleteRelation(relation.id);
-
-						Debug.WriteLine("PersonProfile: Removing person from views.");
-						AllProfiles.people.Remove(currentPerson);
-						if (Session.activePerson.id == currentPerson.id)
-						{
-							Session.activePerson = null;
-							await Navigation.PushAsync(new SelectActivePerson());
+							if (Session.activePerson.id == currentPerson.id)
+							{
+								Session.activePerson = null;
+								var navi = new NavigationPage(new SelectActivePerson());
+								navi.setNavHeaders();
+								//await Navigation.PushAsync(navi);
+								Application.Current.MainPage = navi;
+							}
+							else
+							{
+								await Navigation.PopAsync();
+							}
 						}
 						else
 						{
-							await Navigation.PopAsync();
+							await DisplayAlert("Delete Person", "Person could not be deleted.", "OK");
 						}
+
 					}
 					break;
 				case ("Edit Person"):
@@ -259,27 +282,27 @@ namespace TicketToTalk
 		/// Gets the users associated with this person.
 		/// </summary>
 		/// <returns>The users.</returns>
-		public async Task<List<User>> getUsers()
-		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["token"] = Session.Token.val;
-			parameters["person_id"] = currentPerson.id.ToString();
-			string url = "people/getusers";
+		//public async Task<List<User>> getUsers()
+		//{
+		//	IDictionary<string, string> parameters = new Dictionary<string, string>();
+		//	parameters["token"] = Session.Token.val;
+		//	parameters["person_id"] = currentPerson.id.ToString();
+		//	string url = "people/getusers";
 
-			// Send request for all users associated with the person
-			Console.WriteLine("Sending request for all users associated with the person.");
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendGetRequest(url, parameters);
-			Console.WriteLine(jobject);
+		//	// Send request for all users associated with the person
+		//	Console.WriteLine("Sending request for all users associated with the person.");
+		//	NetworkController net = new NetworkController();
+		//	var jobject = await net.sendGetRequest(url, parameters);
+		//	Console.WriteLine(jobject);
 
-			var jusers = jobject.GetValue("users");
-			var users = jusers.ToObject<User[]>();
-			foreach (User u in users)
-			{
-				Console.WriteLine(u);
-			}
-			return new List<User>(users);
-		}
+		//	var jusers = jobject.GetValue("users");
+		//	var users = jusers.ToObject<User[]>();
+		//	foreach (User u in users)
+		//	{
+		//		Console.WriteLine(u);
+		//	}
+		//	return new List<User>(users);
+		//}
 	}
 }
 

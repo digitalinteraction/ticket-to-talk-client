@@ -40,8 +40,8 @@ namespace TicketToTalk
 
 			Console.WriteLine("Displaying ticket info");
 
-			var areaController = new AreaController();
-			var area = areaController.getArea(ticket.area_id);
+			//var areaController = new AreaController();
+			//var area = areaController.getArea(ticket.area_id);
 
 			Label titleLabel = new Label
 			{
@@ -96,7 +96,8 @@ namespace TicketToTalk
 			// Area entry
 			town_city = new Entry
 			{
-				Text = area.townCity,
+				//Text = area.townCity,
+				Text = ticket.area,
 				Placeholder = "Town/City",
 				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 5)
@@ -120,14 +121,14 @@ namespace TicketToTalk
 			int yearIndex = 0;
 
 			// Add years to picker
-			for (int i = Int32.Parse(Session.activePerson.birthYear) ; i < DateTime.Now.Year; i++)
+			for (int i = Int32.Parse(Session.activePerson.birthYear); i < DateTime.Now.Year; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
 				if (String.Equals(ticket.year, i.ToString()))
 				{
 					yearIndex = i;
 				}
-				else  
+				else
 				{
 					yearIndex = 0;
 				}
@@ -165,10 +166,10 @@ namespace TicketToTalk
 			var periodController = new PeriodController();
 			var periods = periodController.getAllLocalPeriods();
 			int j = 0;
-			foreach (Period p in periods) 
+			foreach (Period p in periods)
 			{
 				period_picker.Items.Add(p.text);
-				if (ticket.period_id == p.id) 
+				if (ticket.period_id == p.id)
 				{
 					period_picker.SelectedIndex = j;
 				}
@@ -179,7 +180,7 @@ namespace TicketToTalk
 			foreach (string s in accessLevels)
 			{
 				access_level.Items.Add(s);
-				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0) 
+				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0)
 				{
 					access_level.SelectedIndex = j;
 					Debug.WriteLine(j);
@@ -214,7 +215,7 @@ namespace TicketToTalk
 					}
 				};
 			}
-			else 
+			else
 			{
 				detailsStack = new StackLayout
 				{
@@ -282,24 +283,28 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void saveChanges(object sender, EventArgs e)
 		{
+			saveButton.IsEnabled = false;
+
 			var periodController = new PeriodController();
 			var period = periodController.getAllLocalPeriods()[period_picker.SelectedIndex];
 
 			ticket.title = title.Text;
 			ticket.description = description.Text;
 			ticket.year = (Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
+
 			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
 
 			var ticketController = new TicketController();
 			Ticket returned = null;
 			if (ticket.mediaType.Equals("Picture"))
 			{
-				returned = await ticketController.updateTicketRemotely(ticket, town_city.Text, period.text);
+				ticket.area = town_city.Text.Trim();
 			}
-			else 
+			else
 			{
-				returned = await ticketController.updateTicketRemotely(ticket, " ", period.text);
+				ticket.area = " ";
 			}
+			returned = await ticketController.updateTicketRemotely(ticket, period.text);
 
 			if (returned != null)
 			{
@@ -311,6 +316,7 @@ namespace TicketToTalk
 			else
 			{
 				await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+				saveButton.IsEnabled = true;
 			}
 		}
 

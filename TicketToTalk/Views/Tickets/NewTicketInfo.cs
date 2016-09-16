@@ -502,8 +502,8 @@ namespace TicketToTalk
 
 			saveButton.IsEnabled = false;
 
-			var year = Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex;
-			Ticket ticket = new Ticket
+			var year = int.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex;
+			var ticket = new Ticket
 			{
 				title = title.Text,
 				description = description.Text,
@@ -511,17 +511,17 @@ namespace TicketToTalk
 				year = year.ToString(),
 				pathToFile = filePath,
 				access_level = ProjectResource.groups[access_level.SelectedIndex],
-				person_id = Session.activePerson.id
+				person_id = Session.activePerson.id,
 			};
 
-			var area = new Area();
+			//var area = new Area();
 			if (mediaType.Equals("Picture"))
 			{
-				area.townCity = town_city.Text;
+				ticket.area = town_city.Text.Trim();
 			}
 			else
 			{
-				area.townCity = " ";
+				ticket.area = " ";
 			}
 
 			if (ticket.mediaType.Equals("YouTube"))
@@ -538,64 +538,67 @@ namespace TicketToTalk
 
 			var selected_period = periods[period.SelectedIndex];
 
-			NetworkController net = new NetworkController();
-			IDictionary<string, Object> parameters = new Dictionary<string, Object>();
-			parameters["token"] = Session.Token.val;
-			parameters["ticket"] = ticket;
-			parameters["area"] = area;
-			parameters["media"] = media;
-			parameters["period"] = selected_period;
+			//NetworkController net = new NetworkController();
+			//IDictionary<string, object> parameters = new Dictionary<string, object>();
+			//parameters["token"] = Session.Token.val;
+			//parameters["ticket"] = ticket;
+			////parameters["area"] = area;
+			//parameters["media"] = media;
+			//parameters["period"] = selected_period;
 
-			var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
+			//var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
 
-			if (jobject != null)
+			//if (jobject != null)
+			//{
+			//	var jtoken = jobject.GetValue("ticket");
+			//	var returned_ticket = jtoken.ToObject<Ticket>();
+
+			//	//jtoken = jobject.GetValue("area");
+			//	//var returned_area = jtoken.ToObject<Area>();
+
+			//	//var areaController = new AreaController();
+			//	//var stored_area = areaController.getArea(returned_area.id);
+
+			//	//if (stored_area == null)
+			//	//{
+			//	//	areaController.addAreaLocally(returned_area);
+			//	//}
+
+			//	var ticketController = new TicketController();
+			//	returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
+			//	string ext = string.Empty;
+			//	switch (mediaType)
+			//	{
+			//		case ("Picture"):
+			//			returned_ticket.displayIcon = "photo_icon.png";
+			//			ext = ".jpg";
+			//			returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+			//			TicketsPicture.pictureTickets.Add(returned_ticket);
+			//			break;
+			//		case ("Sound"):
+			//			returned_ticket.displayIcon = "audio_icon.png";
+			//			ext = ".wav";
+			//			returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
+			//			TicketsSounds.soundTickets.Add(returned_ticket);
+			//			break;
+			//	}
+
+			//	MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
+
+			//	ticketController.addTicketLocally(returned_ticket);
+
+			//	// Add to view
+			//	TicketsByPeriod.addTicket(returned_ticket);
+			var ticketController = new TicketController();
+			var returned_ticket = await ticketController.addTicketRemotely(ticket, media, selected_period);
+			if (returned_ticket != null)
 			{
-				var jtoken = jobject.GetValue("ticket");
-				var returned_ticket = jtoken.ToObject<Ticket>();
-
-				jtoken = jobject.GetValue("area");
-				var returned_area = jtoken.ToObject<Area>();
-
-				var areaController = new AreaController();
-				var stored_area = areaController.getArea(returned_area.id);
-
-				if (stored_area == null)
-				{
-					areaController.addAreaLocally(returned_area);
-				}
-
-				var ticketController = new TicketController();
-				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
-				string ext = String.Empty;
-				switch (mediaType)
-				{
-					case ("Picture"):
-						returned_ticket.displayIcon = "photo_icon.png";
-						ext = ".jpg";
-						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsPicture.pictureTickets.Add(returned_ticket);
-						break;
-					case ("Sound"):
-						returned_ticket.displayIcon = "audio_icon.png";
-						ext = ".wav";
-						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsSounds.soundTickets.Add(returned_ticket);
-						break;
-				}
-
-				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
-
-				ticketController.addTicketLocally(returned_ticket);
-
-				// Add to view
-				TicketsByPeriod.addTicket(returned_ticket);
-
 				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
 
 				if (isInTutorial)
 				{
 					isInTutorial = false;
-					App.Current.MainPage = new FinishTutorialPage();
+					Application.Current.MainPage = new FinishTutorialPage();
 				}
 				else
 				{
@@ -620,17 +623,17 @@ namespace TicketToTalk
 
 			if (mediaType.Equals("Picture"))
 			{
-				entriesNotNull = (!String.IsNullOrEmpty(title.Text))
-				&& (!String.IsNullOrEmpty(description.Text))
-				&& (!String.IsNullOrEmpty(town_city.Text))
+				entriesNotNull = (!string.IsNullOrEmpty(title.Text))
+				&& (!string.IsNullOrEmpty(description.Text))
+				&& (!string.IsNullOrEmpty(town_city.Text))
 				&& (yearPicker.SelectedIndex != -1)
 				&& (period.SelectedIndex != -1)
 				&& (access_level.SelectedIndex != -1);
 			}
 			else
 			{
-				entriesNotNull = (!String.IsNullOrEmpty(title.Text))
-				&& (!String.IsNullOrEmpty(description.Text))
+				entriesNotNull = (!string.IsNullOrEmpty(title.Text))
+				&& (!string.IsNullOrEmpty(description.Text))
 				&& (yearPicker.SelectedIndex != -1)
 				&& (period.SelectedIndex != -1)
 				&& (access_level.SelectedIndex != -1);

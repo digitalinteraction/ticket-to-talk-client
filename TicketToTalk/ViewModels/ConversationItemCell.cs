@@ -33,11 +33,20 @@ namespace TicketToTalk
 			var conversationController = new ConversationController();
 			var removed = await conversationController.removeTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
 
-			if (removed) 
+			if (removed)
 			{
 				conversationController.removeTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
 				ConversationView.conversationItems.Remove(conversationItem);
 				ConversationSelect.conversations.Remove(conversationItem.conversation);
+
+				foreach (Conversation c in ConversationsView.conversations)
+				{
+					if (c.id == conversationItem.conversation.id)
+					{
+						c.ticketCount--;
+						break;
+					}
+				}
 			}
 		}
 	}
