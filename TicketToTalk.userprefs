@@ -1,9 +1,7 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/TicketController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/AreaController.cs">
     <Files>
-      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="35" Column="3" />
-      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/NewTicket.cs" Line="55" Column="29" />
-      <File FileName="TicketToTalk/Views/Tickets/NewTicketInfo.cs" Line="593" Column="35" />
+      <File FileName="TicketToTalk/Controllers/AreaController.cs" Line="8" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />
