@@ -19,11 +19,11 @@ namespace TicketToTalk
 		{
 
 			Ticket = ticket;
-			this.Title = ticket.title;
+			Title = ticket.title;
 
 			NavigationPage.SetHasNavigationBar(this, true);
 			NavigationPage.SetHasBackButton(this, true);
-		
+
 			// Add button to navigation bar.
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -38,7 +38,7 @@ namespace TicketToTalk
 			var stack = new StackLayout()
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
 					ticket_photo,
 					new TicketInfo()
@@ -59,7 +59,7 @@ namespace TicketToTalk
 		{
 			var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Display Information", "Add to Conversation");
 
-			switch (action) 
+			switch (action)
 			{
 				case ("Delete"):
 					var ticketController = new TicketController();

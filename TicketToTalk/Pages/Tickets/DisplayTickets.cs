@@ -9,7 +9,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Tickets in area.
 	/// </summary>
-	public partial class DisplayTickets : ContentPage
+	public class DisplayTickets : ContentPage
 	{
 
 		public static ObservableCollection<Ticket> displayTickets = new ObservableCollection<Ticket>();
@@ -22,10 +22,11 @@ namespace TicketToTalk
 		public DisplayTickets(List<Ticket> tickets, string title)
 		{
 			displayTickets.Clear();
-			foreach (Ticket t in tickets) 
+			foreach (Ticket t in tickets)
 			{
 				displayTickets.Add(t);
 			}
+
 			// Set Padding
 			Padding = new Thickness(20);
 			Title = title;
@@ -82,7 +83,7 @@ namespace TicketToTalk
 			Content = new StackLayout
 			{
 				Spacing = 12,
-				Children = 
+				Children =
 				{
 					ticketsListView
 				}
@@ -102,7 +103,7 @@ namespace TicketToTalk
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
-			Ticket ticket = (Ticket) e.SelectedItem;
+			Ticket ticket = (Ticket)e.SelectedItem;
 			ToolbarItems.Clear();
 
 			var nav = new ViewTicket(ticket);

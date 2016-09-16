@@ -18,6 +18,10 @@ namespace TicketToTalk
 			Content = image;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.PictureLayout"/> class.
+		/// </summary>
+		/// <param name="media">Media.</param>
 		public PictureLayout(byte[] media)
 		{
 			Image image = new Image();
@@ -25,6 +29,11 @@ namespace TicketToTalk
 			Content = image;
 		}
 
+		/// <summary>
+		/// Loads the image.
+		/// </summary>
+		/// <param name="image">Image.</param>
+		/// <param name="filePath">File path.</param>
 		private void loadImage(Image image, string filePath)
 		{
 			var rawBytes = MediaController.readBytesFromFile(filePath);

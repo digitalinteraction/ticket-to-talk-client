@@ -21,7 +21,7 @@ namespace TicketToTalk
 			Debug.WriteLine("YouTubePlayer: string code = " + videoCode);
 
 			Padding = new Thickness(0);
-			var url = String.Format(
+			var url = string.Format(
 				"<!DOCTYPE html><body><iframe src='https://www.youtube.com/embed/{0}' frameborder='0' allowfullscreen></iframe></body></html>", videoCode);
 
 			Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
@@ -40,7 +40,7 @@ namespace TicketToTalk
 			var stack = new StackLayout
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
 					webView
 				}

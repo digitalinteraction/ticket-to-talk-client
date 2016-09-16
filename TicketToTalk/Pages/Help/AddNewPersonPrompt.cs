@@ -43,7 +43,6 @@ namespace TicketToTalk
 				Text = "Let's make a profile for someone you'd like to collect tickets for!",
 				TextColor = ProjectResource.color_white,
 				HorizontalTextAlignment = TextAlignment.Center,
-				//VerticalOptions = LayoutOptions.Center
 			};
 
 			var button = new Button

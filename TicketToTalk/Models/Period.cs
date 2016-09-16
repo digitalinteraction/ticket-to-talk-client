@@ -19,7 +19,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Pivot.
 		/// </summary>
-		public class Pivot 
+		public class Pivot
 		{
 			public string person_id { get; set; }
 			public string period_id { get; set; }
@@ -83,6 +83,10 @@ namespace TicketToTalk
 			return hash;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Period"/>.
+		/// </summary>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Period"/>.</returns>
 		public override string ToString()
 		{
 			return string.Format("[Period: id={0}, text={1}, ticket_count={2}, pivot={3}]", id, text, ticket_count, pivot);

@@ -46,13 +46,6 @@ namespace TicketToTalk
 			button.setButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
-			//var skipTutorialButton = new Button
-			//{
-			//	Text = "Skip Tutorial"
-			//};
-			//skipTutorialButton.setButtonStyle(ProjectResource.color_red);
-			//skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
-
 			Content = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.CenterAndExpand,
@@ -61,7 +54,6 @@ namespace TicketToTalk
 					icon,
 					label,
 					button,
-					//skipTutorialButton
 				}
 			};
 		}
@@ -73,23 +65,8 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void Button_Clicked(object sender, EventArgs e)
 		{
-			//var nav = new NavigationPage(new NewConversation());
-			//nav.setNavHeaders();
-
-			//Navigation.PushModalAsync(nav);
-
 			Navigation.PopModalAsync();
 		}
-
-		///// <summary>
-		///// Skips the tutorial button clicked.
-		///// </summary>
-		///// <param name="sender">Sender.</param>
-		///// <param name="e">E.</param>
-		//private void SkipTutorialButton_Clicked(object sender, EventArgs e)
-		//{
-
-		//}
 	}
 }
 

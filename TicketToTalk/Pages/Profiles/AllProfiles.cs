@@ -31,7 +31,6 @@ namespace TicketToTalk
 			});
 
 			var personController = new PersonController();
-			// TODO: delete this
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
 			var tableView = new TableView
 			{
@@ -54,7 +53,6 @@ namespace TicketToTalk
 			var tableSection = new TableSection("Your People");
 			foreach (Person p in people)
 			{
-				// TODO: Compare image hashcodes
 				var stored_person = personController.getPerson(p.id);
 				if (stored_person != null)
 				{

@@ -24,11 +24,6 @@ namespace TicketToTalk
 		/// </summary>
 		public PersonProfileImage(Person person)
 		{
-			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			//{
-			//	Debug.WriteLine("Image Downloaded");
-			//	download_finished = finished;
-			//});
 
 			profilePic = new CircleImage
 			{
@@ -40,10 +35,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
-				//Source = personController.getPersonProfilePicture(person)
 				Source = Task.Run(() => personController.getPersonProfilePicture(person)).Result
 			};
-			//profilePic.SetBinding(Image.SourceProperty, "imageSource");
 
 			Content = profilePic;
 		}

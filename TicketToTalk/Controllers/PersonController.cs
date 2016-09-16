@@ -135,7 +135,6 @@ namespace TicketToTalk
 			{
 				Debug.WriteLine("PersonController: Getting image from server.");
 				var image = await downloadPersonProfilePicture(person);
-				//imageSource = ImageSource.FromStream(() => new MemoryStream(downloadPersonProfilePicture(person)));
 				imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 			}
 			else
@@ -201,7 +200,6 @@ namespace TicketToTalk
 			person.pathToPhoto = fileName;
 
 			return ImageSource.FromStream(() => new MemoryStream(MediaController.readBytesFromFile(fileName)));
-			//return fileName;
 		}
 
 		/// <summary>
@@ -316,7 +314,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<bool> destroyPerson(Person person)
+		public bool destroyPerson(Person person)
 		{
 			deletePersonLocally(person.id);
 			var deleted = deletePersonRemotely(person);
@@ -451,6 +449,11 @@ namespace TicketToTalk
 			return relation.relationship;
 		}
 
+		/// <summary>
+		/// Gets the relation between the user and the person.
+		/// </summary>
+		/// <returns>The relation.</returns>
+		/// <param name="person_id">Person identifier.</param>
 		public PersonUser getRelation(int person_id)
 		{
 			var personUserDB = new PersonUserDB();
@@ -467,7 +470,7 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void addStockPeriods(Person p)
 		{
-			PersonPeriodDB ppDB = new PersonPeriodDB();
+			var ppDB = new PersonPeriodDB();
 			ppDB.open();
 			for (int i = 1; i < 5; i++)
 			{
@@ -490,9 +493,9 @@ namespace TicketToTalk
 			string url = "people/getusers";
 
 			// Send request for all users associated with the person
-			Console.WriteLine("Sending request for all users associated with the person.");
+			Debug.WriteLine("Sending request for all users associated with the person.");
 			var jobject = await networkController.sendGetRequest(url, parameters);
-			Console.WriteLine(jobject);
+			Debug.WriteLine(jobject);
 
 			var jusers = jobject.GetValue("users");
 			var users = jusers.ToObject<User[]>();

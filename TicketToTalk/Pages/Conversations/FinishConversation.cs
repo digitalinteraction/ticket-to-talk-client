@@ -94,9 +94,8 @@ namespace TicketToTalk
 			{
 				await DisplayAlert("Conversations", "Your notes could not be updated.", "OK");
 			}
-			//await Navigation.PopToRootAsync(true);
+
 			await Navigation.PopModalAsync();
-			//await Navigation.PopModalAsync();
 		}
 	}
 }

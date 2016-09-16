@@ -150,7 +150,7 @@ namespace TicketToTalk
 			credentials["email"] = email;
 			credentials["password"] = password.HashString();
 
-			NetworkController net = new NetworkController();
+			var net = new NetworkController();
 			var jobject = await net.sendPostRequest("auth/login", credentials);
 			if (jobject == null) return false;
 
@@ -159,7 +159,6 @@ namespace TicketToTalk
 
 			if (code == 200)
 			{
-				Console.WriteLine("Success: Token Generated");
 				jtoken = jobject.GetValue("token");
 				var token = new Token
 				{
@@ -199,7 +198,6 @@ namespace TicketToTalk
 					Session.activeUser = returned_user;
 					userController.updateUserLocally(returned_user);
 				}
-				Debug.WriteLine("UserController: Set active person to - " + Session.activeUser);
 				return true;
 			}
 			else
@@ -249,7 +247,7 @@ namespace TicketToTalk
 			if (jobject != null)
 			{
 				var jToken = jobject.GetValue("token");
-				Token token = new Token
+				var token = new Token
 				{
 					val = jToken.ToObject<string>()
 				};
@@ -447,7 +445,7 @@ namespace TicketToTalk
 		/// <param name="ba">Ba.</param>
 		private string byteToHex(byte[] ba)
 		{
-			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			var hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)
 			{
 				hex.AppendFormat("{0:X2}", b);

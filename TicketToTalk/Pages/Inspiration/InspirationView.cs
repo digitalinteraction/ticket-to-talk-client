@@ -95,14 +95,6 @@ namespace TicketToTalk
 				}
 			};
 
-			var img = new Image
-			{
-				Source = "drawer_icon_.png",
-				WidthRequest = 10,
-				HeightRequest = 10,
-				VerticalOptions = LayoutOptions.CenterAndExpand
-			};
-
 			var content = new StackLayout
 			{
 				Padding = new Thickness(20),

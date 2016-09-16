@@ -117,7 +117,7 @@ namespace TicketToTalk
 		/// <returns>The login.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		private async void HandleLogin(Object sender, EventArgs ea)
+		private async void HandleLogin(object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -149,7 +149,7 @@ namespace TicketToTalk
 		/// <returns>The register.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleRegister(Object sender, EventArgs ea)
+		async void HandleRegister(object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -169,8 +169,8 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(email.Text))
-				&& (!String.IsNullOrEmpty(password.Text));
+			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
+				&& (!string.IsNullOrEmpty(password.Text));
 
 			if (entriesNotNull)
 			{

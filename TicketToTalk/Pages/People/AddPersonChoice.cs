@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using TicketToTalk;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -11,7 +8,6 @@ namespace TicketToTalk
 	public class AddPersonChoice : ContentPage
 	{
 		UserController userController = new UserController();
-		PersonController personController = new PersonController();
 		List<Invitation> rawInvites;
 
 		public AddPersonChoice()
@@ -42,13 +38,6 @@ namespace TicketToTalk
 
 			// Get invitations
 			rawInvites = Task.Run(() => userController.getInvitations()).Result;
-			//foreach (Invitation invite in rawInvites)
-			//{
-			//var path = Task.Run(() => personController.downloadPersonProfilePictureForInvite(invite.person)).Result;
-			//invite.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), path);
-			//Debug.WriteLine("PersonPath: " + invite.person.pathToPhoto);
-			//invite.person_name = invite.person.name;
-			//}
 
 			if (rawInvites.Count > 0)
 			{
@@ -68,6 +57,11 @@ namespace TicketToTalk
 			};
 		}
 
+		/// <summary>
+		/// News the person button clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void NewPersonButton_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddPerson(null));
@@ -75,13 +69,16 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 
 			Navigation.PushModalAsync(nav);
-			//Navigation.RemovePage(this);
 		}
 
+		/// <summary>
+		/// Joins the person button clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void JoinPersonButton_Clicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new SeeInvitations(rawInvites));
-			//Navigation.RemovePage(this);
 		}
 	}
 }

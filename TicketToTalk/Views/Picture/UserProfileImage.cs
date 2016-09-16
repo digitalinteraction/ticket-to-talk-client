@@ -44,7 +44,7 @@ namespace TicketToTalk
 				profilePic.HeightRequest = size;
 				profilePic.WidthRequest = size;
 			}
-			if (!(String.IsNullOrEmpty(alignment)))
+			if (!(string.IsNullOrEmpty(alignment)))
 			{
 				switch (alignment)
 				{

@@ -9,7 +9,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// App
 	/// </summary>
-	public partial class App : Application
+	public class App : Application
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.App"/> class.
@@ -32,11 +32,11 @@ namespace TicketToTalk
 		/// <summary>
 		/// Prints all tables.
 		/// </summary>
-		public void printAllTables() 
+		public void printAllTables()
 		{
 			Debug.WriteLine("PRINTING USER TABLE.");
 			var userDB = new UserDB();
-			foreach (User u in userDB.GetUsers()) 
+			foreach (User u in userDB.GetUsers())
 			{
 				Console.WriteLine(u);
 			}
@@ -86,7 +86,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Clears the database.
 		/// </summary>
-		public void clearDatabase() 
+		public void clearDatabase()
 		{
 			Debug.WriteLine("CLEARING USER TABLE.");
 			var userDB = new UserDB();
@@ -122,7 +122,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Sends the audio.
 		/// </summary>
-		public async void sendAudio() 
+		public async void sendAudio()
 		{
 			var audioBytes = MediaController.readBytesFromFile("test.wav");
 			Debug.WriteLine("Audio Bytes Length: " + audioBytes.Length);

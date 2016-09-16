@@ -52,15 +52,15 @@ namespace TicketToTalk
 			del = new char[] { ':' };
 			string[] time = dt[1].Split(del);
 
-			string hour = (Int32.Parse(time[0]) % 12).ToString();
-			int afterMid = Int32.Parse(time[0]) / 12;
+			string hour = (int.Parse(time[0]) % 12).ToString();
+			int afterMid = int.Parse(time[0]) / 12;
 
-			if (Int32.Parse(hour) == 0 && afterMid == 1)
+			if (int.Parse(hour) == 0 && afterMid == 1)
 			{
 				hour = "12";
 			}
 
-			var time_suffix = String.Empty;
+			var time_suffix = string.Empty;
 			switch (afterMid)
 			{
 				case (0):
@@ -78,7 +78,7 @@ namespace TicketToTalk
 
 			var date = new Label
 			{
-				Text = String.Format("{0}:{1} {2}", hour, minutes, time_suffix),
+				Text = string.Format("{0}:{1} {2}", hour, minutes, time_suffix),
 				TextColor = ProjectResource.color_red,
 			};
 
@@ -91,7 +91,6 @@ namespace TicketToTalk
 
 			var notes = new Label
 			{
-				//Text = conversation.notes,
 				TextColor = ProjectResource.color_red,
 			};
 			notes.SetBinding(Label.TextProperty, "notes");
@@ -143,14 +142,14 @@ namespace TicketToTalk
 					Debug.WriteLine("ConversationView: ticket_id " + s);
 				}
 				var ticketController = new TicketController();
-				if (!(String.IsNullOrEmpty(ticket_ids[0])))
+				if (!(string.IsNullOrEmpty(ticket_ids[0])))
 				{
 					tickets = new List<Ticket>();
 					foreach (string s in ticket_ids)
 					{
-						if (!(String.IsNullOrEmpty(s)))
+						if (!(string.IsNullOrEmpty(s)))
 						{
-							var ticket = ticketController.getTicket(Int32.Parse(s));
+							var ticket = ticketController.getTicket(int.Parse(s));
 							tickets.Add(ticket);
 
 							switch (ticket.mediaType)

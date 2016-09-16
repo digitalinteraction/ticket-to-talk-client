@@ -295,12 +295,6 @@ namespace TicketToTalk
 			var rhs = obj as Person;
 
 			return id == rhs.id;
-			//&& admin_id == rhs.admin_id
-			//&& name.Equals(rhs.name)
-			//&& birthYear.Equals(rhs.birthYear)
-			//&& birthPlace.Equals(rhs.birthPlace)
-			//&& area.Equals(rhs.area)
-			//&& notes.Equals(rhs.notes);
 		}
 
 		/// <summary>

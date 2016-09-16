@@ -68,7 +68,6 @@ namespace TicketToTalk
 				HasUnevenRows = true,
 				RowHeight = 60,
 			};
-			//table.BackgroundColor = Color.White;
 			var section = new TableSection("Select a Ticket Type")
 			{
 				photoCell,
@@ -96,13 +95,17 @@ namespace TicketToTalk
 			Navigation.PopModalAsync();
 		}
 
+		/// <summary>
+		/// Songs the button clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		private void SongButton_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AudioRecorder());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			Navigation.PushModalAsync(nav);
-			//Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -211,7 +214,6 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			Navigation.PushModalAsync(nav);
-			//Navigation.RemovePage(this);
 		}
 	}
 }

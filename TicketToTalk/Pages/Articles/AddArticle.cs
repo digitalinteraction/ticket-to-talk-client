@@ -132,7 +132,6 @@ namespace TicketToTalk
 			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
-				//BackgroundColor = ProjectResource.color_blue,
 				VerticalOptions = LayoutOptions.EndAndExpand,
 				Children =
 				{
@@ -143,7 +142,6 @@ namespace TicketToTalk
 			Content = new StackLayout
 			{
 				Spacing = 0,
-				//VerticalOptions = LayoutOptions.FillAndExpand,
 				Children = {
 					detailsStack,
 					buttonStack
@@ -167,9 +165,9 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(title.Text))
-				&& (!String.IsNullOrEmpty(notes.Text))
-				&& (!String.IsNullOrEmpty(link.Text));
+			var entriesNotNull = (!string.IsNullOrEmpty(title.Text))
+				&& (!string.IsNullOrEmpty(notes.Text))
+				&& (!string.IsNullOrEmpty(link.Text));
 
 			if (entriesNotNull)
 			{
@@ -259,7 +257,6 @@ namespace TicketToTalk
 				new_article.favicon = articleController.getFaviconURL(new_article.link);
 				articleController.updateArticleLocally(new_article);
 
-				//var idx = AllArticles.serverArticles.IndexOf(new_article);
 				var idx = -1;
 				for (int i = 0; i < AllArticles.serverArticles.Count; i++)
 				{

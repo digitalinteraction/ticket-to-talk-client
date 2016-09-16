@@ -18,8 +18,7 @@ namespace TicketToTalk
 		/// </summary>
 		public RootPage()
 		{
-			this.Title = "Root";
-			//NavigationPage.SetHasNavigationBar(this, false);
+			Title = "Root";
 			var menuPage = new MenuPage();
 
 			menuPage.Menu.ItemSelected += (sender, e) => NavigateTo(e.SelectedItem as NavMenuItem);
@@ -39,7 +38,7 @@ namespace TicketToTalk
 		/// <param name="menu">Menu.</param>
 		void NavigateTo(NavMenuItem menu)
 		{
-			Page displayPage = (Page)Activator.CreateInstance(menu.TargetType);
+			var displayPage = (Page)Activator.CreateInstance(menu.TargetType);
 
 			var nav = new NavigationPage(displayPage);
 			nav.BarBackgroundColor = ProjectResource.color_blue;

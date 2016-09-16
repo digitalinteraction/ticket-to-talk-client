@@ -56,7 +56,6 @@ namespace TicketToTalk
 				FontSize = 20,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//Margin = new Thickness(0, 0, 0, 5)
 			};
 
 			var detailsHeader = new Label
@@ -77,7 +76,6 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//Margin = new Thickness(0, 0, 0, 10)
 			};
 
 			var associatesLabel = new Label
@@ -98,7 +96,6 @@ namespace TicketToTalk
 
 			foreach (User u in users)
 			{
-				//var userDetail = u.name + "(" + u.pivot.user_type + ")";
 				var label = new Label
 				{
 					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),

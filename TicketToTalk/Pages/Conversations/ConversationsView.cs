@@ -38,10 +38,6 @@ namespace TicketToTalk
 				conversations.Add(conversationController.setPropertiesForDisplay(c));
 			}
 
-			//var cell = new DataTemplate(typeof(ConversationCell));
-			//cell.SetBinding(TextCell.TextProperty, "date");
-			//cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
-
 			var listView = new ListView();
 			listView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			listView.HasUnevenRows = true;
@@ -56,10 +52,9 @@ namespace TicketToTalk
 					return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 				}
 
-				Conversation conversation = (Conversation)e.SelectedItem;
+				var conversation = (Conversation)e.SelectedItem;
 				await Navigation.PushAsync(new ConversationView(conversation));
 
-				//Navigation.PushAsync(new ViewTicket(ticket));
 				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 			};
 
@@ -84,6 +79,9 @@ namespace TicketToTalk
 			await Navigation.PushModalAsync(nav);
 		}
 
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

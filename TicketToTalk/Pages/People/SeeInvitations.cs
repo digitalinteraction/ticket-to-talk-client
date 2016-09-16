@@ -22,7 +22,7 @@ namespace TicketToTalk
 		public SeeInvitations(List<Invitation> invites)
 		{
 			invitations.Clear();
-			foreach (Invitation i in invites) 
+			foreach (Invitation i in invites)
 			{
 				invitations.Add(i);
 			}
@@ -45,8 +45,6 @@ namespace TicketToTalk
 				}
 
 				var inv = (Invitation)e.SelectedItem;
-				//var person = inv.person;
-
 				await Navigation.PushAsync(new SeeInvite(inv));
 
 				((ListView)sender).SelectedItem = null;

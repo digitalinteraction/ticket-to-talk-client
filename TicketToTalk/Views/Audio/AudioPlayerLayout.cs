@@ -61,6 +61,10 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.AudioPlayerLayout"/> class.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
 		public AudioPlayerLayout(Ticket ticket)
 		{
 
@@ -71,12 +75,6 @@ namespace TicketToTalk
 			clock = new Clock();
 
 			fileName = ticket.pathToFile;
-
-			//var storePerms = Device.BeginInvokeOnMainThread(() => checkStoragePerms());
-			//if (storePerms) 
-			//{
-			//	Debug.WriteLine("Has store perms");
-			//}
 
 			DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
 
@@ -94,7 +92,6 @@ namespace TicketToTalk
 				Source = "stop_icon.png",
 				HeightRequest = 50,
 				WidthRequest = 50,
-				//IsEnabled = false,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 			stop_img.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(Stop_Clicked) });
@@ -276,7 +273,6 @@ namespace TicketToTalk
 				stopped = false;
 
 				play_img.Source = "pause_icon.png";
-				//stop_img.IsEnabled = true;
 
 				DependencyService.Get<IAudioPlayer>().PlayAudioFile();
 				timer.Start();
@@ -296,27 +292,6 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-
-			//if (zeroCount > 25)
-			//{
-
-			//	timer.Stop();
-
-			//	Debug.WriteLine("AudioPlayerLayout: Player finish detected.");
-
-			//	clock.current_time = "0:00";
-			//	second_count = 0;
-
-			//	playing = false;
-			//	paused = false;
-
-			//	play_img.Source = "play_icon.png";
-
-			//	DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
-			//	progressBar.ProgressTo(0, 250, Easing.Linear);
-
-			//	return;
-			//}
 
 			Debug.WriteLine("AudioPlayerLayout: Timer");
 			var time = DependencyService.Get<IAudioPlayer>().GetCurrentTime();
@@ -346,20 +321,6 @@ namespace TicketToTalk
 			}
 			else if (Math.Abs(progress - 1) < EPSILON && !stopped)
 			{
-				//timer.Stop();
-
-				//Debug.WriteLine("AudioPlayerLayout: Player finish detected.");
-
-				//clock.current_time = "0:00";
-				//second_count = 0;
-
-				//playing = false;
-				//paused = false;
-
-				//play_img.Source = "play_icon.png";
-
-				//DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
-				//progressBar.ProgressTo(0, 250, Easing.Linear);
 			}
 			else
 			{

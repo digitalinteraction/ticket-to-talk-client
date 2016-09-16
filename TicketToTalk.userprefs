@@ -1,7 +1,16 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/AreaController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/ExtensionMethods.cs">
     <Files>
-      <File FileName="TicketToTalk/Controllers/AreaController.cs" Line="8" Column="3" />
+      <File FileName="TicketToTalk/Views/Audio/AudioPlayerLayout.cs" Line="323" Column="5" />
+      <File FileName="TicketToTalk/Views/People/NewPersonInfo.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Views/Picture/PersonProfileImage.cs" Line="40" Column="4" />
+      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="33" Column="7" />
+      <File FileName="TicketToTalk/Views/Picture/UserProfileImage.cs" Line="47" Column="13" />
+      <File FileName="TicketToTalk/Views/Tickets/NewTicketInfo.cs" Line="595" Column="5" />
+      <File FileName="TicketToTalk/Views/Tickets/TicketInfo.cs" Line="46" Column="49" />
+      <File FileName="TicketToTalk/Views/Video/YouTubePlayer.cs" Line="24" Column="16" />
+      <File FileName="TicketToTalk/App.cs" Line="32" Column="2" />
+      <File FileName="TicketToTalk/ExtensionMethods.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />

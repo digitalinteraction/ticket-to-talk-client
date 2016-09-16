@@ -219,32 +219,7 @@ namespace TicketToTalk
 					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
 					if (confirm)
 					{
-						//// TODO: Move to controller.
-						//Debug.WriteLine("PersonProfile: Person to be deleted.");
-						//Debug.WriteLine("PersonProfile: Deleting person locally.");
-						//personController.deletePersonLocally(currentPerson.id);
-						//Debug.WriteLine("PersonProfile: Deleting person remotely.");
-						//personController.deletePersonRemotely(currentPerson);
-
-						//var ticketController = new TicketController();
-						//var mediaController = new MediaController();
-						//Debug.WriteLine("PersonProfile: Getting all of the person's tickets.");
-						//var tickets = ticketController.getTicketsByPerson(currentPerson.id);
-						//Debug.WriteLine("PersonProfile: Deleting ticket files.");
-						//foreach (Ticket t in tickets)
-						//{
-						//	ticketController.deleteTicketLocally(t);
-						//	mediaController.deleteFile(t.pathToFile);
-						//}
-
-						//var relation = personController.getRelation(currentPerson.id);
-						//var personUserDB = new PersonUserDB();
-						//personUserDB.DeleteRelation(relation.id);
-
-						//Debug.WriteLine("PersonProfile: Removing person from views.");
-						//AllProfiles.people.Remove(currentPerson);
-
-						var deleted = await personController.destroyPerson(currentPerson);
+						var deleted = personController.destroyPerson(currentPerson);
 
 						if (deleted)
 						{
@@ -253,7 +228,6 @@ namespace TicketToTalk
 								Session.activePerson = null;
 								var navi = new NavigationPage(new SelectActivePerson());
 								navi.setNavHeaders();
-								//await Navigation.PushAsync(navi);
 								Application.Current.MainPage = navi;
 							}
 							else
@@ -277,32 +251,6 @@ namespace TicketToTalk
 					break;
 			}
 		}
-
-		/// <summary>
-		/// Gets the users associated with this person.
-		/// </summary>
-		/// <returns>The users.</returns>
-		//public async Task<List<User>> getUsers()
-		//{
-		//	IDictionary<string, string> parameters = new Dictionary<string, string>();
-		//	parameters["token"] = Session.Token.val;
-		//	parameters["person_id"] = currentPerson.id.ToString();
-		//	string url = "people/getusers";
-
-		//	// Send request for all users associated with the person
-		//	Console.WriteLine("Sending request for all users associated with the person.");
-		//	NetworkController net = new NetworkController();
-		//	var jobject = await net.sendGetRequest(url, parameters);
-		//	Console.WriteLine(jobject);
-
-		//	var jusers = jobject.GetValue("users");
-		//	var users = jusers.ToObject<User[]>();
-		//	foreach (User u in users)
-		//	{
-		//		Console.WriteLine(u);
-		//	}
-		//	return new List<User>(users);
-		//}
 	}
 }
 

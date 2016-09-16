@@ -23,19 +23,20 @@ namespace TicketToTalk
 			public Period period { get; set; }
 			public string text { get; set; }
 			public int tickets { get; set; }
-			public string ticketCount { 
-				get 
+			public string ticketCount
+			{
+				get
 				{
 					return this._ticketCount;
 				}
-				set 
+				set
 				{
-					if (value != this._ticketCount) 
+					if (value != this._ticketCount)
 					{
 						this._ticketCount = value;
 						NotifyPropertyChanged();
 					}
-				} 
+				}
 			}
 
 			/// <summary>
@@ -54,8 +55,15 @@ namespace TicketToTalk
 				this.ticketCount = ticketCount;
 			}
 
+			/// <summary>
+			/// Occurs when property changed.
+			/// </summary>
 			public event PropertyChangedEventHandler PropertyChanged;
 
+			/// <summary>
+			/// Notifies the property changed.
+			/// </summary>
+			/// <param name="propertyName">Property name.</param>
 			private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 			{
 				if (PropertyChanged != null)
@@ -64,6 +72,10 @@ namespace TicketToTalk
 				}
 			}
 
+			/// <summary>
+			/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.TicketsByPeriod.ticketPeriodContainer"/>.
+			/// </summary>
+			/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.TicketsByPeriod.ticketPeriodContainer"/>.</returns>
 			public override string ToString()
 			{
 				return string.Format("[ticketPeriodContainer: period={0}, text={1}, ticketCount={2}]", period, text, ticketCount);
@@ -99,7 +111,7 @@ namespace TicketToTalk
 
 				Debug.WriteLine("TicketByPeriod: Got periods - " + periods.Count);
 
-				foreach (Period p in periods) 
+				foreach (Period p in periods)
 				{
 					Debug.WriteLine("TicketByPeriod: Setting container for period - " + p);
 					var tp = new ticketPeriodContainer();
@@ -111,15 +123,15 @@ namespace TicketToTalk
 
 					if (tp.tickets == 0)
 					{
-						tp.ticketCount = tp.tickets.ToString() + " tickets";
+						tp.ticketCount = tp.tickets + " tickets";
 					}
 					else if (tp.tickets == 1)
 					{
-						tp.ticketCount = tp.tickets.ToString() + " ticket";
+						tp.ticketCount = tp.tickets + " ticket";
 					}
-					else 
+					else
 					{
-						tp.ticketCount = tp.tickets.ToString() + " tickets";
+						tp.ticketCount = tp.tickets + " tickets";
 					}
 					Debug.WriteLine("TicketByPeriod: Adding container - " + tp);
 					periodContainers.Add(tp);
@@ -164,9 +176,9 @@ namespace TicketToTalk
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
-			ticketPeriodContainer periodContainer = ( ticketPeriodContainer ) e.SelectedItem;
+			var periodContainer = (ticketPeriodContainer)e.SelectedItem;
 
-			List<Ticket> ticketsInPeriod = new List<Ticket>();
+			var ticketsInPeriod = new List<Ticket>();
 			// Check if ticket year falls within bounds.
 			foreach (Ticket t in tickets)
 			{
@@ -213,11 +225,11 @@ namespace TicketToTalk
 		/// Adds the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticke.</param>
-		public static void addTicket(Ticket ticket) 
+		public static void addTicket(Ticket ticket)
 		{
-			foreach (ticketPeriodContainer tp in periodContainers) 
+			foreach (ticketPeriodContainer tp in periodContainers)
 			{
-				if (tp.period.id == ticket.period_id) 
+				if (tp.period.id == ticket.period_id)
 				{
 					tickets.Add(ticket);
 					tp.tickets++;
@@ -225,7 +237,7 @@ namespace TicketToTalk
 					{
 						tp.ticketCount = tp.ticketCount = tp.tickets + " ticket";
 					}
-					else 
+					else
 					{
 						tp.ticketCount = tp.ticketCount = tp.tickets + " tickets";
 					}
@@ -233,13 +245,17 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Removes the ticket.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
 		public static void removeTicket(Ticket ticket)
 		{
 			tickets.Remove(ticket);
 
-			foreach (ticketPeriodContainer tp in periodContainers) 
+			foreach (ticketPeriodContainer tp in periodContainers)
 			{
-				if (tp.period.id == ticket.period_id) 
+				if (tp.period.id == ticket.period_id)
 				{
 					tp.tickets--;
 					if (tp.tickets == 1)

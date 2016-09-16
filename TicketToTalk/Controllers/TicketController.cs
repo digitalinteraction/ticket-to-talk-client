@@ -43,20 +43,24 @@ namespace TicketToTalk
 		public async Task<Ticket> addTicketRemotely(Ticket ticket, byte[] media, Period period)
 		{
 
-			NetworkController net = new NetworkController();
+			// Create parameters for the request.
+			var net = new NetworkController();
 			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["token"] = Session.Token.val;
 			parameters["ticket"] = ticket;
 			parameters["media"] = media;
 			parameters["period"] = period;
 
+			// Send the request
 			var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
 
 			if (jobject != null)
 			{
+				// Gets the ticket object.
 				var jtoken = jobject.GetValue("ticket");
 				var returned_ticket = jtoken.ToObject<Ticket>();
 
+				// Add to the ticket displays.
 				var ticketController = new TicketController();
 				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
 				string ext = string.Empty;
@@ -81,6 +85,7 @@ namespace TicketToTalk
 						break;
 				}
 
+				// Save the file.
 				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
 
 				ticketController.addTicketLocally(returned_ticket);
@@ -102,12 +107,12 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void destroyTicket(Ticket ticket)
 		{
-			Debug.WriteLine("TicketCell: Deleting ticket locally");
+
+			// Delete the tickets.
 			deleteTicketLocally(ticket);
-			Debug.WriteLine("TicketCell: Deleting ticket remotely");
 			deleteTicketRemotely(ticket);
 
-			Debug.WriteLine("TicketCell: Removing ticket from views");
+			// Remove the tickets from views.
 			switch (ticket.mediaType)
 			{
 				case ("Picture"):
@@ -288,15 +293,6 @@ namespace TicketToTalk
 			paramters["period"] = period;
 			paramters["token"] = Session.Token.val;
 
-			//if (ticket.mediaType.Equals("Picture"))
-			//{
-			//	paramters["area"] = area;
-			//}
-			//else
-			//{
-			//	paramters["area"] = " ";
-			//}
-
 			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
 			if (jobject != null)
 			{
@@ -304,25 +300,7 @@ namespace TicketToTalk
 				var jtoken = jobject.GetValue("Ticket");
 				var returned = jtoken.ToObject<Ticket>();
 
-				// Update ticket area relationships.
-				//var ticketAreaDB = new TicketAreaDB();
-				//var relations = ticketAreaDB.getRelationByTicketID(returned.id);
-				//foreach (TicketArea ta in relations)
-				//{
-				//	ticketAreaDB.DeleteTicketArea(ta.id);
-				//}
-
-				//jtoken = jobject.GetValue("Area");
-				//var rArea = jtoken.ToObject<Area>();
-				//var areaController = new AreaController();
-				//if (areaController.getArea(rArea.id) == null)
-				//{
-				//	areaController.addAreaLocally(rArea);
-				//}
-				//ticketAreaDB.AddTicketArea(new TicketArea(returned.id, returned.area_id));
 				return returned;
-
-				// TODO update ticket period relationship
 			}
 
 			return null;
@@ -336,7 +314,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void addTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
-			TicketTagDB ttDB = new TicketTagDB();
+			var ttDB = new TicketTagDB();
 			ttDB.open();
 			foreach (Tag t in tags)
 			{
@@ -359,103 +337,52 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send GET request
-			Console.WriteLine("Sending GET Request for all tickets");
-			NetworkController net = new NetworkController();
+			var net = new NetworkController();
 			var jobject = await net.sendGetRequest("people/tickets", parameters);
-			Console.WriteLine(jobject);
-
-			// Parse JSON Areas to Areas
-			//Console.WriteLine("Parsing areas");
-			//var jtoken = jobject.GetValue("areas");
-			//var areas = jtoken.ToObject<List<Area>>();
-			////var areaDB = new AreaDB();
-			//var areaController = new AreaController();
-			//foreach (Area a in areas)
-			//{
-			//	Console.WriteLine(a);
-
-			//	var storedArea = areaController.getArea(a.id);
-			//	if (storedArea == null)
-			//	{
-			//		Console.WriteLine("New area... saving");
-			//		//areaDB.AddArea(a);
-			//		areaController.addAreaLocally(a);
-			//	}
-			//	else if (storedArea.GetHashCode() != a.GetHashCode())
-			//	{
-			//		Console.WriteLine("Updating area");
-			//		areaController.updateAreaLocally(a);
-			//	}
-			//}
-			//areaDB.close();
+			Debug.WriteLine(jobject);
 
 			// Parse JSON Tags to Tags
-			Console.WriteLine("Parsing tags");
 			var jtoken = jobject.GetValue("tags");
-			Console.WriteLine(jtoken);
 			var tags = jtoken.ToObject<Tag[]>();
 			var tagController = new TagController();
-			//var tagDB = new TagDB();
+
 			foreach (Tag t in tags)
 			{
 				Console.WriteLine(t);
 				var storedTag = tagController.getTag(t.id);
-				//var storedTag = tagDB.GetTag(t.id);
 				if (storedTag == null)
 				{
 					Console.WriteLine("New tag... saving");
-					//tagDB.AddTag(t);
 					tagController.addTagLocally(t);
 
 				}
 				else if (storedTag.GetHashCode() != t.GetHashCode())
 				{
-					Console.WriteLine("Updating tag");
 					tagController.updateTagLocally(t);
-					//tagDB.DeleteTag(t.id);
-					//tagDB.AddTag(t);
-
 				}
 			}
-			//tagDB.close();
 
 			// Parse JSON Tickets to Tickets
-			Console.WriteLine("Parsing tickets");
 			jtoken = jobject.GetValue("tickets");
-			Console.WriteLine(jtoken);
+			Debug.WriteLine(jtoken);
 			var tickets = jtoken.ToObject<Ticket[]>();
-			//var ticketDB = new TicketDB();
-			//ticketDB.open();
+
 			foreach (Ticket t in tickets)
 			{
-				Console.WriteLine(t);
-
-				//var storedTicket = ticketDB.GetTicket(t.id);
 				var storedTicket = getTicket(t.id);
 				if (storedTicket == null)
 				{
-					Console.WriteLine("New ticket... saving");
-					//ticketDB.AddTicket(t);
+					Debug.WriteLine("New ticket... saving");
 					addTicketLocally(t);
-
-					//foreach (Tag tag in t.tags)
-					//{
-					//	TicketTag tt = new TicketTag(t.id, tag.id);
-					//	ticketTagDB.AddTicketTagRelationship(tt);
-					//}
 				}
 				else if (storedTicket.GetHashCode() != t.GetHashCode())
 				{
-					Console.WriteLine("Updating ticket");
 					updateTicketLocally(t);
 				}
 			}
-			//ticketDB.close();
 
 			// Parse JSON TicketTags to TicketTags
-			Console.WriteLine("Parsing ticket_tags");
 			jtoken = jobject.GetValue("ticket_tags");
-			Console.WriteLine(jtoken);
 			var ticket_tags = jtoken.ToObject<TicketTag[]>();
 			var ticketTagDB = new TicketTagDB();
 			ticketTagDB.open();
@@ -488,9 +415,9 @@ namespace TicketToTalk
 			var ticket_photo = new Image();
 			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
 			{
-				NetworkController net = new NetworkController();
+				var net = new NetworkController();
 
-				var fileName = String.Empty;
+				var fileName = string.Empty;
 				switch (ticket.mediaType)
 				{
 					case ("Picture"):
@@ -558,27 +485,12 @@ namespace TicketToTalk
 		/// <param name="filePath">File path.</param>
 		public async Task downloadTicketContent(string filePath)
 		{
-
-			//var download_finished = false;
-
-			//MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
-			//{
-			//	Debug.WriteLine("Image Downloaded");
-			//	download_finished = finished;
-			//});
-
-			NetworkController net = new NetworkController();
+			var net = new NetworkController();
 
 			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
 			var fileName = filePath.Substring(idx + 1);
 
 			await net.downloadFile(filePath, fileName);
-
-			//while (!download_finished)
-			//{
-			//}
-
-			//MessagingCenter.Unsubscribe<NetworkController, bool>(this, "download_image");
 		}
 
 		/// <summary>
@@ -589,8 +501,6 @@ namespace TicketToTalk
 		public string getDisplayString(Ticket ticket)
 		{
 			var displayString = string.Empty;
-			//var areaController = new AreaController();
-			//var area = areaController.getArea(ticket.area_id);
 
 			switch (ticket.mediaType)
 			{

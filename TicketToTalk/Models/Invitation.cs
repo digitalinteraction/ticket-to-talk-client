@@ -37,6 +37,10 @@ namespace TicketToTalk
 		{
 		}
 
+		/// <summary>
+		/// Notifies the property changed.
+		/// </summary>
+		/// <param name="propertyName">Property name.</param>
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -45,6 +49,9 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Occurs when property changed.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

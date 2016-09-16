@@ -73,12 +73,12 @@ namespace TicketToTalk
 			};
 			sendButton.Clicked += SendButton_Clicked;
 
-			var buttonStack = new StackLayout 
+			var buttonStack = new StackLayout
 			{
 				Padding = new Thickness(20),
 				VerticalOptions = LayoutOptions.EndAndExpand,
 				Spacing = 0,
-				Children = 
+				Children =
 				{
 					sendButton
 				}
@@ -88,7 +88,7 @@ namespace TicketToTalk
 			{
 				Padding = new Thickness(20),
 				Spacing = 10,
-				Children = 
+				Children =
 				{
 					descriptionLabel,
 					email,
@@ -100,9 +100,9 @@ namespace TicketToTalk
 			Content = new StackLayout
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
-					content, 
+					content,
 					buttonStack
 				}
 			};
@@ -126,7 +126,7 @@ namespace TicketToTalk
 				await DisplayAlert("Invite", "Invitation sent to " + email.Text, "OK");
 				await Navigation.PopAsync();
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Invite", "Invitation could not be sent to " + email.Text, "OK");
 			}
@@ -141,7 +141,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void InputChanged(object sender, EventArgs e)
 		{
-			var v = (!String.IsNullOrEmpty(email.Text))
+			var v = (!string.IsNullOrEmpty(email.Text))
 				&& group.SelectedIndex != -1;
 
 			if (v)
@@ -149,7 +149,7 @@ namespace TicketToTalk
 				sendButton.BackgroundColor = ProjectResource.color_red;
 				sendButton.IsEnabled = true;
 			}
-			else 
+			else
 			{
 				sendButton.BackgroundColor = ProjectResource.color_grey;
 				sendButton.IsEnabled = false;

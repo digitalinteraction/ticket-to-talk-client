@@ -23,15 +23,13 @@ namespace TicketToTalk
 			"Friend",
 		};
 
-		public static readonly string[] groups = 
+		public static readonly string[] groups =
 		{
 			"All",
 			"Family",
 			"Friends",
 			"Other (Professionals)"
 		};
-
-		//public static readonly Color cWhite = Color.FromHex("FFFFFA");
 
 		public ProjectResource()
 		{

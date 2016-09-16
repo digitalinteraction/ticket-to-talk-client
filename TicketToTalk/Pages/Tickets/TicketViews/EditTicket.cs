@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Display ticket info.
 	/// </summary>
-	public partial class EditTicket : ContentPage
+	public class EditTicket : ContentPage
 	{
 		string[] accessLevels = ProjectResource.groups;
 
@@ -38,12 +38,7 @@ namespace TicketToTalk
 			this.ticket = ticket;
 			Title = "Info";
 
-			Console.WriteLine("Displaying ticket info");
-
-			//var areaController = new AreaController();
-			//var area = areaController.getArea(ticket.area_id);
-
-			Label titleLabel = new Label
+			var titleLabel = new Label
 			{
 				Text = "Title",
 				TextColor = ProjectResource.color_dark,
@@ -70,7 +65,7 @@ namespace TicketToTalk
 			};
 
 			// Description Label
-			Label descriptionLabel = new Label
+			var descriptionLabel = new Label
 			{
 				Text = "Description",
 				TextColor = ProjectResource.color_dark,
@@ -86,7 +81,7 @@ namespace TicketToTalk
 			};
 
 			// Area label
-			Label areaLabel = new Label
+			var areaLabel = new Label
 			{
 				Text = "Area",
 				TextColor = ProjectResource.color_dark,
@@ -104,7 +99,7 @@ namespace TicketToTalk
 			};
 
 			// Year label
-			Label yearLabel = new Label
+			var yearLabel = new Label
 			{
 				Text = "Year",
 				TextColor = ProjectResource.color_dark,
@@ -121,10 +116,10 @@ namespace TicketToTalk
 			int yearIndex = 0;
 
 			// Add years to picker
-			for (int i = Int32.Parse(Session.activePerson.birthYear); i < DateTime.Now.Year; i++)
+			for (int i = int.Parse(Session.activePerson.birthYear); i < DateTime.Now.Year; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
-				if (String.Equals(ticket.year, i.ToString()))
+				if (string.Equals(ticket.year, i.ToString()))
 				{
 					yearIndex = i;
 				}
@@ -273,15 +268,13 @@ namespace TicketToTalk
 			Navigation.PopModalAsync();
 		}
 
-		async
-
 		/// <summary>
 		/// Saves the changes.
 		/// </summary>
 		/// <returns>The changes.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void saveChanges(object sender, EventArgs e)
+		public async void saveChanges(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 
@@ -290,7 +283,7 @@ namespace TicketToTalk
 
 			ticket.title = title.Text;
 			ticket.description = description.Text;
-			ticket.year = (Int32.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
+			ticket.year = (int.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
 
 			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
 
@@ -328,9 +321,9 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(title.Text))
-				&& (!String.IsNullOrEmpty(description.Text))
-				&& (!String.IsNullOrEmpty(town_city.Text))
+			var entriesNotNull = (!string.IsNullOrEmpty(title.Text))
+				&& (!string.IsNullOrEmpty(description.Text))
+				&& (!string.IsNullOrEmpty(town_city.Text))
 				&& (yearPicker.SelectedIndex != -1)
 				&& (period_picker.SelectedIndex != -1)
 				&& (access_level.SelectedIndex != -1);

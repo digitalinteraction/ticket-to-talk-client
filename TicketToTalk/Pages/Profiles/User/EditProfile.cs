@@ -187,10 +187,10 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void EntryChanged(object sender, EventArgs e)
 		{
-			var notNull = (!String.IsNullOrEmpty(name.Text))
-				&& (!String.IsNullOrEmpty(email.Text))
-				&& (!String.IsNullOrEmpty(password.Text))
-				&& (!String.IsNullOrEmpty(confirmPassword.Text));
+			var notNull = (!string.IsNullOrEmpty(name.Text))
+				&& (!string.IsNullOrEmpty(email.Text))
+				&& (!string.IsNullOrEmpty(password.Text))
+				&& (!string.IsNullOrEmpty(confirmPassword.Text));
 
 			if (notNull)
 			{

@@ -24,9 +24,9 @@ namespace TicketToTalk
 			NavigationPage.SetHasBackButton(this, true);
 
 			displayedTicket = ticket;
-			this.Title = ticket.title;
+			Title = ticket.title;
 			this.SetBinding(TitleProperty, "title");
-			this.BindingContext = displayedTicket;
+			BindingContext = displayedTicket;
 
 			// Add button to navigation bar.
 			ToolbarItems.Add(new ToolbarItem

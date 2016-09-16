@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	
+
 	/// <summary>
 	/// Share article.
 	/// </summary>
@@ -151,7 +151,7 @@ namespace TicketToTalk
 			{
 				await Navigation.PopModalAsync();
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Share Articles", "The article could not be shared", "OK");
 			}
@@ -164,7 +164,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void InputChanged(object sender, EventArgs e)
 		{
-			var v = (!String.IsNullOrEmpty(email.Text));
+			var v = (!string.IsNullOrEmpty(email.Text));
 
 			if (v)
 			{
@@ -189,7 +189,7 @@ namespace TicketToTalk
 			{
 				includeNotes = false;
 			}
-			else 
+			else
 			{
 				includeNotes = true;
 			}

@@ -48,6 +48,10 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Notifies the property changed.
+		/// </summary>
+		/// <param name="propertyName">Property name.</param>
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -56,8 +60,15 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Occurs when property changed.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.PersonPivot"/>.
+		/// </summary>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.PersonPivot"/>.</returns>
 		public override string ToString()
 		{
 			return string.Format("[Pivot: user_type={0}, relation={1}]", user_type, relation);
