@@ -79,7 +79,7 @@ namespace TicketToTalk
 			var audioAccess = Task.Run(() => checkAudioPerms()).Result;
 			var storageAccess = Task.Run(() => checkStoragePerms()).Result;
 
-			if (!(audioAccess && storageAccess)) 
+			if (!(audioAccess && storageAccess))
 			{
 				Navigation.PopAsync();
 			}
@@ -105,7 +105,7 @@ namespace TicketToTalk
 				saveAudio.IsEnabled = true;
 
 			}
-			else 
+			else
 			{
 				record.Source = "stop_icon.png";
 				recording = true;
@@ -120,25 +120,24 @@ namespace TicketToTalk
 		{
 			Navigation.PushAsync(new NewTicket("Sound", fileName));
 			Navigation.RemovePage(this);
-			//DependencyService.Get<IAudioPlayer>().PlayAudioFile(fileName);
 		}
 
 		/// <summary>
 		/// Checks the audio permissions.
 		/// </summary>
 		/// <returns>The audio perms.</returns>
-		private async Task<bool> checkAudioPerms() 
+		private async Task<bool> checkAudioPerms()
 		{
 			try
 			{
 				var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Microphone);
-				if (status != PermissionStatus.Granted) 
+				if (status != PermissionStatus.Granted)
 				{
-					if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Microphone)) 
+					if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Microphone))
 					{
 						await DisplayAlert("Microphone", "Ticket to Talk needs access to the microphone to record audio.", "OK");
 					}
-					var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Microphone});
+					var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Microphone });
 					status = results[Permission.Microphone];
 				}
 
@@ -146,7 +145,7 @@ namespace TicketToTalk
 				{
 					return true;
 				}
-				else if (status != PermissionStatus.Unknown) 
+				else if (status != PermissionStatus.Unknown)
 				{
 					await DisplayAlert("Microphone Denied", "Cannot record audio without microphone permissions.", "OK");
 					return false;

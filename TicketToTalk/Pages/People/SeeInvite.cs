@@ -18,14 +18,16 @@ namespace TicketToTalk
 		Button rejectButton;
 		Picker relation;
 
+		public static bool isInTutorial = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SeeInvite"/> class.
 		/// </summary>
 		/// <param name="person">Person.</param>
 		public SeeInvite(Invitation invitation)
 		{
-			this.person = invitation.person;
-			this.Title = person.name;
+			person = invitation.person;
+			Title = person.name;
 
 			var users = Task.Run(() => personController.getUsers(person.id)).Result;
 
@@ -41,9 +43,10 @@ namespace TicketToTalk
 				Margin = new Thickness(20),
 				BackgroundColor = ProjectResource.color_grey
 			};
+			profilePic.SetBinding(Image.SourceProperty, "imageSource");
+			profilePic.BindingContext = invitation;
 
-				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
-				profilePic.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
+			Debug.WriteLine("SeeInvite: Viewing person - " + person);
 
 			var nameLabel = new Label
 			{
@@ -53,7 +56,6 @@ namespace TicketToTalk
 				FontSize = 20,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//Margin = new Thickness(0, 0, 0, 5)
 			};
 
 			var detailsHeader = new Label
@@ -69,12 +71,11 @@ namespace TicketToTalk
 
 			var birthYearLabel = new Label
 			{
-				Text = String.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
+				Text = string.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_blue,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				//Margin = new Thickness(0, 0, 0, 10)
 			};
 
 			var associatesLabel = new Label
@@ -95,10 +96,9 @@ namespace TicketToTalk
 
 			foreach (User u in users)
 			{
-				//var userDetail = u.name + "(" + u.pivot.user_type + ")";
 				var label = new Label
 				{
-					Text = String.Format("{0} ({1})", u.name, u.pivot.user_type),
+					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
 					HorizontalTextAlignment = TextAlignment.Center,
 					TextColor = ProjectResource.color_blue,
 					FontSize = 14,
@@ -139,17 +139,16 @@ namespace TicketToTalk
 			};
 			button.Clicked += async (sender, e) =>
 			{
-				
+
 				var userController = new UserController();
 				var r = ProjectResource.relations[relation.SelectedIndex];
 				await userController.acceptInvitation(invitation, r);
 
 				Debug.WriteLine("SeeInvite: accepting person - " + person);
 
-				var personController = new PersonController();
-				if (personController.getPerson(invitation.person.id) == null) 
+				if (new PersonController().getPerson(invitation.person.id) == null)
 				{
-					personController.addPersonLocally(invitation.person);	
+					new PersonController().addPersonLocally(invitation.person);
 				}
 
 				SeeInvitations.invitations.Remove(invitation);
@@ -157,7 +156,16 @@ namespace TicketToTalk
 				AllProfiles.people.Add(invitation.person);
 
 				Session.activePerson = invitation.person;
-				App.Current.MainPage = new RootPage();
+
+				if (isInTutorial)
+				{
+					Application.Current.MainPage = new AddTicketPrompt();
+					isInTutorial = false;
+				}
+				else
+				{
+					Application.Current.MainPage = new RootPage();
+				}
 			};
 
 			rejectButton = new Button
@@ -168,19 +176,19 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 			};
-			rejectButton.Clicked += async (sender, e) => 
+			rejectButton.Clicked += async (sender, e) =>
 			{
 				var userController = new UserController();
 				var rejected = await userController.rejectInvitation(invitation.person);
 
-				if (rejected) 
+				if (rejected)
 				{
 					SeeInvitations.invitations.Remove(invitation);
 					await Navigation.PopAsync();
 				}
 			};
 
-			var relationLabel = new Label 
+			var relationLabel = new Label
 			{
 				Text = "Select a relation to accept the invitation.",
 				HorizontalTextAlignment = TextAlignment.Center,
@@ -191,25 +199,25 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			relation = new Picker 
+			relation = new Picker
 			{
 				Title = "Relation",
 				TextColor = ProjectResource.color_red,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
-			foreach (string s in ProjectResource.relations) 
+			foreach (string s in ProjectResource.relations)
 			{
 				relation.Items.Add(s);
 			}
-			relation.SelectedIndexChanged += (sender, e) => 
+			relation.SelectedIndexChanged += (sender, e) =>
 			{
 				if (relation.SelectedIndex != -1)
 				{
 					button.BackgroundColor = ProjectResource.color_blue;
 					button.IsEnabled = true;
 				}
-				else 
+				else
 				{
 					button.BackgroundColor = ProjectResource.color_grey;
 					button.IsEnabled = false;

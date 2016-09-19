@@ -20,15 +20,15 @@ namespace TicketToTalk
 		[PrimaryKey]
 		public int id { get; set; }
 
-		public string notes 
-		{ 
-			get 
+		public string notes
+		{
+			get
 			{
 				return this._notes;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != this._notes) 
+				if (value != this._notes)
 				{
 					this._notes = value;
 					NotifyPropertyChanged();
@@ -36,15 +36,15 @@ namespace TicketToTalk
 			}
 		}
 
-		public string date 
-		{ 
-			get 
+		public string date
+		{
+			get
 			{
 				return this._date;
 			}
-			set 
+			set
 			{
-				if (value != this._date) 
+				if (value != this._date)
 				{
 					this._date = value;
 					NotifyPropertyChanged();
@@ -54,15 +54,15 @@ namespace TicketToTalk
 
 		public int person_id { get; set; }
 
-		public string ticket_id_string 
+		public string ticket_id_string
 		{
-			get 
+			get
 			{
 				return this._ticket_id_string;
 			}
-			set 
+			set
 			{
-				if (value != this._ticket_id_string) 
+				if (value != this._ticket_id_string)
 				{
 					this._ticket_id_string = value;
 					NotifyPropertyChanged();
@@ -71,14 +71,15 @@ namespace TicketToTalk
 		}
 
 		[Ignore]
-		public string displayDate { 
-			get 
+		public string displayDate
+		{
+			get
 			{
 				return this._displayDate;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _displayDate) 
+				if (value != _displayDate)
 				{
 					this._displayDate = value;
 					NotifyPropertyChanged();
@@ -87,15 +88,15 @@ namespace TicketToTalk
 		}
 
 		[Ignore]
-		public int ticketCount 
-		{ 
+		public int ticketCount
+		{
 			get
 			{
 				return this._ticketCount;
 			}
-			set 
+			set
 			{
-				if (value != _ticketCount) 
+				if (value != _ticketCount)
 				{
 					this._ticketCount = value;
 					NotifyPropertyChanged();
@@ -132,6 +133,10 @@ namespace TicketToTalk
 			this.date = date;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Conversation"/>.
+		/// </summary>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Conversation"/>.</returns>
 		public override string ToString()
 		{
 			return string.Format("[Conversation: id={0}, notes={1}, date={2}, person_id={3}, ticket_id_string={4}, displayDate={5}, ticketCount={6}]", id, notes, date, person_id, ticket_id_string, displayDate, ticketCount);

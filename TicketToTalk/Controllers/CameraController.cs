@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 
@@ -19,7 +18,6 @@ namespace TicketToTalk
 		{
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
 			{
-				//await DisplayAlert("No Camera", "No camera avaialble.", "OK");
 				return null;
 			}
 
@@ -34,7 +32,7 @@ namespace TicketToTalk
 			{
 				return null;
 			}
-			else 
+			else
 			{
 				return file;
 			}
@@ -52,7 +50,7 @@ namespace TicketToTalk
 			{
 				return null;
 			}
-			else 
+			else
 			{
 				return file;
 			}

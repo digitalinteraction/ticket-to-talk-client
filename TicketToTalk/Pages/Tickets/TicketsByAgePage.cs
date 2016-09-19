@@ -15,25 +15,25 @@ namespace TicketToTalk
 		/// Initializes a new instance of the Tickets by age View.
 		/// </summary>
 		/// <param name="age">Age: string</param>
-		public TicketsByAgePage(string age) 
+		public TicketsByAgePage(string age)
 		{
 			Padding = new Thickness(20);
 			// Split the text to get upper and lower bounds.
-			char[] delimiters = {' '};
+			char[] delimiters = { ' ' };
 			string[] ageRange = age.Split(delimiters);
 
-			int lowerBound = Int32.Parse(ageRange[0]);
-			int upperBound = Int32.Parse(ageRange[2]);
+			int lowerBound = int.Parse(ageRange[0]);
+			int upperBound = int.Parse(ageRange[2]);
 
 			var person = Session.activePerson;
 
 			// Check if ticket year falls within bounds.
 			TicketDB ticketDB = new TicketDB();
 			var rawTickets = ticketDB.getTicketsByPerson(person.id);
-			foreach (Ticket t in rawTickets) 
+			foreach (Ticket t in rawTickets)
 			{
-				int tYear = Int32.Parse(t.year);
-				if (tYear >= lowerBound && tYear <= upperBound) 
+				int tYear = int.Parse(t.year);
+				if (tYear >= lowerBound && tYear <= upperBound)
 				{
 					switch (t.mediaType)
 					{
@@ -89,9 +89,9 @@ namespace TicketToTalk
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
-			Ticket ticket = (Ticket) e.SelectedItem;
+			var ticket = (Ticket)e.SelectedItem;
 
-			Navigation.PushAsync(new DisplayTicketInfo(ticket));
+			Navigation.PushAsync(new EditTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 	}

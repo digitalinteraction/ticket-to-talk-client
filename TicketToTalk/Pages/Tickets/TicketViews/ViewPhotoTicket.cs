@@ -19,11 +19,11 @@ namespace TicketToTalk
 		{
 
 			Ticket = ticket;
-			this.Title = ticket.title;
+			Title = ticket.title;
 
 			NavigationPage.SetHasNavigationBar(this, true);
 			NavigationPage.SetHasBackButton(this, true);
-		
+
 			// Add button to navigation bar.
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -38,10 +38,10 @@ namespace TicketToTalk
 			var stack = new StackLayout()
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
 					ticket_photo,
-					new TicketInfo(ticket)
+					new TicketInfo()
 				}
 			};
 
@@ -59,7 +59,7 @@ namespace TicketToTalk
 		{
 			var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Display Information", "Add to Conversation");
 
-			switch (action) 
+			switch (action)
 			{
 				case ("Delete"):
 					var ticketController = new TicketController();
@@ -67,7 +67,7 @@ namespace TicketToTalk
 					ticketController.destroyTicket(Ticket);
 					break;
 				case ("Display Information"):
-					await Navigation.PushAsync(new DisplayTicketInfo(Ticket));
+					await Navigation.PushAsync(new EditTicket(Ticket));
 					break;
 				case ("Add to Conversation"):
 					await Navigation.PushModalAsync(new ConversationSelect(Ticket));

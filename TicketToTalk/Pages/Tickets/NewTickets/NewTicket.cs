@@ -32,7 +32,6 @@ namespace TicketToTalk
 
 			// Set title.
 			Title = "New Ticket";
-			//var mediaContent = null;
 			ContentView mediaContent = null;
 			NewTicketInfo ticketInf = null;
 
@@ -41,7 +40,7 @@ namespace TicketToTalk
 			{
 				Navigation.PopAsync();
 			}
-			else 
+			else
 			{
 				switch (mediaType)
 				{
@@ -92,7 +91,7 @@ namespace TicketToTalk
 		/// Used for creating new tickets that do not have data attached. (YouTube videos.)
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public NewTicket(Ticket ticket) 
+		public NewTicket(Ticket ticket)
 		{
 			Title = "New Ticket";
 
@@ -102,12 +101,11 @@ namespace TicketToTalk
 				Children =
 				{
 					new YouTubePlayer(ticket.pathToFile),
-					//webStack,
 					new NewTicketInfo("YouTube", ticket.pathToFile),
 				}
 			};
 
-			Content = new ScrollView 
+			Content = new ScrollView
 			{
 				Content = stack
 			};

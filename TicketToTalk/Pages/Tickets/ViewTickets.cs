@@ -10,17 +10,16 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewTickets : TabbedPage
 	{
-		//TODO: Remove
-		//public string test { get; set; }
 
 		public List<Ticket> tickets = new List<Ticket>();
+		public static bool tutorialShown = false;
 
 		public ViewTickets()
 		{
 			NavigationPage.SetHasNavigationBar(this, false);
 
 			// Set title
-			this.Title = "Tickets";
+			Title = "Tickets";
 
 			var ticketController = new TicketController();
 			Task.Run(() => ticketController.updateTicketsFromAPI()).Wait();
@@ -30,7 +29,7 @@ namespace TicketToTalk
 			tickets = ticketController.getTickets();
 			Debug.WriteLine("ViewTickets: Got tickets from local storage");
 
-			foreach (Ticket t in tickets) 
+			foreach (Ticket t in tickets)
 			{
 				Debug.WriteLine("ViewTickets: " + t);
 			}
@@ -89,16 +88,23 @@ namespace TicketToTalk
 			nav.Icon = "ic_videocam_white_.png";
 			nav.Title = "Video";
 			this.Children.Add(nav);
-
 		}
 
 		/// <summary>
-		/// Launch view to add a new ticket.
+		/// Ons the appearing.
 		/// </summary>
-		/// <returns>The ticket.</returns>
-		//public void newTicket()
-		//{
-		//	Navigation.PushAsync(new NewTicket());
-		//}
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "Use Tickets to view and add snippets of someone's life through pictures, sounds, and YouTube videos.\n\nPress 'Add' to add a ticket.";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "ticket_icon.png"));
+				tutorialShown = true;
+			}
+		}
 	}
 }

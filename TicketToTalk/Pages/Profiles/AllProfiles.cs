@@ -12,8 +12,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class AllProfiles : ContentPage
 	{
+		public static bool promptShown = false;
 		public static ObservableCollection<Person> people = new ObservableCollection<Person>();
-		UserController userController = new UserController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Ticket_to_Talk.AllProfiles"/> class.
@@ -32,8 +32,6 @@ namespace TicketToTalk
 
 			var personController = new PersonController();
 			people = Task.Run(() => personController.getPeopleFromServer()).Result;
-			User user = Session.activeUser;
-
 			var tableView = new TableView
 			{
 				Intent = TableIntent.Form,
@@ -44,19 +42,8 @@ namespace TicketToTalk
 
 			Debug.WriteLine("AllProfiles: Adding user cell.");
 			var userSection = new TableSection("Your Profile");
-			var userCell = new UserCell
-			{
-				user = user,
-			};
-			if (!(user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal)))
-			{
-				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
-			}
-			else 
-			{
-				userController.downloadUserProfilePicture(user);
-				user.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), user.pathToPhoto);
-			}
+
+			var userCell = new UserCell();
 			userCell.BindingContext = Session.activeUser;
 			userCell.Tapped += UserCell_Tapped;
 			userSection.Add(userCell);
@@ -64,25 +51,23 @@ namespace TicketToTalk
 
 			Debug.WriteLine("AllProfiles: Adding people cells");
 			var tableSection = new TableSection("Your People");
-			var personUserDB = new PersonUserDB();
 			foreach (Person p in people)
 			{
-				if (!(p.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))) 
+				var stored_person = personController.getPerson(p.id);
+				if (stored_person != null)
 				{
-					p.pathToPhoto = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), p.pathToPhoto);
+					p.pathToPhoto = stored_person.pathToPhoto;
 				}
-				p.relation = personUserDB.getRelationByUserAndPersonID(user.id, p.id).relationship;
-
-				Debug.WriteLine("AllProfiles: Adding person: " + p);
+				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
 
 				var personCell = new PersonCell(p);
-		
+
 				personCell.BindingContext = p;
 				personCell.Tapped += PersonCell_Tapped;
 				tableSection.Add(personCell);
 			}
 
-			if (people.Count != 0) 
+			if (people.Count != 0)
 			{
 				tableView.Root.Add(tableSection);
 			}
@@ -105,9 +90,9 @@ namespace TicketToTalk
 		{
 			PersonCell cell = (PersonCell)sender;
 
-			foreach (Person p in people) 
+			foreach (Person p in people)
 			{
-				if (p.id == cell.person.id) 
+				if (p.id == cell.person.id)
 				{
 					Navigation.PushAsync(new PersonProfile(p));
 				}
@@ -122,17 +107,35 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void UserCell_Tapped(object sender, EventArgs e)
 		{
-			UserCell cell = (UserCell)sender;
-			Navigation.PushAsync(new UserProfile(cell.user));
+			Navigation.PushAsync(new UserProfile());
 		}
 
 		/// <summary>
 		/// Launchs the add new person view.
 		/// </summary>
 		/// <returns>The add new person view.</returns>
-		void launchAddNewPersonView() 
+		void launchAddNewPersonView()
 		{
 			Navigation.PushAsync(new AddPersonChoice());
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !promptShown)
+			{
+				var canSkip = true;
+				if (people.Count == 0)
+				{
+					canSkip = false;
+				}
+				Application.Current.MainPage = new AddNewPersonPrompt(canSkip);
+				promptShown = true;
+			}
 		}
 	}
 }

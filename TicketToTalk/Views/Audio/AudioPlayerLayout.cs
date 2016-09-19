@@ -14,10 +14,13 @@ namespace TicketToTalk
 	{
 		Timer timer;
 
+		int zeroCount = 0;
+
 		Image play_img;
 		Image stop_img;
 		bool playing = false;
 		bool paused = false;
+		bool stopped = false;
 		string fileName;
 
 		private int second_count;
@@ -29,6 +32,7 @@ namespace TicketToTalk
 
 		internal class Clock : INotifyPropertyChanged
 		{
+
 			private string _current_time = "0:00";
 			public string current_time
 			{
@@ -48,7 +52,7 @@ namespace TicketToTalk
 
 			public event PropertyChangedEventHandler PropertyChanged;
 
-			private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+			private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 			{
 				if (PropertyChanged != null)
 				{
@@ -57,21 +61,20 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.AudioPlayerLayout"/> class.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
 		public AudioPlayerLayout(Ticket ticket)
 		{
+
 			timer = new Timer();
-			timer.Interval = 500;
+			timer.Interval = 50;
 			timer.Elapsed += Timer_Elapsed;
 
 			clock = new Clock();
 
 			fileName = ticket.pathToFile;
-
-			//var storePerms = Device.BeginInvokeOnMainThread(() => checkStoragePerms());
-			//if (storePerms) 
-			//{
-			//	Debug.WriteLine("Has store perms");
-			//}
 
 			DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
 
@@ -89,7 +92,6 @@ namespace TicketToTalk
 				Source = "stop_icon.png",
 				HeightRequest = 50,
 				WidthRequest = 50,
-				//IsEnabled = false,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 			stop_img.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(Stop_Clicked) });
@@ -97,15 +99,15 @@ namespace TicketToTalk
 			rawDuration = DependencyService.Get<IAudioPlayer>().GetDuration();
 			var mins = rawDuration / 60;
 			var seconds = rawDuration % 60;
-			var durString = String.Empty;
+			var durString = string.Empty;
 
 			if (seconds < 10)
 			{
-				durString = String.Format("{0}:0{1}", mins, seconds);
+				durString = string.Format("{0}:0{1}", mins, seconds);
 			}
-			else 
+			else
 			{
-				durString = String.Format("{0}:{1}", mins, seconds);
+				durString = string.Format("{0}:{1}", mins, seconds);
 			}
 
 			var duration = new Label
@@ -125,7 +127,7 @@ namespace TicketToTalk
 			current.SetBinding(Label.TextProperty, "current_time");
 			current.BindingContext = clock;
 
-			progressBar = new ProgressBar 
+			progressBar = new ProgressBar
 			{
 				Progress = 0
 			};
@@ -156,8 +158,8 @@ namespace TicketToTalk
 
 			var progStack = new StackLayout
 			{
-				Padding = new Thickness(20,0),
-				Children = 
+				Padding = new Thickness(20, 0),
+				Children =
 				{
 					progressBar
 				}
@@ -183,6 +185,12 @@ namespace TicketToTalk
 		{
 			Debug.WriteLine("AudioPlayerLayout: Stop clicked");
 			stopPlayBack();
+
+#if __IOS__
+			MessagingCenter.Unsubscribe<TicketToTalk.iOS.AudioPlayerImplementation, bool>(this, "finshed_playback");
+#else
+			MessagingCenter.Unsubscribe<TicketToTalk.Droid.AudioPlayerImplementation, bool>(this, "finshed_playback");
+#endif
 		}
 
 		/// <summary>
@@ -191,6 +199,53 @@ namespace TicketToTalk
 		/// <returns>The clicked.</returns>
 		void Play_Clicked()
 		{
+
+#if __IOS__
+			MessagingCenter.Subscribe<TicketToTalk.iOS.AudioPlayerImplementation, bool>(this, "finished_playback", (sender, finished) =>
+			{
+
+				timer.Stop();
+
+				Debug.WriteLine("AudioPlayerLayout: Message recieved.");
+
+				clock.current_time = "0:00";
+				second_count = 0;
+
+				playing = false;
+				paused = false;
+
+				play_img.Source = "play_icon.png";
+
+				DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
+				progressBar.ProgressTo(0, 250, Easing.Linear);
+
+				MessagingCenter.Unsubscribe<TicketToTalk.iOS.AudioPlayerImplementation, bool>(this, "finshed_playback");
+
+			});
+#else
+			MessagingCenter.Subscribe<TicketToTalk.Droid.AudioPlayerImplementation, bool>(this, "finished_playback", (sender, finished) =>
+			{
+
+				timer.Stop();
+
+				Debug.WriteLine("AudioPlayerLayout: Message recieved.");
+
+				clock.current_time = "0:00";
+				second_count = 0;
+
+				playing = false;
+				paused = false;
+
+				play_img.Source = "play_icon.png";
+
+				DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
+				progressBar.ProgressTo(0, 250, Easing.Linear);
+
+				MessagingCenter.Unsubscribe<TicketToTalk.Droid.AudioPlayerImplementation, bool>(this, "finshed_playback");
+
+			});
+#endif
+
 			// Pause playback
 			if (playing && !paused)
 			{
@@ -203,6 +258,8 @@ namespace TicketToTalk
 			// Resume playback
 			else if (playing && paused)
 			{
+				stopped = false;
+
 				play_img.Source = "pause_icon.png";
 				paused = false;
 				timer.Start();
@@ -213,15 +270,16 @@ namespace TicketToTalk
 			// Play track.
 			else
 			{
+				stopped = false;
+
 				play_img.Source = "pause_icon.png";
-				//stop_img.IsEnabled = true;
 
 				DependencyService.Get<IAudioPlayer>().PlayAudioFile();
+				timer.Start();
+
 				progressBar.Progress = 0;
 				playing = true;
 				paused = false;
-
-				timer.Start();
 
 				Debug.WriteLine("AudioPlayerLayout: Starting playback");
 			}
@@ -234,6 +292,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
+
 			Debug.WriteLine("AudioPlayerLayout: Timer");
 			var time = DependencyService.Get<IAudioPlayer>().GetCurrentTime();
 			Debug.WriteLine("AudioPlayerLayout: Timer - " + time);
@@ -243,38 +302,39 @@ namespace TicketToTalk
 
 			if (seconds < 10)
 			{
-				clock.current_time = String.Format("{0}:0{1}", mins, seconds);
+				clock.current_time = string.Format("{0}:0{1}", mins, seconds);
 			}
-			else 
+			else
 			{
-				clock.current_time = String.Format("{0}:{1}", mins, seconds);
+				clock.current_time = string.Format("{0}:{1}", mins, seconds);
 			}
 
 			EPSILON = 0.05;
-			var progress = ((double)time / (double)rawDuration);
-			//if (Math.Abs(progress) < EPSILON)
-			//{
-			//	stopPlayBack();
-			//	progressBar.ProgressTo(1, 999, Easing.Linear);
-			//}
+			var progress = ((double)time / rawDuration);
+
 			Debug.WriteLine("AudioPlayerLayout: Progress = " + progress);
-			if (progress == 0)
+
+			if (Math.Abs(progress) < EPSILON)
 			{
-				progressBar.ProgressTo(1, 999, Easing.Linear);
-				//stopPlayBack();
+				progressBar.ProgressTo(0, 999, Easing.Linear);
+				zeroCount++;
 			}
-			else 
+			else if (Math.Abs(progress - 1) < EPSILON && !stopped)
+			{
+			}
+			else
 			{
 				progressBar.ProgressTo(progress, 999, Easing.Linear);
+				zeroCount = 0;
 			}
 		}
 
 		/// <summary>
 		/// Stops the play back.
 		/// </summary>
-		private void stopPlayBack() 
+		public void stopPlayBack()
 		{
-			Debug.WriteLine("AudioPlayerLayout: playback button pressed.");
+			Debug.WriteLine("AudioPlayerLayout: Stop button pressed.");
 			playing = false;
 			paused = false;
 			play_img.Source = "play_icon.png";
@@ -284,7 +344,7 @@ namespace TicketToTalk
 			clock.current_time = "0:00";
 			second_count = 0;
 			Debug.WriteLine("AudioPlayer: Stopping playback");
-			//progressBar.ProgressTo(0, 250, Easing.Linear);
+			progressBar.ProgressTo(0, 250, Easing.Linear);
 		}
 
 		/// <summary>
@@ -308,7 +368,7 @@ namespace TicketToTalk
 
 				if (status == PermissionStatus.Granted)
 				{
-					
+
 					return true;
 				}
 				else if (status != PermissionStatus.Unknown)

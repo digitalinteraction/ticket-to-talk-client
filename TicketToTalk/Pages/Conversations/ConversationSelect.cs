@@ -24,8 +24,7 @@ namespace TicketToTalk
 
 			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
 
-			//var rawConversations = conversationController.getConversations();
-			foreach (Conversation converstaion in cs) 
+			foreach (Conversation converstaion in cs)
 			{
 				conversations.Add(conversationController.setPropertiesForDisplay(converstaion));
 			}
@@ -38,8 +37,6 @@ namespace TicketToTalk
 			});
 
 			var cell = new DataTemplate(typeof(ConversationCell));
-			//cell.SetBinding(TextCell.TextProperty, "date");
-			//cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
 
 			var listView = new ListView();
 			listView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
@@ -53,7 +50,7 @@ namespace TicketToTalk
 					return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 				}
 
-				Conversation conversation = (Conversation)e.SelectedItem;
+				var conversation = (Conversation)e.SelectedItem;
 
 				Debug.WriteLine("ConversationSelect: conversation selected = " + conversation);
 
@@ -63,11 +60,10 @@ namespace TicketToTalk
 
 				await Navigation.PopModalAsync();
 
-				//Navigation.PushAsync(new ViewTicket(ticket));
 				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 			};
 
-			var label = new Label 
+			var label = new Label
 			{
 				Text = "Select a conversation",
 				TextColor = ProjectResource.color_dark,
@@ -75,7 +71,7 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
 
-			var add_img = new Image() 
+			var add_img = new Image()
 			{
 				Source = "red_add.png",
 				HeightRequest = 30,
@@ -84,13 +80,13 @@ namespace TicketToTalk
 			};
 			add_img.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newConvo) });
 
-			var newStack = new StackLayout 
+			var newStack = new StackLayout
 			{
 				Padding = 10,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 0,
 				HorizontalOptions = LayoutOptions.Fill,
-				Children = 
+				Children =
 				{
 					label,
 					add_img

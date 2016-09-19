@@ -13,13 +13,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ISQLite.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controllers\ISQLiteImp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\NetworkController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Area.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Article.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\CheckItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\MediaType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\NavMenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MenuListData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Person.cs" />
@@ -38,7 +34,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\MenuListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\MenuPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\RootPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\AddArticle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\AllArticles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\ViewArticle.cs" />
@@ -54,12 +49,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPerson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPersonChoice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Inspiration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\EditArticle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\NewTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewPhotoTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewTicket.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\DisplayTicketInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\SelectNewTicketType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Logout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources\ProjectResource.cs" />
@@ -130,6 +123,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\People\NewPersonInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MenuCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\FinishConversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\User\EditProfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\SelectTicket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddNewPersonPrompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\AddTicketPrompt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\FinishTutorialPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\HelpPopup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PersonPivot.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -147,5 +147,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Views\Picture\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\People\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\Help\" />
   </ItemGroup>
 </Project>

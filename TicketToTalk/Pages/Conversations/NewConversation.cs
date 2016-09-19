@@ -31,7 +31,7 @@ namespace TicketToTalk
 
 			Title = "New Conversation";
 
-			var dateLabel = new Label 
+			var dateLabel = new Label
 			{
 				Text = "Select a date for the conversation."
 			};
@@ -48,12 +48,12 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0)
 			};
 
-			timePicker = new TimePicker 
+			timePicker = new TimePicker
 			{
 				TextColor = ProjectResource.color_red,
 			};
 
-			var notesLabel = new Label 
+			var notesLabel = new Label
 			{
 				Text = "Notes",
 				Margin = new Thickness(0, 10, 0, 0)
@@ -77,22 +77,22 @@ namespace TicketToTalk
 			};
 			saveButton.Clicked += SaveButton_Clicked;
 
-			var buttonStack = new StackLayout 
+			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Children = 
+				Children =
 				{
 					saveButton
 				}
 			};
 
-			var content = new StackLayout 
+			var content = new StackLayout
 			{
 				Spacing = 5,
 				Padding = 20,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				Children = 
+				Children =
 				{
 					dateLabel,
 					datepicker,
@@ -103,12 +103,12 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new StackLayout 
+			Content = new StackLayout
 			{
 				Spacing = 0,
-				Children = 
+				Children =
 				{
-					content, 
+					content,
 					buttonStack
 
 				}
@@ -130,16 +130,16 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void EntryChanged(object sender, EventArgs e)
 		{
-			var notNull = datepicker.Date != null
-				&& timePicker.Time != null
-				&& (!string.IsNullOrEmpty(notes.Text));
+			//var notNull = datepicker.Date != null
+			//	&& timePicker.Time != null
+			//	&& (!string.IsNullOrEmpty(notes.Text));
 
-			if (notNull)
+			if (true)
 			{
 				saveButton.BackgroundColor = ProjectResource.color_blue;
 				saveButton.IsEnabled = true;
 			}
-			else 
+			else
 			{
 				saveButton.BackgroundColor = ProjectResource.color_grey;
 				saveButton.IsEnabled = false;
@@ -154,10 +154,10 @@ namespace TicketToTalk
 		async void SaveButton_Clicked(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
-			char[] delimiters = {' '};
+			char[] delimiters = { ' ' };
 			string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
 
-			var dateTime = String.Format("{0} {1}", dateSplit[0], timePicker.Time);
+			var dateTime = string.Format("{0} {1}", dateSplit[0], timePicker.Time);
 
 			var conversation = new Conversation();
 			conversation.person_id = Session.activePerson.id;
@@ -172,7 +172,7 @@ namespace TicketToTalk
 				ConversationsView.conversations.Add(conversationController.setPropertiesForDisplay(returned));
 				ConversationSelect.conversations.Add(conversationController.setPropertiesForDisplay(returned));
 			}
-			else 
+			else
 			{
 				await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
 				saveButton.IsEnabled = true;

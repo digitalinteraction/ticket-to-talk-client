@@ -6,8 +6,6 @@ namespace TicketToTalk
 {
 	public class UserCell : ViewCell
 	{
-		public User user { get; set;}
-
 		public UserCell()
 		{
 			var personProfileImage = new CircleImage
@@ -20,7 +18,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 			};
-			personProfileImage.SetBinding(Image.SourceProperty, "pathToPhoto");
+			personProfileImage.SetBinding(Image.SourceProperty, "imageSource");
 
 			var nameLabel = new Label
 			{

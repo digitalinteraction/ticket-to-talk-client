@@ -1,6 +1,10 @@
 ﻿using System;
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Audio player.
+	/// </summary>
 	public interface IAudioPlayer
 	{
 		void SetupPlayer(string fileName);
@@ -11,6 +15,7 @@ namespace TicketToTalk
 		bool IsPlaying();
 		int GetDuration();
 		int GetCurrentTime();
+		bool HasFinishedPlaying();
 	}
 }
 

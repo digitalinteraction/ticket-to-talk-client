@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -33,19 +32,15 @@ namespace TicketToTalk
 			path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 #else
 
-			if (fileName.StartsWith("p_", StringComparison.Ordinal) || fileName.StartsWith("t_", StringComparison.Ordinal) || fileName.StartsWith("u_", StringComparison.Ordinal)) 
+			if (fileName.StartsWith("p_", StringComparison.Ordinal) || fileName.StartsWith("t_", StringComparison.Ordinal) || fileName.StartsWith("u_", StringComparison.Ordinal))
 			{
-				//path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath.ToString() + "/" + fileName;
 				path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 				path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
 			}
-			Debug.WriteLine("MediaController: Getting bytes from path: " + path);
-			#endif
-
+#endif
 			try
 			{
 				var bytes = File.ReadAllBytes(path);
-				Debug.WriteLine("MediaController: Got bytes from path: " + path);
 
 				return bytes;
 			}
@@ -69,11 +64,8 @@ namespace TicketToTalk
 #if __IOS__
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 #else
-			//string path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath.ToString() +  "/" + fileName;
-			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
-			path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
+			var path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
 #endif
-			Debug.WriteLine("MediaController: Writing bytes to path: " + path);
 			try
 			{
 				File.WriteAllBytes(path, bytes);
@@ -85,23 +77,6 @@ namespace TicketToTalk
 				Debug.WriteLine(ex);
 				return false;
 			}
-		}
-
-		/// <summary>
-		/// Gets the file from server.
-		/// </summary>
-		/// <param name="fileName">File name.</param>
-		public static async void getFileFromServer(string fileName)
-		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["fileName"] = fileName;
-
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendGetRequest("test/getImageBytes", parameters);
-			var jtoken = jobject.GetValue("bytes");
-			var bytes = jtoken.ToObject<byte[]>();
-
-			writeImageToFile("image.jpg", bytes);
 		}
 
 		/// <summary>
@@ -132,13 +107,13 @@ namespace TicketToTalk
 		/// Deletes the file.
 		/// </summary>
 		/// <param name="fileName">File name.</param>
-		public void deleteFile(string fileName) 
+		public void deleteFile(string fileName)
 		{
-			#if __IOS__
+#if __IOS__
 			var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
-			#else
+#else
 			var path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
-			#endif
+#endif
 			File.Delete(path);
 		}
 	}

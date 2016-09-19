@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace TicketToTalk
 {
@@ -11,7 +10,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationController
 	{
-
 		NetworkController networkController = new NetworkController();
 		ConversationDB convDB = new ConversationDB();
 
@@ -26,7 +24,7 @@ namespace TicketToTalk
 		/// Stores the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public void storeConversationLocally(Conversation conversation) 
+		public void storeConversationLocally(Conversation conversation)
 		{
 			convDB.open();
 			convDB.AddConversation(conversation);
@@ -38,7 +36,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The conversation.</returns>
 		/// <param name="id">Identifier.</param>
-		public Conversation getConversation(int id) 
+		public Conversation getConversation(int id)
 		{
 			convDB.open();
 			var conversation = convDB.GetConversation(id);
@@ -51,7 +49,7 @@ namespace TicketToTalk
 		/// Gets the conversations.
 		/// </summary>
 		/// <returns>The conversations.</returns>
-		public List<Conversation> getConversations() 
+		public List<Conversation> getConversations()
 		{
 			convDB.open();
 			var convs = new List<Conversation>(convDB.GetConversationsForPerson());
@@ -64,9 +62,9 @@ namespace TicketToTalk
 		/// Stores the conversation remotely.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<Conversation> storeConversationRemotely(Conversation conversation) 
+		public async Task<Conversation> storeConversationRemotely(Conversation conversation)
 		{
-			var platform = String.Empty;
+			var platform = string.Empty;
 #if __IOS__
 			platform = "iOS";
 #else
@@ -87,14 +85,13 @@ namespace TicketToTalk
 			{
 				return null;
 			}
-			else 
+			else
 			{
 				var jtoken = jobject.GetValue("conversation");
 				Debug.WriteLine("ConversationController: conversation = " + jtoken);
 				var conv = jtoken.ToObject<Conversation>();
 				return conv;
-
-			};
+			}
 		}
 
 		/// <summary>
@@ -110,7 +107,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			var jobject = await networkController.sendPostRequest("conversations/update", parameters);
-			if (jobject != null) 
+			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("Conversation");
 				return jtoken.ToObject<Conversation>();
@@ -125,19 +122,17 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void updateConversationLocally(Conversation conversation)
 		{
-			foreach (Conversation c in ConversationsView.conversations) 
+			foreach (Conversation c in ConversationsView.conversations)
 			{
-				if (c.id == conversation.id) 
+				if (c.id == conversation.id)
 				{
 					c.notes = conversation.notes;
 				}
 			}
 
 			convDB.open();
-			//ConversationsView.conversations.Remove(conversation);
 			convDB.DeleteConversation(conversation.id);
 			convDB.AddConversation(conversation);
-			//ConversationsView.conversations.Add(conversation);
 			convDB.close();
 		}
 
@@ -148,7 +143,6 @@ namespace TicketToTalk
 		public void deleteConversationLocally(Conversation conversation)
 		{
 			convDB.open();
-
 			convDB.DeleteConversation(conversation.id);
 			convDB.close();
 		}
@@ -157,7 +151,7 @@ namespace TicketToTalk
 		/// Deletes the conversation remotely.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<bool> deleteConversationRemotely(Conversation conversation) 
+		public async Task<bool> deleteConversationRemotely(Conversation conversation)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["conversation_id"] = conversation.id.ToString();
@@ -165,33 +159,33 @@ namespace TicketToTalk
 
 			var jobject = await networkController.sendGetRequest("conversations/destroy", parameters);
 
-			if (jobject == null) 
+			if (jobject == null)
 			{
 				return false;
 			}
-			else 
+			else
 			{
 				return true;
-			}	
+			}
 		}
 
 		/// <summary>
 		/// Destroies the conversation.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async void destroyConversation(Conversation conversation) 
+		public async void destroyConversation(Conversation conversation)
 		{
 			deleteConversationLocally(conversation);
 			var deleted = await deleteConversationRemotely(conversation);
 
-			if (deleted) 
+			if (deleted)
 			{
 				ConversationsView.conversations.Remove(conversation);
 			}
 		}
 
 		/// <summary>
-		/// Gets the remote conversations.
+		/// Gets the conversations from the server.
 		/// </summary>
 		/// <returns>The remote conversations.</returns>
 		public async Task<List<Conversation>> getRemoteConversations()
@@ -216,15 +210,16 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Adds the ticket to conversation.
+		/// Adds the ticket to conversation locally.
 		/// </summary>
 		/// <returns>The ticket to conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public Conversation addTicketToConversation(Conversation conversation, Ticket ticket) 
+		public Conversation addTicketToConversation(Conversation conversation, Ticket ticket)
 		{
 
-			if ((String.IsNullOrEmpty(conversation.ticket_id_string))) 
+			// Manipulates the id string.
+			if ((string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
 				conversation.ticket_id_string = ticket.id.ToString();
 				return conversation;
@@ -237,10 +232,10 @@ namespace TicketToTalk
 			list.Add(ticket.id.ToString());
 
 			var temp = "";
-			foreach (string s in list) 
+			foreach (string s in list)
 			{
-				Debug.WriteLine(String.Format("ConversationController: conversation_id {0} ticket_id {1}", conversation.id, ticket.id));
-				temp = String.Format("{0} ", s);
+				Debug.WriteLine(string.Format("ConversationController: conversation_id {0} ticket_id {1}", conversation.id, ticket.id));
+				temp = string.Format("{0} ", s);
 			}
 
 			conversation.ticket_id_string = temp.TrimEnd();
@@ -254,7 +249,7 @@ namespace TicketToTalk
 		/// <returns>The ticket from conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public Conversation removeTicketFromConversation(Conversation conversation, Ticket ticket) 
+		public Conversation removeTicketFromConversation(Conversation conversation, Ticket ticket)
 		{
 			return null;
 		}
@@ -265,7 +260,7 @@ namespace TicketToTalk
 		/// <returns>The ticket to conversation remotely.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public async Task<bool> addTicketToConversationRemotely(Conversation conversation, Ticket ticket) 
+		public async Task<bool> addTicketToConversationRemotely(Conversation conversation, Ticket ticket)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["conversation_id"] = conversation.id.ToString();
@@ -278,7 +273,7 @@ namespace TicketToTalk
 			{
 				return false;
 			}
-			else 
+			else
 			{
 				return true;
 			}
@@ -311,16 +306,18 @@ namespace TicketToTalk
 
 		/// <summary>
 		/// Sets the properties for display.
+		/// 
+		/// Creates a formatted string for date and time. Also calculates number of tickets in the conversation.
 		/// </summary>
 		/// <returns>The properties for display.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public Conversation setPropertiesForDisplay(Conversation conversation) 
+		public Conversation setPropertiesForDisplay(Conversation conversation)
 		{
 			Debug.WriteLine("ConversationController: Conversation to parse = " + conversation);
 
-			string[] months = 
+			string[] months =
 			{
-				"January", 
+				"January",
 				"February",
 				"March",
 				"April",
@@ -346,49 +343,48 @@ namespace TicketToTalk
 				char[] d_delims = { '/' };
 				string[] date = datetime[0].Split(d_delims);
 
-				#if __IOS__
+#if __IOS__
 
-					day = date[0];
-					Debug.WriteLine("day: " + date[0]);
-					Debug.WriteLine("month: " + date[1]);
-					month = months[Int32.Parse(date[1]) - 1];
-					year = date[2];
+				day = date[0];
+				Debug.WriteLine("day: " + date[0]);
+				Debug.WriteLine("month: " + date[1]);
+				month = months[Int32.Parse(date[1]) - 1];
+				year = date[2];
 
-				#else
+#else
 
-					day = date[1];
-					Debug.WriteLine("day: " + date[1]);
-					Debug.WriteLine("month: " + date[0]);
-					month = months[Int32.Parse(date[0]) - 1];
-					year = date[2];
+				day = date[1];
+				Debug.WriteLine("day: " + date[1]);
+				Debug.WriteLine("month: " + date[0]);
+				month = months[int.Parse(date[0]) - 1];
+				year = date[2];
 
-				#endif
+#endif
 			}
-			else 
+			else
 			{
-				Debug.WriteLine("ConversationController: Parsing date " + conversation.date);
 				char[] d_delims = { '-' };
 				string[] date = datetime[0].Split(d_delims);
 
 				day = date[2];
-				month = months[Int32.Parse(date[1]) - 1];
+				month = months[int.Parse(date[1]) - 1];
 				year = date[0];
 			}
 
 			char[] t_delims = { ':' };
 			string[] time = datetime[1].Split(t_delims);
 
-			hour = (Int32.Parse(time[0]) % 12).ToString();
-			afterMid = Int32.Parse(time[0]) / 12;
+			hour = (int.Parse(time[0]) % 12).ToString();
+			afterMid = int.Parse(time[0]) / 12;
 
-			if (Int32.Parse(hour) == 0 && afterMid == 1)
+			if (int.Parse(hour) == 0 && afterMid == 1)
 			{
 				hour = "12";
 			}
 
 			minutes = time[1];
 
-			switch (Int32.Parse(day))
+			switch (int.Parse(day))
 			{
 				case (1):
 				case (21):
@@ -407,7 +403,7 @@ namespace TicketToTalk
 					date_suffix = "th";
 					break;
 			}
-			var time_suffix = String.Empty;
+			var time_suffix = string.Empty;
 			switch (afterMid)
 			{
 				case (0):
@@ -423,17 +419,16 @@ namespace TicketToTalk
 
 			day = day.TrimStart(new char[] { '0' });
 
-			displayString = String.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
-			Debug.WriteLine("ConversationController: Display date = " + displayString);
+			displayString = string.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
 			conversation.displayDate = displayString;
 
-			if (!String.IsNullOrEmpty(conversation.ticket_id_string))
+			if (!string.IsNullOrEmpty(conversation.ticket_id_string))
 			{
 				List<string> ticket_ids = new List<string>(conversation.ticket_id_string.Split(delims));
 				var t_count = 0;
 				foreach (string t in ticket_ids)
 				{
-					if (!(String.IsNullOrEmpty(t)))
+					if (!(string.IsNullOrEmpty(t)))
 					{
 						t_count++;
 					}
@@ -441,14 +436,33 @@ namespace TicketToTalk
 
 				conversation.ticketCount = t_count;
 			}
-			else 
+			else
 			{
 				conversation.ticketCount = 0;
 			}
 
-			Debug.WriteLine("ConversationController: Ticket count = " + conversation.ticketCount);
-
 			return conversation;
+		}
+
+		/// <summary>
+		/// Adds the ticket to displayed conversation.
+		/// </summary>
+		/// <param name="ticket">Ticket.</param>
+		public void addTicketToDisplayedConversation(Conversation conversation, Ticket ticket)
+		{
+			var item = new ConversationItem(conversation, ticket);
+
+			ConversationView.conversationItems.Add(item);
+			ConversationView.tickets.Add(ticket);
+
+			foreach (Conversation c in ConversationsView.conversations)
+			{
+				if (c.id == conversation.id)
+				{
+					conversation.ticketCount++;
+					break;
+				}
+			}
 		}
 	}
 }

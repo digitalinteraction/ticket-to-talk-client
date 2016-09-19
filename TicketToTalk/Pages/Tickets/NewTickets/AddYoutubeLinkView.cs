@@ -36,11 +36,11 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				HorizontalTextAlignment = TextAlignment.Center,
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0,10,0,0)
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			link = new Entry
-			{ 
+			{
 				Placeholder = "Add your link here!",
 				TextColor = ProjectResource.color_red,
 				WidthRequest = Session.ScreenWidth * 0.8
@@ -69,10 +69,10 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new StackLayout 
+			Content = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.FillAndExpand,
-				Children = 
+				Children =
 				{
 					content,
 					button
@@ -92,12 +92,12 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Link_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			if (!(String.IsNullOrEmpty(link.Text)))
+			if (!(string.IsNullOrEmpty(link.Text)))
 			{
 				button.IsEnabled = true;
 				button.BackgroundColor = ProjectResource.color_blue;
 			}
-			else 
+			else
 			{
 				button.BackgroundColor = ProjectResource.color_grey;
 				button.IsEnabled = false;

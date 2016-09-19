@@ -57,7 +57,7 @@ namespace TicketToTalk
 			if (obj == null || GetType() != obj.GetType())
 				return false;
 
-			Area a = (Area) obj;
+			Area a = (Area)obj;
 			return (id == a.id) && (townCity.Equals(a.townCity));
 		}
 
@@ -72,7 +72,7 @@ namespace TicketToTalk
 
 		public int CompareTo(object obj)
 		{
-			Area a = obj as Area;
+			var a = obj as Area;
 			return string.Compare(townCity, a.townCity, StringComparison.Ordinal);
 		}
 	}

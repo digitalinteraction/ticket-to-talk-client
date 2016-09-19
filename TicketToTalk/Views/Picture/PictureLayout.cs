@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -20,14 +18,23 @@ namespace TicketToTalk
 			Content = image;
 		}
 
-		public PictureLayout(byte[] media) 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.PictureLayout"/> class.
+		/// </summary>
+		/// <param name="media">Media.</param>
+		public PictureLayout(byte[] media)
 		{
 			Image image = new Image();
 			image.Source = ImageSource.FromStream(() => new MemoryStream(media));
 			Content = image;
 		}
 
-		private void loadImage(Image image, string filePath) 
+		/// <summary>
+		/// Loads the image.
+		/// </summary>
+		/// <param name="image">Image.</param>
+		/// <param name="filePath">File path.</param>
+		private void loadImage(Image image, string filePath)
 		{
 			var rawBytes = MediaController.readBytesFromFile(filePath);
 			image.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));

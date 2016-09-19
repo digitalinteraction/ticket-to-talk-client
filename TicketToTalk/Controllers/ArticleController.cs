@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace TicketToTalk
 {
@@ -25,11 +24,11 @@ namespace TicketToTalk
 		/// Adds the article locally.
 		/// </summary>
 		/// <param name="article">Article.</param>
-		public void addArticleLocally(Article article) 
+		public void addArticleLocally(Article article)
 		{
 			articleDB.open();
 
-			if(articleDB.GetArticle(article.id) == null) 
+			if (articleDB.GetArticle(article.id) == null)
 			{
 				articleDB.AddArticle(article);
 			}
@@ -64,7 +63,7 @@ namespace TicketToTalk
 			{
 				return true;
 			}
-			else 
+			else
 			{
 				return false;
 			}
@@ -75,7 +74,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if article was destoried, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
-		public bool destoryArticle(Article article) 
+		public bool destoryArticle(Article article)
 		{
 			if (deleteArticleRemotely(article))
 			{
@@ -87,7 +86,7 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the shared articles.
+		/// Gets the articles shared with the user.
 		/// </summary>
 		/// <returns>The shared articles.</returns>
 		public async System.Threading.Tasks.Task<List<Article>> getSharedArticles()
@@ -101,7 +100,6 @@ namespace TicketToTalk
 				var jtoken = jobject.GetValue("Articles");
 				return jtoken.ToObject<List<Article>>();
 			}
-
 			return null;
 		}
 
@@ -117,7 +115,7 @@ namespace TicketToTalk
 			parameters["article_id"] = article.id.ToString();
 
 			var jobject = await networkController.sendPostRequest("articles/share/accept", parameters);
-			if (jobject != null) 
+			if (jobject != null)
 			{
 				Debug.WriteLine("ArticleController: " + article);
 				addArticleLocally(article);
@@ -145,7 +143,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			var jobject = await networkController.sendPostRequest("articles/share/send", parameters);
-			if (jobject != null) 
+			if (jobject != null)
 			{
 				return true;
 			}
@@ -158,19 +156,78 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The shared.</returns>
 		/// <param name="article">Article.</param>
-		public async Task<bool> rejectShared(Article article) 
+		public async Task<bool> rejectShared(Article article)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["token"] = Session.Token.val;
 
 			var jobject = await networkController.sendPostRequest("articles/share/reject", parameters);
-			if (jobject != null) 
+			if (jobject != null)
 			{
 				return true;
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Gets the favicon URL of an article link.
+		/// </summary>
+		/// <returns>The favicon URL.</returns>
+		/// <param name="url">URL.</param>
+		public string getFaviconURL(string url)
+		{
+			var idx = getBaseURLIndex(url);
+			var baseURL = url.Substring(0, idx + 1);
+			if (!(baseURL.EndsWith("/", StringComparison.Ordinal)))
+			{
+				baseURL += "/";
+			}
+
+			return baseURL + "/favicon.ico";
+		}
+
+		/// <summary>
+		/// Gets the base URL Index.
+		/// </summary>
+		/// <returns>The base URL Index.</returns>
+		/// <param name="url">URL.</param>
+		private int getBaseURLIndex(string url)
+		{
+			int count = 0;
+			char key = '/';
+
+			// Get third occurance of a '/'
+			for (int i = 0; i < url.Length; i++)
+			{
+				if (url[i] == key)
+				{
+					count++;
+					if (count == 3)
+					{
+						return i;
+					}
+				}
+				else if (i == (url.Length - 1))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		/// <summary>
+		/// Updates the article locally.
+		/// </summary>
+		/// <param name="article">Article.</param>
+		public void updateArticleLocally(Article article)
+		{
+			articleDB.open();
+			articleDB.DeleteArticle(article.id);
+			articleDB.AddArticle(article);
+			articleDB.close();
 		}
 	}
 }

@@ -61,13 +61,6 @@ namespace TicketToTalk
 				TargetType = typeof(Help)
 			});
 
-			//this.Add(new NavMenuItem()
-			//{
-			//	Title = "Settings",
-			//	IconSource = "icon_settings.png",
-			//	TargetType = typeof(Settings)
-			//});
-
 			this.Add(new NavMenuItem()
 			{
 				Title = "Logout",

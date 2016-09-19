@@ -33,7 +33,7 @@ namespace TicketToTalk
 				Command = new Command(cancel)
 			});
 
-			var label = new Label 
+			var label = new Label
 			{
 				Text = "How was your conversation? Update your notes below",
 				TextColor = ProjectResource.color_dark
@@ -53,7 +53,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Margin = new Thickness(0,0,0,10)
+				Margin = new Thickness(0, 0, 0, 10)
 			};
 			button.Clicked += Button_Clicked;
 
@@ -90,10 +90,11 @@ namespace TicketToTalk
 			{
 				conversationController.updateConversationLocally(updated);
 			}
-			else 
+			else
 			{
 				await DisplayAlert("Conversations", "Your notes could not be updated.", "OK");
 			}
+
 			await Navigation.PopModalAsync();
 		}
 	}

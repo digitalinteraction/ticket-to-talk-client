@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	
+
 	/// <summary>
 	/// View audio ticket.
 	/// </summary>
@@ -53,7 +53,6 @@ namespace TicketToTalk
 				NetworkController net = new NetworkController();
 				var fileName = "t_" + ticket.id + ".wav";
 				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
-				//net.downloadImage(ticket.pathToFile, fileName);
 				ticket.pathToFile = fileName;
 
 				while (!download_finished)
@@ -71,7 +70,7 @@ namespace TicketToTalk
 			{
 				Children = {
 					new AudioPlayerLayout(ticket),
-					new TicketInfo(ticket),
+					new TicketInfo(),
 				}
 			};
 
@@ -94,7 +93,7 @@ namespace TicketToTalk
 					ticketController.destroyTicket(ticket);
 					break;
 				case ("Display Information"):
-					await Navigation.PushAsync(new DisplayTicketInfo(ticket));
+					await Navigation.PushAsync(new EditTicket(ticket));
 					break;
 				case ("Add to Conversation"):
 					await Navigation.PushModalAsync(new ConversationSelect(ticket));

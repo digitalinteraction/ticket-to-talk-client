@@ -2,83 +2,226 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
 	/// <summary>
-	/// Represents a person.
+	/// Person.
 	/// </summary>
-	public class Person : INotifyPropertyChanged
+	public class Person : INotifyPropertyChanged, IComparable
 	{
 		private string _name;
+		private string _birthYear;
+		private string _birthPlace;
+		private string _pathToPhoto;
 		private string _notes;
 		private string _displayString;
+		private ImageSource _imageSource;
+		private string _imageHash;
+		private PersonPivot _personPivot;
 
 		[PrimaryKey]
 		public int id { get; set; }
 		public int admin_id { get; set; }
 
-		public string name 
-		{ 
-			get 
+		public string name
+		{
+			get
 			{
 				return _name;
 			}
-			set 
+			set
 			{
-				if (value != _name) 
+				if (value != _name)
 				{
 					_name = value;
 					NotifyPropertyChanged();
 				}
-			} 
+			}
 		}
 
-		public string birthYear { get; set; }
-		public string birthPlace { get; set; }
-		public string pathToPhoto { get; set; }
-		public string area { get; set;}
+		public string birthYear
+		{
+			get
+			{
+				return _birthYear;
+			}
+			set
+			{
+				if (value != _birthYear)
+				{
+					_birthYear = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string birthPlace
+		{
+			get
+			{
+				return _birthPlace;
+			}
+			set
+			{
+				if (value != _birthPlace)
+				{
+					_birthPlace = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string pathToPhoto
+		{
+			get
+			{
+				return _pathToPhoto;
+			}
+			set
+			{
+				if (value != _pathToPhoto)
+				{
+					_pathToPhoto = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string area { get; set; }
 		public DateTime created_at { get; set; }
 		public DateTime updated_at { get; set; }
-		public string notes 
+		public string notes
 		{
-			get 
+			get
 			{
 				return _notes;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _notes) 
+				if (value != _notes)
 				{
 					_notes = value;
 					NotifyPropertyChanged();
-				}	
-			} 
+				}
+			}
 		}
 		[Ignore]
 		public Pivot pivot { get; set; }
 		[Ignore]
 		public string relation { get; set; }
 		[Ignore]
-		public string displayString 
-		{ 
-			get 
+		public string displayString
+		{
+			get
 			{
 				return _displayString;
-			} 
-			set 
+			}
+			set
 			{
-				if (value != _displayString) 
+				if (value != _displayString)
 				{
 					_displayString = value;
 					NotifyPropertyChanged();
 				}
 			}
 		}
-
-		public class Pivot
+		[Ignore]
+		public ImageSource imageSource
 		{
-			public string user_type { get; set; }
-			public string relation { get; set; }
+			get
+			{
+				return _imageSource;
+			}
+			set
+			{
+				_imageSource = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		public string imageHash
+		{
+			get
+			{
+				return _imageHash;
+			}
+			set
+			{
+				if (value != _imageHash)
+				{
+					_imageHash = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		[Ignore]
+		public PersonPivot personPivot
+		{
+			get
+			{
+				return _personPivot;
+			}
+			set
+			{
+				if (value != _personPivot)
+				{
+					_personPivot = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Pivot.
+		/// </summary>
+		public class Pivot : INotifyPropertyChanged
+		{
+			private string _user_type;
+			private string _relation;
+
+			public string user_type
+			{
+				get
+				{
+					return _user_type;
+				}
+				set
+				{
+					if (value != _user_type)
+					{
+						_user_type = value;
+						NotifyPropertyChanged();
+					}
+				}
+			}
+			public string relation
+			{
+				get
+				{
+					return _relation;
+				}
+				set
+				{
+					if (value != _relation)
+					{
+						_relation = value;
+						NotifyPropertyChanged();
+					}
+				}
+			}
+
+			private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+			{
+				if (PropertyChanged != null)
+				{
+					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				}
+			}
+
+			public event PropertyChangedEventHandler PropertyChanged;
 
 			public override string ToString()
 			{
@@ -93,6 +236,10 @@ namespace TicketToTalk
 		{
 		}
 
+		/// <summary>
+		/// Notifies the property changed.
+		/// </summary>
+		/// <param name="propertyName">Property name.</param>
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			if (PropertyChanged != null)
@@ -101,15 +248,19 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Occurs when property changed.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
-		/// Tos the string.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Person"/>.
 		/// </summary>
-		/// <returns>The string.</returns>
+		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.Person"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[Person: id={0}, name={1}, birthYear={2}, birthPlace={3}, pathToPhoto={4}, created_at={5}, updated_at={6}, notes={7}, pivot={8}]", id, name, birthYear, birthPlace, pathToPhoto, created_at, updated_at, notes, pivot);
+			return string.Format("[Person: id={0}, admin_id={1}, name={2}, birthYear={3}, birthPlace={4}, pathToPhoto={5}, area={6}, created_at={7}, updated_at={8}, notes={9}, pivot={10}, relation={11}, displayString={12}, imageHash={13}]",
+				id, admin_id, name, birthYear, birthPlace, pathToPhoto, area, created_at, updated_at, notes, pivot, relation, displayString, imageHash);
 		}
 
 		/// <summary>
@@ -130,9 +281,38 @@ namespace TicketToTalk
 			return hash;
 		}
 
+		/// <summary>
+		/// Determines whether the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Person"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to compare with the current <see cref="T:TicketToTalk.Person"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="object"/> is equal to the current <see cref="T:TicketToTalk.Person"/>;
+		/// otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			return base.Equals(obj);
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+
+			var rhs = obj as Person;
+
+			return id == rhs.id;
+		}
+
+		/// <summary>
+		/// Compares to.
+		/// </summary>
+		/// <returns>The to.</returns>
+		/// <param name="obj">Object.</param>
+		public int CompareTo(object obj)
+		{
+			var lhs = obj as Person;
+			var comp = string.Compare(name, lhs.name, StringComparison.Ordinal);
+
+			if (comp == 0)
+			{
+				comp = string.Compare(birthYear, lhs.birthYear, StringComparison.Ordinal);
+			}
+
+			return comp;
 		}
 	}
 }

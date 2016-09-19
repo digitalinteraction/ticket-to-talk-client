@@ -18,14 +18,14 @@ namespace TicketToTalk
 
 			ContextActions.Add(deleteCell);
 
-			var dayMonth = new Label 
+			var dayMonth = new Label
 			{
 				FontSize = 18,
 				TextColor = ProjectResource.color_dark,
 			};
 			dayMonth.SetBinding(Label.TextProperty, "displayDate");
 
-			var ticketCount = new Label 
+			var ticketCount = new Label
 			{
 				FontSize = 12,
 				TextColor = ProjectResource.color_red,
@@ -37,7 +37,7 @@ namespace TicketToTalk
 				Spacing = 5,
 				Padding = new Thickness(10, 5, 10, 5),
 				VerticalOptions = LayoutOptions.CenterAndExpand,
-				Children = 
+				Children =
 				{
 					dayMonth,
 					ticketCount
@@ -47,6 +47,11 @@ namespace TicketToTalk
 			this.View = content;
 		}
 
+		/// <summary>
+		/// Deletes the cell clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);

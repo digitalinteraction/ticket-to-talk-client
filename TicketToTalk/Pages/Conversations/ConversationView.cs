@@ -11,9 +11,12 @@ namespace TicketToTalk
 	/// </summary>
 	public class ConversationView : ContentPage
 	{
+		public static bool tutorialShown = false;
+
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
-		List<Ticket> tickets;
+		public static List<Ticket> tickets = new List<Ticket>();
 		Conversation conversation;
+		ConversationController conversationController = new ConversationController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationView"/> class.
@@ -23,7 +26,19 @@ namespace TicketToTalk
 		{
 			this.conversation = conversation;
 			conversationItems.Clear();
+			tickets.Clear();
 			Debug.WriteLine("ConversationView: Conversation = " + conversation);
+
+			// Wait for new ticket to be returned if added through this view.
+			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
+			{
+				var added = await conversationController.addTicketToConversationRemotely(conversation, returned_ticket);
+				if (added)
+				{
+					conversationController.addTicketToConversation(conversation, returned_ticket);
+					conversationController.addTicketToDisplayedConversation(conversation, returned_ticket);
+				}
+			});
 
 			Title = conversation.displayDate;
 			var dateLabel = new Label
@@ -32,20 +47,20 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark
 			};
 
-			char[] del = {' '};
+			char[] del = { ' ' };
 			string[] dt = conversation.date.Split(del);
-			del = new char[]{ ':' };
+			del = new char[] { ':' };
 			string[] time = dt[1].Split(del);
 
-			string hour = (Int32.Parse(time[0]) % 12).ToString();
-			int afterMid = Int32.Parse(time[0]) / 12;
+			string hour = (int.Parse(time[0]) % 12).ToString();
+			int afterMid = int.Parse(time[0]) / 12;
 
-			if (Int32.Parse(hour) == 0 && afterMid == 1)
+			if (int.Parse(hour) == 0 && afterMid == 1)
 			{
 				hour = "12";
 			}
 
-			var time_suffix = String.Empty;
+			var time_suffix = string.Empty;
 			switch (afterMid)
 			{
 				case (0):
@@ -63,7 +78,7 @@ namespace TicketToTalk
 
 			var date = new Label
 			{
-				Text = String.Format("{0}:{1} {2}", hour, minutes, time_suffix),
+				Text = string.Format("{0}:{1} {2}", hour, minutes, time_suffix),
 				TextColor = ProjectResource.color_red,
 			};
 
@@ -76,7 +91,6 @@ namespace TicketToTalk
 
 			var notes = new Label
 			{
-				//Text = conversation.notes,
 				TextColor = ProjectResource.color_red,
 			};
 			notes.SetBinding(Label.TextProperty, "notes");
@@ -89,6 +103,36 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 0),
 			};
 
+			var newTicketLabel = new Label
+			{
+				Text = "Add a Ticket",
+				TextColor = ProjectResource.color_grey,
+				HorizontalOptions = LayoutOptions.StartAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand
+			};
+
+			var newTicketIcon = new Image()
+			{
+				Source = "red_add.png",
+				HeightRequest = 30,
+				WidthRequest = 30,
+				HorizontalOptions = LayoutOptions.EndAndExpand
+			};
+			newTicketIcon.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newTicket) });
+
+			var newStack = new StackLayout
+			{
+				Padding = 10,
+				Orientation = StackOrientation.Horizontal,
+				Spacing = 0,
+				HorizontalOptions = LayoutOptions.Fill,
+				Children =
+				{
+					newTicketLabel,
+					newTicketIcon
+				}
+			};
+
 			if (conversation.ticket_id_string != null)
 			{
 				char[] delims = { ' ' };
@@ -98,20 +142,20 @@ namespace TicketToTalk
 					Debug.WriteLine("ConversationView: ticket_id " + s);
 				}
 				var ticketController = new TicketController();
-				if (!(String.IsNullOrEmpty(ticket_ids[0])))
+				if (!(string.IsNullOrEmpty(ticket_ids[0])))
 				{
 					tickets = new List<Ticket>();
 					foreach (string s in ticket_ids)
 					{
-						if (!(String.IsNullOrEmpty(s)))
+						if (!(string.IsNullOrEmpty(s)))
 						{
-							var ticket = ticketController.getTicket(Int32.Parse(s));
+							var ticket = ticketController.getTicket(int.Parse(s));
 							tickets.Add(ticket);
 
 							switch (ticket.mediaType)
 							{
 								case "Photo":
-								case "Picture": 
+								case "Picture":
 									ticket.displayIcon = "photo_icon.png";
 									break;
 								case "Video":
@@ -149,7 +193,7 @@ namespace TicketToTalk
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
 
-			var startConversation = new Button 
+			var startConversation = new Button
 			{
 				Text = "Start Conversation",
 				TextColor = ProjectResource.color_white,
@@ -163,17 +207,45 @@ namespace TicketToTalk
 			{
 				Padding = new Thickness(20),
 				Spacing = 5,
-				Children = 
+				Children =
 				{
 					dateLabel,
 					date,
 					notesLabel,
 					notes,
 					ticketsLabel,
+					newStack,
 					ticketsListView,
 					startConversation
 				}
 			};
+		}
+
+		/// <summary>
+		/// Add a new ticket to the conversation.
+		/// </summary>
+		async void newTicket()
+		{
+			var action = await DisplayActionSheet("Add a New Ticket", "Cancel", null, "Create a New Ticket", "Add an Existing Ticket");
+
+			switch (action)
+			{
+				case "Create a New Ticket":
+					var nav = new NavigationPage(new SelectNewTicketType());
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
+
+					break;
+				case "Add an Existing Ticket":
+					nav = new NavigationPage(new SelectTicket(conversation));
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					nav.BarTextColor = ProjectResource.color_white;
+
+					await Navigation.PushModalAsync(nav);
+					break;
+			}
 		}
 
 		/// <summary>
@@ -202,7 +274,46 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void StartConversation_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushAsync(new PlayConversation(conversation, tickets));
+			if (!(String.IsNullOrEmpty(conversation.ticket_id_string)))
+			{
+				var nav = new NavigationPage(new PlayConversation(conversation, tickets));
+				nav.BarBackgroundColor = ProjectResource.color_blue;
+				nav.BarTextColor = ProjectResource.color_white;
+
+				await Navigation.PushAsync(new PlayConversation(conversation, tickets));
+			}
+			else
+			{
+				await DisplayAlert("Start Conversation", "You need to add tickets to the conversation before starting.", "OK");
+			}
+		}
+
+		/// <summary>
+		/// On back button pressed.
+		/// </summary>
+		/// <returns><c>true</c>, if back button pressed was oned, <c>false</c> otherwise.</returns>
+		protected override bool OnBackButtonPressed()
+		{
+			MessagingCenter.Unsubscribe<NewTicketInfo, Ticket>(this, "ticket_added");
+
+			return base.OnBackButtonPressed();
+		}
+
+		/// <summary>
+		/// Ons the appearing.
+		/// </summary>
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (Session.activeUser.firstLogin && !tutorialShown)
+			{
+
+				var text = "This is a conversation, you can add tickets by pressing the add ticket button and view more options by pressing the 'i' button.\n\nStart a conversation by pressing start!";
+
+				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
+				tutorialShown = true;
+			}
 		}
 	}
 }

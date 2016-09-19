@@ -1,17 +1,8 @@
-﻿<Properties StartupItem="iOS/TicketToTalk.iOS.csproj">
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOS/Helpers/AudioPlayerImplementation.cs">
+﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Views/Video/YouTubePlayer.cs">
     <Files>
-      <File FileName="TicketToTalk/Pages/People/SeeInvite.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Views/Tickets/NewTicketInfo.cs" Line="331" Column="29" />
-      <File FileName="TicketToTalk/Resources/Session.cs" Line="4" Column="15" />
-      <File FileName="iOS/Main.cs" Line="17" Column="1" />
-      <File FileName="TicketToTalk/Controllers/TicketController.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/NewConversation.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Controllers/ConversationController.cs" Line="354" Column="39" />
-      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/SelectNewTicketType.cs" Line="103" Column="56" />
-      <File FileName="iOS/Helpers/AudioRecorderImplementation.cs" Line="1" Column="1" />
-      <File FileName="iOS/Helpers/AudioPlayerImplementation.cs" Line="33" Column="25" />
+      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/AddYoutubeLinkView.cs" Line="120" Column="34" />
+      <File FileName="TicketToTalk/Views/Video/YouTubePlayer.cs" Line="24" Column="16" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />
@@ -20,5 +11,5 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
-  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.34ce339d0bb8099501eb09ed89e39240c57992ac" />
 </Properties>

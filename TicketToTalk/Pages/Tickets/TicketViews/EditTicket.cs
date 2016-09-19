@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Display ticket info.
 	/// </summary>
-	public partial class DisplayTicketInfo : ContentPage
+	public class EditTicket : ContentPage
 	{
 		string[] accessLevels = ProjectResource.groups;
 
@@ -19,24 +19,26 @@ namespace TicketToTalk
 		Picker yearPicker;
 		Picker period_picker;
 
+		Ticket ticket;
+
 		/// <summary>
 		/// Initializes a new instance of the page.
 		/// </summary>
 		/// <param name="ticket">Ticket: ticket to display</param>
-		public DisplayTicketInfo(Ticket ticket)
+		public EditTicket(Ticket ticket)
 		{
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
+			this.ticket = ticket;
 			Title = "Info";
 
-			Console.WriteLine("Displaying ticket info");
-
-			// Get attached area
-			//AreaDB areaDB = new AreaDB();
-			var areaController = new AreaController();
-			var area = areaController.getArea(ticket.area_id);
-			//var area = areaDB.GetArea(ticket.area_id);
-			//areaDB.close();
-
-			Label titleLabel = new Label
+			var titleLabel = new Label
 			{
 				Text = "Title",
 				TextColor = ProjectResource.color_dark,
@@ -63,7 +65,7 @@ namespace TicketToTalk
 			};
 
 			// Description Label
-			Label descriptionLabel = new Label
+			var descriptionLabel = new Label
 			{
 				Text = "Description",
 				TextColor = ProjectResource.color_dark,
@@ -79,7 +81,7 @@ namespace TicketToTalk
 			};
 
 			// Area label
-			Label areaLabel = new Label
+			var areaLabel = new Label
 			{
 				Text = "Area",
 				TextColor = ProjectResource.color_dark,
@@ -87,16 +89,17 @@ namespace TicketToTalk
 			};
 
 			// Area entry
-			town_city = new Entry 
+			town_city = new Entry
 			{
-				Text = area.townCity,
+				//Text = area.townCity,
+				Text = ticket.area,
 				Placeholder = "Town/City",
 				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 5)
 			};
 
 			// Year label
-			Label yearLabel = new Label
+			var yearLabel = new Label
 			{
 				Text = "Year",
 				TextColor = ProjectResource.color_dark,
@@ -113,14 +116,14 @@ namespace TicketToTalk
 			int yearIndex = 0;
 
 			// Add years to picker
-			for (int i = Int32.Parse(Session.activePerson.birthYear) ; i < DateTime.Now.Year; i++)
+			for (int i = int.Parse(Session.activePerson.birthYear); i < DateTime.Now.Year; i++)
 			{
 				yearPicker.Items.Add(i.ToString());
-				if (String.Equals(ticket.year, i.ToString()))
+				if (string.Equals(ticket.year, i.ToString()))
 				{
 					yearIndex = i;
 				}
-				else  
+				else
 				{
 					yearIndex = 0;
 				}
@@ -158,10 +161,10 @@ namespace TicketToTalk
 			var periodController = new PeriodController();
 			var periods = periodController.getAllLocalPeriods();
 			int j = 0;
-			foreach (Period p in periods) 
+			foreach (Period p in periods)
 			{
 				period_picker.Items.Add(p.text);
-				if (ticket.period_id == p.id) 
+				if (ticket.period_id == p.id)
 				{
 					period_picker.SelectedIndex = j;
 				}
@@ -172,7 +175,7 @@ namespace TicketToTalk
 			foreach (string s in accessLevels)
 			{
 				access_level.Items.Add(s);
-				if (ticket.access_level.CompareTo(s) == 0) 
+				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0)
 				{
 					access_level.SelectedIndex = j;
 					Debug.WriteLine(j);
@@ -182,26 +185,53 @@ namespace TicketToTalk
 
 			Console.WriteLine("Getting tags.");
 
-			var detailsStack = new StackLayout
+			StackLayout detailsStack = null;
+
+			if (ticket.mediaType.Equals("Picture"))
 			{
-				Padding = new Thickness(20, 10, 20, 20),
-				Spacing = 0,
-				Children =
+				detailsStack = new StackLayout
 				{
-					titleLabel,
-					title,
-					descriptionLabel,
-					description,
-					yearLabel,
-					yearPicker,
-					areaLabel,
-					town_city,
-					periodLabel,
-					period_picker,
-					accessLevelLabel,
-					access_level,
-				}
-			};
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						town_city,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
+			else
+			{
+				detailsStack = new StackLayout
+				{
+					Padding = new Thickness(20, 10, 20, 20),
+					Spacing = 0,
+					Children =
+					{
+						titleLabel,
+						title,
+						descriptionLabel,
+						description,
+						yearLabel,
+						yearPicker,
+						areaLabel,
+						periodLabel,
+						period_picker,
+						accessLevelLabel,
+						access_level,
+					}
+				};
+			}
 
 			var buttonStack = new StackLayout
 			{
@@ -231,14 +261,56 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Cancel this instance.
+		/// </summary>
+		void cancel()
+		{
+			Navigation.PopModalAsync();
+		}
+
+		/// <summary>
 		/// Saves the changes.
 		/// </summary>
 		/// <returns>The changes.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void saveChanges(object sender, EventArgs e)
+		public async void saveChanges(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			saveButton.IsEnabled = false;
+
+			var periodController = new PeriodController();
+			var period = periodController.getAllLocalPeriods()[period_picker.SelectedIndex];
+
+			ticket.title = title.Text;
+			ticket.description = description.Text;
+			ticket.year = (int.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex).ToString();
+
+			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
+
+			var ticketController = new TicketController();
+			Ticket returned = null;
+			if (ticket.mediaType.Equals("Picture"))
+			{
+				ticket.area = town_city.Text.Trim();
+			}
+			else
+			{
+				ticket.area = " ";
+			}
+			returned = await ticketController.updateTicketRemotely(ticket, period.text);
+
+			if (returned != null)
+			{
+				ticketController.updateTicketLocally(returned);
+				ticketController.updateDisplayTicket(returned);
+
+				await Navigation.PopModalAsync();
+			}
+			else
+			{
+				await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+				saveButton.IsEnabled = true;
+			}
 		}
 
 		/// <summary>
@@ -249,9 +321,9 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Entry_TextChanged(object sender, EventArgs e)
 		{
-			var entriesNotNull = (!String.IsNullOrEmpty(title.Text))
-				&& (!String.IsNullOrEmpty(description.Text))
-				&& (!String.IsNullOrEmpty(town_city.Text))
+			var entriesNotNull = (!string.IsNullOrEmpty(title.Text))
+				&& (!string.IsNullOrEmpty(description.Text))
+				&& (!string.IsNullOrEmpty(town_city.Text))
 				&& (yearPicker.SelectedIndex != -1)
 				&& (period_picker.SelectedIndex != -1)
 				&& (access_level.SelectedIndex != -1);

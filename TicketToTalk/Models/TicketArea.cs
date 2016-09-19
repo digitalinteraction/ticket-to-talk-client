@@ -52,10 +52,14 @@ namespace TicketToTalk
 			if (obj == null || GetType() != obj.GetType())
 				return false;
 
-			TicketArea ta = (TicketArea) obj;
+			TicketArea ta = (TicketArea)obj;
 			return (id == ta.id) && (ticket_id == ta.ticket_id) && (area_id == ta.area_id);
 		}
 
+		/// <summary>
+		/// Serves as a hash function for a <see cref="T:TicketToTalk.TicketArea"/> object.
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
