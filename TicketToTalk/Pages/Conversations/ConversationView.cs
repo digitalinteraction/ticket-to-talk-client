@@ -40,6 +40,14 @@ namespace TicketToTalk
 				}
 			});
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "?",
+				Icon = "info_icon.png",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(conversationOptions)
+			});
+
 			Title = conversation.displayDate;
 			var dateLabel = new Label
 			{
@@ -106,7 +114,7 @@ namespace TicketToTalk
 			var newTicketLabel = new Label
 			{
 				Text = "Add a Ticket",
-				TextColor = ProjectResource.color_grey,
+				TextColor = ProjectResource.color_dark,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
@@ -313,6 +321,27 @@ namespace TicketToTalk
 
 				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
 				tutorialShown = true;
+			}
+		}
+
+		/// <summary>
+		/// Conversations the options.
+		/// </summary>
+		private async void conversationOptions()
+		{
+			var action = await DisplayActionSheet("Edit Conversation", "Cancel", "Delete", "Edit");
+
+			switch (action)
+			{
+				case "Delete":
+					conversationController.destroyConversation(conversation);
+					break;
+				case "Edit":
+					var nav = new NavigationPage(new NewConversation(conversation));
+					nav.setNavHeaders();
+
+					await Navigation.PushModalAsync(nav);
+					break;
 			}
 		}
 	}

@@ -69,13 +69,113 @@ namespace TicketToTalk
 			{
 				Text = "Save",
 				TextColor = ProjectResource.color_white,
-				BackgroundColor = ProjectResource.color_grey,
+				BackgroundColor = ProjectResource.color_blue,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 				Margin = new Thickness(0, 0, 0, 10),
-				IsEnabled = false
+				IsEnabled = true
 			};
 			saveButton.Clicked += SaveButton_Clicked;
+
+			var buttonStack = new StackLayout
+			{
+				Spacing = 0,
+				VerticalOptions = LayoutOptions.EndAndExpand,
+				Children =
+				{
+					saveButton
+				}
+			};
+
+			var content = new StackLayout
+			{
+				Spacing = 5,
+				Padding = 20,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				Children =
+				{
+					dateLabel,
+					datepicker,
+					timeLabel,
+					timePicker,
+					notesLabel,
+					notes
+				}
+			};
+
+			Content = new StackLayout
+			{
+				Spacing = 0,
+				Children =
+				{
+					content,
+					buttonStack
+
+				}
+			};
+		}
+
+		public NewConversation(Conversation conversation)
+		{
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(cancel)
+			});
+
+			Title = "Edit Conversation";
+
+			var dateLabel = new Label
+			{
+				Text = "Select a date for the conversation."
+			};
+
+			var dates = conversationController.parseDateToIntegers(conversation);
+
+			datepicker = new DatePicker
+			{
+				TextColor = ProjectResource.color_red,
+			};
+			datepicker.Date = new DateTime(dates[2], dates[1], dates[0]);
+
+			datepicker.DateSelected += EntryChanged;
+
+			var timeLabel = new Label
+			{
+				Text = "Select a time for the conversation.",
+				Margin = new Thickness(0, 10, 0, 0)
+			};
+
+			timePicker = new TimePicker
+			{
+				TextColor = ProjectResource.color_red,
+			};
+			timePicker.Time = new TimeSpan(dates[3], dates[4], dates[5]);
+
+			var notesLabel = new Label
+			{
+				Text = "Notes",
+				Margin = new Thickness(0, 10, 0, 0)
+			};
+
+			notes = new Editor()
+			{
+				Text = conversation.notes,
+				TextColor = ProjectResource.color_red
+			};
+
+			saveButton = new Button()
+			{
+				Text = "Save",
+				TextColor = ProjectResource.color_white,
+				BackgroundColor = ProjectResource.color_blue,
+				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				WidthRequest = Session.ScreenWidth * 0.5,
+				Margin = new Thickness(0, 0, 0, 10),
+				IsEnabled = true
+			};
+			//saveButton.Clicked += SaveButton_Clicked;
 
 			var buttonStack = new StackLayout
 			{
@@ -132,9 +232,9 @@ namespace TicketToTalk
 		{
 			//var notNull = datepicker.Date != null
 			//	&& timePicker.Time != null
-			//	&& (!string.IsNullOrEmpty(notes.Text));
+			var notNull = (!string.IsNullOrEmpty(notes.Text));
 
-			if (true)
+			if (notNull)
 			{
 				saveButton.BackgroundColor = ProjectResource.color_blue;
 				saveButton.IsEnabled = true;

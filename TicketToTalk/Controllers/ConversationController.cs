@@ -464,6 +464,24 @@ namespace TicketToTalk
 				}
 			}
 		}
+
+		/// <summary>
+		/// Parses the date to integers.
+		/// </summary>
+		/// <returns>The date to integers.</returns>
+		/// <param name="conversation">Conversation.</param>
+		public int[] parseDateToIntegers(Conversation conversation)
+		{
+			char[] delims = { '/', ':', ' ' };
+			string[] sDates = conversation.date.Split(delims);
+			int[] dates = new int[sDates.Length];
+			for (int i = 0; i < sDates.Length; i++)
+			{
+				dates[i] = int.Parse(sDates[i]);
+			}
+
+			return dates;
+		}
 	}
 }
 

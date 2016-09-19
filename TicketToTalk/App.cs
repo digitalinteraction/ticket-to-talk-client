@@ -23,6 +23,13 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
+			var conversationController = new ConversationController();
+			var conversation = new Conversation
+			{
+				date = "19/09/2016 00:00:00"
+			};
+			conversationController.parseDateToIntegers(conversation);
+
 			MainPage = nav;
 		}
 	}
