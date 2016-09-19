@@ -44,13 +44,13 @@ namespace TicketToTalk
 			};
 			audioCell.Tapped += SongButton_Clicked;
 
-			var videoCell = new ImageCell
-			{
-				Text = "Video",
-				Detail = "Select a Video",
-				DetailColor = ProjectResource.color_blue,
-				ImageSource = "video_icon.png",
-			};
+			//var videoCell = new ImageCell
+			//{
+			//	Text = "Video",
+			//	Detail = "Select a Video",
+			//	DetailColor = ProjectResource.color_blue,
+			//	ImageSource = "video_icon.png",
+			//};
 
 			var youTubeCell = new ImageCell
 			{
@@ -72,7 +72,7 @@ namespace TicketToTalk
 			{
 				photoCell,
 				audioCell,
-				videoCell,
+				//videoCell,
 				youTubeCell
 			};
 			table.Root.Add(section);

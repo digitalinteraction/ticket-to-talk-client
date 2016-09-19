@@ -6,6 +6,10 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Extension methods.
+	/// </summary>
 	public static class ExtensionMethods
 	{
 		private static Random rng = new Random();

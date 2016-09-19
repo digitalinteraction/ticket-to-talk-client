@@ -20,9 +20,17 @@ namespace TicketToTalk
 		{
 			Debug.WriteLine("YouTubePlayer: string code = " + videoCode);
 
+			var height = (double)Session.ScreenWidth * 0.5625;
+
 			Padding = new Thickness(0);
 			var url = string.Format(
-				"<!DOCTYPE html><body><iframe src='https://www.youtube.com/embed/{0}' frameborder='0' allowfullscreen></iframe></body></html>", videoCode);
+				"<!DOCTYPE html>" +
+					"<body>" +
+				"<iframe src='https://www.youtube.com/embed/{0}' frameborder='0' width='{1}' height={2} allowfullscreen>" +
+						"</iframe>" +
+					"</body>" +
+				"</html>",
+				videoCode, Session.ScreenWidth, height);
 
 			Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
 
