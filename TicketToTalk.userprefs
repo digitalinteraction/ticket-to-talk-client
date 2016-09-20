@@ -1,20 +1,15 @@
 ﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Conversations/ConversationView.cs">
     <Files>
-<<<<<<< HEAD
-      <File FileName="TicketToTalk/Pages/Tickets/NewTickets/AddYoutubeLinkView.cs" Line="120" Column="34" />
-      <File FileName="TicketToTalk/Views/Video/YouTubePlayer.cs" Line="24" Column="1" />
-=======
       <File FileName="TicketToTalk/Views/Audio/AudioPlayerLayout.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="38" Column="7" />
+      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="1" Column="1" />
       <File FileName="TicketToTalk/Pages/People/SeeInvite.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/People/SeeInvitations.cs" Line="34" Column="1" />
+      <File FileName="TicketToTalk/Pages/People/SeeInvitations.cs" Line="1" Column="1" />
       <File FileName="TicketToTalk/ViewModels/InvitationCell.cs" Line="33" Column="53" />
-      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="20" Column="37" />
+      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="1" Column="1" />
       <File FileName="TicketToTalk/Views/Picture/PersonProfileImage.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="149" Column="39" />
+      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="1" Column="1" />
       <File FileName="TicketToTalk/Pages/Conversations/ConversationView.cs" Line="1" Column="1" />
->>>>>>> dev
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
