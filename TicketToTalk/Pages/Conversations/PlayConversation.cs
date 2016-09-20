@@ -144,6 +144,9 @@ namespace TicketToTalk
 				case ("Photo"):
 
 					var image = ticketController.getTicketImage(ticket);
+					image.WidthRequest = Session.ScreenWidth;
+					image.HeightRequest = Session.ScreenWidth;
+					image.Aspect = Aspect.AspectFill;
 
 					ticketStack.Children.Clear();
 					ticketStack.Children.Add(image);

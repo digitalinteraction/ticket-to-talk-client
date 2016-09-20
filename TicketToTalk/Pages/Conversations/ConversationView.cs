@@ -84,9 +84,15 @@ namespace TicketToTalk
 
 			var minutes = time[1];
 
+			var timeText = string.Format("{0}:{1} {2}", hour, minutes, time_suffix);
+			if (int.Parse(minutes) < 10)
+			{
+				timeText = string.Format("{0}:0{1} {2}", hour, minutes, time_suffix);
+			}
+
 			var date = new Label
 			{
-				Text = string.Format("{0}:{1} {2}", hour, minutes, time_suffix),
+				Text = timeText,
 				TextColor = ProjectResource.color_red
 			};
 

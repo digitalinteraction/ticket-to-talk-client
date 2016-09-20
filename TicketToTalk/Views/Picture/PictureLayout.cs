@@ -15,6 +15,9 @@ namespace TicketToTalk
 		{
 			Image image = new Image();
 			loadImage(image, filePath);//loadImage(image, filePath);
+			image.WidthRequest = Session.ScreenWidth;
+			image.HeightRequest = Session.ScreenWidth;
+			image.Aspect = Aspect.AspectFill;
 			Content = image;
 		}
 
