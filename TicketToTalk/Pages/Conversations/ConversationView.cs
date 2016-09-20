@@ -40,6 +40,14 @@ namespace TicketToTalk
 				}
 			});
 
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "?",
+				Icon = "info_icon.png",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(conversationOptions)
+			});
+
 			Title = conversation.displayDate;
 			var dateLabel = new Label
 			{
@@ -76,17 +84,23 @@ namespace TicketToTalk
 
 			var minutes = time[1];
 
+			var timeText = string.Format("{0}:{1} {2}", hour, minutes, time_suffix);
+			if (int.Parse(minutes) < 10)
+			{
+				timeText = string.Format("{0}:0{1} {2}", hour, minutes, time_suffix);
+			}
+
 			var date = new Label
 			{
-				Text = string.Format("{0}:{1} {2}", hour, minutes, time_suffix),
-				TextColor = ProjectResource.color_red,
+				Text = timeText,
+				TextColor = ProjectResource.color_red
 			};
 
 			var notesLabel = new Label
 			{
 				Text = "Notes",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0),
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var notes = new Label
@@ -100,13 +114,13 @@ namespace TicketToTalk
 			{
 				Text = "Tickets",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0),
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var newTicketLabel = new Label
 			{
 				Text = "Add a Ticket",
-				TextColor = ProjectResource.color_grey,
+				TextColor = ProjectResource.color_dark,
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
@@ -274,7 +288,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void StartConversation_Clicked(object sender, EventArgs e)
 		{
-			if (!(String.IsNullOrEmpty(conversation.ticket_id_string)))
+			if (!(string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
 				var nav = new NavigationPage(new PlayConversation(conversation, tickets));
 				nav.BarBackgroundColor = ProjectResource.color_blue;
@@ -313,6 +327,27 @@ namespace TicketToTalk
 
 				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
 				tutorialShown = true;
+			}
+		}
+
+		/// <summary>
+		/// Conversations the options.
+		/// </summary>
+		private async void conversationOptions()
+		{
+			var action = await DisplayActionSheet("Edit Conversation", "Cancel", "Delete", "Edit");
+
+			switch (action)
+			{
+				case "Delete":
+					conversationController.destroyConversation(conversation);
+					break;
+				case "Edit":
+					var nav = new NavigationPage(new NewConversation(conversation));
+					nav.setNavHeaders();
+
+					await Navigation.PushModalAsync(nav);
+					break;
 			}
 		}
 	}

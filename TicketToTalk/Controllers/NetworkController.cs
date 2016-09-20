@@ -223,6 +223,12 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Downloads the file.
+		/// </summary>
+		/// <returns>The file.</returns>
+		/// <param name="path">Path.</param>
+		/// <param name="fileName">File name.</param>
 		public async Task<bool> downloadFile(string path, string fileName)
 		{
 			Debug.WriteLine("NetworkController: Beginning Download");
@@ -242,6 +248,17 @@ namespace TicketToTalk
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Handles the session expiration.
+		/// </summary>
+		public void handleSessionExpiration()
+		{
+			App.Current.MainPage = new Login();
+			Session.activePerson = null;
+			Session.activeUser = null;
+			Session.Token.val = null;
 		}
 	}
 }

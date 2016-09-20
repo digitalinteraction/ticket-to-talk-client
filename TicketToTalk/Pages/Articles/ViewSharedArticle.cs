@@ -180,7 +180,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void AcceptArticle_Clicked(object sender, EventArgs e)
 		{
-			var accepted = await articleController.addShared(article);
+			var accepted = await articleController.acceptSharedArticle(article);
 			if (accepted) 
 			{
 				ViewSharedArticles.articles.Remove(article);

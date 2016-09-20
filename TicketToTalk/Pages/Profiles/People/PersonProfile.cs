@@ -3,6 +3,7 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
 	/// <summary>
 	/// Person profile.
 	/// </summary>
@@ -139,7 +140,7 @@ namespace TicketToTalk
 
 			var button = new Button
 			{
-				Text = "Send an Invitation",
+				Text = "Invite Contributor",
 				BackgroundColor = ProjectResource.color_red,
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,

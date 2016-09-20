@@ -66,6 +66,8 @@ namespace TicketToTalk
 			};
 		}
 
+
+
 		/// <summary>
 		/// Adds the conversation.
 		/// </summary>

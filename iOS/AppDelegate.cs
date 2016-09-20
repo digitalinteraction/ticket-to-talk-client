@@ -22,8 +22,6 @@ namespace TicketToTalk.iOS
 			UITabBar.Appearance.SelectedImageTintColor = UIColor.FromRGB(255, 94, 91);
 			UITabBar.Appearance.BackgroundColor = UIColor.FromRGB(0, 206, 203);
 
-			Console.WriteLine(Session.ScreenWidth);
-
 			return base.FinishedLaunching(app, options);
 		}
 	}

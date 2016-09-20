@@ -3,6 +3,7 @@ using SQLite;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -20,11 +21,11 @@ namespace TicketToTalk
 		public AreaDB()
 		{
 
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("AreaDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
-		public void open() 
+		public void open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Area>();
@@ -73,11 +74,11 @@ namespace TicketToTalk
 		/// Gets unique towns/cities.
 		/// </summary>
 		/// <returns>The unique town city.</returns>
-		public IEnumerable<Area> GetUniqueTownCity() 
+		public IEnumerable<Area> GetUniqueTownCity()
 		{
 			var stored = _connection.Query<Area>("SELECT DISTINCT townCity FROM Area");
 			Console.WriteLine("Printing TOWNS");
-			foreach (Area a in stored) 
+			foreach (Area a in stored)
 			{
 				Console.WriteLine(a.townCity);
 			}
@@ -88,7 +89,7 @@ namespace TicketToTalk
 		/// Delete all records.
 		/// </summary>
 		/// <returns>The null.</returns>
-		public void deleteNull() 
+		public void deleteNull()
 		{
 			_connection.Query<Area>("Delete From Area Where 1 = 1");
 		}
@@ -97,7 +98,7 @@ namespace TicketToTalk
 		/// Get the highest ID value
 		/// </summary>
 		/// <returns>The identifier.</returns>
-		public Area maxID() 
+		public Area maxID()
 		{
 			var max = _connection.Query<Area>("Select * FROM Area ORDER BY ID DESC LIMIT 1");
 
@@ -111,7 +112,7 @@ namespace TicketToTalk
 			{
 				return max[0];
 			}
-			else 
+			else
 			{
 				Console.WriteLine("No area records");
 				return null;
@@ -133,7 +134,7 @@ namespace TicketToTalk
 			_connection.Query<Ticket>("DELETE FROM Area");
 		}
 
-		public void close() 
+		public void close()
 		{
 			_connection.Close();
 		}

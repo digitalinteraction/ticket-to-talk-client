@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -23,8 +24,7 @@ namespace TicketToTalk
 		/// </summary>
 		public PersonDB()
 		{
-
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("PersonDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

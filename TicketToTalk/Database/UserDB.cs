@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -20,13 +21,11 @@ namespace TicketToTalk
 		/// </summary>
 		public UserDB()
 		{
-
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("UserDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
-
 		}
 
-		public void open() 
+		public void open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<User>();
@@ -76,7 +75,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user by email.</returns>
 		/// <param name="email">Email.</param>
-		public User getUserByEmail(string email) 
+		public User getUserByEmail(string email)
 		{
 
 			var stored = _connection.Query<User>("SELECT * FROM User WHERE email = ?", email);
@@ -88,13 +87,13 @@ namespace TicketToTalk
 			{
 				return stored[0];
 			}
-			else 
+			else
 			{
 				return null;
 			}
 		}
 
-		public void clearTable() 
+		public void clearTable()
 		{
 			_connection.Query<User>("DELETE FROM User");
 		}
