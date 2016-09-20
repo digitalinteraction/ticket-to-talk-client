@@ -24,6 +24,7 @@ namespace TicketToTalk
 			invitations.Clear();
 			foreach (Invitation i in invites)
 			{
+				i.person_name = i.person.name;
 				invitations.Add(i);
 			}
 			this.Title = "Invitations";
