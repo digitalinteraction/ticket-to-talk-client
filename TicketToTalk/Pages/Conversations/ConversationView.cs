@@ -87,14 +87,14 @@ namespace TicketToTalk
 			var date = new Label
 			{
 				Text = string.Format("{0}:{1} {2}", hour, minutes, time_suffix),
-				TextColor = ProjectResource.color_red,
+				TextColor = ProjectResource.color_red
 			};
 
 			var notesLabel = new Label
 			{
 				Text = "Notes",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0),
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var notes = new Label
@@ -108,7 +108,7 @@ namespace TicketToTalk
 			{
 				Text = "Tickets",
 				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0),
+				Margin = new Thickness(0, 10, 0, 0)
 			};
 
 			var newTicketLabel = new Label
@@ -282,7 +282,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		async void StartConversation_Clicked(object sender, EventArgs e)
 		{
-			if (!(String.IsNullOrEmpty(conversation.ticket_id_string)))
+			if (!(string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
 				var nav = new NavigationPage(new PlayConversation(conversation, tickets));
 				nav.BarBackgroundColor = ProjectResource.color_blue;

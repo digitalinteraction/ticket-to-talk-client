@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -19,8 +20,7 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketAreaDB()
 		{
-
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("TicketAreaDB: Establishing DB connection");
 			string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 			_connection = new SQLiteConnection(dbPath);
 

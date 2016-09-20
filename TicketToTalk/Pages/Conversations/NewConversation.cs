@@ -254,10 +254,11 @@ namespace TicketToTalk
 		async void SaveButton_Clicked(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
-			char[] delimiters = { ' ' };
-			string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
+			//char[] delimiters = { ' ' };
+			//string[] dateSplit = datepicker.Date.ToString().Split(delimiters);
 
-			var dateTime = string.Format("{0} {1}", dateSplit[0], timePicker.Time);
+			//var dateTime = string.Format("{0} {1}", dateSplit[0], timePicker.Time);
+			var dateTime = string.Format("{0}/{1}/{2} {3}:{4}:{5}", datepicker.Date.Day, datepicker.Date.Month, datepicker.Date.Year, timePicker.Time.Hours, timePicker.Time.Minutes, timePicker.Time.Seconds);
 
 			var conversation = new Conversation();
 			conversation.person_id = Session.activePerson.id;

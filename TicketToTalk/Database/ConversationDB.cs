@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SQLite;
@@ -19,7 +20,7 @@ namespace TicketToTalk
 		/// </summary>
 		public ConversationDB()
 		{
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("ConversationDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
@@ -42,9 +43,9 @@ namespace TicketToTalk
 			var convs = (from t in _connection.Table<Conversation>() select t).ToList();
 
 			var conversations = new List<Conversation>();
-			foreach (Conversation c in convs) 
+			foreach (Conversation c in convs)
 			{
-				if (c.person_id == Session.activePerson.id) 
+				if (c.person_id == Session.activePerson.id)
 				{
 					conversations.Add(c);
 				}

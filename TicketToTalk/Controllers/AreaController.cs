@@ -1,11 +1,11 @@
 ﻿namespace TicketToTalk
 {
 	/// <summary>
-	/// Area controller.
+	/// A Controller for the Area Model.
 	/// </summary>
 	public class AreaController
 	{
-		
+
 		AreaDB areaDB = new AreaDB();
 
 		/// <summary>
@@ -16,11 +16,11 @@
 		}
 
 		/// <summary>
-		/// Gets the area.
+		/// Gets the area from an ID value.
 		/// </summary>
 		/// <returns>The area.</returns>
 		/// <param name="id">Identifier.</param>
-		public Area getArea(int id) 
+		public Area getArea(int id)
 		{
 			areaDB.open();
 			var area = areaDB.GetArea(id);
@@ -33,7 +33,7 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="area">Area.</param>
-		public void addAreaLocally(Area area) 
+		public void addAreaLocally(Area area)
 		{
 			areaDB.open();
 			areaDB.AddArea(area);
@@ -45,7 +45,7 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void deleteAreaLocally(int id) 
+		public void deleteAreaLocally(int id)
 		{
 			areaDB.open();
 			areaDB.DeleteArea(id);
@@ -57,7 +57,7 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="area">Area.</param>
-		public void updateAreaLocally(Area area) 
+		public void updateAreaLocally(Area area)
 		{
 			deleteAreaLocally(area.id);
 			addAreaLocally(area);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SQLite;
@@ -16,7 +17,7 @@ namespace TicketToTalk
 		/// </summary>
 		public PersonPeriodDB()
 		{
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("PersonPeriodDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

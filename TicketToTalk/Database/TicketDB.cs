@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SQLite;
@@ -18,14 +19,11 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketDB()
 		{
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("TicketDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
-			//_connection = new SQLiteConnection(dbPath);
-
-			//_connection.CreateTable<Ticket>();
 		}
 
-		public void open() 
+		public void open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Ticket>();
@@ -75,7 +73,7 @@ namespace TicketToTalk
 		/// Gets the lasts the ticket added.
 		/// </summary>
 		/// <returns>The ticket added.</returns>
-		public Ticket lastTicketAdded() 
+		public Ticket lastTicketAdded()
 		{
 			var max = _connection.Query<Ticket>("Select * FROM Ticket ORDER BY ID DESC LIMIT 1");
 			return max[0];
@@ -86,7 +84,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by person.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public List<Ticket> getTicketsByPerson(int person_id) 
+		public List<Ticket> getTicketsByPerson(int person_id)
 		{
 			return _connection.Query<Ticket>("SELECT * FROM Ticket WHERE person_id = ?", person_id);
 		}
@@ -96,7 +94,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by period identifier.</returns>
 		/// <param name="period_id">Period identifier.</param>
-		public List<Ticket> getTicketsByPeriodID(int period_id) 
+		public List<Ticket> getTicketsByPeriodID(int period_id)
 		{
 			return _connection.Query<Ticket>("SELECT * FROM Ticket WHERE period_id = ?", period_id);
 		}
@@ -105,7 +103,7 @@ namespace TicketToTalk
 		/// Clears the table.
 		/// </summary>
 		/// <returns>The table.</returns>
-		public void clearTable() 
+		public void clearTable()
 		{
 			_connection.Query<Ticket>("DELETE FROM Ticket");
 		}

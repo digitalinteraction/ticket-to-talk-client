@@ -11,9 +11,10 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Selects the picture.
+		/// Takes the picture.
 		/// </summary>
 		/// <returns>The picture.</returns>
+		/// <param name="name">Name.</param>
 		public static async Task<MediaFile> TakePicture(string name)
 		{
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -23,7 +24,6 @@ namespace TicketToTalk
 
 			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
 			{
-
 				Directory = "TicketToTalk",
 				Name = name
 			});
@@ -38,6 +38,10 @@ namespace TicketToTalk
 			}
 		}
 
+		/// <summary>
+		/// Selects the picture.
+		/// </summary>
+		/// <returns>The picture.</returns>
 		public static async Task<MediaFile> SelectPicture()
 		{
 			if (!CrossMedia.Current.IsPickPhotoSupported)

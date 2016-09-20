@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketToTalk
 {
@@ -20,14 +21,14 @@ namespace TicketToTalk
 		/// </summary>
 		public TagDB()
 		{
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("TagDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
 		/// <summary>
 		/// Open the database.
 		/// </summary>
-		public void open() 
+		public void open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Tag>();

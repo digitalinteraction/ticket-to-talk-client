@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace TicketToTalk
 {
 	/// <summary>
-	/// Article controller.
+	/// Controller for the Article Model.
 	/// </summary>
 	public class ArticleController
 	{
@@ -28,6 +28,7 @@ namespace TicketToTalk
 		{
 			articleDB.open();
 
+			// Checks if the article already exists, if null, the article is added.
 			if (articleDB.GetArticle(article.id) == null)
 			{
 				articleDB.AddArticle(article);
@@ -54,11 +55,15 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public bool deleteArticleRemotely(Article article)
 		{
+			// Create parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["token"] = Session.Token.val;
 
+			// Sends delete request.
 			var jobject = networkController.sendDeleteRequest("articles/destroy", parameters);
+
+			// If null, request failed.
 			if (jobject != null)
 			{
 				return true;
@@ -76,6 +81,8 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public bool destoryArticle(Article article)
 		{
+
+			// If article was destroyed remotely, remove the article locally.
 			if (deleteArticleRemotely(article))
 			{
 				deleteArticleLocally(article);
@@ -86,15 +93,19 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the articles shared with the user.
+		/// Gets articles that have been shared with the user.
 		/// </summary>
 		/// <returns>The shared articles.</returns>
-		public async System.Threading.Tasks.Task<List<Article>> getSharedArticles()
+		public async Task<List<Article>> getSharedArticles()
 		{
+			// Build parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
+			// Sends the request.
 			var jobject = await networkController.sendGetRequest("articles/share/get", parameters);
+
+			// If null the request failed.
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("Articles");
@@ -104,21 +115,26 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Adds the shared article.
+		/// Adds an article that was shared with the user.
 		/// </summary>
-		/// <returns>The shared.</returns>
+		/// <returns>The shared article.</returns>
 		/// <param name="article">Article.</param>
-		public async Task<bool> addShared(Article article)
+		public async Task<bool> acceptSharedArticle(Article article)
 		{
+			// Builds the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 			parameters["article_id"] = article.id.ToString();
 
+			// Sends the request.
 			var jobject = await networkController.sendPostRequest("articles/share/accept", parameters);
+
+			// If null the request failed.
 			if (jobject != null)
 			{
-				Debug.WriteLine("ArticleController: " + article);
 				addArticleLocally(article);
+
+				// Add article to the list of displayed articles.
 				AllArticles.serverArticles.Add(article);
 
 				return true;
@@ -136,13 +152,18 @@ namespace TicketToTalk
 		/// <param name="includeNotes">If set to <c>true</c> include notes.</param>
 		public async Task<bool> shareArticle(Article article, string email, bool includeNotes)
 		{
+			// TODO: Stop crash if recipient is not registered with the system.
+			// Build the paramters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["email"] = email;
 			parameters["includeNotes"] = includeNotes.ToString();
 			parameters["token"] = Session.Token.val;
 
+			// Send the request.
 			var jobject = await networkController.sendPostRequest("articles/share/send", parameters);
+
+			// If null, the request failed.
 			if (jobject != null)
 			{
 				return true;
@@ -158,11 +179,15 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public async Task<bool> rejectShared(Article article)
 		{
+			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["token"] = Session.Token.val;
 
+			// Send the request.
 			var jobject = await networkController.sendPostRequest("articles/share/reject", parameters);
+
+			// If null, the request failed.
 			if (jobject != null)
 			{
 				return true;

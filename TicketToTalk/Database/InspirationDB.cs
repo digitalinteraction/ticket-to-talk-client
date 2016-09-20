@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SQLite;
@@ -16,7 +17,7 @@ namespace TicketToTalk
 		public InspirationDB()
 		{
 
-			Console.WriteLine("Establishing DB connection");
+			Debug.WriteLine("InspirationDB: Establishing DB connection");
 			string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 			_connection = new SQLiteConnection(dbPath);
 
@@ -66,7 +67,7 @@ namespace TicketToTalk
 		/// Gets a random inspiration.
 		/// </summary>
 		/// <returns>The random inspiration.</returns>
-		public Inspiration getRandomInspiration() 
+		public Inspiration getRandomInspiration()
 		{
 			var query = _connection.Query<Inspiration>("SELECT * FROM Inspiration WHERE used = ?", false);
 			Console.WriteLine(query.Count());
@@ -75,7 +76,7 @@ namespace TicketToTalk
 				var idx = new Random().Next(query.Count());
 				return query[idx];
 			}
-			else 
+			else
 			{
 				return null;
 			}
