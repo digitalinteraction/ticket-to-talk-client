@@ -19,5 +19,5 @@
   <MonoDevelop.Ide.ItemProperties.TicketToTalk.Droid PreferredExecutionTarget="Android.Android_Accelerated_x86" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
-  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.9847D0AE-764D-4CAC-B73A-FEA7161A7A1C" />
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.81B128C6-80BA-4FB2-B338-879D92E4CA56" />
 </Properties>
