@@ -14,7 +14,7 @@ namespace TicketToTalk
 	public class TicketTagDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Creates a connection to the ticket tag table.
@@ -28,7 +28,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Opens a connection to the database.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<TicketTag>();
@@ -78,7 +78,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by tag identifier.</returns>
 		/// <param name="TagID">Tag identifier.</param>
-		public List<TicketTag> getRelationByTagID(int TagID)
+		public List<TicketTag> GetRelationByTagID(int TagID)
 		{
 			var results = _connection.Query<TicketTag>("SELECT * FROM TicketTag WHERE tag_id = ?", TagID);
 			if (results.Count > 0)
@@ -96,7 +96,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by ticket identifier.</returns>
 		/// <param name="TicketID">Ticket identifier.</param>
-		public List<TicketTag> getRelationByTicketID(int TicketID)
+		public List<TicketTag> GetRelationByTicketID(int TicketID)
 		{
 			var results = _connection.Query<TicketTag>("SELECT * FROM TicketTag WHERE ticket_id = ?", TicketID);
 
@@ -110,7 +110,13 @@ namespace TicketToTalk
 			}
 		}
 
-		public TicketTag getRelationByTicketAndTagID(int ticket_id, int tag_id)
+		/// <summary>
+		/// Gets the relation by ticket and tag identifier.
+		/// </summary>
+		/// <returns>The relation by ticket and tag identifier.</returns>
+		/// <param name="ticket_id">Ticket identifier.</param>
+		/// <param name="tag_id">Tag identifier.</param>
+		public TicketTag GetRelationByTicketAndTagID(int ticket_id, int tag_id)
 		{
 			var results = _connection.Query<TicketTag>(String.Format("SELECT * FROM TicketTag WHERE ticket_id = {0} AND tag_id = {1}", ticket_id, tag_id));
 			if (results.Count > 0)
@@ -126,7 +132,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

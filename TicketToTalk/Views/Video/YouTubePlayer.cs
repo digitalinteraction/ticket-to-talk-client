@@ -2,7 +2,6 @@
 // Created on: 22/08/2016
 //
 // YouTubePlayer.cs
-using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 

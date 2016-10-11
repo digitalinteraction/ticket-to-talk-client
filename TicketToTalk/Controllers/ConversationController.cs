@@ -24,11 +24,11 @@ namespace TicketToTalk
 		/// Stores the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public void storeConversationLocally(Conversation conversation)
+		public void StoreConversationLocally(Conversation conversation)
 		{
-			convDB.open();
+			convDB.Open();
 			convDB.AddConversation(conversation);
-			convDB.close();
+			convDB.Close();
 		}
 
 		/// <summary>
@@ -36,11 +36,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The conversation.</returns>
 		/// <param name="id">Identifier.</param>
-		public Conversation getConversationLocally(int id)
+		public Conversation GetConversationLocally(int id)
 		{
-			convDB.open();
+			convDB.Open();
 			var conversation = convDB.GetConversation(id);
-			convDB.close();
+			convDB.Close();
 
 			return conversation;
 		}
@@ -49,11 +49,11 @@ namespace TicketToTalk
 		/// Gets the conversations.
 		/// </summary>
 		/// <returns>The conversations.</returns>
-		public List<Conversation> getConversationsRemotely()
+		public List<Conversation> GetConversationsRemotely()
 		{
-			convDB.open();
+			convDB.Open();
 			var convs = new List<Conversation>(convDB.GetConversationsForPerson());
-			convDB.close();
+			convDB.Close();
 
 			return convs;
 		}
@@ -63,7 +63,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The new conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<Conversation> storeConversationRemotely(Conversation conversation)
+		public async Task<Conversation> StoreConversationRemotely(Conversation conversation)
 		{
 			// Get platform of the device.
 			// TODO: Remove after fix for getting standard dates across language settings.
@@ -84,7 +84,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendPostRequest("conversations/store", parameters);
+			var jobject = await networkController.SendPostRequest("conversations/store", parameters);
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -104,7 +104,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The updated conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<Conversation> updateConversationRemotely(Conversation conversation)
+		public async Task<Conversation> UpdateConversationRemotely(Conversation conversation)
 		{
 			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -113,7 +113,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendPostRequest("conversations/update", parameters);
+			var jobject = await networkController.SendPostRequest("conversations/update", parameters);
 
 			// If null, request failed.
 			if (jobject != null)
@@ -129,7 +129,7 @@ namespace TicketToTalk
 		/// Updates the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public void updateConversationLocally(Conversation conversation)
+		public void UpdateConversationLocally(Conversation conversation)
 		{
 			// Update conversation currently being displayed.
 			foreach (Conversation c in ConversationsView.conversations)
@@ -141,28 +141,28 @@ namespace TicketToTalk
 			}
 
 			// Store in local DB.
-			convDB.open();
+			convDB.Open();
 			convDB.DeleteConversation(conversation.id);
 			convDB.AddConversation(conversation);
-			convDB.close();
+			convDB.Close();
 		}
 
 		/// <summary>
 		/// Deletes the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public void deleteConversationLocally(Conversation conversation)
+		public void DeleteConversationLocally(Conversation conversation)
 		{
-			convDB.open();
+			convDB.Open();
 			convDB.DeleteConversation(conversation.id);
-			convDB.close();
+			convDB.Close();
 		}
 
 		/// <summary>
 		/// Deletes the conversation remotely.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<bool> deleteConversationRemotely(Conversation conversation)
+		public async Task<bool> DeleteConversationRemotely(Conversation conversation)
 		{
 			// Build paramters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -170,7 +170,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.sendGetRequest("conversations/destroy", parameters);
+			var jobject = await networkController.SendGetRequest("conversations/destroy", parameters);
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -187,15 +187,15 @@ namespace TicketToTalk
 		/// Destroies the conversation.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async void destroyConversation(Conversation conversation)
+		public async void DestroyConversation(Conversation conversation)
 		{
 			// Delete conversation remotely.
-			var deleted = await deleteConversationRemotely(conversation);
+			var deleted = await DeleteConversationRemotely(conversation);
 
 			// If successfully deleted...
 			if (deleted)
 			{
-				deleteConversationLocally(conversation);
+				DeleteConversationLocally(conversation);
 				ConversationsView.conversations.Remove(conversation);
 			}
 		}
@@ -204,7 +204,7 @@ namespace TicketToTalk
 		/// Get a list of conversations for this person-user relationship from the server.
 		/// </summary>
 		/// <returns>The remote conversations.</returns>
-		public async Task<List<Conversation>> getRemoteConversations()
+		public async Task<List<Conversation>> GetRemoteConversations()
 		{
 			// Build paramters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -212,7 +212,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendGetRequest("conversations/get", parameters);
+			var jobject = await networkController.SendGetRequest("conversations/get", parameters);
 
 			// If null, request failed.
 			if (jobject == null)
@@ -233,7 +233,7 @@ namespace TicketToTalk
 		/// <returns>The conversation with the added ticket.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public Conversation addTicketToConversation(Conversation conversation, Ticket ticket)
+		public Conversation AddTicketToConversation(Conversation conversation, Ticket ticket)
 		{
 
 			// If the ticket string is empty, the ticket string becomes the ticket id.
@@ -271,7 +271,7 @@ namespace TicketToTalk
 		/// <returns>The ticket from conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public Conversation removeTicketFromConversation(Conversation conversation, Ticket ticket)
+		public Conversation RemoveTicketFromConversation(Conversation conversation, Ticket ticket)
 		{
 			return null;
 		}
@@ -282,7 +282,7 @@ namespace TicketToTalk
 		/// <returns>The ticket to conversation remotely.</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public async Task<bool> addTicketToConversationRemotely(Conversation conversation, Ticket ticket)
+		public async Task<bool> AddTicketToConversationRemotely(Conversation conversation, Ticket ticket)
 		{
 			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -291,7 +291,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendPostRequest("conversations/tickets/add", parameters);
+			var jobject = await networkController.SendPostRequest("conversations/tickets/add", parameters);
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -310,7 +310,7 @@ namespace TicketToTalk
 		/// <returns>The conversation</returns>
 		/// <param name="conversation">Conversation.</param>
 		/// <param name="ticket">Ticket.</param>
-		public async Task<bool> removeTicketFromConversationRemotely(Conversation conversation, Ticket ticket)
+		public async Task<bool> RemoveTicketFromConversationRemotely(Conversation conversation, Ticket ticket)
 		{
 
 			// Build parameters.
@@ -320,7 +320,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.sendPostRequest("conversations/tickets/remove", parameters);
+			var jobject = await networkController.SendPostRequest("conversations/tickets/remove", parameters);
 
 			// If null, request failed.
 			if (jobject == null)
@@ -340,7 +340,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The properties for display.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public Conversation setPropertiesForDisplay(Conversation conversation)
+		public Conversation SetPropertiesForDisplay(Conversation conversation)
 		{
 			string[] months =
 			{
@@ -475,7 +475,7 @@ namespace TicketToTalk
 		/// Adds the ticket to displayed conversation.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void addTicketToDisplayedConversation(Conversation conversation, Ticket ticket)
+		public void AddTicketToDisplayedConversation(Conversation conversation, Ticket ticket)
 		{
 			var item = new ConversationItem(conversation, ticket);
 
@@ -497,7 +497,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The date to integers.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public int[] parseDateToIntegers(Conversation conversation)
+		public int[] ParseDateToIntegers(Conversation conversation)
 		{
 			char[] delims = { '/', ':', ' ' };
 			string[] sDates = conversation.date.Split(delims);

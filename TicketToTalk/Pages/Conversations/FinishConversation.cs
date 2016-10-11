@@ -14,8 +14,8 @@ namespace TicketToTalk
 	public class FinishConversation : ContentPage
 	{
 
-		Conversation conversation;
-		Editor editor;
+		private Conversation conversation;
+		private Editor editor;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.FinishConversation"/> class.
@@ -30,7 +30,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			var label = new Label
@@ -71,7 +71,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		private void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
@@ -85,10 +85,10 @@ namespace TicketToTalk
 		{
 			conversation.notes = editor.Text;
 			var conversationController = new ConversationController();
-			var updated = await conversationController.updateConversationRemotely(conversation);
+			var updated = await conversationController.UpdateConversationRemotely(conversation);
 			if (updated != null)
 			{
-				conversationController.updateConversationLocally(updated);
+				conversationController.UpdateConversationLocally(updated);
 			}
 			else
 			{

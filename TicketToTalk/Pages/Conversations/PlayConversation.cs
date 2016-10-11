@@ -10,15 +10,15 @@ namespace TicketToTalk
 	/// </summary>
 	public class PlayConversation : ContentPage
 	{
-		StackLayout ticketStack;
-		List<Ticket> tickets;
-		Label ticketTitleLabel;
-		int currentIndex = 0;
-		Label descriptionLabel;
+		private StackLayout ticketStack;
+		private List<Ticket> tickets;
+		private Label ticketTitleLabel;
+		private int currentIndex = 0;
+		private Label descriptionLabel;
 
-		Conversation conversation;
+		private Conversation conversation;
 
-		TicketController ticketController = new TicketController();
+		private TicketController ticketController = new TicketController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.PlayConversation"/> class.
@@ -37,7 +37,7 @@ namespace TicketToTalk
 			{
 				Text = "Finish",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(finishConversation)
+				Command = new Command(FinishConversation)
 			});
 
 			var next = new Button
@@ -99,7 +99,7 @@ namespace TicketToTalk
 				}
 			};
 
-			setTicketStack(tickets[currentIndex]);
+			SetTicketStack(tickets[currentIndex]);
 
 			var content = new StackLayout
 			{
@@ -121,7 +121,7 @@ namespace TicketToTalk
 		/// Finishs the conversation.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		private async void finishConversation(object obj)
+		private async void FinishConversation(object obj)
 		{
 			var nav = new NavigationPage(new FinishConversation(conversation));
 			nav.BarTextColor = ProjectResource.color_white;
@@ -135,7 +135,7 @@ namespace TicketToTalk
 		/// Sets the ticket stack.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		private void setTicketStack(Ticket ticket)
+		private void SetTicketStack(Ticket ticket)
 		{
 			Debug.WriteLine("PlayConversation: Ticket to display = " + ticket);
 			switch (ticket.mediaType)
@@ -143,7 +143,7 @@ namespace TicketToTalk
 				case ("Picture"):
 				case ("Photo"):
 
-					var image = ticketController.getTicketImage(ticket);
+					var image = ticketController.GetTicketImage(ticket);
 					image.WidthRequest = Session.ScreenWidth;
 					image.HeightRequest = Session.ScreenWidth;
 					image.Aspect = Aspect.AspectFill;
@@ -183,7 +183,7 @@ namespace TicketToTalk
 
 			Debug.WriteLine("PlayConversation: Index of next ticket" + currentIndex);
 
-			setTicketStack(tickets[currentIndex]);
+			SetTicketStack(tickets[currentIndex]);
 		}
 
 		/// <summary>
@@ -191,11 +191,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Previous_Clicked(object sender, EventArgs e)
+		private void Previous_Clicked(object sender, EventArgs e)
 		{
 			currentIndex--;
 			currentIndex = currentIndex % tickets.Count;
-			setTicketStack(tickets[currentIndex]);
+			SetTicketStack(tickets[currentIndex]);
 		}
 	}
 }

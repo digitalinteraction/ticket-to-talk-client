@@ -4,6 +4,10 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera is needed to create picture tickets.</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access is needed to photos to create picture tickets</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone is needed to create sound tickets.</string>
 	<key>CFBundleDisplayName</key>

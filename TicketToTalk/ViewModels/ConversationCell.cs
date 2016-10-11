@@ -60,7 +60,7 @@ namespace TicketToTalk
 			var conversation = (Conversation)mi.BindingContext;
 
 			var conversationController = new ConversationController();
-			conversationController.destroyConversation(conversation);
+			conversationController.DestroyConversation(conversation);
 		}
 	}
 }

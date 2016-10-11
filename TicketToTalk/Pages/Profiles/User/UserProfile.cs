@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using ImageCircle.Forms.Plugin.Abstractions;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace TicketToTalk
 {
@@ -27,7 +22,7 @@ namespace TicketToTalk
 				Text = "Info",
 				Icon = "info_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(options)
+				Command = new Command(Options)
 			});
 
 			var nameLabel = new Label
@@ -67,7 +62,7 @@ namespace TicketToTalk
 		/// Displays profile options.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		async void options(object obj)
+		private async void Options(object obj)
 		{
 			var action = await DisplayActionSheet("Your Profile", "Cancel", null, "Edit Profile");
 

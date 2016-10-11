@@ -23,7 +23,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			var photoCell = new ImageCell
@@ -90,7 +90,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		private void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}

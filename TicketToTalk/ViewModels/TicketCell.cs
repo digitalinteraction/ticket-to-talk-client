@@ -37,7 +37,7 @@ namespace TicketToTalk
 			var ticket = (Ticket)mi.BindingContext;
 
 			var ticketController = new TicketController();
-			ticketController.destroyTicket(ticket);
+			ticketController.DestroyTicket(ticket);
 		}
 	}
 }

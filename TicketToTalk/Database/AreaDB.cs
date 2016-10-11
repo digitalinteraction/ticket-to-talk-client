@@ -13,7 +13,7 @@ namespace TicketToTalk
 	public class AreaDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Opens database connection for the area table.
@@ -25,7 +25,7 @@ namespace TicketToTalk
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Area>();
@@ -89,7 +89,7 @@ namespace TicketToTalk
 		/// Delete all records.
 		/// </summary>
 		/// <returns>The null.</returns>
-		public void deleteNull()
+		public void DeleteNull()
 		{
 			_connection.Query<Area>("Delete From Area Where 1 = 1");
 		}
@@ -98,7 +98,7 @@ namespace TicketToTalk
 		/// Get the highest ID value
 		/// </summary>
 		/// <returns>The identifier.</returns>
-		public Area maxID()
+		public Area MaxID()
 		{
 			var max = _connection.Query<Area>("Select * FROM Area ORDER BY ID DESC LIMIT 1");
 
@@ -124,17 +124,23 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The area by town.</returns>
 		/// <param name="town_city">Town city.</param>
-		public IEnumerable<Area> getAreaByTown(string town_city)
+		public IEnumerable<Area> GetAreaByTown(string town_city)
 		{
 			return _connection.Query<Area>("SELECT * FROM Area WHERE townCity = ?", town_city);
 		}
 
-		public void clearTable()
+		/// <summary>
+		/// Clears the table.
+		/// </summary>
+		public void ClearTable()
 		{
 			_connection.Query<Ticket>("DELETE FROM Area");
 		}
 
-		public void close()
+		/// <summary>
+		/// Close this instance.
+		/// </summary>
+		public void Close()
 		{
 			_connection.Close();
 		}

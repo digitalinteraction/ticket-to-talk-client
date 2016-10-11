@@ -12,23 +12,23 @@ namespace TicketToTalk
 	/// </summary>
 	public class AllArticles : ContentPage
 	{
-		public static ObservableCollection<Article> serverArticles = new ObservableCollection<Article>();
+		public static ObservableCollection<Article> ServerArticles = new ObservableCollection<Article>();
 		private ArticleController articleController = new ArticleController();
-		public static List<Article> sharedArticles;
-		public static bool tutorialShown = false;
+		public static List<Article> SharedArticles;
+		public static bool TutorialShown = false;
 
 		/// <summary>
 		/// Creates an instance of all articles view.
 		/// </summary>
 		public AllArticles()
 		{
-			serverArticles.Clear();
+			ServerArticles.Clear();
 			Title = "Articles";
 
-			serverArticles = Task.Run(() => this.checkForNewArticles()).Result;
-			sharedArticles = Task.Run(() => articleController.getSharedArticles()).Result;
+			ServerArticles = Task.Run(() => this.CheckForNewArticles()).Result;
+			SharedArticles = Task.Run(() => articleController.GetSharedArticles()).Result;
 
-			foreach (Article a in serverArticles)
+			foreach (Article a in ServerArticles)
 			{
 				Console.WriteLine(a);
 			}
@@ -38,20 +38,20 @@ namespace TicketToTalk
 				Text = "Add",
 				Icon = "add_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(launchAddArticleView)
+				Command = new Command(LaunchAddArticleView)
 			});
 
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "View Shared Articles",
 				Order = ToolbarItemOrder.Secondary,
-				Command = new Command(viewShared),
+				Command = new Command(ViewShared),
 			});
 
 			// Format image cell
 			ListView articleList = new ListView();
 			articleList.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
-			articleList.BindingContext = serverArticles;
+			articleList.BindingContext = ServerArticles;
 			articleList.ItemTemplate = new DataTemplate(typeof(ArticleCell));
 			articleList.SeparatorColor = Color.Transparent;
 			articleList.ItemSelected += OnSelection;
@@ -67,11 +67,11 @@ namespace TicketToTalk
 		/// <summary>
 		/// View shared articles.
 		/// </summary>
-		void viewShared()
+		private void ViewShared()
 		{
-			if (sharedArticles != null && sharedArticles.Count > 0)
+			if (SharedArticles != null && SharedArticles.Count > 0)
 			{
-				Navigation.PushAsync(new ViewSharedArticles(sharedArticles));
+				Navigation.PushAsync(new ViewSharedArticles(SharedArticles));
 			}
 			else
 			{
@@ -83,7 +83,7 @@ namespace TicketToTalk
 		/// Launchs the add article view.
 		/// </summary>
 		/// <returns>The add article view.</returns>
-		public void launchAddArticleView()
+		public void LaunchAddArticleView()
 		{
 			var nav = new NavigationPage(new AddArticle(null));
 			nav.BarTextColor = ProjectResource.color_white;
@@ -96,13 +96,13 @@ namespace TicketToTalk
 		/// Checks for new articles.
 		/// </summary>
 		/// <returns>The for new articles.</returns>
-		public async Task<ObservableCollection<Article>> checkForNewArticles()
+		public async Task<ObservableCollection<Article>> CheckForNewArticles()
 		{
 			NetworkController net = new NetworkController();
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await net.sendGetRequest("articles/all", parameters);
+			var jobject = await net.SendGetRequest("articles/all", parameters);
 			Console.WriteLine(jobject);
 			var jarticles = jobject.GetValue("articles");
 			Console.WriteLine(jarticles);
@@ -112,7 +112,7 @@ namespace TicketToTalk
 			foreach (Article a in articles)
 			{
 				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
-				a.favicon = articleController.getFaviconURL(a.link);
+				a.favicon = articleController.GetFaviconURL(a.link);
 				list.Add(a);
 			}
 
@@ -125,7 +125,7 @@ namespace TicketToTalk
 		/// <returns>The selection.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -145,13 +145,13 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-			if (Session.activeUser.firstLogin && !tutorialShown)
+			if (Session.activeUser.firstLogin && !TutorialShown)
 			{
 
 				var text = "Use Articles to store useful information about the person you're collecting tickets for. Click '+' to get started!";
 
 				Navigation.PushModalAsync(new HelpPopup(text, "file_white_icon.png"));
-				tutorialShown = true;
+				TutorialShown = true;
 			}
 		}
 	}

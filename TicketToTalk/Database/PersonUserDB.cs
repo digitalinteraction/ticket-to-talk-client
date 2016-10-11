@@ -67,7 +67,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by person identifier.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public List<PersonUser> getRelationByPersonID(int person_id)
+		public List<PersonUser> GetRelationByPersonID(int person_id)
 		{
 			var results = _connection.Query<PersonUser>("SELECT * FROM PersonUser WHERE person_id = ?", person_id);
 
@@ -86,7 +86,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by user identifier.</returns>
 		/// <param name="user_id">User identifier.</param>
-		public List<PersonUser> getRelationByUserID(int user_id)
+		public List<PersonUser> GetRelationByUserID(int user_id)
 		{
 			var results = _connection.Query<PersonUser>("SELECT * FROM PersonUser WHERE user_id = ?", user_id);
 
@@ -100,7 +100,7 @@ namespace TicketToTalk
 			}
 		}
 
-		public PersonUser getRelationByUserAndPersonID(int user_id, int person_id)
+		public PersonUser GetRelationByUserAndPersonID(int user_id, int person_id)
 		{
 			var results = _connection.Query<PersonUser>(String.Format("SELECT * FROM PersonUser WHERE user_id = {0} AND person_id = {1}", user_id, person_id));
 			if (results.Count > 0)
@@ -113,7 +113,7 @@ namespace TicketToTalk
 			}
 		}
 
-		public void clearTable()
+		public void ClearTable()
 		{
 			_connection.Query<PersonUser>("DELETE FROM PersonUser");
 		}
@@ -121,7 +121,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

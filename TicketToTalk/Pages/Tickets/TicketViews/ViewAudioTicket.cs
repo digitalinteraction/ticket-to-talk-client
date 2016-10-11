@@ -13,8 +13,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewAudioTicket : ContentPage
 	{
-		string fileName;
-		Ticket ticket;
+		private string fileName;
+		private Ticket ticket;
 		private bool download_finished = false;
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public ViewAudioTicket(Ticket ticket)
 		{
-			var hasStoragePerms = Task.Run(() => checkStoragePerms()).Result;
+			var hasStoragePerms = Task.Run(() => CheckStoragePerms()).Result;
 			if (!hasStoragePerms)
 			{
 				Navigation.PopAsync();
@@ -43,16 +43,16 @@ namespace TicketToTalk
 			{
 				Text = "?",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(displayInfo)
+				Command = new Command(DisplayInfo)
 			});
 
 			Debug.WriteLine("ViewAudioTicket: Getting audio file.");
 
-			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
+			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
 				NetworkController net = new NetworkController();
 				var fileName = "t_" + ticket.id + ".wav";
-				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
+				var task = Task.Run(() => net.DownloadFile(ticket.pathToFile, fileName)).Result;
 				ticket.pathToFile = fileName;
 
 				while (!download_finished)
@@ -60,7 +60,7 @@ namespace TicketToTalk
 				}
 
 				var ticketController = new TicketController();
-				ticketController.updateTicketLocally(ticket);
+				ticketController.UpdateTicketLocally(ticket);
 			}
 			Debug.WriteLine("ViewAudioTicket: Got file");
 			fileName = ticket.pathToFile;
@@ -81,7 +81,7 @@ namespace TicketToTalk
 		/// Display ticket info
 		/// </summary>
 		/// <returns>The info.</returns>
-		public async void displayInfo()
+		private async void DisplayInfo()
 		{
 			var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Display Information", "Add to Conversation");
 
@@ -90,7 +90,7 @@ namespace TicketToTalk
 				case ("Delete"):
 					var ticketController = new TicketController();
 					await Navigation.PopAsync();
-					ticketController.destroyTicket(ticket);
+					ticketController.DestroyTicket(ticket);
 					break;
 				case ("Display Information"):
 					await Navigation.PushAsync(new EditTicket(ticket));
@@ -105,7 +105,7 @@ namespace TicketToTalk
 		/// Checks the storage perms.
 		/// </summary>
 		/// <returns>The storage perms.</returns>
-		private async Task<bool> checkStoragePerms()
+		private async Task<bool> CheckStoragePerms()
 		{
 			try
 			{

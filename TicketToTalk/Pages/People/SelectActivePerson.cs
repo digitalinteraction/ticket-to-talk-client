@@ -11,23 +11,23 @@ namespace TicketToTalk
 	/// </summary>
 	public class SelectActivePerson : ContentPage
 	{
-		PersonController personController = new PersonController();
-		ObservableCollection<Person> people = new ObservableCollection<Person>();
+		private PersonController personController = new PersonController();
+		private ObservableCollection<Person> people = new ObservableCollection<Person>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectActivePerson"/> class.
 		/// </summary>
 		public SelectActivePerson()
 		{
-			people = Task.Run(() => personController.getPeopleFromServer()).Result;
+			people = Task.Run(() => personController.GetPeopleFromServer()).Result;
 			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
 
 			foreach (Person p in people)
 			{
-				personController.addPersonLocally(p);
-				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
+				personController.AddPersonLocally(p);
+				p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
 				Debug.WriteLine("SelectActivePerson: Got image");
-				p.relation = personController.getRelationship(p.id);
+				p.relation = personController.GetRelationship(p.id);
 			}
 
 			Padding = new Thickness(20);
@@ -109,7 +109,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void PeopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+		private void PeopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			var p = (Person)e.SelectedItem;
 			Session.activePerson = p;

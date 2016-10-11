@@ -14,7 +14,7 @@ namespace TicketToTalk
 	public class ArticleDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Creates a new connection to the article table.
@@ -29,7 +29,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Open a database connection.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Article>();
@@ -77,7 +77,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close the database connection.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

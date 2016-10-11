@@ -34,7 +34,7 @@ namespace TicketToTalk
 		/// <returns>The get request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> sendGetRequest(string URL, IDictionary<string, string> parameters)
+		public async Task<JObject> SendGetRequest(string URL, IDictionary<string, string> parameters)
 		{
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
@@ -54,6 +54,7 @@ namespace TicketToTalk
 			try
 			{
 				response = await client.GetAsync(uri);
+				Debug.WriteLine(response);
 			}
 			catch (TaskCanceledException ex)
 			{
@@ -86,7 +87,7 @@ namespace TicketToTalk
 		/// <returns>The post request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> sendPostRequest(string URL, IDictionary<string, string> parameters)
+		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var uri = new Uri(URLBase + URL);
 			Debug.WriteLine(uri);
@@ -102,6 +103,7 @@ namespace TicketToTalk
 			{
 				// Get response
 				response = await client.PostAsync(uri, content);
+				Debug.WriteLine(response.ToString());
 			}
 			catch (WebException ex)
 			{
@@ -139,7 +141,7 @@ namespace TicketToTalk
 		/// <returns>The generic post request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> sendGenericPostRequest(string URL, IDictionary<string, object> parameters)
+		public async Task<JObject> SendGenericPostRequest(string URL, IDictionary<string, object> parameters)
 		{
 			var uri = new Uri(URLBase + URL);
 			Debug.WriteLine("NetworkController: " + uri);
@@ -173,7 +175,7 @@ namespace TicketToTalk
 		/// <returns>The delete request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> sendDeleteRequest(string URL, IDictionary<string, string> parameters)
+		public async Task<JObject> SendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
@@ -229,7 +231,7 @@ namespace TicketToTalk
 		/// <returns>The file.</returns>
 		/// <param name="path">Path.</param>
 		/// <param name="fileName">File name.</param>
-		public async Task<bool> downloadFile(string path, string fileName)
+		public async Task<bool> DownloadFile(string path, string fileName)
 		{
 			Debug.WriteLine("NetworkController: Beginning Download");
 			var webClient = new WebClient();
@@ -241,7 +243,7 @@ namespace TicketToTalk
 			if (returned != null)
 			{
 				Debug.WriteLine("NetworkController: Downloaded image - " + returned.HashArray());
-				MediaController.writeImageToFile(fileName, returned);
+				MediaController.WriteImageToFile(fileName, returned);
 				return true;
 			}
 			else
@@ -253,7 +255,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Handles the session expiration.
 		/// </summary>
-		public void handleSessionExpiration()
+		public void HandleSessionExpiration()
 		{
 			App.Current.MainPage = new Login();
 			Session.activePerson = null;

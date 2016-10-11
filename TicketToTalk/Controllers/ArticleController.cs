@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace TicketToTalk
@@ -10,8 +9,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class ArticleController
 	{
-		ArticleDB articleDB = new ArticleDB();
-		NetworkController networkController = new NetworkController();
+		private ArticleDB articleDB = new ArticleDB();
+		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ArticleController"/> class.
@@ -24,9 +23,9 @@ namespace TicketToTalk
 		/// Adds the article locally.
 		/// </summary>
 		/// <param name="article">Article.</param>
-		public void addArticleLocally(Article article)
+		public void AddArticleLocally(Article article)
 		{
-			articleDB.open();
+			articleDB.Open();
 
 			// Checks if the article already exists, if null, the article is added.
 			if (articleDB.GetArticle(article.id) == null)
@@ -34,18 +33,18 @@ namespace TicketToTalk
 				articleDB.AddArticle(article);
 			}
 
-			articleDB.close();
+			articleDB.Close();
 		}
 
 		/// <summary>
 		/// Deletes the article locally.
 		/// </summary>
 		/// <param name="article">Article.</param>
-		public void deleteArticleLocally(Article article)
+		public void DeleteArticleLocally(Article article)
 		{
-			articleDB.open();
+			articleDB.Open();
 			articleDB.DeleteArticle(article.id);
-			articleDB.close();
+			articleDB.Close();
 		}
 
 		/// <summary>
@@ -53,7 +52,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if article was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
-		public bool deleteArticleRemotely(Article article)
+		public bool DeleteArticleRemotely(Article article)
 		{
 			// Create parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -61,7 +60,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Sends delete request.
-			var jobject = networkController.sendDeleteRequest("articles/destroy", parameters);
+			var jobject = networkController.SendDeleteRequest("articles/destroy", parameters);
 
 			// If null, request failed.
 			if (jobject != null)
@@ -79,14 +78,14 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if article was destoried, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
-		public bool destoryArticle(Article article)
+		public bool DestoryArticle(Article article)
 		{
 
 			// If article was destroyed remotely, remove the article locally.
-			if (deleteArticleRemotely(article))
+			if (DeleteArticleRemotely(article))
 			{
-				deleteArticleLocally(article);
-				AllArticles.serverArticles.Remove(article);
+				DeleteArticleLocally(article);
+				AllArticles.ServerArticles.Remove(article);
 				return true;
 			}
 			return false;
@@ -96,14 +95,14 @@ namespace TicketToTalk
 		/// Gets articles that have been shared with the user.
 		/// </summary>
 		/// <returns>The shared articles.</returns>
-		public async Task<List<Article>> getSharedArticles()
+		public async Task<List<Article>> GetSharedArticles()
 		{
 			// Build parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
 			// Sends the request.
-			var jobject = await networkController.sendGetRequest("articles/share/get", parameters);
+			var jobject = await networkController.SendGetRequest("articles/share/get", parameters);
 
 			// If null the request failed.
 			if (jobject != null)
@@ -119,7 +118,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The shared article.</returns>
 		/// <param name="article">Article.</param>
-		public async Task<bool> acceptSharedArticle(Article article)
+		public async Task<bool> AcceptSharedArticle(Article article)
 		{
 			// Builds the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -127,15 +126,15 @@ namespace TicketToTalk
 			parameters["article_id"] = article.id.ToString();
 
 			// Sends the request.
-			var jobject = await networkController.sendPostRequest("articles/share/accept", parameters);
+			var jobject = await networkController.SendPostRequest("articles/share/accept", parameters);
 
 			// If null the request failed.
 			if (jobject != null)
 			{
-				addArticleLocally(article);
+				AddArticleLocally(article);
 
 				// Add article to the list of displayed articles.
-				AllArticles.serverArticles.Add(article);
+				AllArticles.ServerArticles.Add(article);
 
 				return true;
 			}
@@ -150,7 +149,7 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		/// <param name="email">Email.</param>
 		/// <param name="includeNotes">If set to <c>true</c> include notes.</param>
-		public async Task<bool> shareArticle(Article article, string email, bool includeNotes)
+		public async Task<bool> ShareArticle(Article article, string email, bool includeNotes)
 		{
 			// TODO: Stop crash if recipient is not registered with the system.
 			// Build the paramters.
@@ -161,7 +160,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendPostRequest("articles/share/send", parameters);
+			var jobject = await networkController.SendPostRequest("articles/share/send", parameters);
 
 			// If null, the request failed.
 			if (jobject != null)
@@ -177,7 +176,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The shared.</returns>
 		/// <param name="article">Article.</param>
-		public async Task<bool> rejectShared(Article article)
+		public async Task<bool> RejectShared(Article article)
 		{
 			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -185,7 +184,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.sendPostRequest("articles/share/reject", parameters);
+			var jobject = await networkController.SendPostRequest("articles/share/reject", parameters);
 
 			// If null, the request failed.
 			if (jobject != null)
@@ -201,9 +200,9 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The favicon URL.</returns>
 		/// <param name="url">URL.</param>
-		public string getFaviconURL(string url)
+		public string GetFaviconURL(string url)
 		{
-			var idx = getBaseURLIndex(url);
+			var idx = GetBaseURLIndex(url);
 			var baseURL = url.Substring(0, idx + 1);
 			if (!(baseURL.EndsWith("/", StringComparison.Ordinal)))
 			{
@@ -218,7 +217,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The base URL Index.</returns>
 		/// <param name="url">URL.</param>
-		private int getBaseURLIndex(string url)
+		private int GetBaseURLIndex(string url)
 		{
 			int count = 0;
 			char key = '/';
@@ -247,12 +246,12 @@ namespace TicketToTalk
 		/// Updates the article locally.
 		/// </summary>
 		/// <param name="article">Article.</param>
-		public void updateArticleLocally(Article article)
+		public void UpdateArticleLocally(Article article)
 		{
-			articleDB.open();
+			articleDB.Open();
 			articleDB.DeleteArticle(article.id);
 			articleDB.AddArticle(article);
-			articleDB.close();
+			articleDB.Close();
 		}
 	}
 }

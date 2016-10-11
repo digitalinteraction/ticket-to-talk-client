@@ -14,8 +14,8 @@ namespace TicketToTalk
 	public class PersonController
 	{
 
-		PersonDB personDB = new PersonDB();
-		NetworkController networkController = new NetworkController();
+		private PersonDB personDB = new PersonDB();
+		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.PersonController"/> class.
@@ -29,11 +29,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person.</returns>
 		/// <param name="id">Identifier.</param>
-		public Person getPerson(int id)
+		public Person GetPerson(int id)
 		{
-			personDB.open();
+			personDB.Open();
 			var person = personDB.GetPerson(id);
-			personDB.close();
+			personDB.Close();
 			return person;
 		}
 
@@ -41,13 +41,13 @@ namespace TicketToTalk
 		/// Gets the people.
 		/// </summary>
 		/// <returns>The people.</returns>
-		public List<Person> getPeople()
+		public List<Person> GetPeople()
 		{
 			var personUserDB = new PersonUserDB();
-			var relations = personUserDB.getRelationByUserID(Session.activeUser.id);
+			var relations = personUserDB.GetRelationByUserID(Session.activeUser.id);
 
 			var list = new List<Person>();
-			personDB.open();
+			personDB.Open();
 
 			foreach (PersonUser pu in relations)
 			{
@@ -57,7 +57,7 @@ namespace TicketToTalk
 				}
 			}
 
-			personDB.close();
+			personDB.Close();
 			return list;
 		}
 
@@ -66,11 +66,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void deletePersonLocally(int id)
+		public void DeletePersonLocally(int id)
 		{
-			personDB.open();
+			personDB.Open();
 			personDB.DeletePerson(id);
-			personDB.close();
+			personDB.Close();
 		}
 
 		/// <summary>
@@ -78,15 +78,15 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person locally.</returns>
 		/// <param name="p">P.</param>
-		public void addPersonLocally(Person p)
+		public void AddPersonLocally(Person p)
 		{
 			Debug.WriteLine("PersonController: adding person " + p);
 
-			if (getPerson(p.id) == null)
+			if (GetPerson(p.id) == null)
 			{
-				personDB.open();
+				personDB.Open();
 				personDB.AddPerson(p);
-				personDB.close();
+				personDB.Close();
 			}
 
 			Debug.WriteLine("PersonController: person added");
@@ -98,24 +98,24 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person locally.</returns>
 		/// <param name="p">P.</param>
-		public void updatePersonLocally(Person p)
+		public void UpdatePersonLocally(Person p)
 		{
-			deletePersonLocally(p.id);
-			addPersonLocally(p);
+			DeletePersonLocally(p.id);
+			AddPersonLocally(p);
 		}
 
 		/// <summary>
 		/// Updates the relationship locally.
 		/// </summary>
 		/// <param name="pu">Pu.</param>
-		public void updateRelationshipLocally(PersonUser pu)
+		public void UpdateRelationshipLocally(PersonUser pu)
 		{
 			var puDB = new PersonUserDB();
 
 			puDB.DeleteRelation(pu.id);
 			puDB.AddPersonUser(pu);
 
-			puDB.close();
+			puDB.Close();
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<ImageSource> getPersonProfilePicture(Person person)
+		public async Task<ImageSource> GetPersonProfilePicture(Person person)
 		{
 			ImageSource imageSource;
 			if (person.pathToPhoto.Equals("default_profile.png"))
@@ -131,16 +131,16 @@ namespace TicketToTalk
 				Debug.WriteLine("PersonController: Getting default image.");
 				imageSource = ImageSource.FromFile(person.pathToPhoto);
 			}
-			else if (person.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			else if (person.pathToPhoto.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
 				Debug.WriteLine("PersonController: Getting image from server.");
-				var image = await downloadPersonProfilePicture(person);
+				var image = await DownloadPersonProfilePicture(person);
 				imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 			}
 			else
 			{
 				Debug.WriteLine("PersonController: Getting image from storage");
-				var rawBytes = MediaController.readBytesFromFile(person.pathToPhoto);
+				var rawBytes = MediaController.ReadBytesFromFile(person.pathToPhoto);
 				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
 				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 			}
@@ -152,10 +152,10 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<byte[]> downloadPersonProfilePicture(Person person)
+		public async Task<byte[]> DownloadPersonProfilePicture(Person person)
 		{
 			var fileName = "p_" + person.id + ".jpg";
-			var downloaded = await networkController.downloadFile(person.pathToPhoto, fileName);
+			var downloaded = await networkController.DownloadFile(person.pathToPhoto, fileName);
 
 			if (downloaded)
 			{
@@ -163,11 +163,11 @@ namespace TicketToTalk
 
 				while (PersonDB.locked) { }
 				PersonDB.locked = true;
-				updatePersonLocally(person);
+				UpdatePersonLocally(person);
 				PersonDB.locked = false;
 			}
 
-			return MediaController.readBytesFromFile(person.pathToPhoto);
+			return MediaController.ReadBytesFromFile(person.pathToPhoto);
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture for invite.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<ImageSource> getPersonProfilePictureForInvite(Person person)
+		public async Task<ImageSource> GetPersonProfilePictureForInvite(Person person)
 		{
 			if (person.pathToPhoto.Equals("default_profile.png"))
 			{
@@ -183,7 +183,7 @@ namespace TicketToTalk
 			}
 			else
 			{
-				return await downloadPersonProfilePictureForInvite(person);
+				return await DownloadPersonProfilePictureForInvite(person);
 			}
 		}
 
@@ -192,21 +192,21 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person profile picture for invite.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<ImageSource> downloadPersonProfilePictureForInvite(Person person)
+		public async Task<ImageSource> DownloadPersonProfilePictureForInvite(Person person)
 		{
 			var fileName = "p_" + person.id + ".jpg";
-			await networkController.downloadFile(person.pathToPhoto, fileName);
+			await networkController.DownloadFile(person.pathToPhoto, fileName);
 
 			person.pathToPhoto = fileName;
 
-			return ImageSource.FromStream(() => new MemoryStream(MediaController.readBytesFromFile(fileName)));
+			return ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(fileName)));
 		}
 
 		/// <summary>
 		/// Gets the people from server.
 		/// </summary>
 		/// <returns>The people from server.</returns>
-		public async Task<ObservableCollection<Person>> getPeopleFromServer()
+		public async Task<ObservableCollection<Person>> GetPeopleFromServer()
 		{
 			// Setting parameters for request
 			Console.WriteLine("Setting parameters for request");
@@ -215,7 +215,7 @@ namespace TicketToTalk
 
 			// Sending request
 			Console.WriteLine("Sending request");
-			var jobject = await networkController.sendGetRequest("user/getpeople", parameters);
+			var jobject = await networkController.SendGetRequest("user/getpeople", parameters);
 			Console.WriteLine(jobject);
 
 			// Parsing JSON to People array
@@ -226,7 +226,7 @@ namespace TicketToTalk
 
 			// Getting all people
 			List<Person> savedPeople = new List<Person>();
-			savedPeople = getPeople();
+			savedPeople = GetPeople();
 
 			// Checking if existing people have been updated externally.
 			Console.WriteLine("Checking if existing people have been updated externally.");
@@ -247,17 +247,17 @@ namespace TicketToTalk
 							Console.WriteLine("Updating person:" + s.id);
 							p.pathToPhoto = s.pathToPhoto;
 							p.imageHash = s.imageHash;
-							updatePersonLocally(p);
+							UpdatePersonLocally(p);
 						}
 						if (p.imageHash != null)
 						{
 							if (s.imageHash == null)
 							{
-								await downloadPersonProfilePicture(p);
+								await DownloadPersonProfilePicture(p);
 							}
 							else if (!(p.imageHash.Equals(s.imageHash)))
 							{
-								await downloadPersonProfilePicture(p);
+								await DownloadPersonProfilePicture(p);
 							}
 						}
 					}
@@ -274,9 +274,9 @@ namespace TicketToTalk
 					p.pivot.user_type = null;
 					p.pivot = null;
 					Console.WriteLine(p);
-					addPersonLocally(p);
+					AddPersonLocally(p);
 				}
-				personUserDB.close();
+				personUserDB.Close();
 			}
 
 			Debug.WriteLine("PersonController: Getting periods");
@@ -287,18 +287,18 @@ namespace TicketToTalk
 
 			var periodController = new PeriodController();
 			var personPeriodDB = new PersonPeriodDB();
-			personPeriodDB.open();
+			personPeriodDB.Open();
 			foreach (Period p in periods)
 			{
 				Debug.WriteLine(p);
-				var temp = periodController.getPeriod(p.id);
+				var temp = periodController.GetPeriod(p.id);
 				if (temp == null)
 				{
-					periodController.addLocalPeriod(p);
+					periodController.AddLocalPeriod(p);
 				}
 
 				var pp = new PersonPeriod((int.Parse(p.pivot.person_id)), int.Parse(p.pivot.period_id));
-				var spp = personPeriodDB.getRelationByPersonAndPeriodID(pp.person_id, pp.period_id);
+				var spp = personPeriodDB.GetRelationByPersonAndPeriodID(pp.person_id, pp.period_id);
 
 				if (spp == null)
 				{
@@ -306,7 +306,7 @@ namespace TicketToTalk
 				}
 			}
 
-			return new ObservableCollection<Person>(getPeople());
+			return new ObservableCollection<Person>(GetPeople());
 		}
 
 		/// <summary>
@@ -314,24 +314,24 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person.</returns>
 		/// <param name="person">Person.</param>
-		public bool destroyPerson(Person person)
+		public bool DestroyPerson(Person person)
 		{
-			deletePersonLocally(person.id);
-			var deleted = deletePersonRemotely(person);
+			DeletePersonLocally(person.id);
+			var deleted = DeletePersonRemotely(person);
 
 			if (deleted)
 			{
 				var ticketController = new TicketController();
 				var mediaController = new MediaController();
-				var tickets = ticketController.getTicketsByPerson(person.id);
+				var tickets = ticketController.GetTicketsByPerson(person.id);
 
 				foreach (Ticket t in tickets)
 				{
-					ticketController.deleteTicketLocally(t);
-					mediaController.deleteFile(t.pathToFile);
+					ticketController.DeleteTicketLocally(t);
+					mediaController.DeleteFile(t.pathToFile);
 				}
 
-				var relation = getRelation(person.id);
+				var relation = GetRelation(person.id);
 				var personUserDB = new PersonUserDB();
 				personUserDB.DeleteRelation(relation.id);
 
@@ -347,13 +347,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if person was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="person">Person.</param>
-		public bool deletePersonRemotely(Person person)
+		public bool DeletePersonRemotely(Person person)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["person_id"] = person.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = networkController.sendDeleteRequest("people/destroy", parameters);
+			var jobject = networkController.SendDeleteRequest("people/destroy", parameters);
 
 			if (jobject == null)
 			{
@@ -371,7 +371,7 @@ namespace TicketToTalk
 		/// <returns>The person remotely.</returns>
 		/// <param name="person">Person.</param>
 		/// <param name="image">Image.</param>
-		public async Task<bool> addPersonRemotely(Person person, string relation, byte[] image)
+		public async Task<bool> AddPersonRemotely(Person person, string relation, byte[] image)
 		{
 			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["token"] = Session.Token.val;
@@ -397,7 +397,7 @@ namespace TicketToTalk
 			}
 
 			var net = new NetworkController();
-			var jobject = await net.sendGenericPostRequest("people/store", parameters);
+			var jobject = await net.SendGenericPostRequest("people/store", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("person");
@@ -410,10 +410,10 @@ namespace TicketToTalk
 				{
 					var fileName = "p_" + stored_person.id + ".jpg";
 					stored_person.pathToPhoto = fileName;
-					MediaController.writeImageToFile(fileName, image);
+					MediaController.WriteImageToFile(fileName, image);
 				}
 
-				addPersonLocally(stored_person);
+				AddPersonLocally(stored_person);
 				Session.activePerson = stored_person;
 
 				var personUserDB = new PersonUserDB();
@@ -426,7 +426,7 @@ namespace TicketToTalk
 				};
 				personUserDB.AddPersonUser(pu);
 
-				addStockPeriods(stored_person);
+				AddStockPeriods(stored_person);
 
 				return true;
 			}
@@ -441,11 +441,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relationship.</returns>
 		/// <param name="id">Identifier.</param>
-		public string getRelationship(int id)
+		public string GetRelationship(int id)
 		{
 			var personUserDB = new PersonUserDB();
-			var relation = personUserDB.getRelationByUserAndPersonID(Session.activeUser.id, id);
-			personUserDB.close();
+			var relation = personUserDB.GetRelationByUserAndPersonID(Session.activeUser.id, id);
+			personUserDB.Close();
 			return relation.relationship;
 		}
 
@@ -454,11 +454,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public PersonUser getRelation(int person_id)
+		public PersonUser GetRelation(int person_id)
 		{
 			var personUserDB = new PersonUserDB();
-			var relation = personUserDB.getRelationByUserAndPersonID(Session.activeUser.id, person_id);
-			personUserDB.close();
+			var relation = personUserDB.GetRelationByUserAndPersonID(Session.activeUser.id, person_id);
+			personUserDB.Close();
 
 			return relation;
 		}
@@ -468,16 +468,16 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The stock periods.</returns>
 		/// <param name="p">P.</param>
-		public void addStockPeriods(Person p)
+		public void AddStockPeriods(Person p)
 		{
 			var ppDB = new PersonPeriodDB();
-			ppDB.open();
+			ppDB.Open();
 			for (int i = 1; i < 5; i++)
 			{
 				var pp = new PersonPeriod(p.id, i);
 				ppDB.AddPersonPeriodRelationship(pp);
 			}
-			ppDB.close();
+			ppDB.Close();
 		}
 
 		/// <summary>
@@ -485,7 +485,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The users.</returns>
 		/// <param name="id">Identifier.</param>
-		public async Task<List<User>> getUsers(int id)
+		public async Task<List<User>> GetUsers(int id)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
@@ -494,7 +494,7 @@ namespace TicketToTalk
 
 			// Send request for all users associated with the person
 			Debug.WriteLine("Sending request for all users associated with the person.");
-			var jobject = await networkController.sendGetRequest(url, parameters);
+			var jobject = await networkController.SendGetRequest(url, parameters);
 			Debug.WriteLine(jobject);
 
 			var jusers = jobject.GetValue("users");
@@ -511,7 +511,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person remotely.</returns>
 		/// <param name="person">Person.</param>
-		public async Task<Person> updatePersonRemotely(Person person, string relation, byte[] image)
+		public async Task<Person> UpdatePersonRemotely(Person person, string relation, byte[] image)
 		{
 
 			// Build url parameters.
@@ -534,7 +534,7 @@ namespace TicketToTalk
 			}
 
 			// Make post request.
-			var jobject = await networkController.sendGenericPostRequest("people/update", parameters);
+			var jobject = await networkController.SendGenericPostRequest("people/update", parameters);
 			if (jobject != null)
 			{
 
@@ -543,14 +543,14 @@ namespace TicketToTalk
 				var p = jtoken.ToObject<Person>();
 
 				// Update local copy
-				updatePersonLocally(p);
+				UpdatePersonLocally(p);
 
 				// Create a new relationship between person and user.
-				var new_relation = getRelation(p.id);
+				var new_relation = GetRelation(p.id);
 				new_relation.relationship = relation;
 
 				// Update local copy.
-				updateRelationshipLocally(new_relation);
+				UpdateRelationshipLocally(new_relation);
 
 				// Parse into relation model.
 				var pp = new PersonPivot();
@@ -563,10 +563,10 @@ namespace TicketToTalk
 				AllProfiles.people[r].birthPlace = p.birthPlace;
 				AllProfiles.people[r].area = p.area;
 				AllProfiles.people[r].notes = p.notes;
-				AllProfiles.people[r].displayString = getDisplayString(AllProfiles.people[r]);
+				AllProfiles.people[r].displayString = GetDisplayString(AllProfiles.people[r]);
 
 				PersonProfile.currentPerson.notes = p.notes;
-				PersonProfile.currentPerson.displayString = getDisplayString(p);
+				PersonProfile.currentPerson.displayString = GetDisplayString(p);
 				PersonProfile.pivot.relation = pp.relation;
 
 				Session.activePerson = p;
@@ -576,7 +576,7 @@ namespace TicketToTalk
 					// Update image stored locally.
 					AllProfiles.people[r].imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 					PersonProfile.currentPerson.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
-					MediaController.writeImageToFile("p_" + p.id + ".jpg", image);
+					MediaController.WriteImageToFile("p_" + p.id + ".jpg", image);
 				}
 
 				return p;
@@ -590,7 +590,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The display string.</returns>
 		/// <param name="person">Person.</param>
-		public string getDisplayString(Person person)
+		public string GetDisplayString(Person person)
 		{
 			var displayString = string.Empty;
 

@@ -9,7 +9,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class TagController
 	{
-		TagDB tagDB = new TagDB();
+		private TagDB tagDB = new TagDB();
+
 		public TagController()
 		{
 		}
@@ -19,11 +20,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag locally.</returns>
 		/// <param name="tag">Tag.</param>
-		public void addTagLocally(Tag tag) 
+		public void AddTagLocally(Tag tag) 
 		{
-			tagDB.open();
+			tagDB.Open();
 			tagDB.AddTag(tag);
-			tagDB.close();
+			tagDB.Close();
 		}
 
 		/// <summary>
@@ -31,11 +32,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void deleteTagLocally(int id) 
+		public void DeleteTagLocally(int id) 
 		{
-			tagDB.open();
+			tagDB.Open();
 			tagDB.DeleteTag(id);
-			tagDB.close();
+			tagDB.Close();
 		}
 
 		/// <summary>
@@ -43,10 +44,10 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag locally.</returns>
 		/// <param name="t">T.</param>
-		public void updateTagLocally(Tag t) 
+		public void UpdateTagLocally(Tag t) 
 		{
-			deleteTagLocally(t.id);
-			addTagLocally(t);
+			DeleteTagLocally(t.id);
+			AddTagLocally(t);
 		}
 
 		/// <summary>
@@ -54,19 +55,19 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag.</returns>
 		/// <param name="id">Identifier.</param>
-		public Tag getTag(int id) 
+		public Tag GetTag(int id) 
 		{
-			tagDB.open();
+			tagDB.Open();
 			var tag = tagDB.GetTag(id);
-			tagDB.close();
+			tagDB.Close();
 			return tag;
 		}
 
-		public List<Tag> getTags() 
+		public List<Tag> GetTags() 
 		{
-			tagDB.open();
+			tagDB.Open();
 			var tags = tagDB.GetTags();
-			tagDB.close();
+			tagDB.Close();
 
 			var list = new List<Tag>();
 			foreach (Tag t in tags) 
@@ -81,21 +82,21 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>if new tag</returns>
 		/// <param name="tag">Tag.</param>
-		public async Task<bool> addTagToServer(Tag tag)
+		public async Task<bool> AddTagToServer(Tag tag)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["text"] = tag.text;
 			parameters["token"] = Session.Token.val;
 
 			NetworkController net = new NetworkController();
-			var jobject = await net.sendPostRequest("tags/store", parameters);
+			var jobject = await net.SendPostRequest("tags/store", parameters);
 			var jtoken = jobject.GetValue("tag");
 			var returned_tag = jtoken.ToObject<Tag>();
 
 			Console.WriteLine(tag);
 
 			// Check tag already exists.
-			var stored = getTag(returned_tag.id);
+			var stored = GetTag(returned_tag.id);
 
 			bool exists = false;
 			if (stored != null)
@@ -104,7 +105,7 @@ namespace TicketToTalk
 			}
 			else 
 			{
-				addTagLocally(tag);
+				AddTagLocally(tag);
 			}
 
 			return exists;

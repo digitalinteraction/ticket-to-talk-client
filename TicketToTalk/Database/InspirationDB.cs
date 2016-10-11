@@ -67,7 +67,7 @@ namespace TicketToTalk
 		/// Gets a random inspiration.
 		/// </summary>
 		/// <returns>The random inspiration.</returns>
-		public Inspiration getRandomInspiration()
+		public Inspiration GetRandomInspiration()
 		{
 			var query = _connection.Query<Inspiration>("SELECT * FROM Inspiration WHERE used = ?", false);
 			Console.WriteLine(query.Count());
@@ -85,7 +85,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Clears the table.
 		/// </summary>
-		public void clearTable()
+		public void ClearTable()
 		{
 			_connection.Query<Inspiration>("DELETE FROM Inspiration");
 		}

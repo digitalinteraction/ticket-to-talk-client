@@ -22,11 +22,11 @@ namespace TicketToTalk
 			Title = "Tickets";
 
 			var ticketController = new TicketController();
-			Task.Run(() => ticketController.updateTicketsFromAPI()).Wait();
+			Task.Run(() => ticketController.UpdateTicketsFromAPI()).Wait();
 
 			Debug.WriteLine("ViewTickets: Got tickets from API");
 
-			tickets = ticketController.getTickets();
+			tickets = ticketController.GetTickets();
 			Debug.WriteLine("ViewTickets: Got tickets from local storage");
 
 			foreach (Ticket t in tickets)

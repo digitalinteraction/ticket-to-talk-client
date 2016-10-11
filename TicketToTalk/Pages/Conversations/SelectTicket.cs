@@ -2,7 +2,6 @@
 // Created on: 06/09/2016
 //
 // SelectTicket.cs
-using System;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
@@ -15,9 +14,9 @@ namespace TicketToTalk
 	public class SelectTicket : ContentPage
 	{
 
-		TicketController ticketController = new TicketController();
-		Conversation conversation;
-		ObservableCollection<Ticket> tickets = new ObservableCollection<Ticket>();
+		private TicketController ticketController = new TicketController();
+		private Conversation conversation;
+		private ObservableCollection<Ticket> tickets = new ObservableCollection<Ticket>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectTicket"/> class.
@@ -32,10 +31,10 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
-			var rawTickets = ticketController.getTickets();
+			var rawTickets = ticketController.GetTickets();
 			rawTickets.Sort();
 
 			foreach (Ticket t in rawTickets)
@@ -91,7 +90,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Dismiss the page.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
@@ -101,7 +100,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private async void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -111,12 +110,12 @@ namespace TicketToTalk
 			var conversationController = new ConversationController();
 			Ticket ticket = (Ticket)e.SelectedItem;
 
-			var added = await conversationController.addTicketToConversationRemotely(conversation, ticket);
+			var added = await conversationController.AddTicketToConversationRemotely(conversation, ticket);
 			if (added)
 			{
-				conversationController.addTicketToConversation(conversation, ticket);
-				conversationController.updateConversationLocally(conversation);
-				conversationController.addTicketToDisplayedConversation(conversation, ticket);
+				conversationController.AddTicketToConversation(conversation, ticket);
+				conversationController.UpdateConversationLocally(conversation);
+				conversationController.AddTicketToDisplayedConversation(conversation, ticket);
 
 				await Navigation.PopModalAsync();
 			}

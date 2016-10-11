@@ -23,7 +23,7 @@ namespace TicketToTalk
 			{
 				Text = "Options",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(editOptions)
+				Command = new Command(EditOptions)
 			});
 
 			var articleTitle = new Label
@@ -83,7 +83,7 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 0, 0, 10),
 				BorderRadius = 5
 			};
-			viewArticleButton.Clicked += launchBrowser;
+			viewArticleButton.Clicked += LaunchBrowser;
 
 			var shareArticleButton = new Button
 			{
@@ -134,7 +134,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Displays edit options
 		/// </summary>
-		public async void editOptions()
+		private async void EditOptions()
 		{
 			var action = await DisplayActionSheet("Article Options", "Cancel", "Delete", "Edit");
 
@@ -142,7 +142,7 @@ namespace TicketToTalk
 			{
 				case ("Delete"):
 					var articleController = new ArticleController();
-					articleController.destoryArticle(currentArticle);
+					articleController.DestoryArticle(currentArticle);
 					await Navigation.PopAsync();
 					break;
 				case ("Edit"):
@@ -161,7 +161,7 @@ namespace TicketToTalk
 		/// <returns>The browser.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		void launchBrowser(Object sender, EventArgs ea)
+		private void LaunchBrowser(Object sender, EventArgs ea)
 		{
 			Device.OpenUri(new Uri(currentArticle.link));
 		}
@@ -171,7 +171,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void ShareArticleButton_Clicked(object sender, EventArgs e)
+		private async void ShareArticleButton_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new ShareArticle(currentArticle));
 

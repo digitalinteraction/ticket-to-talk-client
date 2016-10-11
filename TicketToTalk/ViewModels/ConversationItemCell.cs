@@ -4,6 +4,10 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Conversation item cell.
+	/// </summary>
 	public class ConversationItemCell : ImageCell
 	{
 		public ConversationItemCell()
@@ -31,11 +35,11 @@ namespace TicketToTalk
 			var conversationItem = (ConversationItem)mi.BindingContext;
 
 			var conversationController = new ConversationController();
-			var removed = await conversationController.removeTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
+			var removed = await conversationController.RemoveTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
 
 			if (removed)
 			{
-				conversationController.removeTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
+				conversationController.RemoveTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
 				ConversationView.conversationItems.Remove(conversationItem);
 				ConversationSelect.conversations.Remove(conversationItem.conversation);
 

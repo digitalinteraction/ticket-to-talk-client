@@ -14,8 +14,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class AddYoutubeLinkView : ContentPage
 	{
-		Button button;
-		Entry link;
+		private Button button;
+		private Entry link;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.AddYoutubeLinkView"/> class.
@@ -91,7 +91,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Link_TextChanged(object sender, TextChangedEventArgs e)
+		private void Link_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			if (!(string.IsNullOrEmpty(link.Text)))
 			{
@@ -110,10 +110,10 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Button_Clicked(object sender, EventArgs e)
+		private void Button_Clicked(object sender, EventArgs e)
 		{
 			var ticketController = new TicketController();
-			var ticket = ticketController.parseYouTubeToTicket(link.Text);
+			var ticket = ticketController.ParseYouTubeToTicket(link.Text);
 
 			Debug.WriteLine("AddYoutubeLinkView: parsing link: " + link.Text);
 			Debug.WriteLine("AddYoutubeLinkView: returned ticket: " + ticket);

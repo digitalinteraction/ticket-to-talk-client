@@ -101,13 +101,13 @@ namespace TicketToTalk
 					Text = "Add",
 					Icon = "add_icon.png",
 					Order = ToolbarItemOrder.Primary,
-					Command = new Command(launchNewTicketView)
+					Command = new Command(LaunchNewTicketView)
 				});
 
 				Debug.WriteLine("TicketByPeriod: Getting periods");
 
 				var periodController = new PeriodController();
-				var periods = periodController.getAllLocalPeriods();
+				var periods = periodController.GetAllLocalPeriods();
 
 				Debug.WriteLine("TicketByPeriod: Got periods - " + periods.Count);
 
@@ -117,7 +117,7 @@ namespace TicketToTalk
 					var tp = new ticketPeriodContainer();
 					tp.text = p.text;
 					tp.period = p;
-					tp.tickets = periodController.getTicketsInPeriod(p.id).Count;
+					tp.tickets = periodController.GetTicketsInPeriod(p.id).Count;
 
 					Debug.WriteLine("TicketByPeriod: tickets in period - " + tp.tickets);
 
@@ -169,7 +169,7 @@ namespace TicketToTalk
 		/// <returns>void</returns>
 		/// <param name="sender">Sender: Object</param>
 		/// <param name="e">SelectedItemChangedEventArgs: Event arguments</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -212,7 +212,7 @@ namespace TicketToTalk
 		/// Launchs the new ticket view.
 		/// </summary>
 		/// <returns>The new ticket view.</returns>
-		public void launchNewTicketView()
+		private void LaunchNewTicketView()
 		{
 			var nav = new NavigationPage(new SelectNewTicketType());
 			nav.BarTextColor = ProjectResource.color_white;
@@ -225,7 +225,7 @@ namespace TicketToTalk
 		/// Adds the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticke.</param>
-		public static void addTicket(Ticket ticket)
+		public static void AddTicket(Ticket ticket)
 		{
 			foreach (ticketPeriodContainer tp in periodContainers)
 			{
@@ -249,7 +249,7 @@ namespace TicketToTalk
 		/// Removes the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public static void removeTicket(Ticket ticket)
+		public static void RemoveTicket(Ticket ticket)
 		{
 			tickets.Remove(ticket);
 

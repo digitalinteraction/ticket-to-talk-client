@@ -15,8 +15,8 @@ namespace TicketToTalk
 
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
 		public static List<Ticket> tickets = new List<Ticket>();
-		Conversation conversation;
-		ConversationController conversationController = new ConversationController();
+		private Conversation conversation;
+		private ConversationController conversationController = new ConversationController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationView"/> class.
@@ -32,11 +32,11 @@ namespace TicketToTalk
 			// Wait for new ticket to be returned if added through this view.
 			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
 			{
-				var added = await conversationController.addTicketToConversationRemotely(conversation, returned_ticket);
+				var added = await conversationController.AddTicketToConversationRemotely(conversation, returned_ticket);
 				if (added)
 				{
-					conversationController.addTicketToConversation(conversation, returned_ticket);
-					conversationController.addTicketToDisplayedConversation(conversation, returned_ticket);
+					conversationController.AddTicketToConversation(conversation, returned_ticket);
+					conversationController.AddTicketToDisplayedConversation(conversation, returned_ticket);
 				}
 			});
 
@@ -45,7 +45,7 @@ namespace TicketToTalk
 				Text = "?",
 				Icon = "info_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(conversationOptions)
+				Command = new Command(ConversationOptions)
 			});
 
 			Title = conversation.displayDate;
@@ -132,7 +132,7 @@ namespace TicketToTalk
 				WidthRequest = 30,
 				HorizontalOptions = LayoutOptions.EndAndExpand
 			};
-			newTicketIcon.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newTicket) });
+			newTicketIcon.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(NewTicket) });
 
 			var newStack = new StackLayout
 			{
@@ -163,7 +163,7 @@ namespace TicketToTalk
 					{
 						if (!(string.IsNullOrEmpty(s)))
 						{
-							var ticket = ticketController.getTicket(int.Parse(s));
+							var ticket = ticketController.GetTicket(int.Parse(s));
 							tickets.Add(ticket);
 
 							switch (ticket.mediaType)
@@ -238,7 +238,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Add a new ticket to the conversation.
 		/// </summary>
-		async void newTicket()
+		private async void NewTicket()
 		{
 			var action = await DisplayActionSheet("Add a New Ticket", "Cancel", null, "Create a New Ticket", "Add an Existing Ticket");
 
@@ -267,7 +267,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -286,7 +286,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void StartConversation_Clicked(object sender, EventArgs e)
+		private async void StartConversation_Clicked(object sender, EventArgs e)
 		{
 			if (!(string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
@@ -333,18 +333,18 @@ namespace TicketToTalk
 		/// <summary>
 		/// Conversations the options.
 		/// </summary>
-		private async void conversationOptions()
+		private async void ConversationOptions()
 		{
 			var action = await DisplayActionSheet("Edit Conversation", "Cancel", "Delete", "Edit");
 
 			switch (action)
 			{
 				case "Delete":
-					conversationController.destroyConversation(conversation);
+					conversationController.DestroyConversation(conversation);
 					break;
 				case "Edit":
 					var nav = new NavigationPage(new NewConversation(conversation));
-					nav.setNavHeaders();
+					nav.SetNavHeaders();
 
 					await Navigation.PushModalAsync(nav);
 					break;

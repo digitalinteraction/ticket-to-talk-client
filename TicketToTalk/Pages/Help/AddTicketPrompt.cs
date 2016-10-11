@@ -4,7 +4,6 @@
 // AddTicketPrompt.cs
 using System;
 using System.Diagnostics;
-using ImageCircle.Forms.Plugin.Abstractions;
 using Plugin.Media;
 using Xamarin.Forms;
 
@@ -42,20 +41,20 @@ namespace TicketToTalk
 			{
 				Text = "You've added a person! Let's add a photo 'ticket' that we can use in conversation with them.",
 			};
-			label.setLabelStyleInversreCenter();
+			label.SetLabelStyleInversreCenter();
 
 			var button = new Button
 			{
 				Text = "Add a Ticket"
 			};
-			button.setButtonStyle(ProjectResource.color_dark);
+			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
 			var skipTutorialButton = new Button
 			{
 				Text = "Skip Tutorial"
 			};
-			skipTutorialButton.setButtonStyle(ProjectResource.color_red);
+			skipTutorialButton.SetButtonStyle(ProjectResource.color_red);
 			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
 
 			Content = new StackLayout

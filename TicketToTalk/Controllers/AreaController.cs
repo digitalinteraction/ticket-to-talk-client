@@ -6,7 +6,7 @@
 	public class AreaController
 	{
 
-		AreaDB areaDB = new AreaDB();
+		private AreaDB areaDB = new AreaDB();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.AreaController"/> class.
@@ -20,11 +20,11 @@
 		/// </summary>
 		/// <returns>The area.</returns>
 		/// <param name="id">Identifier.</param>
-		public Area getArea(int id)
+		public Area GetArea(int id)
 		{
-			areaDB.open();
+			areaDB.Open();
 			var area = areaDB.GetArea(id);
-			areaDB.close();
+			areaDB.Close();
 			return area;
 		}
 
@@ -33,11 +33,11 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="area">Area.</param>
-		public void addAreaLocally(Area area)
+		public void AddAreaLocally(Area area)
 		{
-			areaDB.open();
+			areaDB.Open();
 			areaDB.AddArea(area);
-			areaDB.close();
+			areaDB.Close();
 		}
 
 		/// <summary>
@@ -45,11 +45,11 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void deleteAreaLocally(int id)
+		public void DeleteAreaLocally(int id)
 		{
-			areaDB.open();
+			areaDB.Open();
 			areaDB.DeleteArea(id);
-			areaDB.close();
+			areaDB.Close();
 		}
 
 		/// <summary>
@@ -57,10 +57,10 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="area">Area.</param>
-		public void updateAreaLocally(Area area)
+		public void UpdateAreaLocally(Area area)
 		{
-			deleteAreaLocally(area.id);
-			addAreaLocally(area);
+			DeleteAreaLocally(area.id);
+			AddAreaLocally(area);
 		}
 	}
 }

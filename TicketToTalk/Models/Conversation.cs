@@ -124,7 +124,6 @@ namespace TicketToTalk
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Conversation"/> class.
 		/// </summary>
-		/// <param name="tickets">Tickets.</param>
 		/// <param name="notes">Notes.</param>
 		/// <param name="date">Date.</param>
 		public Conversation(string notes, string date)

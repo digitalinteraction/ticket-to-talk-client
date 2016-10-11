@@ -13,7 +13,7 @@ namespace TicketToTalk
 	public class ConversationDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationDB"/> class.
@@ -27,7 +27,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Open a database connection.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Conversation>();
@@ -86,7 +86,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close the database connection.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

@@ -24,7 +24,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The bytes from file.</returns>
 		/// <param name="fileName">File name.</param>
-		public static byte[] readBytesFromFile(string fileName)
+		public static byte[] ReadBytesFromFile(string fileName)
 		{
 			string path = fileName;
 			Debug.WriteLine("MediaController: Reading bytes from file with fileName - " + fileName);
@@ -58,7 +58,7 @@ namespace TicketToTalk
 		/// <returns><c>true</c>, if image was written to file, <c>false</c> otherwise.</returns>
 		/// <param name="fileName">File name.</param>
 		/// <param name="bytes">Bytes.</param>
-		public static bool writeImageToFile(string fileName, byte[] bytes)
+		public static bool WriteImageToFile(string fileName, byte[] bytes)
 		{
 			Debug.WriteLine("MediaController: Writing bytes to file.");
 #if __IOS__
@@ -107,7 +107,7 @@ namespace TicketToTalk
 		/// Deletes the file.
 		/// </summary>
 		/// <param name="fileName">File name.</param>
-		public void deleteFile(string fileName)
+		public void DeleteFile(string fileName)
 		{
 #if __IOS__
 			var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);

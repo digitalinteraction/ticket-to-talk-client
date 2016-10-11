@@ -90,10 +90,10 @@ namespace TicketToTalk
 
 			Debug.WriteLine("ArticleCell: Binding context - " + article);
 
-			articleController.deleteArticleLocally(article);
-			articleController.deleteArticleRemotely(article);
+			articleController.DeleteArticleLocally(article);
+			articleController.DeleteArticleRemotely(article);
 
-			AllArticles.serverArticles.Remove(article);
+			AllArticles.ServerArticles.Remove(article);
 		}
 	}
 }

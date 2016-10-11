@@ -26,7 +26,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			Title = "New Conversation";
@@ -115,13 +115,17 @@ namespace TicketToTalk
 			};
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewConversation"/> class.
+		/// </summary>
+		/// <param name="conversation">Conversation.</param>
 		public NewConversation(Conversation conversation)
 		{
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			Title = "Edit Conversation";
@@ -131,7 +135,7 @@ namespace TicketToTalk
 				Text = "Select a date for the conversation."
 			};
 
-			var dates = conversationController.parseDateToIntegers(conversation);
+			var dates = conversationController.ParseDateToIntegers(conversation);
 
 			datepicker = new DatePicker
 			{
@@ -218,7 +222,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
@@ -228,7 +232,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void EntryChanged(object sender, EventArgs e)
+		private void EntryChanged(object sender, EventArgs e)
 		{
 			//var notNull = datepicker.Date != null
 			//	&& timePicker.Time != null
@@ -251,7 +255,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void SaveButton_Clicked(object sender, EventArgs e)
+		private async void SaveButton_Clicked(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 			//char[] delimiters = { ' ' };
@@ -265,13 +269,13 @@ namespace TicketToTalk
 			conversation.notes = notes.Text;
 			conversation.date = dateTime;
 
-			var returned = await conversationController.storeConversationRemotely(conversation);
+			var returned = await conversationController.StoreConversationRemotely(conversation);
 			if (returned != null)
 			{
 				Debug.WriteLine("NewConversation: conversation - " + returned);
-				conversationController.storeConversationLocally(returned);
-				ConversationsView.conversations.Add(conversationController.setPropertiesForDisplay(returned));
-				ConversationSelect.conversations.Add(conversationController.setPropertiesForDisplay(returned));
+				conversationController.StoreConversationLocally(returned);
+				ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
+				ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
 			}
 			else
 			{

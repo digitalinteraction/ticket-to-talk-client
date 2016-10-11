@@ -15,8 +15,8 @@ namespace TicketToTalk
 	public class UserController
 	{
 
-		UserDB userDB = new UserDB();
-		NetworkController networkController = new NetworkController();
+		private UserDB userDB = new UserDB();
+		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.UserController"/> class.
@@ -30,11 +30,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The local user by identifier.</returns>
 		/// <param name="id">Identifier.</param>
-		public User getLocalUserByID(int id)
+		public User GetLocalUserByID(int id)
 		{
-			userDB.open();
+			userDB.Open();
 			var user = userDB.GetUser(id);
-			userDB.close();
+			userDB.Close();
 
 			return user;
 		}
@@ -44,11 +44,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The local user by email.</returns>
 		/// <param name="email">Email.</param>
-		public User getLocalUserByEmail(string email)
+		public User GetLocalUserByEmail(string email)
 		{
-			userDB.open();
-			var user = userDB.getUserByEmail(email);
-			userDB.close();
+			userDB.Open();
+			var user = userDB.GetUserByEmail(email);
+			userDB.Close();
 			return user;
 		}
 
@@ -57,11 +57,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user locally.</returns>
 		/// <param name="user">User.</param>
-		public void addUserLocally(User user)
+		public void AddUserLocally(User user)
 		{
-			userDB.open();
+			userDB.Open();
 			userDB.AddUser(user);
-			userDB.close();
+			userDB.Close();
 		}
 
 		/// <summary>
@@ -69,11 +69,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void deleteUserLocally(int id)
+		public void DeleteUserLocally(int id)
 		{
-			userDB.open();
+			userDB.Open();
 			userDB.DeleteUser(id);
-			userDB.close();
+			userDB.Close();
 		}
 
 		/// <summary>
@@ -81,17 +81,17 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user locally.</returns>
 		/// <param name="user">User.</param>
-		public void updateUserLocally(User user)
+		public void UpdateUserLocally(User user)
 		{
-			deleteUserLocally(user.id);
-			addUserLocally(user);
+			DeleteUserLocally(user.id);
+			AddUserLocally(user);
 		}
 
 		/// <summary>
 		/// Updates the user remotely.
 		/// </summary>
 		/// <param name="user">User.</param>
-		public async Task<User> updateUserRemotely(User user, byte[] image)
+		public async Task<User> UpdateUserRemotely(User user, byte[] image)
 		{
 			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["name"] = user.name;
@@ -107,7 +107,7 @@ namespace TicketToTalk
 				parameters["imageHash"] = image.HashArray();
 			}
 
-			var jobject = await networkController.sendGenericPostRequest("user/update", parameters);
+			var jobject = await networkController.SendGenericPostRequest("user/update", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("User");
@@ -125,10 +125,10 @@ namespace TicketToTalk
 				{
 					Session.activeUser.imageSource = ImageSource.FromStream(() => new MemoryStream(image));
 					Session.activeUser.imageHash = image.HashArray();
-					MediaController.writeImageToFile(Session.activeUser.pathToPhoto, image);
+					MediaController.WriteImageToFile(Session.activeUser.pathToPhoto, image);
 				}
 
-				updateUserLocally(user);
+				UpdateUserLocally(user);
 
 				return returned;
 			}
@@ -144,14 +144,14 @@ namespace TicketToTalk
 		/// <returns>Is authenticated.</returns>
 		/// <param name="email">Email.</param>
 		/// <param name="password">Password.</param>
-		public async Task<bool> authenticateUser(string email, string password)
+		public async Task<bool> AuthenticateUser(string email, string password)
 		{
 			IDictionary<string, string> credentials = new Dictionary<string, string>();
 			credentials["email"] = email;
 			credentials["password"] = password.HashString();
 
 			var net = new NetworkController();
-			var jobject = await net.sendPostRequest("auth/login", credentials);
+			var jobject = await net.SendPostRequest("auth/login", credentials);
 			if (jobject == null) return false;
 
 			var jtoken = jobject.GetValue("code");
@@ -170,11 +170,11 @@ namespace TicketToTalk
 				var returned_user = jtoken.ToObject<User>();
 
 				var userController = new UserController();
-				var local_user = userController.getLocalUserByEmail(returned_user.email);
+				var local_user = userController.GetLocalUserByEmail(returned_user.email);
 				if (local_user == null)
 				{
 					returned_user.firstLogin = true;
-					userController.addUserLocally(returned_user);
+					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
 				}
 				else
@@ -185,18 +185,18 @@ namespace TicketToTalk
 					{
 						if (local_user.imageHash == null)
 						{
-							await downloadUserProfilePicture();
+							await DownloadUserProfilePicture();
 						}
 						else if (!returned_user.imageHash.Equals(local_user.imageHash))
 						{
-							await downloadUserProfilePicture();
+							await DownloadUserProfilePicture();
 						}
 						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;
 					Session.activeUser = returned_user;
-					userController.updateUserLocally(returned_user);
+					userController.UpdateUserLocally(returned_user);
 				}
 				return true;
 			}
@@ -214,12 +214,12 @@ namespace TicketToTalk
 		/// <returns>The new user.</returns>
 		/// <param name="user">User.</param>
 		/// <param name="image">Image.</param>
-		public async Task<bool> registerNewUser(User user, byte[] image)
+		public async Task<bool> RegisterNewUser(User user, byte[] image)
 		{
 			SHA256 sha = new SHA256Managed();
 			byte[] passBytes = Encoding.UTF8.GetBytes(user.password);
 			byte[] hash = sha.ComputeHash(passBytes);
-			user.password = byteToHex(hash);
+			user.password = ByteToHex(hash);
 
 			// Json convert details.
 			IDictionary<string, object> content = new Dictionary<string, object>();
@@ -242,7 +242,7 @@ namespace TicketToTalk
 
 			// post to server.
 			var net = new NetworkController();
-			var jobject = await net.sendGenericPostRequest("auth/register", content);
+			var jobject = await net.SendGenericPostRequest("auth/register", content);
 
 			if (jobject != null)
 			{
@@ -260,7 +260,7 @@ namespace TicketToTalk
 				if (image != null && image.Length > 0)
 				{
 					var fileName = "u_" + user.id + ".jpg";
-					MediaController.writeImageToFile(fileName, image);
+					MediaController.WriteImageToFile(fileName, image);
 					user.pathToPhoto = fileName;
 				}
 				else
@@ -269,7 +269,7 @@ namespace TicketToTalk
 					user.pathToPhoto = "default_profile.png";
 				}
 				Debug.WriteLine("Registered User: " + user);
-				addUserLocally(user);
+				AddUserLocally(user);
 
 				Session.activeUser = user;
 
@@ -288,7 +288,7 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		/// <param name="group">Group.</param>
 		/// <param name="person_id">Person identifier.</param>
-		public async Task<bool> sendInviteToPerson(string email, string group, int person_id)
+		public async Task<bool> SendInviteToPerson(string email, string group, int person_id)
 		{
 			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["email"] = email;
@@ -296,7 +296,7 @@ namespace TicketToTalk
 			parameters["person_id"] = person_id;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendGenericPostRequest("user/invitations/send", parameters);
+			var jobject = await networkController.SendGenericPostRequest("user/invitations/send", parameters);
 
 			if (jobject != null)
 			{
@@ -310,12 +310,12 @@ namespace TicketToTalk
 		/// Gets the invitations.
 		/// </summary>
 		/// <returns>The invitations.</returns>
-		public async Task<List<Invitation>> getInvitations()
+		public async Task<List<Invitation>> GetInvitations()
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendGetRequest("user/invitations/get", parameters);
+			var jobject = await networkController.SendGetRequest("user/invitations/get", parameters);
 
 			if (jobject != null)
 			{
@@ -326,7 +326,7 @@ namespace TicketToTalk
 
 				foreach (Invitation i in invitations)
 				{
-					i.imageSource = await personController.getPersonProfilePictureForInvite(i.person);
+					i.imageSource = await personController.GetPersonProfilePictureForInvite(i.person);
 				}
 
 				return invitations;
@@ -338,8 +338,7 @@ namespace TicketToTalk
 		/// Gets the user profile picture.
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
-		/// <param name="user">User.</param>
-		public async Task<ImageSource> getUserProfilePicture()
+		public async Task<ImageSource> GetUserProfilePicture()
 		{
 			var user = Session.activeUser;
 			ImageSource imageSource;
@@ -348,16 +347,16 @@ namespace TicketToTalk
 				Debug.WriteLine("UserController: Getting default image.");
 				imageSource = ImageSource.FromFile(user.pathToPhoto);
 			}
-			else if (user.pathToPhoto.StartsWith("storage", StringComparison.Ordinal))
+			else if (user.pathToPhoto.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
 				Debug.WriteLine("UserController: Getting image from server.");
-				var imgBytes = await downloadUserProfilePicture();
+				var imgBytes = await DownloadUserProfilePicture();
 				imageSource = ImageSource.FromStream(() => new MemoryStream(imgBytes));
 			}
 			else
 			{
 				Debug.WriteLine("UserController: Getting image from storage");
-				var rawBytes = MediaController.readBytesFromFile(user.pathToPhoto);
+				var rawBytes = MediaController.ReadBytesFromFile(user.pathToPhoto);
 				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
 				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 			}
@@ -368,20 +367,19 @@ namespace TicketToTalk
 		/// Downloads the user profile picture.
 		/// </summary>
 		/// <returns>The user profile picture.</returns>
-		/// <param name="user">User.</param>
-		public async Task<byte[]> downloadUserProfilePicture()
+		public async Task<byte[]> DownloadUserProfilePicture()
 		{
 			var user = Session.activeUser;
 
 			var fileName = "u_" + user.id + ".jpg";
 			Debug.WriteLine("UserController: Downloading profile picture with path - " + user.pathToPhoto);
-			await networkController.downloadFile(user.pathToPhoto, fileName);
+			await networkController.DownloadFile(user.pathToPhoto, fileName);
 
 			user.pathToPhoto = fileName;
 
-			updateUserLocally(user);
+			UpdateUserLocally(user);
 
-			return MediaController.readBytesFromFile(user.pathToPhoto);
+			return MediaController.ReadBytesFromFile(user.pathToPhoto);
 		}
 
 		/// <summary>
@@ -390,21 +388,21 @@ namespace TicketToTalk
 		/// <returns>The invitation.</returns>
 		/// <param name="i">The index.</param>
 		/// <param name="relation">Relation.</param>
-		public async Task<bool> acceptInvitation(Invitation i, string relation)
+		public async Task<bool> AcceptInvitation(Invitation i, string relation)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["person_id"] = i.person.id.ToString();
 			parameters["relation"] = relation;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendPostRequest("user/invitations/accept", parameters);
+			var jobject = await networkController.SendPostRequest("user/invitations/accept", parameters);
 
 			if (jobject != null)
 			{
 				var pu = new PersonUser(i.person.id, Session.activeUser.id, i.group, relation);
 				var puDB = new PersonUserDB();
 				puDB.AddPersonUser(pu);
-				puDB.close();
+				puDB.Close();
 
 				return true;
 			}
@@ -419,13 +417,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The invitation.</returns>
 		/// <param name="p">P.</param>
-		public async Task<bool> rejectInvitation(Person p)
+		public async Task<bool> RejectInvitation(Person p)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["person_id"] = p.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendPostRequest("user/invitations/reject", parameters);
+			var jobject = await networkController.SendPostRequest("user/invitations/reject", parameters);
 
 			if (jobject != null)
 			{
@@ -443,7 +441,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The to hex.</returns>
 		/// <param name="ba">Ba.</param>
-		private string byteToHex(byte[] ba)
+		private string ByteToHex(byte[] ba)
 		{
 			var hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)

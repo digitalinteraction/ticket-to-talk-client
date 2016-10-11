@@ -13,8 +13,8 @@ namespace TicketToTalk
 		private Label loadTime;
 		private Entry email;
 		private Entry password;
-		Button login;
-		Button register;
+		private Button login;
+		private Button register;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Login"/> class.
@@ -125,10 +125,10 @@ namespace TicketToTalk
 			await email.FadeTo(0, 500);
 
 			var userController = new UserController();
-			var authed = await userController.authenticateUser(email.Text, password.Text);
+			var authed = await userController.AuthenticateUser(email.Text, password.Text);
 			if (authed)
 			{
-				Session.activeUser.imageSource = await userController.getUserProfilePicture();
+				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 				await Navigation.PushAsync(new SelectActivePerson());
 				Navigation.RemovePage(this);
 			}
@@ -149,7 +149,7 @@ namespace TicketToTalk
 		/// <returns>The register.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		async void HandleRegister(object sender, EventArgs ea)
+		private async void HandleRegister(object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -167,7 +167,7 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Entry_TextChanged(object sender, EventArgs e)
+		private void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
 				&& (!string.IsNullOrEmpty(password.Text));

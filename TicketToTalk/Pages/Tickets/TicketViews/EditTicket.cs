@@ -9,17 +9,17 @@ namespace TicketToTalk
 	/// </summary>
 	public class EditTicket : ContentPage
 	{
-		string[] accessLevels = ProjectResource.groups;
+		private string[] accessLevels = ProjectResource.groups;
 
-		Entry town_city;
-		Entry title;
-		Picker access_level;
-		Button saveButton;
-		Editor description;
-		Picker yearPicker;
-		Picker period_picker;
+		private Entry town_city;
+		private Entry title;
+		private Picker access_level;
+		private Button saveButton;
+		private Editor description;
+		private Picker yearPicker;
+		private Picker period_picker;
 
-		Ticket ticket;
+		private Ticket ticket;
 
 		/// <summary>
 		/// Initializes a new instance of the page.
@@ -32,7 +32,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			this.ticket = ticket;
@@ -55,7 +55,7 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				Margin = new Thickness(0, 0, 0, 10)
 			};
-			saveButton.Clicked += saveChanges;
+			saveButton.Clicked += SaveChanges;
 
 			title = new Entry
 			{
@@ -159,7 +159,7 @@ namespace TicketToTalk
 			access_level.SelectedIndexChanged += Entry_TextChanged;
 
 			var periodController = new PeriodController();
-			var periods = periodController.getAllLocalPeriods();
+			var periods = periodController.GetAllLocalPeriods();
 			int j = 0;
 			foreach (Period p in periods)
 			{
@@ -263,7 +263,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
@@ -274,12 +274,12 @@ namespace TicketToTalk
 		/// <returns>The changes.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void saveChanges(object sender, EventArgs e)
+		private async void SaveChanges(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 
 			var periodController = new PeriodController();
-			var period = periodController.getAllLocalPeriods()[period_picker.SelectedIndex];
+			var period = periodController.GetAllLocalPeriods()[period_picker.SelectedIndex];
 
 			ticket.title = title.Text;
 			ticket.description = description.Text;
@@ -297,12 +297,12 @@ namespace TicketToTalk
 			{
 				ticket.area = " ";
 			}
-			returned = await ticketController.updateTicketRemotely(ticket, period.text);
+			returned = await ticketController.UpdateTicketRemotely(ticket, period.text);
 
 			if (returned != null)
 			{
-				ticketController.updateTicketLocally(returned);
-				ticketController.updateDisplayTicket(returned);
+				ticketController.UpdateTicketLocally(returned);
+				ticketController.UpdateDisplayTicket(returned);
 
 				await Navigation.PopModalAsync();
 			}
@@ -319,7 +319,7 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Entry_TextChanged(object sender, EventArgs e)
+		private void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!string.IsNullOrEmpty(title.Text))
 				&& (!string.IsNullOrEmpty(description.Text))

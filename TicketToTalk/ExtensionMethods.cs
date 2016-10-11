@@ -42,7 +42,7 @@ namespace TicketToTalk
 		{
 			SHA256 sha = new SHA256Managed();
 			byte[] hash = sha.ComputeHash(arr);
-			var hashString = byteToHex(hash);
+			var hashString = ByteToHex(hash);
 			return hashString;
 		}
 
@@ -63,7 +63,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The to hex.</returns>
 		/// <param name="ba">Ba.</param>
-		private static string byteToHex(byte[] ba)
+		private static string ByteToHex(byte[] ba)
 		{
 			StringBuilder hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)
@@ -77,7 +77,7 @@ namespace TicketToTalk
 		/// Sets header on navigation page.
 		/// </summary>
 		/// <param name="nav">Nav.</param>
-		public static void setNavHeaders(this NavigationPage nav)
+		public static void SetNavHeaders(this NavigationPage nav)
 		{
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
@@ -88,7 +88,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="button">Button.</param>
 		/// <param name="color">Color.</param>
-		public static void setButtonStyle(this Button button, Color color)
+		public static void SetButtonStyle(this Button button, Color color)
 		{
 			button.TextColor = ProjectResource.color_white;
 			button.BackgroundColor = color;
@@ -100,7 +100,7 @@ namespace TicketToTalk
 		/// Sets the label style.
 		/// </summary>
 		/// <param name="label">Label.</param>
-		public static void setLabelStyleInversreCenter(this Label label)
+		public static void SetLabelStyleInversreCenter(this Label label)
 		{
 			label.TextColor = ProjectResource.color_white;
 			label.HorizontalTextAlignment = TextAlignment.Center;

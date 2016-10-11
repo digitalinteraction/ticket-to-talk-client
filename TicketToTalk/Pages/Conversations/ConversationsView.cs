@@ -12,7 +12,7 @@ namespace TicketToTalk
 	{
 		public static bool tutorialShown = false;
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
-		ConversationController conversationController = new ConversationController();
+		private ConversationController conversationController = new ConversationController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationsView"/> class.
@@ -22,7 +22,7 @@ namespace TicketToTalk
 			Padding = new Thickness(20);
 			conversations.Clear();
 
-			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
+			var cs = Task.Run(() => conversationController.GetRemoteConversations()).Result;
 
 			Title = "Converations";
 
@@ -30,12 +30,12 @@ namespace TicketToTalk
 			{
 				Text = "Add",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(addConversation)
+				Command = new Command(AddConversation)
 			});
 
 			foreach (Conversation c in cs)
 			{
-				conversations.Add(conversationController.setPropertiesForDisplay(c));
+				conversations.Add(conversationController.SetPropertiesForDisplay(c));
 			}
 
 			var listView = new ListView();
@@ -72,7 +72,7 @@ namespace TicketToTalk
 		/// Adds the conversation.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		private async void addConversation(object obj)
+		private async void AddConversation(object obj)
 		{
 			var nav = new NavigationPage(new NewConversation());
 			nav.BarTextColor = ProjectResource.color_white;

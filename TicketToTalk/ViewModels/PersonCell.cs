@@ -10,9 +10,9 @@ namespace TicketToTalk
 	/// </summary>
 	public class PersonCell : ViewCell
 	{
-		CircleImage personProfileImage;
-		Label nameLabel;
-		Label relation;
+		private CircleImage personProfileImage;
+		private Label nameLabel;
+		private Label relation;
 
 		public Person person { get; set; }
 
@@ -75,11 +75,15 @@ namespace TicketToTalk
 			this.View = cellLayout;
 		}
 
-		void DeleteCell_Clicked(object sender, EventArgs e)
+		private void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.PersonCell"/> class.
+		/// </summary>
+		/// <param name="p">P.</param>
 		public PersonCell(Person p) : this()
 		{
 			this.person = p;

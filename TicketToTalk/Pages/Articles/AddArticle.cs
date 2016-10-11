@@ -11,12 +11,12 @@ namespace TicketToTalk
 	/// </summary>
 	public class AddArticle : ContentPage
 	{
-		Entry title;
-		Editor notes;
-		Entry link;
+		private Entry title;
+		private Editor notes;
+		private Entry link;
 
-		Article article = null;
-		Button saveButton;
+		private Article article = null;
+		private Button saveButton;
 
 		ArticleController articleController = new ArticleController();
 
@@ -98,12 +98,12 @@ namespace TicketToTalk
 			};
 			if (article == null)
 			{
-				saveButton.Clicked += saveArticle;
+				saveButton.Clicked += SaveArticle;
 			}
 			else
 			{
 				saveButton.Text = "Update";
-				saveButton.Clicked += updateArticle;
+				saveButton.Clicked += UpdateArticle;
 			}
 
 			if (article != null)
@@ -185,7 +185,7 @@ namespace TicketToTalk
 		/// Saves the article.
 		/// </summary>
 		/// <returns>The article.</returns>
-		public async void saveArticle(object sender, EventArgs e)
+		public async void SaveArticle(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 
@@ -202,7 +202,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			NetworkController net = new NetworkController();
-			var jobject = await net.sendPostRequest("articles/store", parameters);
+			var jobject = await net.SendPostRequest("articles/store", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("article");
@@ -210,12 +210,12 @@ namespace TicketToTalk
 				Debug.WriteLine("Saved Article: " + article);
 
 				ArticleDB aDB = new ArticleDB();
-				aDB.open();
+				aDB.Open();
 				aDB.AddArticle(article);
-				aDB.close();
+				aDB.Close();
 
-				article.favicon = articleController.getFaviconURL(article.link);
-				AllArticles.serverArticles.Add(article);
+				article.favicon = articleController.GetFaviconURL(article.link);
+				AllArticles.ServerArticles.Add(article);
 
 				await Navigation.PopModalAsync();
 			}
@@ -231,7 +231,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void updateArticle(object sender, EventArgs e)
+		public async void UpdateArticle(object sender, EventArgs e)
 		{
 			var post_link = link.Text.ToLower();
 			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)))
@@ -247,27 +247,27 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			NetworkController net = new NetworkController();
-			var jobject = await net.sendPostRequest("articles/update", parameters);
+			var jobject = await net.SendPostRequest("articles/update", parameters);
 			if (jobject != null)
 			{
 				var jtoken = jobject.GetValue("article");
 				var new_article = jtoken.ToObject<Article>();
 				Debug.WriteLine("Saved Article: " + new_article);
 
-				new_article.favicon = articleController.getFaviconURL(new_article.link);
-				articleController.updateArticleLocally(new_article);
+				new_article.favicon = articleController.GetFaviconURL(new_article.link);
+				articleController.UpdateArticleLocally(new_article);
 
 				var idx = -1;
-				for (int i = 0; i < AllArticles.serverArticles.Count; i++)
+				for (int i = 0; i < AllArticles.ServerArticles.Count; i++)
 				{
-					if (new_article.id == AllArticles.serverArticles[i].id)
+					if (new_article.id == AllArticles.ServerArticles[i].id)
 					{
 						idx = i;
 						break;
 					}
 				}
 
-				AllArticles.serverArticles[idx] = new_article;
+				AllArticles.ServerArticles[idx] = new_article;
 				ViewArticle.currentArticle.title = new_article.title;
 				ViewArticle.currentArticle.link = new_article.link;
 				ViewArticle.currentArticle.notes = new_article.notes;

@@ -10,7 +10,7 @@ namespace TicketToTalk
 	public class PersonPeriodDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.PersonPeriodDB"/> class.
@@ -24,7 +24,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Opens the database connection.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<PersonPeriod>();
@@ -70,11 +70,11 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the relation by tag identifier.
+		/// Gets the relation by person identifier.
 		/// </summary>
-		/// <returns>The relation by tag identifier.</returns>
-		/// <param name="TagID">Tag identifier.</param>
-		public List<PersonPeriod> getRelationByPersonID(int person_id)
+		/// <returns>The relation by person identifier.</returns>
+		/// <param name="person_id">Person identifier.</param>
+		public List<PersonPeriod> GetRelationByPersonID(int person_id)
 		{
 			var results = _connection.Query<PersonPeriod>("SELECT * FROM PersonPeriod WHERE person_id = ?", person_id);
 			if (results.Count > 0)
@@ -92,7 +92,8 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by ticket identifier.</returns>
 		/// <param name="period_id">Period identifier.</param>
-		public List<PersonPeriod> getRelationByTicketID(int period_id)
+		public List<PersonPeriod> GetRelationByTicketID(int period_id)
+
 		{
 			var results = _connection.Query<PersonPeriod>("SELECT * FROM PersonPeriod WHERE period_id = ?", period_id);
 
@@ -112,7 +113,7 @@ namespace TicketToTalk
 		/// <returns>The relation by person and period identifier.</returns>
 		/// <param name="person_id">Person identifier.</param>
 		/// <param name="period_id">Period identifier.</param>
-		public PersonPeriod getRelationByPersonAndPeriodID(int person_id, int period_id)
+		public PersonPeriod GetRelationByPersonAndPeriodID(int person_id, int period_id)
 		{
 			var results = _connection.Query<PersonPeriod>(String.Format("SELECT * FROM PersonPeriod WHERE person_id = {0} AND period_id = {1}", person_id, period_id));
 			if (results.Count > 0)
@@ -128,7 +129,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}
