@@ -150,13 +150,32 @@ namespace TicketToTalk
 			credentials["email"] = email;
 			credentials["password"] = password.HashString();
 
+			var userController = new UserController();
+			var user = userController.GetLocalUserByEmail(email);
+
+			var newDevice = false;
+
+			// first time login
+			if (user == null)
+			{
+				Session.activeUser = null;
+				newDevice = true;
+			}
+			else 
+			{
+				Session.activeUser = user;
+			}
+
 			var net = new NetworkController();
 			var jobject = await net.SendPostRequest("auth/login", credentials);
+
+			// fail if null response
 			if (jobject == null) return false;
 
 			var jtoken = jobject.GetValue("code");
 			var code = jtoken.ToObject<int>();
 
+			// if success.
 			if (code == 200)
 			{
 				jtoken = jobject.GetValue("token");
@@ -169,7 +188,6 @@ namespace TicketToTalk
 				jtoken = jobject.GetValue("user");
 				var returned_user = jtoken.ToObject<User>();
 
-				var userController = new UserController();
 				var local_user = userController.GetLocalUserByEmail(returned_user.email);
 				if (local_user == null)
 				{
@@ -195,6 +213,13 @@ namespace TicketToTalk
 					}
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;
+
+					if (newDevice) 
+					{
+						jtoken = jobject.GetValue("api_key");
+						returned_user.api_key = jtoken.ToObject<string>();
+					}
+
 					Session.activeUser = returned_user;
 					userController.UpdateUserLocally(returned_user);
 				}
@@ -246,15 +271,15 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
-				var jToken = jobject.GetValue("token");
+				var jtoken = jobject.GetValue("token");
 				var token = new Token
 				{
-					val = jToken.ToObject<string>()
+					val = jtoken.ToObject<string>()
 				};
 				Session.Token = token;
 
-				jToken = jobject.GetValue("user");
-				user = jToken.ToObject<User>();
+				jtoken = jobject.GetValue("user");
+				user = jtoken.ToObject<User>();
 				user.firstLogin = true;
 
 				if (image != null && image.Length > 0)
@@ -269,6 +294,11 @@ namespace TicketToTalk
 					user.pathToPhoto = "default_profile.png";
 				}
 				Debug.WriteLine("Registered User: " + user);
+
+				// Store api-key
+				jtoken = jobject.GetValue("api_key");
+				user.api_key = jtoken.ToObject<string>();
+
 				AddUserLocally(user);
 
 				Session.activeUser = user;

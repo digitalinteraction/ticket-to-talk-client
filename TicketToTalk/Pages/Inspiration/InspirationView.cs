@@ -128,7 +128,9 @@ namespace TicketToTalk
 			// Send get request for inspirations
 			Debug.WriteLine("Sending get request for inspirations.");
 			NetworkController net = new NetworkController();
-			var jobject = await net.SendGetRequest("inspiration/get", new Dictionary<string, string>());
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+			var jobject = await net.SendGetRequest("inspiration/get", parameters);
 			Debug.WriteLine(jobject);
 
 			var jtoken = jobject.GetValue("Inspirations");

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Xamarin.Forms;
 
 namespace TicketToTalk
 {
@@ -17,6 +18,8 @@ namespace TicketToTalk
 	{
 		HttpClient client;
 		string URLBase = Session.baseUrl;
+
+		private readonly string api_key = "a82ae536fc32c8c185920f3a440b0984bb51b9077517a6c8ce4880e41737438d";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NetworkController"/> class.
@@ -36,6 +39,8 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendGetRequest(string URL, IDictionary<string, string> parameters)
 		{
+			parameters["api_key"] = Session.activeUser.api_key;
+
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
 			{
@@ -89,6 +94,15 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
 		{
+			if (Session.activeUser == null)
+			{
+				parameters["api_key"] = api_key;
+			}
+			else 
+			{
+				parameters["api_key"] = Session.activeUser.api_key;	
+			}
+
 			var uri = new Uri(URLBase + URL);
 			Debug.WriteLine(uri);
 
@@ -143,6 +157,16 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendGenericPostRequest(string URL, IDictionary<string, object> parameters)
 		{
+			// Use default key, this method is called when registering with a photo.
+			if (Session.activeUser == null)
+			{
+				parameters["api_key"] = api_key;
+			}
+			else
+			{
+				parameters["api_key"] = Session.activeUser.api_key;
+			}
+
 			var uri = new Uri(URLBase + URL);
 			Debug.WriteLine("NetworkController: " + uri);
 
@@ -177,6 +201,8 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
+			parameters["api_key"] = Session.activeUser.api_key;
+
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
 			{
@@ -233,10 +259,11 @@ namespace TicketToTalk
 		/// <param name="fileName">File name.</param>
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
+
 			Debug.WriteLine("NetworkController: Beginning Download");
 			var webClient = new WebClient();
 
-			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val);
+			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val) + "&api_key=" + Session.activeUser.api_key;
 			Debug.WriteLine(url);
 
 			var returned = await webClient.DownloadDataTaskAsync(url);
@@ -257,7 +284,7 @@ namespace TicketToTalk
 		/// </summary>
 		public void HandleSessionExpiration()
 		{
-			App.Current.MainPage = new Login();
+			Application.Current.MainPage = new Login();
 			Session.activePerson = null;
 			Session.activeUser = null;
 			Session.Token.val = null;
