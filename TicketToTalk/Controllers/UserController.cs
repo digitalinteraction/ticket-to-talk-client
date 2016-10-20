@@ -151,15 +151,13 @@ namespace TicketToTalk
 			credentials["password"] = password.HashString();
 
 			var userController = new UserController();
-			var user = userController.GetLocalUserByEmail(email);
-
-			var newDevice = false;
+			var user = userController.GetLocalUserByEmail(email.ToLower());
 
 			// first time login
 			if (user == null)
 			{
+				Debug.WriteLine("First time login");
 				Session.activeUser = null;
-				newDevice = true;
 			}
 			else 
 			{
@@ -172,26 +170,33 @@ namespace TicketToTalk
 			// fail if null response
 			if (jobject == null) return false;
 
-			var jtoken = jobject.GetValue("code");
-			var code = jtoken.ToObject<int>();
+			Debug.WriteLine(jobject);
+
+			var status = jobject.GetValue("status");
+			//var jtoken = status.
+			var jcode = status["code"];
+			var code = jcode.ToObject<int>();
 
 			// if success.
 			if (code == 200)
 			{
-				jtoken = jobject.GetValue("token");
+				var data = jobject.GetValue("data");
+				var jtoken = data["token"];
 				var token = new Token
 				{
 					val = jtoken.ToObject<string>()
 				};
 				Session.Token = token;
 
-				jtoken = jobject.GetValue("user");
+				jtoken = data["user"];
 				var returned_user = jtoken.ToObject<User>();
 
 				var local_user = userController.GetLocalUserByEmail(returned_user.email);
 				if (local_user == null)
 				{
 					returned_user.firstLogin = true;
+					jtoken = data["api_key"];
+					returned_user.api_key = jtoken.ToObject<string>();
 					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
 				}
@@ -214,21 +219,17 @@ namespace TicketToTalk
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;
 
-					if (newDevice) 
-					{
-						jtoken = jobject.GetValue("api_key");
-						returned_user.api_key = jtoken.ToObject<string>();
-					}
-
 					Session.activeUser = returned_user;
+					Session.activeUser.api_key = user.api_key;
 					userController.UpdateUserLocally(returned_user);
 				}
 				return true;
 			}
 			else
 			{
-				jtoken = jobject.GetValue("message");
-				Console.WriteLine(jtoken.ToObject<string>());
+				var errors = jobject.GetValue("errors");
+				var jerrors = errors["message"];
+				Console.WriteLine(jerrors.ToObject<string>());
 				return false;
 			}
 		}
@@ -271,15 +272,16 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("token");
+				var data = jobject["data"];
+				var jtoken = data["token"];
 				var token = new Token
 				{
 					val = jtoken.ToObject<string>()
 				};
 				Session.Token = token;
 
-				jtoken = jobject.GetValue("user");
-				user = jtoken.ToObject<User>();
+				var juser = data["user"];
+				user = juser.ToObject<User>();
 				user.firstLogin = true;
 
 				if (image != null && image.Length > 0)
@@ -296,8 +298,8 @@ namespace TicketToTalk
 				Debug.WriteLine("Registered User: " + user);
 
 				// Store api-key
-				jtoken = jobject.GetValue("api_key");
-				user.api_key = jtoken.ToObject<string>();
+				var japi_key = data["api_key"];
+				user.api_key = japi_key.ToObject<string>();
 
 				AddUserLocally(user);
 
