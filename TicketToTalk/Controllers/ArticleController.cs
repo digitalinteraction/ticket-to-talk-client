@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace TicketToTalk
@@ -169,6 +170,88 @@ namespace TicketToTalk
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Adds the article to the remote server
+		/// </summary>
+		/// <returns><c>true</c>, if article remotely was added, <c>false</c> otherwise.</returns>
+		/// <param name="article">Article.</param>
+		public async Task<bool> AddArticleRemotely(Article article)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["title"] = article.title;
+			parameters["notes"] = article.notes;
+			parameters["link"] = article.link;
+			parameters["token"] = Session.Token.val;
+
+			NetworkController net = new NetworkController();
+			var jobject = await net.SendPostRequest("articles/store", parameters);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("article");
+				var returned_article = jtoken.ToObject<Article>();
+				Debug.WriteLine("Saved Article: " + article);
+
+				AddArticleLocally(returned_article);
+
+				article.favicon = GetFaviconURL(article.link);
+				AllArticles.ServerArticles.Add(article);
+
+				return true;
+			}
+			else 
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Updates the article remotely.
+		/// </summary>
+		/// <returns>The article remotely.</returns>
+		/// <param name="article">Article.</param>
+		public async Task<bool> UpdateArticleRemotely(Article article)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["article_id"] = article.id.ToString();
+			parameters["title"] = article.title;
+			parameters["notes"] = article.notes;
+			parameters["link"] = article.link;
+			parameters["token"] = Session.Token.val;
+
+			NetworkController net = new NetworkController();
+			var jobject = await net.SendPostRequest("articles/update", parameters);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("article");
+				var new_article = jtoken.ToObject<Article>();
+				Debug.WriteLine("Saved Article: " + new_article);
+
+				new_article.favicon = GetFaviconURL(new_article.link);
+				UpdateArticleLocally(new_article);
+
+				var idx = -1;
+				for (int i = 0; i < AllArticles.ServerArticles.Count; i++)
+				{
+					if (new_article.id == AllArticles.ServerArticles[i].id)
+					{
+						idx = i;
+						break;
+					}
+				}
+
+				AllArticles.ServerArticles[idx] = new_article;
+				ViewArticle.currentArticle.title = new_article.title;
+				ViewArticle.currentArticle.link = new_article.link;
+				ViewArticle.currentArticle.notes = new_article.notes;
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// <summary>

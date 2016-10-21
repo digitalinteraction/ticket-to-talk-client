@@ -195,32 +195,21 @@ namespace TicketToTalk
 				post_link = "http://" + post_link;
 			}
 
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["title"] = title.Text;
-			parameters["notes"] = notes.Text;
-			parameters["link"] = post_link;
-			parameters["token"] = Session.Token.val;
-
-			NetworkController net = new NetworkController();
-			var jobject = await net.SendPostRequest("articles/store", parameters);
-			if (jobject != null)
+			var article = new Article
 			{
-				var jtoken = jobject.GetValue("article");
-				var article = jtoken.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + article);
+				title = title.Text,
+				notes = notes.Text,
+				link = link.Text
+			};
 
-				ArticleDB aDB = new ArticleDB();
-				aDB.Open();
-				aDB.AddArticle(article);
-				aDB.Close();
+			var added =  await articleController.AddArticleRemotely(article);
 
-				article.favicon = articleController.GetFaviconURL(article.link);
-				AllArticles.ServerArticles.Add(article);
-
+			if (added)
+			{
 				await Navigation.PopModalAsync();
 			}
 			else
-			{
+			{ 
 				await DisplayAlert("Articles", "Article could not be saved.", "OK");
 				saveButton.IsEnabled = true;
 			}
@@ -239,42 +228,21 @@ namespace TicketToTalk
 				post_link = "http://" + post_link;
 			}
 
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["article_id"] = article.id.ToString();
-			parameters["title"] = title.Text;
-			parameters["notes"] = notes.Text;
-			parameters["link"] = post_link;
-			parameters["token"] = Session.Token.val;
-
-			NetworkController net = new NetworkController();
-			var jobject = await net.SendPostRequest("articles/update", parameters);
-			if (jobject != null)
+			var new_article = new Article
 			{
-				var jtoken = jobject.GetValue("article");
-				var new_article = jtoken.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + new_article);
+				id = article.id,
+				title = title.Text,
+				notes = notes.Text,
+				link = post_link
+			};
 
-				new_article.favicon = articleController.GetFaviconURL(new_article.link);
-				articleController.UpdateArticleLocally(new_article);
+			bool added = await articleController.UpdateArticleRemotely(new_article);
 
-				var idx = -1;
-				for (int i = 0; i < AllArticles.ServerArticles.Count; i++)
-				{
-					if (new_article.id == AllArticles.ServerArticles[i].id)
-					{
-						idx = i;
-						break;
-					}
-				}
-
-				AllArticles.ServerArticles[idx] = new_article;
-				ViewArticle.currentArticle.title = new_article.title;
-				ViewArticle.currentArticle.link = new_article.link;
-				ViewArticle.currentArticle.notes = new_article.notes;
-
+			if (added)
+			{
 				await Navigation.PopModalAsync();
 			}
-			else
+			else 
 			{
 				await DisplayAlert("Articles", "Article could not updated.", "OK");
 				saveButton.IsEnabled = true;
