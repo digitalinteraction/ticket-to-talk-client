@@ -25,7 +25,7 @@ namespace TicketToTalk
 			ServerArticles.Clear();
 			Title = "Articles";
 
-			ServerArticles = Task.Run(() => this.CheckForNewArticles()).Result;
+			ServerArticles = Task.Run(() => articleController.GetAllArticles()).Result;
 			SharedArticles = Task.Run(() => articleController.GetSharedArticles()).Result;
 
 			foreach (Article a in ServerArticles)
@@ -90,33 +90,6 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			Navigation.PushModalAsync(nav);
-		}
-
-		/// <summary>
-		/// Checks for new articles.
-		/// </summary>
-		/// <returns>The for new articles.</returns>
-		public async Task<ObservableCollection<Article>> CheckForNewArticles()
-		{
-			NetworkController net = new NetworkController();
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["token"] = Session.Token.val;
-
-			var jobject = await net.SendGetRequest("articles/all", parameters);
-			Console.WriteLine(jobject);
-			var jarticles = jobject.GetValue("articles");
-			Console.WriteLine(jarticles);
-			var articles = jarticles.ToObject<Article[]>();
-
-			ObservableCollection<Article> list = new ObservableCollection<Article>();
-			foreach (Article a in articles)
-			{
-				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
-				a.favicon = articleController.GetFaviconURL(a.link);
-				list.Add(a);
-			}
-
-			return list;
 		}
 
 		/// <summary>

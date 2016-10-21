@@ -199,7 +199,7 @@ namespace TicketToTalk
 			{
 				title = title.Text,
 				notes = notes.Text,
-				link = link.Text
+				link = post_link
 			};
 
 			var added =  await articleController.AddArticleRemotely(article);

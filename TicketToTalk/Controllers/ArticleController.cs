@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -115,6 +116,32 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Gets all articles.
+		/// </summary>
+		/// <returns>The all articles.</returns>
+		public async Task<ObservableCollection<Article>> GetAllArticles()
+		{
+			NetworkController net = new NetworkController();
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+
+			var jobject = await net.SendGetRequest("articles/all", parameters);
+			var data = jobject.GetValue("data");
+			var jarticles = data["articles"];
+			var articles = jarticles.ToObject<Article[]>();
+
+			ObservableCollection<Article> list = new ObservableCollection<Article>();
+			foreach (Article a in articles)
+			{
+				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
+				a.favicon = GetFaviconURL(a.link);
+				list.Add(a);
+			}
+
+			return list;
+		}
+
+		/// <summary>
 		/// Adds an article that was shared with the user.
 		/// </summary>
 		/// <returns>The shared article.</returns>
@@ -189,8 +216,10 @@ namespace TicketToTalk
 			var jobject = await net.SendPostRequest("articles/store", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("article");
-				var returned_article = jtoken.ToObject<Article>();
+				var data = jobject.GetValue("data");
+				var jarticle = data["article"];
+
+				var returned_article = jarticle.ToObject<Article>();
 				Debug.WriteLine("Saved Article: " + article);
 
 				AddArticleLocally(returned_article);
@@ -224,8 +253,9 @@ namespace TicketToTalk
 			var jobject = await net.SendPostRequest("articles/update", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("article");
-				var new_article = jtoken.ToObject<Article>();
+				var data = jobject.GetValue("data");
+				var jarticle = data["article"];
+				var new_article = jarticle.ToObject<Article>();
 				Debug.WriteLine("Saved Article: " + new_article);
 
 				new_article.favicon = GetFaviconURL(new_article.link);
