@@ -4,10 +4,10 @@
       <File FileName="TicketToTalk/Controllers/UserController.cs" Line="223" Column="48" />
       <File FileName="TicketToTalk/Resources/Session.cs" Line="8" Column="3" />
       <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="33" Column="3" />
-      <File FileName="TicketToTalk/Controllers/ArticleController.cs" Line="32" Column="23" />
+      <File FileName="TicketToTalk/Controllers/ArticleController.cs" Line="131" Column="51" />
       <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="202" Column="21" />
       <File FileName="iOS/Main.cs" Line="17" Column="1" />
-      <File FileName="TicketToTalk/Pages/Articles/AllArticles.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Articles/AllArticles.cs" Line="93" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
