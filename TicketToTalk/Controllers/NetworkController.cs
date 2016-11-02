@@ -39,6 +39,10 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendGetRequest(string URL, IDictionary<string, string> parameters)
 		{
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			client.Timeout = new TimeSpan(0, 0, 100);
+
 			parameters["api_key"] = Session.activeUser.api_key;
 
 			URL += "?";
@@ -94,6 +98,10 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
 		{
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			client.Timeout = new TimeSpan(0, 0, 100);
+
 			if (Session.activeUser == null)
 			{
 				parameters["api_key"] = api_key;
@@ -157,6 +165,10 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendGenericPostRequest(string URL, IDictionary<string, object> parameters)
 		{
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			client.Timeout = new TimeSpan(0, 0, 100);
+
 			// Use default key, this method is called when registering with a photo.
 			if (Session.activeUser == null)
 			{
@@ -201,6 +213,10 @@ namespace TicketToTalk
 		/// <param name="parameters">Parameters.</param>
 		public async Task<JObject> SendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			client.Timeout = new TimeSpan(0, 0, 100);
+
 			parameters["api_key"] = Session.activeUser.api_key;
 
 			URL += "?";
@@ -259,6 +275,9 @@ namespace TicketToTalk
 		/// <param name="fileName">File name.</param>
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			client.Timeout = new TimeSpan(0, 0, 100);
 
 			Debug.WriteLine("NetworkController: Beginning Download");
 			var webClient = new WebClient();
