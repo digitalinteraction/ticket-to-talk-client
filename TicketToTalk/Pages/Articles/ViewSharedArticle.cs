@@ -14,8 +14,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewSharedArticle : ContentPage
 	{
-		Article article;
-		ArticleController articleController = new ArticleController();
+		private Article article;
+		private ArticleController articleController = new ArticleController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ViewSharedArticle"/> class.
@@ -30,7 +30,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			var titleStack = new StackLayout
@@ -84,7 +84,7 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 0, 0, 10),
 				BorderRadius = 5
 			};
-			viewArticleButton.Clicked += launchBrowser;
+			viewArticleButton.Clicked += LaunchBrowser;
 
 			var acceptArticle = new Button
 			{
@@ -157,7 +157,7 @@ namespace TicketToTalk
 		/// Cancel the specified obj.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		void cancel(object obj)
+		private void Cancel(object obj)
 		{
 			Navigation.PopModalAsync();
 		}
@@ -167,7 +167,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="ea">Ea.</param>
-		void launchBrowser(Object sender, EventArgs ea)
+		private void LaunchBrowser(Object sender, EventArgs ea)
 		{
 			Device.OpenUri(new Uri(article.link));
 		}
@@ -178,13 +178,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void AcceptArticle_Clicked(object sender, EventArgs e)
+		private async void AcceptArticle_Clicked(object sender, EventArgs e)
 		{
-			var accepted = await articleController.acceptSharedArticle(article);
+			var accepted = await articleController.AcceptSharedArticle(article);
 			if (accepted) 
 			{
 				ViewSharedArticles.articles.Remove(article);
-				AllArticles.sharedArticles.Remove(article);
+				AllArticles.SharedArticles.Remove(article);
 				await Navigation.PopModalAsync();
 			}
 		}
@@ -194,13 +194,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void RejectArticle_Clicked(object sender, EventArgs e)
+		private async void RejectArticle_Clicked(object sender, EventArgs e)
 		{
-			var rejected = await articleController.rejectShared(article);
+			var rejected = await articleController.RejectShared(article);
 			if (rejected) 
 			{
 				ViewSharedArticles.articles.Remove(article);
-				AllArticles.sharedArticles.Remove(article);
+				AllArticles.SharedArticles.Remove(article);
 				await Navigation.PopModalAsync();
 			}
 		}

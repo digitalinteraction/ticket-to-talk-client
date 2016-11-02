@@ -11,7 +11,7 @@ namespace TicketToTalk
 	{
 
 		public static Person currentPerson;
-		PersonController personController = new PersonController();
+		private PersonController personController = new PersonController();
 		public static PersonPivot pivot;
 
 		/// <summary>
@@ -29,12 +29,12 @@ namespace TicketToTalk
 				Text = "?",
 				Icon = "info_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(editPerson)
+				Command = new Command(EditPerson)
 			});
 
-			person.displayString = personController.getDisplayString(person);
+			person.displayString = personController.GetDisplayString(person);
 
-			var users = Task.Run(() => personController.getUsers(person.id)).Result;
+			var users = Task.Run(() => personController.GetUsers(person.id)).Result;
 
 			var nameLabel = new Label
 			{
@@ -48,8 +48,8 @@ namespace TicketToTalk
 			nameLabel.BindingContext = currentPerson;
 
 			PersonUserDB puDB = new PersonUserDB();
-			var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, currentPerson.id);
-			puDB.close();
+			var personUser = puDB.GetRelationByUserAndPersonID(Session.activeUser.id, currentPerson.id);
+			puDB.Close();
 
 			pivot = new PersonPivot();
 			pivot.relation = personUser.relationship;
@@ -199,7 +199,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Edits the person.
 		/// </summary>
-		private async void editPerson()
+		private async void EditPerson()
 		{
 
 			// Display the action sheet.
@@ -220,7 +220,7 @@ namespace TicketToTalk
 					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
 					if (confirm)
 					{
-						var deleted = personController.destroyPerson(currentPerson);
+						var deleted = personController.DestroyPerson(currentPerson);
 
 						if (deleted)
 						{
@@ -228,7 +228,7 @@ namespace TicketToTalk
 							{
 								Session.activePerson = null;
 								var navi = new NavigationPage(new SelectActivePerson());
-								navi.setNavHeaders();
+								navi.SetNavHeaders();
 								Application.Current.MainPage = navi;
 							}
 							else

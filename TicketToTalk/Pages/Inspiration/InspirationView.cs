@@ -12,12 +12,13 @@ namespace TicketToTalk
 	/// </summary>
 	public class InspirationView : ContentPage
 	{
-		Inspiration inspiration;
-		Label question;
-		Label promptLabel;
-		Button recordMediaButton = new Button();
-		Button searchButton;
-		string searchLink;
+		private Inspiration inspiration;
+		private Label question;
+		private Label promptLabel;
+		private Button recordMediaButton = new Button();
+		private Button searchButton;
+		private string searchLink;
+
 		public static bool tutorialShown;
 
 		/// <summary>
@@ -54,7 +55,7 @@ namespace TicketToTalk
 			searchButton.Clicked += SearchButton_Clicked;
 
 			// Check for new inspirations.
-			var task = Task.Run(() => this.getIns()).Result;
+			var task = Task.Run(() => this.GetIns()).Result;
 
 			foreach (Inspiration ins in task)
 			{
@@ -62,10 +63,10 @@ namespace TicketToTalk
 			}
 
 			InspirationDB insDB = new InspirationDB();
-			inspiration = populateVariables(insDB.getRandomInspiration());
+			inspiration = PopulateVariables(insDB.GetRandomInspiration());
 			insDB.close();
 
-			setViewToInspiration();
+			SetViewToInspiration();
 
 			recordMediaButton.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			recordMediaButton.WidthRequest = 125;
@@ -122,12 +123,14 @@ namespace TicketToTalk
 		/// Gets inspirations from the server.
 		/// </summary>
 		/// <returns>The ins.</returns>
-		public async Task<List<Inspiration>> getIns()
+		private async Task<List<Inspiration>> GetIns()
 		{
 			// Send get request for inspirations
 			Debug.WriteLine("Sending get request for inspirations.");
 			NetworkController net = new NetworkController();
-			var jobject = await net.sendGetRequest("inspiration/get", new Dictionary<string, string>());
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+			var jobject = await net.SendGetRequest("inspiration/get", parameters);
 			Debug.WriteLine(jobject);
 
 			var jtoken = jobject.GetValue("Inspirations");
@@ -158,27 +161,27 @@ namespace TicketToTalk
 		/// <returns>The button clicked.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void NextButton_Clicked(object sender, EventArgs e)
+		private void NextButton_Clicked(object sender, EventArgs e)
 		{
 			InspirationDB insDB = new InspirationDB();
-			var newIns = insDB.getRandomInspiration();
+			var newIns = insDB.GetRandomInspiration();
 
 			while (newIns.Equals(inspiration))
 			{
-				newIns = insDB.getRandomInspiration();
+				newIns = insDB.GetRandomInspiration();
 			}
 
-			inspiration = populateVariables(newIns);
+			inspiration = PopulateVariables(newIns);
 			insDB.close();
 
-			setViewToInspiration();
+			SetViewToInspiration();
 		}
 
 		/// <summary>
 		/// Sets the view to inspiration.
 		/// </summary>
 		/// <returns>The view to inspiration.</returns>
-		public void setViewToInspiration()
+		private void SetViewToInspiration()
 		{
 			question.Text = inspiration.question;
 			promptLabel.Text = inspiration.prompt;
@@ -230,7 +233,7 @@ namespace TicketToTalk
 			await Navigation.PushModalAsync(nav);
 		}
 
-		public async void SelectPicture()
+		private async void SelectPicture()
 		{
 			if (!CrossMedia.Current.IsPickPhotoSupported)
 			{
@@ -253,7 +256,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The variables.</returns>
 		/// <param name="ins">Ins.</param>
-		private Inspiration populateVariables(Inspiration ins)
+		private Inspiration PopulateVariables(Inspiration ins)
 		{
 			var asChars = ins.question.ToCharArray();
 			var ageIdx = ins.question.LastIndexOf("[age=");
@@ -308,7 +311,7 @@ namespace TicketToTalk
 		// </summary>
 		// <param name="sender">Sender.</param>
 		// <param name="e">E.</param>
-		void SearchButton_Clicked(object sender, EventArgs e)
+		private void SearchButton_Clicked(object sender, EventArgs e)
 		{
 			Console.WriteLine("Clicked");
 			Debug.WriteLine("Inspirations: SearchLink = " + searchLink);

@@ -9,13 +9,16 @@ namespace TicketToTalk
 {
 	public class AudioRecorder : ContentPage
 	{
-		bool recording = false;
-		Image record;
-		Label inf;
-		StackLayout labelStack;
-		Button saveAudio;
-		string fileName;
+		private bool recording = false;
+		private Image record;
+		private Label inf;
+		private StackLayout labelStack;
+		private Button saveAudio;
+		private string fileName;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.AudioRecorder"/> class.
+		/// </summary>
 		public AudioRecorder()
 		{
 			Title = "New Audio Ticket";
@@ -24,7 +27,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			inf = new Label
@@ -88,12 +91,12 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
 
-		void Record_Clicked()
+		private void Record_Clicked()
 		{
 			if (recording)
 			{
@@ -116,7 +119,7 @@ namespace TicketToTalk
 			}
 		}
 
-		void Finished_Clicked(object sender, EventArgs e)
+		private void Finished_Clicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new NewTicket("Sound", fileName));
 			Navigation.RemovePage(this);

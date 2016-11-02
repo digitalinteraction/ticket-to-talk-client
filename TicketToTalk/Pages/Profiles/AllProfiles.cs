@@ -31,7 +31,7 @@ namespace TicketToTalk
 			});
 
 			var personController = new PersonController();
-			people = Task.Run(() => personController.getPeopleFromServer()).Result;
+			people = Task.Run(() => personController.GetPeopleFromServer()).Result;
 			var tableView = new TableView
 			{
 				Intent = TableIntent.Form,
@@ -53,12 +53,12 @@ namespace TicketToTalk
 			var tableSection = new TableSection("Your People");
 			foreach (Person p in people)
 			{
-				var stored_person = personController.getPerson(p.id);
+				var stored_person = personController.GetPerson(p.id);
 				if (stored_person != null)
 				{
 					p.pathToPhoto = stored_person.pathToPhoto;
 				}
-				p.imageSource = Task.Run(() => personController.getPersonProfilePicture(p)).Result;
+				p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
 
 				var personCell = new PersonCell(p);
 
@@ -86,7 +86,7 @@ namespace TicketToTalk
 		/// <returns>The cell tapped.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void PersonCell_Tapped(object sender, EventArgs e)
+		private void PersonCell_Tapped(object sender, EventArgs e)
 		{
 			PersonCell cell = (PersonCell)sender;
 
@@ -105,7 +105,7 @@ namespace TicketToTalk
 		/// <returns>The cell tapped.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void UserCell_Tapped(object sender, EventArgs e)
+		private void UserCell_Tapped(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new UserProfile());
 		}
@@ -114,7 +114,7 @@ namespace TicketToTalk
 		/// Launchs the add new person view.
 		/// </summary>
 		/// <returns>The add new person view.</returns>
-		void launchAddNewPersonView()
+		private void launchAddNewPersonView()
 		{
 			Navigation.PushAsync(new AddPersonChoice());
 		}

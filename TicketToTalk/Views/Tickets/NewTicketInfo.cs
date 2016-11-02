@@ -1,29 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
 	public class NewTicketInfo : ContentView
 	{
-		Picker access_level;
-		Editor description;
-		Picker period;
-		List<Period> periods;
-		Button saveButton;
-		Entry title;
-		Entry town_city;
-		Picker yearPicker;
+		private Picker access_level;
+		private Editor description;
+		private Picker period;
+		private List<Period> periods;
+		private Button saveButton;
+		private Entry title;
+		private Entry town_city;
+		private Picker yearPicker;
 
-		string mediaType;
-		string filePath;
-		byte[] media;
+		private string mediaType;
+		private string filePath;
+		private byte[] media;
 
 		public static bool isInTutorial = false;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicketInfo"/> class.
+		/// </summary>
+		/// <param name="mediaType">Media type.</param>
+		/// <param name="filePath">File path.</param>
 		public NewTicketInfo(string mediaType, string filePath)
 		{
 			Debug.WriteLine("NewTicketInfo: constructor");
@@ -43,7 +46,7 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5),
 				Margin = new Thickness(0, 0, 0, 10)
 			};
-			saveButton.Clicked += uploadTicket;
+			saveButton.Clicked += UploadTicket;
 
 			Debug.WriteLine("NewTicketInfo: Set save button");
 
@@ -140,7 +143,7 @@ namespace TicketToTalk
 			};
 
 			var periodController = new PeriodController();
-			periods = periodController.getAllLocalPeriods();
+			periods = periodController.GetAllLocalPeriods();
 
 			for (int i = 0; i < periods.Count; i++)
 			{
@@ -257,6 +260,11 @@ namespace TicketToTalk
 			Debug.WriteLine("NewTicketInfo: Set stack");
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicketInfo"/> class.
+		/// </summary>
+		/// <param name="mediaType">Media type.</param>
+		/// <param name="media">Media.</param>
 		public NewTicketInfo(string mediaType, byte[] media)
 		{
 			this.media = media;
@@ -277,7 +285,7 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5),
 				Margin = new Thickness(0, 0, 0, 10)
 			};
-			saveButton.Clicked += uploadTicket;
+			saveButton.Clicked += UploadTicket;
 
 			Debug.WriteLine("NewTicketInfo: Set save button");
 
@@ -374,7 +382,7 @@ namespace TicketToTalk
 			};
 
 			var periodController = new PeriodController();
-			periods = periodController.getAllLocalPeriods();
+			periods = periodController.GetAllLocalPeriods();
 
 			for (int i = 0; i < periods.Count; i++)
 			{
@@ -497,7 +505,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private async void uploadTicket(object sender, EventArgs e)
+		private async void UploadTicket(object sender, EventArgs e)
 		{
 
 			saveButton.IsEnabled = false;
@@ -532,7 +540,7 @@ namespace TicketToTalk
 			{
 				if (media == null)
 				{
-					media = MediaController.readBytesFromFile(filePath);
+					media = MediaController.ReadBytesFromFile(filePath);
 				}
 			}
 
@@ -590,7 +598,7 @@ namespace TicketToTalk
 			//	// Add to view
 			//	TicketsByPeriod.addTicket(returned_ticket);
 			var ticketController = new TicketController();
-			var returned_ticket = await ticketController.addTicketRemotely(ticket, media, selected_period);
+			var returned_ticket = await ticketController.AddTicketRemotely(ticket, media, selected_period);
 			if (returned_ticket != null)
 			{
 				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);

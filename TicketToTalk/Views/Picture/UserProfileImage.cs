@@ -2,10 +2,6 @@
 // Created on: 17/08/2016
 //
 // UserProfileImage.cs
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 using ImageCircle.Forms.Plugin.Abstractions;
 using Xamarin.Forms;
 

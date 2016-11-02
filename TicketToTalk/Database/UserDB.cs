@@ -14,7 +14,7 @@ namespace TicketToTalk
 	public class UserDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Creates a connection to the User table.
@@ -25,7 +25,7 @@ namespace TicketToTalk
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<User>();
@@ -75,7 +75,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The user by email.</returns>
 		/// <param name="email">Email.</param>
-		public User getUserByEmail(string email)
+		public User GetUserByEmail(string email)
 		{
 
 			var stored = _connection.Query<User>("SELECT * FROM User WHERE email = ?", email);
@@ -93,7 +93,10 @@ namespace TicketToTalk
 			}
 		}
 
-		public void clearTable()
+		/// <summary>
+		/// Clears the table.
+		/// </summary>
+		public void ClearTable()
 		{
 			_connection.Query<User>("DELETE FROM User");
 		}
@@ -101,7 +104,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

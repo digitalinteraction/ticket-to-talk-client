@@ -12,21 +12,19 @@ namespace TicketToTalk
 {
 	public class AudioPlayerLayout : ContentView
 	{
-		Timer timer;
-
-		int zeroCount = 0;
-
-		Image play_img;
-		Image stop_img;
-		bool playing = false;
-		bool paused = false;
-		bool stopped = false;
-		string fileName;
+		private Timer timer;
+		private int zeroCount = 0;
+		private Image play_img;
+		private Image stop_img;
+		private bool playing = false;
+		private bool paused = false;
+		private bool stopped = false;
+		private string fileName;
 
 		private int second_count;
 		private int rawDuration;
-		Clock clock;
-		ProgressBar progressBar;
+		private Clock clock;
+		private ProgressBar progressBar;
 
 		public double EPSILON { get; private set; }
 
@@ -184,7 +182,7 @@ namespace TicketToTalk
 		void Stop_Clicked()
 		{
 			Debug.WriteLine("AudioPlayerLayout: Stop clicked");
-			stopPlayBack();
+			StopPlayBack();
 
 #if __IOS__
 			MessagingCenter.Unsubscribe<TicketToTalk.iOS.AudioPlayerImplementation, bool>(this, "finshed_playback");
@@ -332,7 +330,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Stops the play back.
 		/// </summary>
-		public void stopPlayBack()
+		public void StopPlayBack()
 		{
 			Debug.WriteLine("AudioPlayerLayout: Stop button pressed.");
 			playing = false;
@@ -351,7 +349,7 @@ namespace TicketToTalk
 		/// Checks the storage perms.
 		/// </summary>
 		/// <returns>The storage perms.</returns>
-		private async Task<bool> checkStoragePerms()
+		private async Task<bool> CheckStoragePerms()
 		{
 			try
 			{

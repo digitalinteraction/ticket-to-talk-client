@@ -12,8 +12,8 @@ namespace TicketToTalk
 	/// </summary>
 	public class TicketController
 	{
-		TicketDB ticketDB = new TicketDB();
-		NetworkController networkController = new NetworkController();
+		private TicketDB ticketDB = new TicketDB();
+		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.TicketController"/> class.
@@ -26,11 +26,11 @@ namespace TicketToTalk
 		/// Adds the ticket locally.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void addTicketLocally(Ticket ticket)
+		public void AddTicketLocally(Ticket ticket)
 		{
-			ticketDB.open();
+			ticketDB.Open();
 			ticketDB.AddTicket(ticket);
-			ticketDB.close();
+			ticketDB.Close();
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		/// <param name="media">Media.</param>
 		/// <param name="period">Period.</param>
-		public async Task<Ticket> addTicketRemotely(Ticket ticket, byte[] media, Period period)
+		public async Task<Ticket> AddTicketRemotely(Ticket ticket, byte[] media, Period period)
 		{
 
 			// Create parameters for the request.
@@ -52,7 +52,7 @@ namespace TicketToTalk
 			parameters["period"] = period;
 
 			// Send the request
-			var jobject = await net.sendGenericPostRequest("tickets/store", parameters);
+			var jobject = await net.SendGenericPostRequest("tickets/store", parameters);
 
 			if (jobject != null)
 			{
@@ -62,7 +62,7 @@ namespace TicketToTalk
 
 				// Add to the ticket displays.
 				var ticketController = new TicketController();
-				returned_ticket.displayString = ticketController.getDisplayString(returned_ticket);
+				returned_ticket.displayString = ticketController.GetDisplayString(returned_ticket);
 				string ext = string.Empty;
 				switch (ticket.mediaType)
 				{
@@ -86,12 +86,12 @@ namespace TicketToTalk
 				}
 
 				// Save the file.
-				MediaController.writeImageToFile("t_" + returned_ticket.id + ext, media);
+				MediaController.WriteImageToFile("t_" + returned_ticket.id + ext, media);
 
-				ticketController.addTicketLocally(returned_ticket);
+				ticketController.AddTicketLocally(returned_ticket);
 
 				// Add to view
-				TicketsByPeriod.addTicket(returned_ticket);
+				TicketsByPeriod.AddTicket(returned_ticket);
 
 				return returned_ticket;
 			}
@@ -105,12 +105,12 @@ namespace TicketToTalk
 		/// Destroies the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void destroyTicket(Ticket ticket)
+		public void DestroyTicket(Ticket ticket)
 		{
 
 			// Delete the tickets.
-			deleteTicketLocally(ticket);
-			deleteTicketRemotely(ticket);
+			DeleteTicketLocally(ticket);
+			DeleteTicketRemotely(ticket);
 
 			// Remove the tickets from views.
 			switch (ticket.mediaType)
@@ -130,7 +130,7 @@ namespace TicketToTalk
 					break;
 			}
 
-			TicketsByPeriod.removeTicket(ticket);
+			TicketsByPeriod.RemoveTicket(ticket);
 
 			bool inPeriodList = false;
 			foreach (Ticket t in DisplayTickets.displayTickets)
@@ -145,10 +145,10 @@ namespace TicketToTalk
 
 			Debug.WriteLine("TicketCell: Deleting ticket file locally");
 
-			if (!(ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal)))
+			if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
 			{
 				var mediaController = new MediaController();
-				mediaController.deleteFile(ticket.pathToFile);
+				mediaController.DeleteFile(ticket.pathToFile);
 			}
 		}
 
@@ -157,13 +157,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if ticket was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public bool deleteTicketRemotely(Ticket ticket)
+		public bool DeleteTicketRemotely(Ticket ticket)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = networkController.sendDeleteRequest("tickets/destroy", parameters);
+			var jobject = networkController.SendDeleteRequest("tickets/destroy", parameters);
 			if (jobject == null)
 			{
 				return false;
@@ -178,13 +178,13 @@ namespace TicketToTalk
 		/// Gets the tickets attached to the active person.
 		/// </summary>
 		/// <returns>The tickets.</returns>
-		public List<Ticket> getTickets()
+		public List<Ticket> GetTickets()
 		{
-			ticketDB.open();
-			var raw_tickets = ticketDB.getTicketsByPerson(Session.activePerson.id);
-			ticketDB.close();
+			ticketDB.Open();
+			var raw_tickets = ticketDB.GetTicketsByPerson(Session.activePerson.id);
+			ticketDB.Close();
 
-			return filterTicketsForUserType(raw_tickets);
+			return FilterTicketsForUserType(raw_tickets);
 		}
 
 		/// <summary>
@@ -192,12 +192,12 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets for user type.</returns>
 		/// <param name="input">Input.</param>
-		public List<Ticket> filterTicketsForUserType(List<Ticket> input)
+		public List<Ticket> FilterTicketsForUserType(List<Ticket> input)
 		{
 			var output = new List<Ticket>();
 
 			var personController = new PersonController();
-			var relation = personController.getRelation(Session.activePerson.id);
+			var relation = personController.GetRelation(Session.activePerson.id);
 			if (relation.user_type.ToLower().Equals("admin"))
 			{
 				relation.user_type = "All";
@@ -230,11 +230,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by person.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public List<Ticket> getTicketsByPerson(int person_id)
+		public List<Ticket> GetTicketsByPerson(int person_id)
 		{
-			ticketDB.open();
-			var tickets = ticketDB.getTicketsByPerson(person_id);
-			ticketDB.close();
+			ticketDB.Open();
+			var tickets = ticketDB.GetTicketsByPerson(person_id);
+			ticketDB.Close();
 			return tickets;
 		}
 
@@ -243,11 +243,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket.</returns>
 		/// <param name="id">Identifier.</param>
-		public Ticket getTicket(int id)
+		public Ticket GetTicket(int id)
 		{
-			ticketDB.open();
+			ticketDB.Open();
 			var ticket = ticketDB.GetTicket(id);
-			ticketDB.close();
+			ticketDB.Close();
 			return ticket;
 		}
 
@@ -256,11 +256,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public void deleteTicketLocally(Ticket ticket)
+		public void DeleteTicketLocally(Ticket ticket)
 		{
-			ticketDB.open();
+			ticketDB.Open();
 			ticketDB.DeleteTicket(ticket.id);
-			ticketDB.close();
+			ticketDB.Close();
 		}
 
 		/// <summary>
@@ -268,12 +268,12 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket locally.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public void updateTicketLocally(Ticket ticket)
+		public void UpdateTicketLocally(Ticket ticket)
 		{
-			ticketDB.open();
+			ticketDB.Open();
 			ticketDB.DeleteTicket(ticket.id);
 			ticketDB.AddTicket(ticket);
-			ticketDB.close();
+			ticketDB.Close();
 		}
 
 		/// <summary>
@@ -281,7 +281,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket remotely.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public async Task<Ticket> updateTicketRemotely(Ticket ticket, string period)
+		public async Task<Ticket> UpdateTicketRemotely(Ticket ticket, string period)
 		{
 			IDictionary<string, string> paramters = new Dictionary<string, string>();
 			paramters["ticket_id"] = ticket.id.ToString();
@@ -293,7 +293,7 @@ namespace TicketToTalk
 			paramters["period"] = period;
 			paramters["token"] = Session.Token.val;
 
-			var jobject = await networkController.sendPostRequest("tickets/update", paramters);
+			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
 			if (jobject != null)
 			{
 				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
@@ -312,23 +312,23 @@ namespace TicketToTalk
 		/// <returns>The tag relations locally.</returns>
 		/// <param name="tags">Tags.</param>
 		/// <param name="ticket">Ticket.</param>
-		public void addTagRelationsLocally(List<Tag> tags, Ticket ticket)
+		public void AddTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
 			var ttDB = new TicketTagDB();
-			ttDB.open();
+			ttDB.Open();
 			foreach (Tag t in tags)
 			{
 				var ttr = new TicketTag(ticket.id, t.id);
 				ttDB.AddTicketTagRelationship(ttr);
 			}
-			ttDB.close();
+			ttDB.Close();
 		}
 
 		/// <summary>
 		/// Check for new tickets from the server.
 		/// </summary>
 		/// <returns>The tickets.</returns>
-		public async Task updateTicketsFromAPI()
+		public async Task UpdateTicketsFromAPI()
 		{
 			// Set parameters
 			Debug.WriteLine("Setting parameters");
@@ -338,7 +338,7 @@ namespace TicketToTalk
 
 			// Send GET request
 			var net = new NetworkController();
-			var jobject = await net.sendGetRequest("people/tickets", parameters);
+			var jobject = await net.SendGetRequest("people/tickets", parameters);
 			Debug.WriteLine(jobject);
 
 			// Parse JSON Tags to Tags
@@ -349,16 +349,16 @@ namespace TicketToTalk
 			foreach (Tag t in tags)
 			{
 				Console.WriteLine(t);
-				var storedTag = tagController.getTag(t.id);
+				var storedTag = tagController.GetTag(t.id);
 				if (storedTag == null)
 				{
 					Console.WriteLine("New tag... saving");
-					tagController.addTagLocally(t);
+					tagController.AddTagLocally(t);
 
 				}
 				else if (storedTag.GetHashCode() != t.GetHashCode())
 				{
-					tagController.updateTagLocally(t);
+					tagController.UpdateTagLocally(t);
 				}
 			}
 
@@ -369,15 +369,15 @@ namespace TicketToTalk
 
 			foreach (Ticket t in tickets)
 			{
-				var storedTicket = getTicket(t.id);
+				var storedTicket = GetTicket(t.id);
 				if (storedTicket == null)
 				{
 					Debug.WriteLine("New ticket... saving");
-					addTicketLocally(t);
+					AddTicketLocally(t);
 				}
 				else if (storedTicket.GetHashCode() != t.GetHashCode())
 				{
-					updateTicketLocally(t);
+					UpdateTicketLocally(t);
 				}
 			}
 
@@ -385,10 +385,10 @@ namespace TicketToTalk
 			jtoken = jobject.GetValue("ticket_tags");
 			var ticket_tags = jtoken.ToObject<TicketTag[]>();
 			var ticketTagDB = new TicketTagDB();
-			ticketTagDB.open();
+			ticketTagDB.Open();
 			foreach (TicketTag tt in ticket_tags)
 			{
-				var stored = ticketTagDB.getRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
+				var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
 				if (stored == null)
 				{
 					Console.WriteLine("New ticket_tag, adding...");
@@ -401,7 +401,7 @@ namespace TicketToTalk
 					ticketTagDB.AddTicketTagRelationship(tt);
 				}
 			}
-			ticketTagDB.close();
+			ticketTagDB.Close();
 		}
 
 		/// <summary>
@@ -409,11 +409,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket image.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public Image getTicketImage(Ticket ticket)
+		public Image GetTicketImage(Ticket ticket)
 		{
 			bool download_finished = false;
 			var ticket_photo = new Image();
-			if (ticket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
+			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
 				var net = new NetworkController();
 
@@ -428,21 +428,21 @@ namespace TicketToTalk
 						break;
 				}
 
-				var task = Task.Run(() => net.downloadFile(ticket.pathToFile, fileName)).Result;
+				var task = Task.Run(() => net.DownloadFile(ticket.pathToFile, fileName)).Result;
 				ticket.pathToFile = fileName;
 
 				while (!download_finished)
 				{
 				}
 
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.readBytesFromFile(ticket.pathToFile)));
+				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
 
 				var ticketController = new TicketController();
-				ticketController.updateTicketLocally(ticket);
+				ticketController.UpdateTicketLocally(ticket);
 			}
 			else
 			{
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.readBytesFromFile(ticket.pathToFile)));
+				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
 			}
 
 			return ticket_photo;
@@ -453,7 +453,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
 		/// <param name="link">Link.</param>
-		public Ticket parseYouTubeToTicket(string link)
+		public Ticket ParseYouTubeToTicket(string link)
 		{
 
 			if (link.Contains("youtu.be"))
@@ -483,14 +483,14 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket content.</returns>
 		/// <param name="filePath">File path.</param>
-		public async Task downloadTicketContent(string filePath)
+		public async Task DownloadTicketContent(string filePath)
 		{
 			var net = new NetworkController();
 
 			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
 			var fileName = filePath.Substring(idx + 1);
 
-			await net.downloadFile(filePath, fileName);
+			await net.DownloadFile(filePath, fileName);
 		}
 
 		/// <summary>
@@ -498,7 +498,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The display string.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public string getDisplayString(Ticket ticket)
+		public string GetDisplayString(Ticket ticket)
 		{
 			var displayString = string.Empty;
 
@@ -518,11 +518,11 @@ namespace TicketToTalk
 		/// Updates the display ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void updateDisplayTicket(Ticket ticket)
+		public void UpdateDisplayTicket(Ticket ticket)
 		{
 			ViewTicket.displayedTicket.title = ticket.title;
 			ViewTicket.displayedTicket.description = ticket.description;
-			ViewTicket.displayedTicket.displayString = getDisplayString(ticket);
+			ViewTicket.displayedTicket.displayString = GetDisplayString(ticket);
 
 			ViewTicket.displayedTicket.area = ticket.area;
 		}

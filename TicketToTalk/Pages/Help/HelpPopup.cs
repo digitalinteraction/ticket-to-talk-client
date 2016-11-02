@@ -37,13 +37,13 @@ namespace TicketToTalk
 			{
 				Text = text
 			};
-			label.setLabelStyleInversreCenter();
+			label.SetLabelStyleInversreCenter();
 
 			var button = new Button
 			{
 				Text = "Dismiss"
 			};
-			button.setButtonStyle(ProjectResource.color_dark);
+			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
 			Content = new StackLayout

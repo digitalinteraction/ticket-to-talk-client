@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Plugin.Permissions;
@@ -24,7 +23,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			Debug.WriteLine("NewTicket: filepath - " + filePath);
@@ -45,7 +44,7 @@ namespace TicketToTalk
 				switch (mediaType)
 				{
 					case ("Picture"):
-						var media = MediaController.readBytesFromFile(filePath);
+						var media = MediaController.ReadBytesFromFile(filePath);
 						mediaContent = new PictureLayout(media);
 						ticketInf = new NewTicketInfo(mediaType, media);
 						break;
@@ -81,7 +80,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}

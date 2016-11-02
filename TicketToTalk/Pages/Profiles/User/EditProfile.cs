@@ -14,13 +14,13 @@ namespace TicketToTalk
 	/// </summary>
 	public class EditProfile : ContentPage
 	{
-		Entry confirmPassword;
-		Entry email;
-		Entry name;
-		Entry password;
-		Button saveButton;
-		byte[] image;
-		UserProfileImage profile;
+		private Entry confirmPassword;
+		private Entry email;
+		private Entry name;
+		private Entry password;
+		private Button saveButton;
+		private byte[] image;
+		private UserProfileImage profile;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.EditProfile"/> class.
@@ -34,11 +34,11 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			profile = new UserProfileImage((Session.ScreenWidth * 0.8), null, ProjectResource.color_red);
-			profile.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onImageTap) });
+			profile.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(OnImageTap) });
 
 			var nameLabel = new Label
 			{
@@ -149,7 +149,7 @@ namespace TicketToTalk
 		/// Ons the image tap.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		private async void onImageTap(object obj)
+		private async void OnImageTap(object obj)
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			MediaFile file = null;
@@ -165,7 +165,7 @@ namespace TicketToTalk
 
 			if (file != null)
 			{
-				var bytes = MediaController.readBytesFromFile(file.Path);
+				var bytes = MediaController.ReadBytesFromFile(file.Path);
 				profile.profilePic.Source = ImageSource.FromFile(file.Path);
 				image = bytes;
 			}
@@ -175,7 +175,7 @@ namespace TicketToTalk
 		/// Cancel the specified obj.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		void cancel(object obj)
+		private void Cancel(object obj)
 		{
 			Navigation.PopModalAsync();
 		}
@@ -185,7 +185,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void EntryChanged(object sender, EventArgs e)
+		private void EntryChanged(object sender, EventArgs e)
 		{
 			var notNull = (!string.IsNullOrEmpty(name.Text))
 				&& (!string.IsNullOrEmpty(email.Text))
@@ -209,7 +209,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void SaveButton_Clicked(object sender, EventArgs e)
+		private async void SaveButton_Clicked(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 			if (!(password.Text.Equals(confirmPassword.Text)))
@@ -220,12 +220,12 @@ namespace TicketToTalk
 			}
 
 			var userController = new UserController();
-			var user = userController.getLocalUserByID(Session.activeUser.id);
+			var user = userController.GetLocalUserByID(Session.activeUser.id);
 			user.name = name.Text;
 			user.email = email.Text;
 			user.password = password.Text;
 
-			var returned = await userController.updateUserRemotely(user, image);
+			var returned = await userController.UpdateUserRemotely(user, image);
 			if (returned != null)
 			{
 				Session.activeUser.name = returned.name;

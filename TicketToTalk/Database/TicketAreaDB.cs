@@ -1,6 +1,5 @@
 ﻿using System;
 using SQLite;
-using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -71,7 +70,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by ticket identifier.</returns>
 		/// <param name="ticketID">Ticket identifier.</param>
-		public List<TicketArea> getRelationByTicketID(int ticketID)
+		public List<TicketArea> GetRelationByTicketID(int ticketID)
 		{
 			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE ticket_id = ?", ticketID);
 			List<TicketArea> relations = new List<TicketArea>();
@@ -88,7 +87,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The relation by area identifier.</returns>
 		/// <param name="areaID">Area identifier.</param>
-		public List<TicketArea> getRelationByAreaID(int areaID)
+		public List<TicketArea> GetRelationByAreaID(int areaID)
 		{
 			var results = _connection.Query<TicketArea>("SELECT * FROM TicketArea WHERE area_id = ?", areaID);
 			List<TicketArea> relations = new List<TicketArea>();
@@ -103,7 +102,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

@@ -13,7 +13,7 @@ namespace TicketToTalk
 	public partial class ViewTicket : ContentPage
 	{
 		public static Ticket displayedTicket { get; set; }
-		TicketController ticketController = new TicketController();
+		private TicketController ticketController = new TicketController();
 
 		/// <summary>
 		/// Initializes a view of the ticket content.
@@ -34,22 +34,22 @@ namespace TicketToTalk
 				Text = "?",
 				Icon = "info_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(displayInfo)
+				Command = new Command(DisplayInfo)
 			});
 
-			if (displayedTicket.pathToFile.StartsWith("storage", StringComparison.Ordinal))
+			if (displayedTicket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
-				Task.Run(() => ticketController.downloadTicketContent(ticket.pathToFile)).Wait();
+				Task.Run(() => ticketController.DownloadTicketContent(ticket.pathToFile)).Wait();
 
 				displayedTicket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
-				ticketController.updateTicketLocally(ticket);
+				ticketController.UpdateTicketLocally(ticket);
 			}
 
-			displayedTicket.displayString = ticketController.getDisplayString(displayedTicket);
+			displayedTicket.displayString = ticketController.GetDisplayString(displayedTicket);
 
 			ContentView mediaContent = null;
 
-			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
+			var hasPerms = Task.Run(() => CheckStoragePerms()).Result;
 			if (!hasPerms)
 			{
 				Navigation.PopAsync();
@@ -94,7 +94,7 @@ namespace TicketToTalk
 		/// Checks the storage perms.
 		/// </summary>
 		/// <returns>The storage perms.</returns>
-		private async Task<bool> checkStoragePerms()
+		private async Task<bool> CheckStoragePerms()
 		{
 			try
 			{
@@ -132,7 +132,7 @@ namespace TicketToTalk
 		/// Display ticket info
 		/// </summary>
 		/// <returns>The info.</returns>
-		public async void displayInfo()
+		private async void DisplayInfo()
 		{
 			var action = await DisplayActionSheet("Ticket Options", "Cancel", "Delete", "Edit Ticket", "Add to Conversation");
 
@@ -140,7 +140,7 @@ namespace TicketToTalk
 			{
 				case ("Delete"):
 					await Navigation.PopAsync();
-					ticketController.destroyTicket(displayedTicket);
+					ticketController.DestroyTicket(displayedTicket);
 					break;
 				case ("Edit Ticket"):
 

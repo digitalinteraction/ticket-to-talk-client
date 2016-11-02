@@ -10,7 +10,11 @@ namespace TicketToTalk
 	/// </summary>
 	public class ViewPhotoTicket : ContentPage
 	{
-		Ticket Ticket { get; set; }
+		Ticket Ticket 
+		{ 
+			get; 
+			set; 
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ViewPhotoTicket"/> class.
@@ -33,7 +37,7 @@ namespace TicketToTalk
 			});
 
 			var ticketController = new TicketController();
-			var ticket_photo = ticketController.getTicketImage(Ticket);
+			var ticket_photo = ticketController.GetTicketImage(Ticket);
 
 			var stack = new StackLayout()
 			{
@@ -64,7 +68,7 @@ namespace TicketToTalk
 				case ("Delete"):
 					var ticketController = new TicketController();
 					await Navigation.PopAsync();
-					ticketController.destroyTicket(Ticket);
+					ticketController.DestroyTicket(Ticket);
 					break;
 				case ("Display Information"):
 					await Navigation.PushAsync(new EditTicket(Ticket));

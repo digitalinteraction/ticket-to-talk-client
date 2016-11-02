@@ -1,9 +1,12 @@
-﻿using System;
-using ImageCircle.Forms.Plugin.Abstractions;
+﻿using ImageCircle.Forms.Plugin.Abstractions;
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// User cell.
+	/// </summary>
 	public class UserCell : ViewCell
 	{
 		public UserCell()

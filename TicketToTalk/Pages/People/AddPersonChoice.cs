@@ -7,8 +7,8 @@ namespace TicketToTalk
 {
 	public class AddPersonChoice : ContentPage
 	{
-		UserController userController = new UserController();
-		List<Invitation> rawInvites;
+		private UserController userController = new UserController();
+		private List<Invitation> rawInvites;
 
 		public AddPersonChoice()
 		{
@@ -37,7 +37,7 @@ namespace TicketToTalk
 			joinPersonButton.Clicked += JoinPersonButton_Clicked;
 
 			// Get invitations
-			rawInvites = Task.Run(() => userController.getInvitations()).Result;
+			rawInvites = Task.Run(() => userController.GetInvitations()).Result;
 
 			if (rawInvites.Count > 0)
 			{
@@ -62,7 +62,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void NewPersonButton_Clicked(object sender, EventArgs e)
+		private void NewPersonButton_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddPerson(null));
 			nav.BarBackgroundColor = ProjectResource.color_blue;
@@ -76,7 +76,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void JoinPersonButton_Clicked(object sender, EventArgs e)
+		private void JoinPersonButton_Clicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync(new SeeInvitations(rawInvites));
 		}

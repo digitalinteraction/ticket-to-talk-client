@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -36,7 +34,7 @@ namespace TicketToTalk
 				Text = "Add",
 				Icon = "add_icon.png",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(launchNewTicketView),
+				Command = new Command(LaunchNewTicketView),
 			});
 
 			BackgroundColor = ProjectResource.color_white;
@@ -96,7 +94,7 @@ namespace TicketToTalk
 		/// <returns>The selection.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -116,7 +114,7 @@ namespace TicketToTalk
 		/// Launchs the new ticket view.
 		/// </summary>
 		/// <returns>The new ticket view.</returns>
-		public void launchNewTicketView()
+		private void LaunchNewTicketView()
 		{
 			var nav = new NavigationPage(new SelectNewTicketType());
 			nav.BarTextColor = ProjectResource.color_white;

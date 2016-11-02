@@ -9,10 +9,10 @@ namespace TicketToTalk
 	public class PeriodController
 	{
 
-		PeriodDB periodDB = new PeriodDB();
-		PersonPeriodDB personPeriodDB = new PersonPeriodDB();
-		TicketDB ticketDB = new TicketDB();
-		TicketController ticketController = new TicketController();
+		private PeriodDB periodDB = new PeriodDB();
+		private PersonPeriodDB personPeriodDB = new PersonPeriodDB();
+		private TicketDB ticketDB = new TicketDB();
+		private TicketController ticketController = new TicketController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.PeriodController"/> class.
@@ -26,11 +26,11 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The period.</returns>
 		/// <param name="id">Identifier.</param>
-		public Period getPeriod(int id) 
+		public Period GetPeriod(int id) 
 		{
-			periodDB.open();
+			periodDB.Open();
 			var period = periodDB.GetPeriod(id);
-			periodDB.close();
+			periodDB.Close();
 
 			return period;
 		}
@@ -39,15 +39,15 @@ namespace TicketToTalk
 		/// Gets all periods.
 		/// </summary>
 		/// <returns>The all periods.</returns>
-		public List<Period> getAllLocalPeriods() 
+		public List<Period> GetAllLocalPeriods() 
 		{
-			personPeriodDB.open();
-			var relations = personPeriodDB.getRelationByPersonID(Session.activePerson.id);
+			personPeriodDB.Open();
+			var relations = personPeriodDB.GetRelationByPersonID(Session.activePerson.id);
 
 			var periods = new List<Period>();
 			foreach (PersonPeriod pp in relations) 
 			{
-				periods.Add(getPeriod(pp.period_id));
+				periods.Add(GetPeriod(pp.period_id));
 			}
 
 			return periods;
@@ -58,18 +58,18 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The period.</returns>
 		/// <param name="p">P.</param>
-		public void addLocalPeriod(Period p) 
+		public void AddLocalPeriod(Period p) 
 		{
-			periodDB.open();
+			periodDB.Open();
 			periodDB.AddPeriod(p);
-			periodDB.close();
+			periodDB.Close();
 		}
 
 		/// <summary>
 		/// Inits the stock periods.
 		/// </summary>
 		/// <returns>The stock periods.</returns>
-		public void initStockPeriods() 
+		public void InitStockPeriods() 
 		{
 			string[] texts = 
 			{
@@ -81,10 +81,10 @@ namespace TicketToTalk
 
 			for (int i = 1; i < 5; i++) 
 			{
-				if (getPeriod(i) == null) 
+				if (GetPeriod(i) == null) 
 				{
 					var pp = new Period(i, texts[i - 1]);
-					addLocalPeriod(pp);
+					AddLocalPeriod(pp);
 				}
 			}
 		}
@@ -94,15 +94,15 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets in period.</returns>
 		/// <param name="period_id">Period identifier.</param>
-		public List<Ticket> getTicketsInPeriod(int period_id) 
+		public List<Ticket> GetTicketsInPeriod(int period_id) 
 		{
-			ticketDB.open();
-			var all_tickets = ticketDB.getTicketsByPeriodID(period_id);
+			ticketDB.Open();
+			var all_tickets = ticketDB.GetTicketsByPeriodID(period_id);
 			var tickets = new List<Ticket>();
 
 			if (all_tickets != null) 
 			{
-				foreach (Ticket t in ticketController.filterTicketsForUserType(all_tickets))
+				foreach (Ticket t in ticketController.FilterTicketsForUserType(all_tickets))
 				{
 					if (t.person_id == Session.activePerson.id)
 					{
@@ -111,7 +111,7 @@ namespace TicketToTalk
 				}
 			}
 
-			ticketDB.close();
+			ticketDB.Close();
 
 			return tickets;
 		}
@@ -121,13 +121,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The period ticket count.</returns>
 		/// <param name="period_id">Period identifier.</param>
-		public int getPeriodTicketCount(int period_id) 
+		public int GetPeriodTicketCount(int period_id) 
 		{
-			ticketDB.open();
-			var tickets = ticketDB.getTicketsByPeriodID(period_id);
-			ticketDB.close();
+			ticketDB.Open();
+			var tickets = ticketDB.GetTicketsByPeriodID(period_id);
+			ticketDB.Close();
 
-			return ticketController.filterTicketsForUserType(tickets).Count;
+			return ticketController.FilterTicketsForUserType(tickets).Count;
 		}
 	}
 }

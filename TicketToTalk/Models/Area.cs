@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SQLite;
 namespace TicketToTalk
 {
@@ -9,8 +8,16 @@ namespace TicketToTalk
 	public class Area : IComparable
 	{
 		[PrimaryKey]
-		public int id { get; set; }
-		public string townCity { get; set; }
+		public int id 
+		{ 
+			get; 
+			set; 
+		}
+		public string townCity 
+		{ 
+			get; 
+			set; 
+		}
 
 		/// <summary>
 		/// Initializes a new instance of Area.

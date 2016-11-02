@@ -2,12 +2,15 @@
 // Created on: 26/08/2016
 //
 // MenuCell.cs
-using System;
 
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
+	/// <summary>
+	/// Menu cell.
+	/// </summary>
 	public class MenuCell : ViewCell
 	{
 		public MenuCell()

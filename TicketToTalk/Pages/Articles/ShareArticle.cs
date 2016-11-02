@@ -14,11 +14,11 @@ namespace TicketToTalk
 	/// </summary>
 	public class ShareArticle : ContentPage
 	{
-		Entry email;
-		Button sendButton;
-		Switch toggle;
-		bool includeNotes = false;
-		Article article;
+		private Entry email;
+		private Button sendButton;
+		private Switch toggle;
+		private bool includeNotes = false;
+		private Article article;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ShareArticle"/> class.
@@ -32,7 +32,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			var descriptionLabel = new Label
@@ -132,7 +132,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 		}
@@ -142,10 +142,10 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void SendButton_Clicked(object sender, EventArgs e)
+		private async void SendButton_Clicked(object sender, EventArgs e)
 		{
 			ArticleController articleController = new ArticleController();
-			var shared = await articleController.shareArticle(article, email.Text, includeNotes);
+			var shared = await articleController.ShareArticle(article, email.Text, includeNotes);
 
 			if (shared)
 			{
@@ -162,7 +162,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void InputChanged(object sender, EventArgs e)
+		private void InputChanged(object sender, EventArgs e)
 		{
 			var v = (!string.IsNullOrEmpty(email.Text));
 
@@ -183,7 +183,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Toggle_Toggled(object sender, ToggledEventArgs e)
+		private void Toggle_Toggled(object sender, ToggledEventArgs e)
 		{
 			if (includeNotes)
 			{

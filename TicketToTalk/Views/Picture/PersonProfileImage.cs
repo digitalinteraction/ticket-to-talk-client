@@ -2,9 +2,6 @@
 // Created on: 17/08/2016
 //
 // ProfileImage.cs
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using ImageCircle.Forms.Plugin.Abstractions;
 using Xamarin.Forms;
@@ -35,7 +32,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(20),
-				Source = Task.Run(() => personController.getPersonProfilePicture(person)).Result
+				Source = Task.Run(() => personController.GetPersonProfilePicture(person)).Result
 			};
 
 			Content = profilePic;

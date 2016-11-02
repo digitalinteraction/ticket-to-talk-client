@@ -14,7 +14,7 @@ namespace TicketToTalk
 	public class TagDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Create a connection to the Tag database.
@@ -28,7 +28,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Open the database.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Tag>();
@@ -78,7 +78,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag by text.</returns>
 		/// <param name="text">Text.</param>
-		public Tag getTagByText(string text)
+		public Tag GetTagByText(string text)
 		{
 
 			var stored = _connection.Query<Tag>("SELECT * FROM Tag WHERE Text = ?", text);
@@ -92,7 +92,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close the database connection.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

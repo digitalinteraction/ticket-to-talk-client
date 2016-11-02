@@ -12,11 +12,11 @@ namespace TicketToTalk
 	/// </summary>
 	public class SeeInvite : ContentPage
 	{
-		public Person person;
-		Button button;
-		PersonController personController = new PersonController();
-		Button rejectButton;
-		Picker relation;
+		private Person person;
+		private Button button;
+		private PersonController personController = new PersonController();
+		private Button rejectButton;
+		private Picker relation;
 
 		public static bool isInTutorial = false;
 
@@ -29,7 +29,7 @@ namespace TicketToTalk
 			person = invitation.person;
 			Title = person.name;
 
-			var users = Task.Run(() => personController.getUsers(person.id)).Result;
+			var users = Task.Run(() => personController.GetUsers(person.id)).Result;
 
 			var profilePic = new CircleImage
 			{
@@ -142,13 +142,13 @@ namespace TicketToTalk
 
 				var userController = new UserController();
 				var r = ProjectResource.relations[relation.SelectedIndex];
-				await userController.acceptInvitation(invitation, r);
+				await userController.AcceptInvitation(invitation, r);
 
 				Debug.WriteLine("SeeInvite: accepting person - " + person);
 
-				if (new PersonController().getPerson(invitation.person.id) == null)
+				if (new PersonController().GetPerson(invitation.person.id) == null)
 				{
-					new PersonController().addPersonLocally(invitation.person);
+					new PersonController().AddPersonLocally(invitation.person);
 				}
 
 				SeeInvitations.invitations.Remove(invitation);
@@ -179,7 +179,7 @@ namespace TicketToTalk
 			rejectButton.Clicked += async (sender, e) =>
 			{
 				var userController = new UserController();
-				var rejected = await userController.rejectInvitation(invitation.person);
+				var rejected = await userController.RejectInvitation(invitation.person);
 
 				if (rejected)
 				{

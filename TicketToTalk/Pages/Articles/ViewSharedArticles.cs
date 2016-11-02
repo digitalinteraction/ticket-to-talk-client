@@ -2,7 +2,6 @@
 // Created on: 24/08/2016
 //
 // ViewArticles.cs
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;

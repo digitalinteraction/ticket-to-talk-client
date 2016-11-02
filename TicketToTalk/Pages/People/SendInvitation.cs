@@ -9,10 +9,10 @@ namespace TicketToTalk
 	public class SendInvitation : ContentPage
 	{
 
-		Entry email;
-		Picker group;
-		Button sendButton;
-		Person person;
+		private Entry email;
+		private Picker group;
+		private Button sendButton;
+		private Person person;
 
 		string[] userGroups = ProjectResource.groups;
 
@@ -114,12 +114,12 @@ namespace TicketToTalk
 		/// <returns>The button clicked.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void SendButton_Clicked(object sender, EventArgs e)
+		private async void SendButton_Clicked(object sender, EventArgs e)
 		{
 			var userController = new UserController();
 			var chosenGroup = userGroups[group.SelectedIndex];
 
-			var sent = await userController.sendInviteToPerson(email.Text.ToLower(), chosenGroup, person.id);
+			var sent = await userController.SendInviteToPerson(email.Text.ToLower(), chosenGroup, person.id);
 
 			if (sent)
 			{
@@ -139,7 +139,7 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void InputChanged(object sender, EventArgs e)
+		private void InputChanged(object sender, EventArgs e)
 		{
 			var v = (!string.IsNullOrEmpty(email.Text))
 				&& group.SelectedIndex != -1;

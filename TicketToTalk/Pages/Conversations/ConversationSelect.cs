@@ -22,18 +22,18 @@ namespace TicketToTalk
 			Title = "Conversations";
 			var conversationController = new ConversationController();
 
-			var cs = Task.Run(() => conversationController.getRemoteConversations()).Result;
+			var cs = Task.Run(() => conversationController.GetRemoteConversations()).Result;
 
 			foreach (Conversation converstaion in cs)
 			{
-				conversations.Add(conversationController.setPropertiesForDisplay(converstaion));
+				conversations.Add(conversationController.SetPropertiesForDisplay(converstaion));
 			}
 
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			var cell = new DataTemplate(typeof(ConversationCell));
@@ -54,9 +54,9 @@ namespace TicketToTalk
 
 				Debug.WriteLine("ConversationSelect: conversation selected = " + conversation);
 
-				await conversationController.addTicketToConversationRemotely(conversation, ticket);
-				conversation = conversationController.addTicketToConversation(conversation, ticket);
-				conversationController.updateConversationLocally(conversation);
+				await conversationController.AddTicketToConversationRemotely(conversation, ticket);
+				conversation = conversationController.AddTicketToConversation(conversation, ticket);
+				conversationController.UpdateConversationLocally(conversation);
 
 				await Navigation.PopModalAsync();
 
@@ -78,7 +78,7 @@ namespace TicketToTalk
 				WidthRequest = 30,
 				HorizontalOptions = LayoutOptions.EndAndExpand
 			};
-			add_img.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(newConvo) });
+			add_img.GestureRecognizers.Add(new TapGestureRecognizer() { Command = new Command(NewConversation) });
 
 			var newStack = new StackLayout
 			{
@@ -105,7 +105,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Creates a new conversation.
 		/// </summary>
-		void newConvo()
+		private void NewConversation()
 		{
 			var nav = new NavigationPage(new NewConversation());
 			nav.BarTextColor = ProjectResource.color_white;
@@ -118,7 +118,7 @@ namespace TicketToTalk
 		/// Cancels the operation
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		void cancel(object obj)
+		private void Cancel(object obj)
 		{
 			Navigation.PopModalAsync();
 		}

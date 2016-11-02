@@ -29,7 +29,7 @@ namespace TicketToTalk
 
 			// Check if ticket year falls within bounds.
 			TicketDB ticketDB = new TicketDB();
-			var rawTickets = ticketDB.getTicketsByPerson(person.id);
+			var rawTickets = ticketDB.GetTicketsByPerson(person.id);
 			foreach (Ticket t in rawTickets)
 			{
 				int tYear = int.Parse(t.year);
@@ -82,7 +82,7 @@ namespace TicketToTalk
 		/// <returns>The selection.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{

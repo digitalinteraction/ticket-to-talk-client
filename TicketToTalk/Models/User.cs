@@ -18,6 +18,7 @@ namespace TicketToTalk
 		private ImageSource _imageSource;
 		private string _imageHash;
 		private bool _firstLogin;
+		private string _api_key;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -129,13 +130,35 @@ namespace TicketToTalk
 			}
 		}
 
+		public string api_key 
+		{
+			get 
+			{
+				return _api_key;
+			}
+			set 
+			{
+				if (value != _api_key) 
+				{
+					_api_key = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		[Ignore]
 		public Pivot pivot { get; set; }
 
 		/// <summary>
 		/// Creates a new instance of a user.
+		/// 
+		/// Sets a default api key.
 		/// </summary>
-		public User() { }
+		public User() 
+		{
+			// TODO: Remove from constructor
+			api_key = "a82ae536fc32c8c185920f3a440b0984bb51b9077517a6c8ce4880e41737438d";
+		}
 
 		/// <summary>
 		/// Creates a new instance of a user.
@@ -145,15 +168,15 @@ namespace TicketToTalk
 		public User(int id, string Name, string Email)
 		{
 			this.id = id;
-			this.name = Name;
-			this.email = Email;
+			name = Name;
+			email = Email;
 		}
 
 		/// <summary>
 		/// Notifies the property changed.
 		/// </summary>
 		/// <param name="propertyName">Property name.</param>
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{
@@ -163,14 +186,13 @@ namespace TicketToTalk
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		/// <summary>
-		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.User"/>.
-		/// </summary>
-		/// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:TicketToTalk.User"/>.</returns>
 		public override string ToString()
 		{
-			return string.Format("[User: id={0}, name={1}, email={2}, password={3}, pathToPhoto={4}, created_at={5}, updated_at={6}, imageHash={7}, pivot={8}]",
-								id, name, email, password, pathToPhoto, created_at, updated_at, imageHash, pivot);
+			return string.Format("[User: name={0}, email={1}, password={2}, pathToPhoto={3}, " +
+			                     "created_at={4}, updated_at={5}, imageSource={6}, imageHash={7}, " +
+			                     "firstLogin={8}, api_key={9}, pivot={10}]", 
+			                     name, email, password, pathToPhoto, created_at, updated_at, 
+			                     imageSource, imageHash, firstLogin, api_key, pivot);
 		}
 
 		/// <summary>

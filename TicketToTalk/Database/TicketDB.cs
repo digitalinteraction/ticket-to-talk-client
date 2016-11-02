@@ -12,7 +12,7 @@ namespace TicketToTalk
 	public class TicketDB
 	{
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Creates a connection to the Ticket database.
@@ -23,7 +23,10 @@ namespace TicketToTalk
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 
-		public void open()
+		/// <summary>
+		/// Open this instance.
+		/// </summary>
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Ticket>();
@@ -73,7 +76,7 @@ namespace TicketToTalk
 		/// Gets the lasts the ticket added.
 		/// </summary>
 		/// <returns>The ticket added.</returns>
-		public Ticket lastTicketAdded()
+		public Ticket LastTicketAdded()
 		{
 			var max = _connection.Query<Ticket>("Select * FROM Ticket ORDER BY ID DESC LIMIT 1");
 			return max[0];
@@ -84,7 +87,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by person.</returns>
 		/// <param name="person_id">Person identifier.</param>
-		public List<Ticket> getTicketsByPerson(int person_id)
+		public List<Ticket> GetTicketsByPerson(int person_id)
 		{
 			return _connection.Query<Ticket>("SELECT * FROM Ticket WHERE person_id = ?", person_id);
 		}
@@ -94,7 +97,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets by period identifier.</returns>
 		/// <param name="period_id">Period identifier.</param>
-		public List<Ticket> getTicketsByPeriodID(int period_id)
+		public List<Ticket> GetTicketsByPeriodID(int period_id)
 		{
 			return _connection.Query<Ticket>("SELECT * FROM Ticket WHERE period_id = ?", period_id);
 		}
@@ -103,7 +106,7 @@ namespace TicketToTalk
 		/// Clears the table.
 		/// </summary>
 		/// <returns>The table.</returns>
-		public void clearTable()
+		public void ClearTable()
 		{
 			_connection.Query<Ticket>("DELETE FROM Ticket");
 		}
@@ -111,7 +114,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

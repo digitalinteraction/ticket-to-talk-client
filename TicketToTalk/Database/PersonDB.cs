@@ -17,7 +17,7 @@ namespace TicketToTalk
 		public static bool locked = false;
 
 		private SQLiteConnection _connection;
-		string dbPath;
+		private string dbPath;
 
 		/// <summary>
 		/// Create a connection to the Person table.
@@ -31,7 +31,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Open a database connection.
 		/// </summary>
-		public void open()
+		public void Open()
 		{
 			_connection = new SQLiteConnection(dbPath);
 			_connection.CreateTable<Person>();
@@ -84,7 +84,7 @@ namespace TicketToTalk
 			_connection.Insert(person);
 		}
 
-		public void clearTable()
+		public void ClearTable()
 		{
 			_connection.Query<Person>("DELETE FROM Person");
 		}
@@ -92,7 +92,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Close the database connection.
 		/// </summary>
-		public void close()
+		public void Close()
 		{
 			_connection.Close();
 		}

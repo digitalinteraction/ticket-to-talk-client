@@ -39,7 +39,7 @@ namespace TicketToTalk
 		/// <param name="filePath">File path.</param>
 		private void loadImage(Image image, string filePath)
 		{
-			var rawBytes = MediaController.readBytesFromFile(filePath);
+			var rawBytes = MediaController.ReadBytesFromFile(filePath);
 			image.Source = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 		}
 	}

@@ -4,7 +4,6 @@
 // AddNewPersonPrompt.cs
 using System;
 using System.Diagnostics;
-using ImageCircle.Forms.Plugin.Abstractions;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -27,9 +26,6 @@ namespace TicketToTalk
 
 			var icon = new Image
 			{
-				//BackgroundColor = ProjectResource.color_white,
-				//BorderColor = ProjectResource.color_white,
-				//BorderThickness = 2,
 				Source = "face_white_icon.png",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
@@ -49,14 +45,14 @@ namespace TicketToTalk
 			{
 				Text = "Add a Person",
 			};
-			button.setButtonStyle(ProjectResource.color_dark);
+			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
 			var skipTutorialButton = new Button
 			{
 				Text = "Skip Tutorial"
 			};
-			skipTutorialButton.setButtonStyle(ProjectResource.color_red);
+			skipTutorialButton.SetButtonStyle(ProjectResource.color_red);
 			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
 			skipTutorialButton.IsVisible = canSkip;
 
@@ -83,7 +79,7 @@ namespace TicketToTalk
 		private void Button_Clicked(object sender, EventArgs e)
 		{
 			var nav = new NavigationPage(new AddPersonChoice());
-			nav.setNavHeaders();
+			nav.SetNavHeaders();
 			AddPerson.isInTutorial = true;
 
 			//Application.Current.MainPage = nav;

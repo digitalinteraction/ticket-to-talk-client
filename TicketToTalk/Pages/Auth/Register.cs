@@ -12,15 +12,15 @@ namespace TicketToTalk
 	/// </summary>
 	public class Register : ContentPage
 	{
-		Image personImage;
-		Entry nameEntry;
-		Entry emailEntry;
-		Entry passwordEntry;
-		Entry confirmPasswordEntry;
-		Button savePersonButton;
-		MediaFile file;
+		private Image personImage;
+		private Entry nameEntry;
+		private Entry emailEntry;
+		private Entry passwordEntry;
+		private Entry confirmPasswordEntry;
+		private Button savePersonButton;
+		private MediaFile file;
 
-		UserController userController = new UserController();
+		private UserController userController = new UserController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Register"/> class.
@@ -43,7 +43,7 @@ namespace TicketToTalk
 				Margin = new Thickness(20),
 			};
 			personImage.Source = "profile_placeholder.png";
-			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onPlaceholderTap) });
+			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(OnPlaceholderTap) });
 
 			// Create form.
 			var nameLabel = new Label
@@ -153,7 +153,7 @@ namespace TicketToTalk
 				IsEnabled = false,
 				Margin = new Thickness(0, 0, 0, 10)
 			};
-			savePersonButton.Clicked += register;
+			savePersonButton.Clicked += RegisterProfile;
 			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
@@ -185,7 +185,7 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Entry_TextChanged(object sender, TextChangedEventArgs e)
+		private void Entry_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			var entriesNotNull = (!string.IsNullOrEmpty(nameEntry.Text))
 				&& (!string.IsNullOrEmpty(emailEntry.Text))
@@ -207,7 +207,7 @@ namespace TicketToTalk
 		/// On image tap
 		/// </summary>
 		/// <returns>The placeholder tap.</returns>
-		async void onPlaceholderTap()
+		private async void OnPlaceholderTap()
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			MediaFile file = null;
@@ -231,7 +231,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Save the user when the save button is clicked.
 		/// </summary>
-		async void register(Object sender, EventArgs e)
+		private async void RegisterProfile(object sender, EventArgs e)
 		{
 			savePersonButton.IsEnabled = false;
 
@@ -260,12 +260,12 @@ namespace TicketToTalk
 					}
 				}
 
-				registered = await userController.registerNewUser(user, image);
+				registered = await userController.RegisterNewUser(user, image);
 			}
 
 			if (registered)
 			{
-				Session.activeUser.imageSource = await userController.getUserProfilePicture();
+				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 
 				await Navigation.PushAsync(new AllProfiles());
 				Navigation.RemovePage(this);

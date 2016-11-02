@@ -11,12 +11,12 @@ namespace TicketToTalk
 	/// </summary>
 	public class AddArticle : ContentPage
 	{
-		Entry title;
-		Editor notes;
-		Entry link;
+		private Entry title;
+		private Editor notes;
+		private Entry link;
 
-		Article article = null;
-		Button saveButton;
+		private Article article = null;
+		private Button saveButton;
 
 		ArticleController articleController = new ArticleController();
 
@@ -98,12 +98,12 @@ namespace TicketToTalk
 			};
 			if (article == null)
 			{
-				saveButton.Clicked += saveArticle;
+				saveButton.Clicked += SaveArticle;
 			}
 			else
 			{
 				saveButton.Text = "Update";
-				saveButton.Clicked += updateArticle;
+				saveButton.Clicked += UpdateArticle;
 			}
 
 			if (article != null)
@@ -185,7 +185,7 @@ namespace TicketToTalk
 		/// Saves the article.
 		/// </summary>
 		/// <returns>The article.</returns>
-		public async void saveArticle(object sender, EventArgs e)
+		public async void SaveArticle(object sender, EventArgs e)
 		{
 			saveButton.IsEnabled = false;
 
@@ -195,32 +195,21 @@ namespace TicketToTalk
 				post_link = "http://" + post_link;
 			}
 
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["title"] = title.Text;
-			parameters["notes"] = notes.Text;
-			parameters["link"] = post_link;
-			parameters["token"] = Session.Token.val;
-
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendPostRequest("articles/store", parameters);
-			if (jobject != null)
+			var article = new Article
 			{
-				var jtoken = jobject.GetValue("article");
-				var article = jtoken.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + article);
+				title = title.Text,
+				notes = notes.Text,
+				link = post_link
+			};
 
-				ArticleDB aDB = new ArticleDB();
-				aDB.open();
-				aDB.AddArticle(article);
-				aDB.close();
+			var added =  await articleController.AddArticleRemotely(article);
 
-				article.favicon = articleController.getFaviconURL(article.link);
-				AllArticles.serverArticles.Add(article);
-
+			if (added)
+			{
 				await Navigation.PopModalAsync();
 			}
 			else
-			{
+			{ 
 				await DisplayAlert("Articles", "Article could not be saved.", "OK");
 				saveButton.IsEnabled = true;
 			}
@@ -231,7 +220,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		public async void updateArticle(object sender, EventArgs e)
+		public async void UpdateArticle(object sender, EventArgs e)
 		{
 			var post_link = link.Text.ToLower();
 			if (!(post_link.StartsWith("http://", StringComparison.Ordinal)))
@@ -239,42 +228,21 @@ namespace TicketToTalk
 				post_link = "http://" + post_link;
 			}
 
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["article_id"] = article.id.ToString();
-			parameters["title"] = title.Text;
-			parameters["notes"] = notes.Text;
-			parameters["link"] = post_link;
-			parameters["token"] = Session.Token.val;
-
-			NetworkController net = new NetworkController();
-			var jobject = await net.sendPostRequest("articles/update", parameters);
-			if (jobject != null)
+			var new_article = new Article
 			{
-				var jtoken = jobject.GetValue("article");
-				var new_article = jtoken.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + new_article);
+				id = article.id,
+				title = title.Text,
+				notes = notes.Text,
+				link = post_link
+			};
 
-				new_article.favicon = articleController.getFaviconURL(new_article.link);
-				articleController.updateArticleLocally(new_article);
+			bool added = await articleController.UpdateArticleRemotely(new_article);
 
-				var idx = -1;
-				for (int i = 0; i < AllArticles.serverArticles.Count; i++)
-				{
-					if (new_article.id == AllArticles.serverArticles[i].id)
-					{
-						idx = i;
-						break;
-					}
-				}
-
-				AllArticles.serverArticles[idx] = new_article;
-				ViewArticle.currentArticle.title = new_article.title;
-				ViewArticle.currentArticle.link = new_article.link;
-				ViewArticle.currentArticle.notes = new_article.notes;
-
+			if (added)
+			{
 				await Navigation.PopModalAsync();
 			}
-			else
+			else 
 			{
 				await DisplayAlert("Articles", "Article could not updated.", "OK");
 				saveButton.IsEnabled = true;

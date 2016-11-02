@@ -14,15 +14,15 @@ namespace TicketToTalk
 	public class AddPerson : ContentPage
 	{
 
-		PersonController personController = new PersonController();
+		private PersonController personController = new PersonController();
 		public static bool isInTutorial = false;
 
-		Entry name;
-		Image personImage;
-		Entry birthPlaceEntry;
-		Entry town_city;
-		MediaFile file;
-		Editor notesEditor;
+		private Entry name;
+		private Image personImage;
+		private Entry birthPlaceEntry;
+		private Entry town_city;
+		private MediaFile file;
+		private Editor notesEditor;
 
 		string[] relations =
 		{
@@ -35,10 +35,10 @@ namespace TicketToTalk
 			"Friend",
 		};
 
-		Picker yearPicker;
-		Picker relationPicker;
-		Button savePersonButton;
-		Person person;
+		private Picker yearPicker;
+		private Picker relationPicker;
+		private Button savePersonButton;
+		private Person person;
 
 		/// <summary>
 		/// Creates an instance of an add person view.
@@ -52,7 +52,7 @@ namespace TicketToTalk
 			{
 				Text = "Cancel",
 				Order = ToolbarItemOrder.Primary,
-				Command = new Command(cancel)
+				Command = new Command(Cancel)
 			});
 
 			personImage = new CircleImage
@@ -68,14 +68,14 @@ namespace TicketToTalk
 			};
 			if (person != null)
 			{
-				byte[] pic = MediaController.readBytesFromFile(person.pathToPhoto);
+				byte[] pic = MediaController.ReadBytesFromFile(person.pathToPhoto);
 				personImage.Source = ImageSource.FromStream(() => new MemoryStream(pic));
 			}
 			else
 			{
 				personImage.Source = "person_placeholder.png";
 			}
-			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(onPlaceholderTap) });
+			personImage.GestureRecognizers.Add(new TapGestureRecognizer { Command = new Command(OnPlaceholderTap) });
 
 			var nameLabel = new Label
 			{
@@ -231,7 +231,7 @@ namespace TicketToTalk
 			}
 			else
 			{
-				savePersonButton.Clicked += savePerson;
+				savePersonButton.Clicked += SavePerson;
 			}
 
 			var buttonStack = new StackLayout
@@ -259,8 +259,8 @@ namespace TicketToTalk
 				Title = "Edit Person";
 
 				var puDB = new PersonUserDB();
-				var personUser = puDB.getRelationByUserAndPersonID(Session.activeUser.id, person.id);
-				puDB.close();
+				var personUser = puDB.GetRelationByUserAndPersonID(Session.activeUser.id, person.id);
+				puDB.Close();
 
 				var ridx = 0;
 				for (int i = 0; i < ProjectResource.relations.Length; i++)
@@ -289,7 +289,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Cancel this instance.
 		/// </summary>
-		void cancel()
+		private void Cancel()
 		{
 			Navigation.PopModalAsync();
 
@@ -300,7 +300,7 @@ namespace TicketToTalk
 		/// On placeholder tap, select image.
 		/// </summary>
 		/// <returns>The placeholder tap.</returns>
-		async void onPlaceholderTap()
+		private async void OnPlaceholderTap()
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			MediaFile file = null;
@@ -327,7 +327,7 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Entry_TextChanged(object sender, EventArgs e)
+		private void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!string.IsNullOrEmpty(name.Text))
 				&& (!string.IsNullOrEmpty(birthPlaceEntry.Text))
@@ -351,7 +351,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Saves the person to the database.
 		/// </summary>
-		public async void savePerson(object sender, EventArgs ea)
+		private async void SavePerson(object sender, EventArgs ea)
 		{
 			savePersonButton.IsEnabled = false;
 
@@ -376,7 +376,7 @@ namespace TicketToTalk
 				}
 			}
 
-			bool saved = await personController.addPersonRemotely(tempPerson, relations[relationPicker.SelectedIndex], image);
+			bool saved = await personController.AddPersonRemotely(tempPerson, relations[relationPicker.SelectedIndex], image);
 
 			if (saved)
 			{
@@ -406,7 +406,7 @@ namespace TicketToTalk
 		{
 			savePersonButton.IsEnabled = false;
 
-			var p = personController.getPerson(person.id);
+			var p = personController.GetPerson(person.id);
 
 			p.name = name.Text;
 			p.birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
@@ -424,7 +424,7 @@ namespace TicketToTalk
 				}
 			}
 
-			var returned = await personController.updatePersonRemotely(p, relations[relationPicker.SelectedIndex], image);
+			var returned = await personController.UpdatePersonRemotely(p, relations[relationPicker.SelectedIndex], image);
 
 			if (returned != null)
 			{
