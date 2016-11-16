@@ -1,23 +1,26 @@
-﻿<Properties StartupConfiguration="{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Pages/Conversations/ConversationView.cs">
+﻿<Properties StartupConfiguration="{BB52CBA1-6A03-4FB2-B92E-238352078CD9}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TicketToTalk/Controllers/NetworkController.cs">
     <Files>
-      <File FileName="TicketToTalk/Views/Audio/AudioPlayerLayout.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Tickets/TicketViews/ViewTicket.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/People/SeeInvite.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/People/SeeInvitations.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/ViewModels/InvitationCell.cs" Line="33" Column="53" />
-      <File FileName="TicketToTalk/Views/Picture/PictureLayout.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Views/Picture/PersonProfileImage.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/PlayConversation.cs" Line="1" Column="1" />
-      <File FileName="TicketToTalk/Pages/Conversations/ConversationView.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Controllers/UserController.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Resources/Session.cs" Line="15" Column="34" />
+      <File FileName="TicketToTalk/Controllers/NetworkController.cs" Line="61" Column="40" />
+      <File FileName="TicketToTalk/Controllers/ArticleController.cs" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Pages/Articles/AddArticle.cs" Line="1" Column="1" />
+      <File FileName="iOS/Main.cs" Line="17" Column="1" />
+      <File FileName="TicketToTalk/Pages/Articles/AllArticles.cs" Line="1" Column="1" />
+      <File FileName="iOS/Info.plist" />
+      <File FileName="../../../../../Library/Frameworks/Xamarin.iOS.framework/Versions/10.2.0.4/lib/mono/2.1/Xamarin.iOS.Common.targets" Line="1" Column="1" />
+      <File FileName="TicketToTalk/Resources/ProjectResource.cs" Line="13" Column="69" />
     </Files>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/Daniel/Code/Xamarin/ticket_to_talk/TicketToTalk/Controllers/TicketController.cs" line="56" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.TicketToTalk.Droid PreferredExecutionTarget="Android.Android_Accelerated_x86" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <AuthorInfo Name="Daniel Welsh" Email="d.welsh@ncl.ac.uk" Copyright="" Company="OpenLab - Newcastle University" Trademark="" />
-  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.81B128C6-80BA-4FB2-B338-879D92E4CA56" />
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
 </Properties>

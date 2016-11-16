@@ -40,6 +40,7 @@ namespace TicketToTalk
 		public async Task<JObject> SendGetRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 

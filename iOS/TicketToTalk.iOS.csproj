@@ -132,6 +132,9 @@
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_80.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_180.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -204,6 +207,10 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork%402x" />
+    <ITunesArtwork Include="iTunesArtwork" />
   </ItemGroup>
   <Import Project="..\TicketToTalk\TicketToTalk.projitems" Label="Shared" Condition="Exists('..\TicketToTalk\TicketToTalk.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
