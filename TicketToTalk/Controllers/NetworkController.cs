@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -26,7 +27,9 @@ namespace TicketToTalk
 		/// </summary>
 		public NetworkController()
 		{
+			
 			client = new HttpClient();
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "danielwelsh.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 		}
@@ -40,6 +43,11 @@ namespace TicketToTalk
 		public async Task<JObject> SendGetRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
@@ -100,6 +108,12 @@ namespace TicketToTalk
 		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -167,6 +181,11 @@ namespace TicketToTalk
 		public async Task<JObject> SendGenericPostRequest(string URL, IDictionary<string, object> parameters)
 		{
 			var client = new HttpClient();
+
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -215,6 +234,10 @@ namespace TicketToTalk
 		public async Task<JObject> SendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -277,20 +300,37 @@ namespace TicketToTalk
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
 			var client = new HttpClient();
-			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
-			client.Timeout = new TimeSpan(0, 0, 100);
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
 
-			Debug.WriteLine("NetworkController: Beginning Download");
-			var webClient = new WebClient();
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+			client.Timeout = new TimeSpan(0, 0, 100);
 
 			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val) + "&api_key=" + Session.activeUser.api_key;
 			Debug.WriteLine(url);
 
-			var returned = await webClient.DownloadDataTaskAsync(url);
+			Debug.WriteLine("NetworkController: Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0) 
+				{
+					ms.Write(buffer, 0, read);
+				}
+				Debug.WriteLine("Writing to bytes");
+				imageBytes = ms.ToArray();
+			}
+			// http://stackoverflow.com/questions/221925/creating-a-byte-array-from-a-stream
+			//var returned = await webClient.DownloadDataTaskAsync(url);
 			if (returned != null)
 			{
-				Debug.WriteLine("NetworkController: Downloaded image - " + returned.HashArray());
-				MediaController.WriteImageToFile(fileName, returned);
+				Debug.WriteLine("NetworkController: Downloaded image - " + imageBytes.HashArray());
+				MediaController.WriteImageToFile(fileName, imageBytes);
 				return true;
 			}
 			else

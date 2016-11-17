@@ -405,7 +405,8 @@ namespace TicketToTalk
 
 			var fileName = "u_" + user.id + ".jpg";
 			Debug.WriteLine("UserController: Downloading profile picture with path - " + user.pathToPhoto);
-			await networkController.DownloadFile(user.pathToPhoto, fileName);
+			//await networkController.DownloadFile(user.pathToPhoto, fileName);
+			await Task.Run(() => networkController.DownloadFile(user.pathToPhoto, fileName));
 
 			user.pathToPhoto = fileName;
 
