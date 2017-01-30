@@ -27,7 +27,7 @@ namespace TicketToTalk
 		/// </summary>
 		public NetworkController()
 		{
-			
+
 			client = new HttpClient();
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "danielwelsh.uk";
@@ -121,9 +121,9 @@ namespace TicketToTalk
 			{
 				parameters["api_key"] = api_key;
 			}
-			else 
+			else
 			{
-				parameters["api_key"] = Session.activeUser.api_key;	
+				parameters["api_key"] = Session.activeUser.api_key;
 			}
 
 			var uri = new Uri(URLBase + URL);
@@ -277,7 +277,7 @@ namespace TicketToTalk
 			{
 				return null;
 			}
-			else if (response.IsSuccessStatusCode)
+			if (response.IsSuccessStatusCode)
 			{
 				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
@@ -287,6 +287,10 @@ namespace TicketToTalk
 			else
 			{
 				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
+				if (response.StatusCode.ToString().Equals("401"))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -318,7 +322,7 @@ namespace TicketToTalk
 			using (MemoryStream ms = new MemoryStream())
 			{
 				int read = 0;
-				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0) 
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
 				{
 					ms.Write(buffer, 0, read);
 				}

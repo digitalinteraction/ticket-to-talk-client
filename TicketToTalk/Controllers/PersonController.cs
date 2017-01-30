@@ -155,7 +155,8 @@ namespace TicketToTalk
 		public async Task<byte[]> DownloadPersonProfilePicture(Person person)
 		{
 			var fileName = "p_" + person.id + ".jpg";
-			var downloaded = await networkController.DownloadFile(person.pathToPhoto, fileName);
+			//var downloaded = await networkController.DownloadFile(person.pathToPhoto, fileName);
+			var downloaded = await Task.Run(() => networkController.DownloadFile(person.pathToPhoto, fileName));
 
 			if (downloaded)
 			{
