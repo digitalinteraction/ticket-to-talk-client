@@ -95,6 +95,11 @@ namespace TicketToTalk
 			else
 			{
 				Console.WriteLine("Response:" + response.StatusCode);
+
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -168,6 +173,11 @@ namespace TicketToTalk
 			else
 			{
 				Console.WriteLine("Request:" + response.StatusCode);
+
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -221,6 +231,11 @@ namespace TicketToTalk
 			else
 			{
 				Debug.WriteLine("Request:" + response.StatusCode);
+
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -242,7 +257,6 @@ namespace TicketToTalk
 			client.Timeout = new TimeSpan(0, 0, 100);
 
 			parameters["api_key"] = Session.activeUser.api_key;
-
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
 			{
@@ -287,7 +301,7 @@ namespace TicketToTalk
 			else
 			{
 				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
-				if (response.StatusCode.ToString().Equals("401"))
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
 				{
 					HandleSessionExpiration();
 				}
@@ -348,10 +362,15 @@ namespace TicketToTalk
 		/// </summary>
 		public void HandleSessionExpiration()
 		{
-			Application.Current.MainPage = new Login();
 			Session.activePerson = null;
 			Session.activeUser = null;
 			Session.Token.val = null;
+
+			var nav = new NavigationPage(new Login());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Application.Current.MainPage = nav;
 		}
 	}
 }

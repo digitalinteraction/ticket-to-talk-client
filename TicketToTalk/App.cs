@@ -28,10 +28,10 @@ namespace TicketToTalk
 			//};
 			//conversationController.ParseDateToIntegers(conversation);
 
-			var net = new NetworkController();
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			var response = net.SendGetRequest("/", parameters);
-			Debug.WriteLine(response);
+			//var net = new NetworkController();
+			//IDictionary<string, string> parameters = new Dictionary<string, string>();
+			//var response = net.SendGetRequest("/", parameters);
+			//Debug.WriteLine(response);
 
 			MainPage = nav;
 		}
