@@ -156,7 +156,6 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
 				return false;
 			}
 
@@ -194,7 +193,6 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
 				return false;
 			}
 

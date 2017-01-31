@@ -64,7 +64,6 @@ namespace TicketToTalk
 			}
 			URL = URL.Substring(0, URL.Length - 1);
 			var uri = new Uri(URLBase + URL);
-			Console.WriteLine("Sending request to: " + uri);
 
 			HttpResponseMessage response = null;
 
@@ -72,12 +71,10 @@ namespace TicketToTalk
 			try
 			{
 				response = await client.GetAsync(uri);
-				Debug.WriteLine(response);
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine("Network Timeout");
 			}
 
 			// Check for success.
@@ -87,15 +84,12 @@ namespace TicketToTalk
 			}
 			else if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("NetworkController: Response - " + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Console.WriteLine("Response:" + response.StatusCode);
-
 				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
 				{
 					HandleSessionExpiration();
@@ -132,11 +126,9 @@ namespace TicketToTalk
 			}
 
 			var uri = new Uri(URLBase + URL);
-			Debug.WriteLine(uri);
 
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
-			Debug.WriteLine("NetworkController: " + jsonCredentials);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
 			//var response = null;
@@ -145,17 +137,14 @@ namespace TicketToTalk
 			{
 				// Get response
 				response = await client.PostAsync(uri, content);
-				Debug.WriteLine(response.ToString());
 			}
 			catch (WebException ex)
 			{
-				Debug.WriteLine("Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine("Network Timeout");
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine(ex);
 			}
 
 			// Check for success.
@@ -165,15 +154,12 @@ namespace TicketToTalk
 			}
 			else if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Console.WriteLine("Request:" + response.StatusCode);
-
 				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
 				{
 					HandleSessionExpiration();
@@ -210,11 +196,9 @@ namespace TicketToTalk
 			}
 
 			var uri = new Uri(URLBase + URL);
-			Debug.WriteLine("NetworkController: " + uri);
 
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
-			//Console.WriteLine(jsonCredentials);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
 			// Get response
@@ -223,14 +207,12 @@ namespace TicketToTalk
 			// Check for success.
 			if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
 
 				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
 				{
@@ -268,8 +250,6 @@ namespace TicketToTalk
 			URL = URL.Substring(0, URL.Length - 1);
 			var uri = URLBase + URL;
 
-			Debug.WriteLine("NetworkController: Sending delete request to: " + uri);
-
 			// Get response
 			HttpResponseMessage response = null;
 			try
@@ -278,13 +258,10 @@ namespace TicketToTalk
 			}
 			catch (WebException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine("NetworkController:" + ex);
+				Console.WriteLine("Network Timeout");
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine("NetworkController:" + ex);
 			}
 
 			if (response == null)
@@ -293,14 +270,12 @@ namespace TicketToTalk
 			}
 			if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
 				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
 				{
 					HandleSessionExpiration();
@@ -327,9 +302,8 @@ namespace TicketToTalk
 			client.Timeout = new TimeSpan(0, 0, 100);
 
 			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val) + "&api_key=" + Session.activeUser.api_key;
-			Debug.WriteLine(url);
 
-			Debug.WriteLine("NetworkController: Beginning Download");
+			Console.WriteLine("Beginning Download");
 			var returned = await client.GetStreamAsync(url);
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
@@ -340,14 +314,12 @@ namespace TicketToTalk
 				{
 					ms.Write(buffer, 0, read);
 				}
-				Debug.WriteLine("Writing to bytes");
 				imageBytes = ms.ToArray();
 			}
 			// http://stackoverflow.com/questions/221925/creating-a-byte-array-from-a-stream
 			//var returned = await webClient.DownloadDataTaskAsync(url);
 			if (returned != null)
 			{
-				Debug.WriteLine("NetworkController: Downloaded image - " + imageBytes.HashArray());
 				MediaController.WriteImageToFile(fileName, imageBytes);
 				return true;
 			}

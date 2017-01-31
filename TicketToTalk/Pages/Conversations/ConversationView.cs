@@ -27,7 +27,6 @@ namespace TicketToTalk
 			this.conversation = conversation;
 			conversationItems.Clear();
 			tickets.Clear();
-			Debug.WriteLine("ConversationView: Conversation = " + conversation);
 
 			// Wait for new ticket to be returned if added through this view.
 			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
@@ -151,10 +150,7 @@ namespace TicketToTalk
 			{
 				char[] delims = { ' ' };
 				string[] ticket_ids = conversation.ticket_id_string.Split(delims);
-				foreach (string s in ticket_ids)
-				{
-					Debug.WriteLine("ConversationView: ticket_id " + s);
-				}
+
 				var ticketController = new TicketController();
 				if (!(string.IsNullOrEmpty(ticket_ids[0])))
 				{

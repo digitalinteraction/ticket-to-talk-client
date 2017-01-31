@@ -272,7 +272,6 @@ namespace TicketToTalk
 			var returned = await conversationController.StoreConversationRemotely(conversation);
 			if (returned != null)
 			{
-				Debug.WriteLine("NewConversation: conversation - " + returned);
 				conversationController.StoreConversationLocally(returned);
 				ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
 				ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));

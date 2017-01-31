@@ -24,15 +24,7 @@ namespace TicketToTalk
 			var ticketController = new TicketController();
 			Task.Run(() => ticketController.UpdateTicketsFromAPI()).Wait();
 
-			Debug.WriteLine("ViewTickets: Got tickets from API");
-
 			tickets = ticketController.GetTickets();
-			Debug.WriteLine("ViewTickets: Got tickets from local storage");
-
-			foreach (Ticket t in tickets)
-			{
-				Debug.WriteLine("ViewTickets: " + t);
-			}
 
 			// Set navigation tabs
 			// Set ages
@@ -42,8 +34,6 @@ namespace TicketToTalk
 			nav.Title = "Periods";
 			nav.Icon = "ic_schedule_white_.png";
 			this.Children.Add(nav);
-
-			Debug.WriteLine("Set periods page");
 
 			// Sort tickets into songs.
 			List<Ticket> ticketSongs = new List<Ticket>();

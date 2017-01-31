@@ -21,8 +21,6 @@ namespace TicketToTalk
 		/// </summary>
 		public ArticleDB()
 		{
-
-			Debug.WriteLine("ArticleDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

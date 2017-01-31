@@ -17,7 +17,6 @@ namespace TicketToTalk
 		public InspirationDB()
 		{
 
-			Debug.WriteLine("InspirationDB: Establishing DB connection");
 			string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 			_connection = new SQLiteConnection(dbPath);
 
@@ -70,7 +69,7 @@ namespace TicketToTalk
 		public Inspiration GetRandomInspiration()
 		{
 			var query = _connection.Query<Inspiration>("SELECT * FROM Inspiration WHERE used = ?", false);
-			Console.WriteLine(query.Count());
+
 			if (query.Count > 0)
 			{
 				var idx = new Random().Next(query.Count());

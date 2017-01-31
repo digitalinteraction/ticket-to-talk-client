@@ -181,7 +181,7 @@ namespace TicketToTalk
 		/// <returns>The clicked.</returns>
 		void Stop_Clicked()
 		{
-			Debug.WriteLine("AudioPlayerLayout: Stop clicked");
+
 			StopPlayBack();
 
 #if __IOS__
@@ -204,7 +204,6 @@ namespace TicketToTalk
 
 				timer.Stop();
 
-				Debug.WriteLine("AudioPlayerLayout: Message recieved.");
 
 				clock.current_time = "0:00";
 				second_count = 0;
@@ -225,8 +224,6 @@ namespace TicketToTalk
 			{
 
 				timer.Stop();
-
-				Debug.WriteLine("AudioPlayerLayout: Message recieved.");
 
 				clock.current_time = "0:00";
 				second_count = 0;
@@ -251,7 +248,6 @@ namespace TicketToTalk
 				timer.Stop();
 				DependencyService.Get<IAudioPlayer>().PausePlayback();
 				play_img.Source = "play_icon.png";
-				Debug.WriteLine("AudioPlayerLayout: Pausing playback");
 			}
 			// Resume playback
 			else if (playing && paused)
@@ -262,8 +258,6 @@ namespace TicketToTalk
 				paused = false;
 				timer.Start();
 				DependencyService.Get<IAudioPlayer>().ResumePlayBack();
-
-				Debug.WriteLine("AudioPlayerLayout: Resuming playback");
 			}
 			// Play track.
 			else
@@ -278,8 +272,6 @@ namespace TicketToTalk
 				progressBar.Progress = 0;
 				playing = true;
 				paused = false;
-
-				Debug.WriteLine("AudioPlayerLayout: Starting playback");
 			}
 		}
 
@@ -290,10 +282,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-
-			Debug.WriteLine("AudioPlayerLayout: Timer");
 			var time = DependencyService.Get<IAudioPlayer>().GetCurrentTime();
-			Debug.WriteLine("AudioPlayerLayout: Timer - " + time);
 			second_count++;
 			var mins = time / 60;
 			var seconds = time % 60;
@@ -309,8 +298,6 @@ namespace TicketToTalk
 
 			EPSILON = 0.05;
 			var progress = ((double)time / rawDuration);
-
-			Debug.WriteLine("AudioPlayerLayout: Progress = " + progress);
 
 			if (Math.Abs(progress) < EPSILON)
 			{
@@ -332,7 +319,6 @@ namespace TicketToTalk
 		/// </summary>
 		public void StopPlayBack()
 		{
-			Debug.WriteLine("AudioPlayerLayout: Stop button pressed.");
 			playing = false;
 			paused = false;
 			play_img.Source = "play_icon.png";
@@ -341,7 +327,6 @@ namespace TicketToTalk
 			timer.Stop();
 			clock.current_time = "0:00";
 			second_count = 0;
-			Debug.WriteLine("AudioPlayer: Stopping playback");
 			progressBar.ProgressTo(0, 250, Easing.Linear);
 		}
 
@@ -371,7 +356,7 @@ namespace TicketToTalk
 				}
 				else if (status != PermissionStatus.Unknown)
 				{
-					//await DisplayAlert("Storage Denied", "Cannot save tickets without access to audio.", "OK");
+
 					return false;
 				}
 
@@ -379,7 +364,7 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
+
 				return false;
 			}
 		}

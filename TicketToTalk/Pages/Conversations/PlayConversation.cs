@@ -137,7 +137,6 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		private void SetTicketStack(Ticket ticket)
 		{
-			Debug.WriteLine("PlayConversation: Ticket to display = " + ticket);
 			switch (ticket.mediaType)
 			{
 				case ("Picture"):
@@ -180,8 +179,6 @@ namespace TicketToTalk
 		{
 			currentIndex++;
 			currentIndex = currentIndex % tickets.Count;
-
-			Debug.WriteLine("PlayConversation: Index of next ticket" + currentIndex);
 
 			SetTicketStack(tickets[currentIndex]);
 		}

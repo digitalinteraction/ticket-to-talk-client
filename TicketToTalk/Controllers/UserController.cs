@@ -156,10 +156,9 @@ namespace TicketToTalk
 			// first time login
 			if (user == null)
 			{
-				Debug.WriteLine("First time login");
 				Session.activeUser = null;
 			}
-			else 
+			else
 			{
 				Session.activeUser = user;
 			}
@@ -169,8 +168,6 @@ namespace TicketToTalk
 
 			// fail if null response
 			if (jobject == null) return false;
-
-			Debug.WriteLine(jobject);
 
 			var status = jobject.GetValue("status");
 			//var jtoken = status.
@@ -292,10 +289,8 @@ namespace TicketToTalk
 				}
 				else
 				{
-					Debug.WriteLine("UserController: Set to default photo");
 					user.pathToPhoto = "default_profile.png";
 				}
-				Debug.WriteLine("Registered User: " + user);
 
 				// Store api-key
 				var japi_key = data["api_key"];
@@ -376,20 +371,16 @@ namespace TicketToTalk
 			ImageSource imageSource;
 			if (user.pathToPhoto.Equals("default_profile.png"))
 			{
-				Debug.WriteLine("UserController: Getting default image.");
 				imageSource = ImageSource.FromFile(user.pathToPhoto);
 			}
 			else if (user.pathToPhoto.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
-				Debug.WriteLine("UserController: Getting image from server.");
 				var imgBytes = await DownloadUserProfilePicture();
 				imageSource = ImageSource.FromStream(() => new MemoryStream(imgBytes));
 			}
 			else
 			{
-				Debug.WriteLine("UserController: Getting image from storage");
 				var rawBytes = MediaController.ReadBytesFromFile(user.pathToPhoto);
-				Debug.WriteLine("PersonController: fileSize " + rawBytes.Length);
 				imageSource = ImageSource.FromStream(() => new MemoryStream(rawBytes));
 			}
 			return imageSource;
@@ -404,7 +395,7 @@ namespace TicketToTalk
 			var user = Session.activeUser;
 
 			var fileName = "u_" + user.id + ".jpg";
-			Debug.WriteLine("UserController: Downloading profile picture with path - " + user.pathToPhoto);
+
 #if __IOS__
 			await networkController.DownloadFile(user.pathToPhoto, fileName);
 #else

@@ -17,8 +17,6 @@ namespace TicketToTalk
 		/// </summary>
 		public YouTubePlayer(string videoCode)
 		{
-			Debug.WriteLine("YouTubePlayer: string code = " + videoCode);
-
 			var height = (double)Session.ScreenWidth * 0.5625;
 
 			Padding = new Thickness(0);
@@ -30,8 +28,6 @@ namespace TicketToTalk
 					"</body>" +
 				"</html>",
 				videoCode, Session.ScreenWidth, height);
-
-			Debug.WriteLine("YouTubePlayer: Embeded URL = " + url);
 
 			var webView = new WebView
 			{

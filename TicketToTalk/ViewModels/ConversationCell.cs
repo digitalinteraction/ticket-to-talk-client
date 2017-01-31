@@ -55,7 +55,6 @@ namespace TicketToTalk
 		void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
-			Debug.WriteLine("ConversationCell: Binding context - " + mi.BindingContext);
 
 			var conversation = (Conversation)mi.BindingContext;
 

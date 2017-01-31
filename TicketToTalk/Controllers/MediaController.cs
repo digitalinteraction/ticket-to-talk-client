@@ -27,7 +27,7 @@ namespace TicketToTalk
 		public static byte[] ReadBytesFromFile(string fileName)
 		{
 			string path = fileName;
-			Debug.WriteLine("MediaController: Reading bytes from file with fileName - " + fileName);
+			Console.WriteLine("MediaController: Reading bytes from file with fileName - " + fileName);
 #if __IOS__
 			path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 #else
@@ -46,8 +46,7 @@ namespace TicketToTalk
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine("MediaController: Could not find file at path: " + path);
-				Debug.WriteLine(ex);
+				Console.WriteLine("MediaController: Could not find file at path: " + path);
 				return new byte[0];
 			}
 		}
@@ -60,7 +59,7 @@ namespace TicketToTalk
 		/// <param name="bytes">Bytes.</param>
 		public static bool WriteImageToFile(string fileName, byte[] bytes)
 		{
-			Debug.WriteLine("MediaController: Writing bytes to file.");
+			Console.WriteLine("MediaController: Writing media to file.");
 #if __IOS__
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 #else
@@ -69,12 +68,11 @@ namespace TicketToTalk
 			try
 			{
 				File.WriteAllBytes(path, bytes);
-				Debug.WriteLine("MediaController: Wrote bytes");
 				return true;
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex);
+				Console.WriteLine("Could not write to file");
 				return false;
 			}
 		}

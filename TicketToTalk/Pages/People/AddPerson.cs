@@ -371,7 +371,6 @@ namespace TicketToTalk
 				using (MemoryStream ms = new MemoryStream())
 				{
 					file.GetStream().CopyTo(ms);
-					Debug.WriteLine(ms.ToArray().Length / 1000000 + "MB");
 					image = ms.ToArray();
 				}
 			}
@@ -428,9 +427,6 @@ namespace TicketToTalk
 
 			if (returned != null)
 			{
-				Debug.WriteLine("AddPerson: returned person - " + returned);
-
-
 				await Navigation.PopModalAsync();
 			}
 			else

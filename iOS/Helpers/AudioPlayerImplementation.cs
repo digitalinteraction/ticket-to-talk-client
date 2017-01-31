@@ -26,9 +26,7 @@ namespace TicketToTalk.iOS
 		public void SetupPlayer(string fileName)
 		{
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
-			Debug.WriteLine("AudioPlayer: Path - " + path);
 			var url = NSUrl.FromString(path);
-			Debug.WriteLine(url);
 
 			_player = AVAudioPlayer.FromUrl(url);
 			_player.Volume = 100;
@@ -43,10 +41,6 @@ namespace TicketToTalk.iOS
 		/// <returns>The audio file.</returns>
 		public void PlayAudioFile()
 		{
-			//string sFilePath = NSBundle.MainBundle.PathForResource
-			//(Path.GetFileNameWithoutExtension(fileName), Path.GetExtension(fileName));
-			//var url = NSUrl.FromString(sFilePath);
-
 			_player.Play();
 		}
 
@@ -85,13 +79,10 @@ namespace TicketToTalk.iOS
 		/// <param name="e">E.</param>
 		public void PlayerFinishedPlaying(object sender, AVStatusEventArgs e)
 		{
-			//_player = null;
 			_player.Stop();
 			finished = true;
 
 			MessagingCenter.Send<AudioPlayerImplementation, bool>(this, "finished_playback", finished);
-
-			Debug.WriteLine("AudioPlayer: Audio Finished");
 		}
 
 		/// <summary>

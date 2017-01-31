@@ -143,8 +143,6 @@ namespace TicketToTalk
 			}
 			if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
 
-			Debug.WriteLine("TicketCell: Deleting ticket file locally");
-
 			if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
 			{
 				var mediaController = new MediaController();
@@ -214,7 +212,6 @@ namespace TicketToTalk
 				var g_num = groups[relation.user_type];
 				foreach (Ticket t in input)
 				{
-					Debug.WriteLine("TicketController: Ticket access level = " + t.access_level);
 					if (groups[t.access_level] >= g_num)
 					{
 						output.Add(t);
@@ -296,7 +293,6 @@ namespace TicketToTalk
 			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
 			if (jobject != null)
 			{
-				Debug.WriteLine("TicketController: Edited ticket returned - " + jobject);
 				var jtoken = jobject.GetValue("Ticket");
 				var returned = jtoken.ToObject<Ticket>();
 
@@ -331,7 +327,6 @@ namespace TicketToTalk
 		public async Task UpdateTicketsFromAPI()
 		{
 			// Set parameters
-			Debug.WriteLine("Setting parameters");
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["person_id"] = Session.activePerson.id.ToString();
 			parameters["token"] = Session.Token.val;
@@ -339,7 +334,6 @@ namespace TicketToTalk
 			// Send GET request
 			var net = new NetworkController();
 			var jobject = await net.SendGetRequest("people/tickets", parameters);
-			Debug.WriteLine(jobject);
 
 			// Parse JSON Tags to Tags
 			var jtoken = jobject.GetValue("tags");
@@ -364,7 +358,6 @@ namespace TicketToTalk
 
 			// Parse JSON Tickets to Tickets
 			jtoken = jobject.GetValue("tickets");
-			Debug.WriteLine(jtoken);
 			var tickets = jtoken.ToObject<Ticket[]>();
 
 			foreach (Ticket t in tickets)
@@ -372,7 +365,6 @@ namespace TicketToTalk
 				var storedTicket = GetTicket(t.id);
 				if (storedTicket == null)
 				{
-					Debug.WriteLine("New ticket... saving");
 					AddTicketLocally(t);
 				}
 				else if (storedTicket.GetHashCode() != t.GetHashCode())

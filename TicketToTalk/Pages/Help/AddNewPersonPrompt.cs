@@ -67,8 +67,6 @@ namespace TicketToTalk
 					skipTutorialButton
 				}
 			};
-
-			Debug.WriteLine("AddNewPersonPrompt: Content Set");
 		}
 
 		/// <summary>

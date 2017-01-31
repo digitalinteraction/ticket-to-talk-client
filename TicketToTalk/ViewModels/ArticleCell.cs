@@ -88,8 +88,6 @@ namespace TicketToTalk
 			var mi = ((MenuItem)sender);
 			var article = (Article)mi.BindingContext;
 
-			Debug.WriteLine("ArticleCell: Binding context - " + article);
-
 			articleController.DeleteArticleLocally(article);
 			articleController.DeleteArticleRemotely(article);
 

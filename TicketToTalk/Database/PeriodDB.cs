@@ -17,8 +17,6 @@ namespace TicketToTalk
 		/// </summary>
 		public PeriodDB()
 		{
-
-			Debug.WriteLine("PeriodDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

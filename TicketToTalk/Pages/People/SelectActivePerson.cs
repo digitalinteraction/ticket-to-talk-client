@@ -20,13 +20,11 @@ namespace TicketToTalk
 		public SelectActivePerson()
 		{
 			people = Task.Run(() => personController.GetPeopleFromServer()).Result;
-			Debug.WriteLine("SelectActivePerson: peopleLength - " + people.Count);
 
 			foreach (Person p in people)
 			{
 				personController.AddPersonLocally(p);
 				p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
-				Debug.WriteLine("SelectActivePerson: Got image");
 				p.relation = personController.GetRelationship(p.id);
 			}
 
@@ -113,7 +111,6 @@ namespace TicketToTalk
 		{
 			var p = (Person)e.SelectedItem;
 			Session.activePerson = p;
-			Debug.WriteLine("Setting active person: " + p);
 
 			Application.Current.MainPage = new RootPage();
 		}

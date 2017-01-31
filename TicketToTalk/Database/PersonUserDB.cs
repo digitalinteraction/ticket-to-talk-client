@@ -16,7 +16,6 @@ namespace TicketToTalk
 		/// </summary>
 		public PersonUserDB()
 		{
-			Debug.WriteLine("PersonUserDB: Establishing DB connection");
 			string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 			_connection = new SQLiteConnection(dbPath);
 

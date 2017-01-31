@@ -104,22 +104,15 @@ namespace TicketToTalk
 					Command = new Command(LaunchNewTicketView)
 				});
 
-				Debug.WriteLine("TicketByPeriod: Getting periods");
-
 				var periodController = new PeriodController();
 				var periods = periodController.GetAllLocalPeriods();
 
-				Debug.WriteLine("TicketByPeriod: Got periods - " + periods.Count);
-
 				foreach (Period p in periods)
 				{
-					Debug.WriteLine("TicketByPeriod: Setting container for period - " + p);
 					var tp = new ticketPeriodContainer();
 					tp.text = p.text;
 					tp.period = p;
 					tp.tickets = periodController.GetTicketsInPeriod(p.id).Count;
-
-					Debug.WriteLine("TicketByPeriod: tickets in period - " + tp.tickets);
 
 					if (tp.tickets == 0)
 					{
@@ -133,12 +126,9 @@ namespace TicketToTalk
 					{
 						tp.ticketCount = tp.tickets + " tickets";
 					}
-					Debug.WriteLine("TicketByPeriod: Adding container - " + tp);
-					periodContainers.Add(tp);
-					Debug.WriteLine("TicketByPeriod: Added container");
-				}
 
-				Debug.WriteLine("TicketByPeriod: Set containers");
+					periodContainers.Add(tp);
+				}
 
 				var cell = new DataTemplate(typeof(TextCell));
 				cell.SetBinding(TextCell.TextProperty, "text");

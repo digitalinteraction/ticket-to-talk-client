@@ -20,8 +20,6 @@ namespace TicketToTalk
 		/// </summary>
 		public AreaDB()
 		{
-
-			Debug.WriteLine("AreaDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

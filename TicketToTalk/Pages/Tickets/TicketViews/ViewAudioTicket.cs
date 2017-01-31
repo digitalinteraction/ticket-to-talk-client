@@ -31,7 +31,6 @@ namespace TicketToTalk
 
 			MessagingCenter.Subscribe<NetworkController, bool>(this, "download_image", (sender, finished) =>
 			{
-				Debug.WriteLine("Image Downloaded");
 				download_finished = finished;
 			});
 
@@ -45,8 +44,6 @@ namespace TicketToTalk
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(DisplayInfo)
 			});
-
-			Debug.WriteLine("ViewAudioTicket: Getting audio file.");
 
 			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
@@ -62,10 +59,9 @@ namespace TicketToTalk
 				var ticketController = new TicketController();
 				ticketController.UpdateTicketLocally(ticket);
 			}
-			Debug.WriteLine("ViewAudioTicket: Got file");
+
 			fileName = ticket.pathToFile;
 			DependencyService.Get<IAudioPlayer>().SetupPlayer(fileName);
-			Debug.WriteLine("ViewAudioTicket: SetupPlayer");
 			Content = new StackLayout
 			{
 				Children = {
@@ -132,7 +128,6 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
 				return false;
 			}
 
