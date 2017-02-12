@@ -19,9 +19,7 @@ namespace TicketToTalk
 			{
 				Text = "The Ticket to Talk application is the result of a collaboration between Newcastle University and Youth Focus North East. It’s development and design was funded by the research projects: ESRC-IAA ‘Coproduction of dementia-care communications technology’ (DemYouth) project, the EPSRC Digital Economy Research Centre and the EPSRC Centre for Doctoral Training in Digital Civics.",
 				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				//FontAttributes = FontAttributes.Bold,
-				//HorizontalTextAlignment = TextAlignment.Center
+				FontSize = 16
 			};
 
 			var p2 = new Label

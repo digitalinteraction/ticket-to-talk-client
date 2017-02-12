@@ -225,6 +225,8 @@
     <BundleResource Include="Resources\NewcastleUni.jpg" />
     <BundleResource Include="Resources\NewcastleUniNISR.jpg" />
     <BundleResource Include="Resources\YFNE.jpg" />
+    <BundleResource Include="Resources\ic_info_3x.png" />
+    <BundleResource Include="Resources\swap_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />
