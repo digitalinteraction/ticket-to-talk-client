@@ -35,3 +35,5 @@ Droid/obj/Debug/android/bin/resources_and_assemblies
 /TicketToTalk.userprefs
 
 TicketToTalk.userprefs
+
+*.ipa

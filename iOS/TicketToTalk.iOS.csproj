@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution: University of Newcastle upon Tyne (J3676MPZ85)</CodesignKey>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchFloat32>true</MtouchFloat32>
@@ -46,6 +46,7 @@
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchTlsProvider>Default</MtouchTlsProvider>
     <PlatformTarget>x86</PlatformTarget>
+    <CodesignProvision></CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -74,7 +75,7 @@
     <CodesignKey>iPhone Developer: danjwelsh2@hotmail.com (M4D435HDR2)</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchFastDev>false</MtouchFastDev>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchFloat32>true</MtouchFloat32>
@@ -132,9 +133,23 @@
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_80.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_120.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\AppIcon60x60%402x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\29x29.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\58x58.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\80x80.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\57x57.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\114x114.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\87x87.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\120x120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\180x180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\100x100.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\50x50.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\40x40.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\72x72.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\144x144.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\167x167.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\152x152.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\76x76.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -204,6 +219,12 @@
     <BundleResource Include="Resources\file_white_icon.png" />
     <BundleResource Include="Resources\white_ticket_icon.png" />
     <BundleResource Include="Resources\light_white_icon.png" />
+    <BundleResource Include="Resources\DigitalEconomy.jpg" />
+    <BundleResource Include="Resources\EPSRC.jpg" />
+    <BundleResource Include="Resources\ESRC.jpg" />
+    <BundleResource Include="Resources\NewcastleUni.jpg" />
+    <BundleResource Include="Resources\NewcastleUniNISR.jpg" />
+    <BundleResource Include="Resources\YFNE.jpg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />

@@ -3,6 +3,7 @@ using TicketToTalk.iOS;
 using AVFoundation;
 using Foundation;
 using System.IO;
+using AudioToolbox;
 
 [assembly: Xamarin.Forms.Dependency(typeof(AudioRecorderImplementation))]
 namespace TicketToTalk.iOS
@@ -70,6 +71,7 @@ namespace TicketToTalk.iOS
 
 			//Set recorder parameters
 			recorder = AVAudioRecorder.Create(url, new AudioSettings(settings), out error);
+			//recorder = AVAudioRecorder.Create(url, settings, out error);
 
 			//Set Recorder to Prepare To Record
 			recorder.PrepareToRecord();

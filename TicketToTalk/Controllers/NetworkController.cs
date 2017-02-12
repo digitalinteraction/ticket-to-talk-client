@@ -27,7 +27,6 @@ namespace TicketToTalk
 		/// </summary>
 		public NetworkController()
 		{
-
 			client = new HttpClient();
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "danielwelsh.uk";
