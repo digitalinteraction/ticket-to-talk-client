@@ -255,7 +255,6 @@ namespace TicketToTalk
 					using (MemoryStream ms = new MemoryStream())
 					{
 						file.GetStream().CopyTo(ms);
-						Debug.WriteLine(ms.ToArray().Length / 1000000 + "MB");
 						image = ms.ToArray();
 					}
 				}

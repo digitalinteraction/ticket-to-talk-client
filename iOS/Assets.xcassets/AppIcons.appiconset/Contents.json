@@ -1,105 +1,121 @@
 {
   "images": [
     {
+      "filename": "29x29.png",
       "size": "29x29",
       "scale": "1x",
       "idiom": "iphone"
     },
     {
+      "filename": "58x58.png",
       "size": "29x29",
       "scale": "2x",
       "idiom": "iphone"
     },
     {
+      "filename": "87x87.png",
       "size": "29x29",
       "scale": "3x",
       "idiom": "iphone"
     },
     {
-      "filename": "logo_80.png",
+      "filename": "80x80.png",
       "size": "40x40",
       "scale": "2x",
       "idiom": "iphone"
     },
     {
-      "filename": "logo_120.png",
+      "filename": "AppIcon60x60@2x.png",
       "size": "40x40",
       "scale": "3x",
       "idiom": "iphone"
     },
     {
+      "filename": "57x57.png",
       "size": "57x57",
       "scale": "1x",
       "idiom": "iphone"
     },
     {
+      "filename": "114x114.png",
       "size": "57x57",
       "scale": "2x",
       "idiom": "iphone"
     },
     {
-      "filename": "logo_120.png",
+      "filename": "120x120.png",
       "size": "60x60",
       "scale": "2x",
       "idiom": "iphone"
     },
     {
-      "filename": "logo_180.png",
+      "filename": "180x180.png",
       "size": "60x60",
       "scale": "3x",
       "idiom": "iphone"
     },
     {
+      "filename": "29x29.png",
       "size": "29x29",
       "scale": "1x",
       "idiom": "ipad"
     },
     {
+      "filename": "58x58.png",
       "size": "29x29",
       "scale": "2x",
       "idiom": "ipad"
     },
     {
+      "filename": "40x40.png",
       "size": "40x40",
       "scale": "1x",
       "idiom": "ipad"
     },
     {
+      "filename": "80x80.png",
       "size": "40x40",
       "scale": "2x",
       "idiom": "ipad"
     },
     {
+      "filename": "50x50.png",
       "size": "50x50",
       "scale": "1x",
       "idiom": "ipad"
     },
     {
+      "filename": "100x100.png",
       "size": "50x50",
       "scale": "2x",
       "idiom": "ipad"
     },
     {
+      "filename": "167x167.png",
       "size": "83.5x83.5",
       "scale": "2x",
       "idiom": "ipad"
     },
     {
+      "filename": "72x72.png",
       "size": "72x72",
       "scale": "1x",
       "idiom": "ipad"
     },
     {
+      "filename": "144x144.png",
       "size": "72x72",
       "scale": "2x",
       "idiom": "ipad"
     },
     {
+      "filename": "76x76.png",
       "size": "76x76",
       "scale": "1x",
       "idiom": "ipad"
     },
     {
+      "filename": "152x152.png",
       "size": "76x76",
       "scale": "2x",
       "idiom": "ipad"
@@ -212,5 +228,8 @@
   "info": {
     "version": 1,
     "author": "xcode"
+  },
+  "properties": {
+    "pre-rendered": true
   }
 }

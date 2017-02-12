@@ -117,7 +117,6 @@ namespace TicketToTalk
 		private async void PhotoButton_Clicked(object sender, EventArgs e)
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
-			Debug.WriteLine("Action: " + action);
 			switch (action)
 			{
 				case ("Take a Photo"):
@@ -151,7 +150,6 @@ namespace TicketToTalk
 			// App will not progress to new ticket screen on android without this...
 			await DisplayAlert("File Location", "Photo Added!", "OK");
 
-			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
 			var page = new NewTicket("Picture", file.Path);
 
 			try
@@ -164,7 +162,7 @@ namespace TicketToTalk
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex);
+				Console.WriteLine("Error taking picture");
 			}
 		}
 

@@ -256,12 +256,10 @@ namespace TicketToTalk
 			var temp = "";
 			foreach (string s in list)
 			{
-				Debug.WriteLine(string.Format("ConversationController: conversation_id {0} ticket_id {1}", conversation.id, ticket.id));
 				temp = string.Format("{0} ", s);
 			}
 
 			conversation.ticket_id_string = temp.TrimEnd();
-			Debug.WriteLine("ConversationController: tickets = " + conversation.ticket_id_string);
 			return conversation;
 		}
 
@@ -373,16 +371,12 @@ namespace TicketToTalk
 #if __IOS__
 
 				day = date[0];
-				Debug.WriteLine("day: " + date[0]);
-				Debug.WriteLine("month: " + date[1]);
 				month = months[Int32.Parse(date[1]) - 1];
 				year = date[2];
 
 #else
 
 				day = date[1];
-				Debug.WriteLine("day: " + date[1]);
-				Debug.WriteLine("month: " + date[0]);
 				month = months[int.Parse(date[0]) - 1];
 				year = date[2];
 

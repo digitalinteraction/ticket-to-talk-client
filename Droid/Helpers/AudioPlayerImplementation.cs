@@ -30,13 +30,8 @@ namespace TicketToTalk.Droid
 		public void SetupPlayer(string fileName)
 		{
 			player = new MediaPlayer();
-			Debug.WriteLine("AndroidAudioPlayer: setting player");
 			var path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
-			Debug.WriteLine("AndroidAudioPlayer: " + path);
-			//path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
-			//var fd = Android.App.Application.Context.Assets.OpenFd(path);
-			Debug.WriteLine("AndroidAudioPlayer: Set up player to file - " + path);
-			//player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);
+		
 			player.SetDataSource(path);
 			player.Prepare();
 			player.Completion += Player_Completion;
@@ -68,17 +63,6 @@ namespace TicketToTalk.Droid
 		{
 			player.Start();
 		}
-
-		//public void PlayAudioFile(string fileName)
-		//{
-		//	var fd = global::Android.App.Application.Context.Assets.OpenFd(fileName);
-		//	player.Prepared += (s, e) =>
-		//	{
-		//		player.Start();
-		//	};
-		//	player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);
-		//	player.Prepare();
-		//}
 
 		/// <summary>
 		/// Resumes the play back.

@@ -178,7 +178,6 @@ namespace TicketToTalk
 				if (string.Compare(ticket.access_level, s, StringComparison.Ordinal) == 0)
 				{
 					access_level.SelectedIndex = j;
-					Debug.WriteLine(j);
 				}
 				j++;
 			}

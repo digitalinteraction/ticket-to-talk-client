@@ -50,7 +50,7 @@ namespace TicketToTalk
 			this.Add(new NavMenuItem()
 			{
 				Title = "Change Person",
-				IconSource = "face_icon.png",
+				IconSource = "swap_icon.png",
 				TargetType = typeof(SelectActivePerson)
 			});
 
@@ -59,6 +59,13 @@ namespace TicketToTalk
 				Title = "Help",
 				IconSource = "help_icon.png",
 				TargetType = typeof(Help)
+			});
+
+			this.Add(new NavMenuItem()
+			{
+				Title = "About",
+				IconSource = "ic_info_3x.png",
+				TargetType = typeof(About)
 			});
 
 			this.Add(new NavMenuItem()

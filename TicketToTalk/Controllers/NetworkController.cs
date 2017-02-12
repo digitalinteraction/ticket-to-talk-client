@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -27,6 +28,7 @@ namespace TicketToTalk
 		public NetworkController()
 		{
 			client = new HttpClient();
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "danielwelsh.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 		}
@@ -41,6 +43,11 @@ namespace TicketToTalk
 		{
 			var client = new HttpClient();
 
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -56,7 +63,6 @@ namespace TicketToTalk
 			}
 			URL = URL.Substring(0, URL.Length - 1);
 			var uri = new Uri(URLBase + URL);
-			Console.WriteLine("Sending request to: " + uri);
 
 			HttpResponseMessage response = null;
 
@@ -64,12 +70,10 @@ namespace TicketToTalk
 			try
 			{
 				response = await client.GetAsync(uri);
-				Debug.WriteLine(response);
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine("Network Timeout");
 			}
 
 			// Check for success.
@@ -79,14 +83,16 @@ namespace TicketToTalk
 			}
 			else if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("NetworkController: Response - " + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Console.WriteLine("Response:" + response.StatusCode);
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -100,6 +106,12 @@ namespace TicketToTalk
 		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -107,17 +119,15 @@ namespace TicketToTalk
 			{
 				parameters["api_key"] = api_key;
 			}
-			else 
+			else
 			{
-				parameters["api_key"] = Session.activeUser.api_key;	
+				parameters["api_key"] = Session.activeUser.api_key;
 			}
 
 			var uri = new Uri(URLBase + URL);
-			Debug.WriteLine(uri);
 
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
-			Debug.WriteLine("NetworkController: " + jsonCredentials);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
 			//var response = null;
@@ -126,17 +136,14 @@ namespace TicketToTalk
 			{
 				// Get response
 				response = await client.PostAsync(uri, content);
-				Debug.WriteLine(response.ToString());
 			}
 			catch (WebException ex)
 			{
-				Debug.WriteLine("Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine("Network Timeout");
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("Network Timeout");
-				Debug.WriteLine(ex);
+				Console.WriteLine(ex);
 			}
 
 			// Check for success.
@@ -146,14 +153,16 @@ namespace TicketToTalk
 			}
 			else if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Console.WriteLine("Request:" + response.StatusCode);
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -167,6 +176,11 @@ namespace TicketToTalk
 		public async Task<JObject> SendGenericPostRequest(string URL, IDictionary<string, object> parameters)
 		{
 			var client = new HttpClient();
+
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
@@ -181,11 +195,9 @@ namespace TicketToTalk
 			}
 
 			var uri = new Uri(URLBase + URL);
-			Debug.WriteLine("NetworkController: " + uri);
 
 			// Create json content for parameters.
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
-			//Console.WriteLine(jsonCredentials);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
 			// Get response
@@ -194,14 +206,17 @@ namespace TicketToTalk
 			// Check for success.
 			if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Debug.WriteLine("Request:" + response.StatusCode);
+
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -215,11 +230,14 @@ namespace TicketToTalk
 		public async Task<JObject> SendDeleteRequest(string URL, IDictionary<string, string> parameters)
 		{
 			var client = new HttpClient();
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 
 			parameters["api_key"] = Session.activeUser.api_key;
-
 			URL += "?";
 			foreach (KeyValuePair<string, string> entry in parameters)
 			{
@@ -231,8 +249,6 @@ namespace TicketToTalk
 			URL = URL.Substring(0, URL.Length - 1);
 			var uri = URLBase + URL;
 
-			Debug.WriteLine("NetworkController: Sending delete request to: " + uri);
-
 			// Get response
 			HttpResponseMessage response = null;
 			try
@@ -241,29 +257,28 @@ namespace TicketToTalk
 			}
 			catch (WebException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine("NetworkController:" + ex);
+				Console.WriteLine("Network Timeout");
 			}
 			catch (TaskCanceledException ex)
 			{
-				Debug.WriteLine("NetworkController: Network Timeout");
-				Debug.WriteLine("NetworkController:" + ex);
 			}
 
 			if (response == null)
 			{
 				return null;
 			}
-			else if (response.IsSuccessStatusCode)
+			if (response.IsSuccessStatusCode)
 			{
-				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
 				string jsonString = await response.Content.ReadAsStringAsync();
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
 			else
 			{
-				Debug.WriteLine("NewtorkController: Request = " + response.StatusCode);
+				if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+				{
+					HandleSessionExpiration();
+				}
 				return null;
 			}
 		}
@@ -277,20 +292,34 @@ namespace TicketToTalk
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
 			var client = new HttpClient();
+#if __Android__
+			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
+#endif
+
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.Timeout = new TimeSpan(0, 0, 100);
 
-			Debug.WriteLine("NetworkController: Beginning Download");
-			var webClient = new WebClient();
-
 			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val) + "&api_key=" + Session.activeUser.api_key;
-			Debug.WriteLine(url);
 
-			var returned = await webClient.DownloadDataTaskAsync(url);
+			Console.WriteLine("Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				imageBytes = ms.ToArray();
+			}
+			// http://stackoverflow.com/questions/221925/creating-a-byte-array-from-a-stream
+			//var returned = await webClient.DownloadDataTaskAsync(url);
 			if (returned != null)
 			{
-				Debug.WriteLine("NetworkController: Downloaded image - " + returned.HashArray());
-				MediaController.WriteImageToFile(fileName, returned);
+				MediaController.WriteImageToFile(fileName, imageBytes);
 				return true;
 			}
 			else
@@ -304,10 +333,15 @@ namespace TicketToTalk
 		/// </summary>
 		public void HandleSessionExpiration()
 		{
-			Application.Current.MainPage = new Login();
 			Session.activePerson = null;
 			Session.activeUser = null;
 			Session.Token.val = null;
+
+			var nav = new NavigationPage(new Login());
+			nav.BarTextColor = ProjectResource.color_white;
+			nav.BarBackgroundColor = ProjectResource.color_blue;
+
+			Application.Current.MainPage = nav;
 		}
 	}
 }

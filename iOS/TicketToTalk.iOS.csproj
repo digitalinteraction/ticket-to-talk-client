@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution: University of Newcastle upon Tyne (J3676MPZ85)</CodesignKey>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchFloat32>true</MtouchFloat32>
@@ -46,6 +46,7 @@
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchTlsProvider>Default</MtouchTlsProvider>
     <PlatformTarget>x86</PlatformTarget>
+    <CodesignProvision></CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -74,7 +75,7 @@
     <CodesignKey>iPhone Developer: danjwelsh2@hotmail.com (M4D435HDR2)</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchFastDev>false</MtouchFastDev>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchFloat32>true</MtouchFloat32>
@@ -97,24 +98,6 @@
     <Reference Include="ExifLib">
       <HintPath>..\packages\ExifLib.PCL.1.0.1\lib\portable-net45+sl50+win+WindowsPhoneApp81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\ExifLib.dll</HintPath>
     </Reference>
-    <Reference Include="Plugin.Media">
-      <HintPath>..\packages\Xam.Plugin.Media.2.3.0\lib\Xamarin.iOS10\Plugin.Media.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin.Media.Abstractions">
-      <HintPath>..\packages\Xam.Plugin.Media.2.3.0\lib\Xamarin.iOS10\Plugin.Media.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin.Permissions">
-      <HintPath>..\packages\Plugin.Permissions.1.1.7\lib\Xamarin.iOS10\Plugin.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin.Permissions.Abstractions">
-      <HintPath>..\packages\Plugin.Permissions.1.1.7\lib\Xamarin.iOS10\Plugin.Permissions.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="ImageCircle.Forms.Plugin.iOS">
-      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.6.1\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.iOS.dll</HintPath>
-    </Reference>
-    <Reference Include="ImageCircle.Forms.Plugin.Abstractions">
-      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.6.1\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="Xamarin.Forms.Core">
       <HintPath>..\packages\Xamarin.Forms.2.3.2.127\lib\Xamarin.iOS10\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
@@ -127,14 +110,46 @@
     <Reference Include="Xamarin.Forms.Xaml">
       <HintPath>..\packages\Xamarin.Forms.2.3.2.127\lib\Xamarin.iOS10\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.Permissions.Abstractions">
+      <HintPath>..\packages\Plugin.Permissions.1.2.1\lib\Xamarin.iOS10\Plugin.Permissions.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Permissions">
+      <HintPath>..\packages\Plugin.Permissions.1.2.1\lib\Xamarin.iOS10\Plugin.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Media.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.Media.2.6.1\lib\Xamarin.iOS10\Plugin.Media.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Media">
+      <HintPath>..\packages\Xam.Plugin.Media.2.6.1\lib\Xamarin.iOS10\Plugin.Media.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageCircle.Forms.Plugin.Abstractions">
+      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.8.0.5\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageCircle.Forms.Plugin.iOS">
+      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.8.0.5\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_80.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_120.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\logo_180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\AppIcon60x60%402x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\29x29.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\58x58.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\80x80.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\57x57.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\114x114.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\87x87.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\120x120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\180x180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\100x100.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\50x50.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\40x40.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\72x72.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\144x144.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\167x167.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\152x152.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\76x76.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -204,6 +219,14 @@
     <BundleResource Include="Resources\file_white_icon.png" />
     <BundleResource Include="Resources\white_ticket_icon.png" />
     <BundleResource Include="Resources\light_white_icon.png" />
+    <BundleResource Include="Resources\DigitalEconomy.jpg" />
+    <BundleResource Include="Resources\EPSRC.jpg" />
+    <BundleResource Include="Resources\ESRC.jpg" />
+    <BundleResource Include="Resources\NewcastleUni.jpg" />
+    <BundleResource Include="Resources\NewcastleUniNISR.jpg" />
+    <BundleResource Include="Resources\YFNE.jpg" />
+    <BundleResource Include="Resources\ic_info_3x.png" />
+    <BundleResource Include="Resources\swap_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />

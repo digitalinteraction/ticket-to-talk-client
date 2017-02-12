@@ -57,11 +57,6 @@ namespace TicketToTalk
 			// Check for new inspirations.
 			var task = Task.Run(() => this.GetIns()).Result;
 
-			foreach (Inspiration ins in task)
-			{
-				Debug.WriteLine(ins);
-			}
-
 			InspirationDB insDB = new InspirationDB();
 			inspiration = PopulateVariables(insDB.GetRandomInspiration());
 			insDB.close();
@@ -126,19 +121,16 @@ namespace TicketToTalk
 		private async Task<List<Inspiration>> GetIns()
 		{
 			// Send get request for inspirations
-			Debug.WriteLine("Sending get request for inspirations.");
 			NetworkController net = new NetworkController();
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 			var jobject = await net.SendGetRequest("inspiration/get", parameters);
-			Debug.WriteLine(jobject);
 
 			var jtoken = jobject.GetValue("Inspirations");
 			var inspirations = jtoken.ToObject<List<Inspiration>>();
 			InspirationDB insDB = new InspirationDB();
 			foreach (Inspiration ins in inspirations)
 			{
-				Debug.WriteLine(ins);
 				var stored = insDB.GetInspiration(ins.id);
 				if (stored == null)
 				{
@@ -185,8 +177,6 @@ namespace TicketToTalk
 		{
 			question.Text = inspiration.question;
 			promptLabel.Text = inspiration.prompt;
-
-			Debug.WriteLine("Inspiration: ins_media_type = " + inspiration.mediaType);
 
 			switch (inspiration.mediaType.Trim())
 			{
@@ -286,11 +276,8 @@ namespace TicketToTalk
 				var link = ins.prompt.Substring(linkIdx, linkEnd - linkIdx);
 
 				ins.prompt = ins.prompt.Replace("HERE [link=\"" + link + "\"] ", "");
-				Debug.WriteLine("Inspirations: link = " + link);
 
 				searchLink = link;
-
-				Debug.WriteLine("Inspirations: searchLink set to - " + searchLink);
 
 				searchButton.Text = "Search Google...";
 				searchButton.IsVisible = true;
@@ -298,9 +285,7 @@ namespace TicketToTalk
 			}
 			else
 			{
-				Debug.WriteLine("Inspirations: setting button as false");
 				searchButton.IsVisible = false;
-				Debug.WriteLine("Inspirations: set to false");
 			}
 
 			return ins;
@@ -313,8 +298,6 @@ namespace TicketToTalk
 		// <param name="e">E.</param>
 		private void SearchButton_Clicked(object sender, EventArgs e)
 		{
-			Console.WriteLine("Clicked");
-			Debug.WriteLine("Inspirations: SearchLink = " + searchLink);
 			Device.OpenUri(new Uri(searchLink));
 		}
 

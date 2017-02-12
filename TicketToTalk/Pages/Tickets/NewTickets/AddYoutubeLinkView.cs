@@ -115,9 +115,6 @@ namespace TicketToTalk
 			var ticketController = new TicketController();
 			var ticket = ticketController.ParseYouTubeToTicket(link.Text);
 
-			Debug.WriteLine("AddYoutubeLinkView: parsing link: " + link.Text);
-			Debug.WriteLine("AddYoutubeLinkView: returned ticket: " + ticket);
-
 			Navigation.PushAsync(new NewTicket(ticket));
 		}
 	}

@@ -72,8 +72,6 @@ namespace TicketToTalk
 				}
 			}
 
-			Debug.WriteLine("NewTicket: Set image view");
-
 			var content = new StackLayout
 			{
 				Spacing = 12,
@@ -121,7 +119,6 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
 				return false;
 			}
 

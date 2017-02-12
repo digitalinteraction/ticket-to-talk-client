@@ -15,10 +15,8 @@
 	<key>CFBundleName</key>
 	<string>Ticket To Talk</string>
 	<key>CFBundleIdentifier</key>
-	<string>uk.ac.ncl.d.welsh.ticket-to-talk</string>
+	<string>uk.ac.ncl.openlab.tickettotalk</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
-	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -48,13 +46,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcons.appiconset</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImage.launchimage</string>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcons.appiconset</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Access to the calender is required to create conversations.</string>
+	<key>CFBundleVersion</key>
+	<string>2.1</string>
 </dict>
 </plist>

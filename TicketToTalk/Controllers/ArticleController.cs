@@ -121,6 +121,8 @@ namespace TicketToTalk
 		/// <returns>The all articles.</returns>
 		public async Task<ObservableCollection<Article>> GetAllArticles()
 		{
+			Console.WriteLine("Downloading Articles");
+
 			NetworkController net = new NetworkController();
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
@@ -133,7 +135,6 @@ namespace TicketToTalk
 			ObservableCollection<Article> list = new ObservableCollection<Article>();
 			foreach (Article a in articles)
 			{
-				Debug.WriteLine("AllArticles: Parsing link: " + a.link);
 				a.favicon = GetFaviconURL(a.link);
 				list.Add(a);
 			}
@@ -220,7 +221,7 @@ namespace TicketToTalk
 				var jarticle = data["article"];
 
 				var returned_article = jarticle.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + article);
+				Console.WriteLine("Saved article");
 
 				AddArticleLocally(returned_article);
 
@@ -242,6 +243,8 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public async Task<bool> UpdateArticleRemotely(Article article)
 		{
+			Console.WriteLine("Updating article");
+
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["title"] = article.title;
@@ -256,7 +259,6 @@ namespace TicketToTalk
 				var data = jobject.GetValue("data");
 				var jarticle = data["article"];
 				var new_article = jarticle.ToObject<Article>();
-				Debug.WriteLine("Saved Article: " + new_article);
 
 				new_article.favicon = GetFaviconURL(new_article.link);
 				UpdateArticleLocally(new_article);

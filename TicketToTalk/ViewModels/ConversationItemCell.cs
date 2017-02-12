@@ -30,7 +30,6 @@ namespace TicketToTalk
 		async void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
-			Debug.WriteLine("TicketCell: Binding context - " + mi.BindingContext);
 
 			var conversationItem = (ConversationItem)mi.BindingContext;
 

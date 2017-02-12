@@ -21,7 +21,6 @@ namespace TicketToTalk
 		/// </summary>
 		public TagDB()
 		{
-			Debug.WriteLine("TagDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

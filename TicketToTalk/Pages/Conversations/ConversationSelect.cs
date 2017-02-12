@@ -52,8 +52,6 @@ namespace TicketToTalk
 
 				var conversation = (Conversation)e.SelectedItem;
 
-				Debug.WriteLine("ConversationSelect: conversation selected = " + conversation);
-
 				await conversationController.AddTicketToConversationRemotely(conversation, ticket);
 				conversation = conversationController.AddTicketToConversation(conversation, ticket);
 				conversationController.UpdateConversationLocally(conversation);

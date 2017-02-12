@@ -40,7 +40,6 @@ namespace TicketToTalk
 				RowHeight = 90
 			};
 
-			Debug.WriteLine("AllProfiles: Adding user cell.");
 			var userSection = new TableSection("Your Profile");
 
 			var userCell = new UserCell();
@@ -49,7 +48,6 @@ namespace TicketToTalk
 			userSection.Add(userCell);
 			tableView.Root.Add(userSection);
 
-			Debug.WriteLine("AllProfiles: Adding people cells");
 			var tableSection = new TableSection("Your People");
 			foreach (Person p in people)
 			{

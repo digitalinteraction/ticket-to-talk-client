@@ -26,9 +26,6 @@ namespace TicketToTalk
 				Command = new Command(Cancel)
 			});
 
-			Debug.WriteLine("NewTicket: filepath - " + filePath);
-			Debug.WriteLine("NewTicket: mediaType - " + mediaType);
-
 			// Set title.
 			Title = "New Ticket";
 			ContentView mediaContent = null;
@@ -57,8 +54,6 @@ namespace TicketToTalk
 				}
 			}
 
-			Debug.WriteLine("NewTicket: Set image view");
-
 			var stack = new StackLayout
 			{
 				Spacing = 0,
@@ -73,8 +68,6 @@ namespace TicketToTalk
 			{
 				Content = stack
 			};
-
-			Debug.WriteLine("NewTicket: set content");
 		}
 
 		/// <summary>
@@ -141,7 +134,6 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine(e);
 				return false;
 			}
 

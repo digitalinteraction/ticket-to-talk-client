@@ -20,7 +20,6 @@ namespace TicketToTalk
 		/// </summary>
 		public ConversationDB()
 		{
-			Debug.WriteLine("ConversationDB: Establishing DB connection");
 			dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), Session.DB);
 		}
 

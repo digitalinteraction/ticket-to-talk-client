@@ -46,8 +46,6 @@ namespace TicketToTalk
 			profilePic.SetBinding(Image.SourceProperty, "imageSource");
 			profilePic.BindingContext = invitation;
 
-			Debug.WriteLine("SeeInvite: Viewing person - " + person);
-
 			var nameLabel = new Label
 			{
 				Text = person.name,
@@ -143,8 +141,6 @@ namespace TicketToTalk
 				var userController = new UserController();
 				var r = ProjectResource.relations[relation.SelectedIndex];
 				await userController.AcceptInvitation(invitation, r);
-
-				Debug.WriteLine("SeeInvite: accepting person - " + person);
 
 				if (new PersonController().GetPerson(invitation.person.id) == null)
 				{
