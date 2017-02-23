@@ -107,7 +107,7 @@ namespace TicketToTalk
 		{
 			var client = new HttpClient();
 
-#if __Android__
+#if __ANDROID__
 			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
 #endif
 

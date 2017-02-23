@@ -6,5 +6,13 @@
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<application android:label="Ticket To Talk"></application>
+	<application android:label="Ticket To Talk">
+		<provider android:name="android.support.v4.content.FileProvider" 
+				android:authorities="uk.ncl.ac.d.welsh.ticket_to_talk.fileprovider" 
+				android:exported="false" 
+				android:grantUriPermissions="true">
+				<meta-data android:name="android.support.FILE_PROVIDER_PATHS" 
+				android:resource="@xml/file_paths"></meta-data>
+		</provider>
+	</application>
 </manifest>
