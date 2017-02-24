@@ -66,7 +66,6 @@ namespace TicketToTalk
 		public async Task<Conversation> StoreConversationRemotely(Conversation conversation)
 		{
 			// Get platform of the device.
-			// TODO: Remove after fix for getting standard dates across language settings.
 			var platform = string.Empty;
 #if __IOS__
 			platform = "iOS";
@@ -340,108 +339,10 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public Conversation SetPropertiesForDisplay(Conversation conversation)
 		{
-			string[] months =
-			{
-				"January",
-				"February",
-				"March",
-				"April",
-				"May",
-				"June",
-				"July",
-				"August",
-				"September",
-				"October",
-				"November",
-				"December"
-			};
-
-			string displayString;
-			string day, month, year, hour, minutes, date_suffix;
-			int afterMid;
 
 			char[] delims = { ' ' };
-			string[] datetime = conversation.date.Split(delims);
 
-			if (conversation.date.Contains("/"))
-			{
-				char[] d_delims = { '/' };
-				string[] date = datetime[0].Split(d_delims);
-
-#if __IOS__
-
-				day = date[0];
-				month = months[Int32.Parse(date[1]) - 1];
-				year = date[2];
-
-#else
-
-				day = date[1];
-				month = months[int.Parse(date[0]) - 1];
-				year = date[2];
-
-#endif
-			}
-			else
-			{
-				char[] d_delims = { '-' };
-				string[] date = datetime[0].Split(d_delims);
-
-				day = date[2];
-				month = months[int.Parse(date[1]) - 1];
-				year = date[0];
-			}
-
-			char[] t_delims = { ':' };
-			string[] time = datetime[1].Split(t_delims);
-
-			hour = (int.Parse(time[0]) % 12).ToString();
-			afterMid = int.Parse(time[0]) / 12;
-
-			if (int.Parse(hour) == 0 && afterMid == 1)
-			{
-				hour = "12";
-			}
-
-			minutes = time[1];
-
-			switch (int.Parse(day))
-			{
-				case (1):
-				case (21):
-				case (31):
-					date_suffix = "st";
-					break;
-				case (2):
-				case (22):
-					date_suffix = "nd";
-					break;
-				case (3):
-				case (23):
-					date_suffix = "rd";
-					break;
-				default:
-					date_suffix = "th";
-					break;
-			}
-			var time_suffix = string.Empty;
-			switch (afterMid)
-			{
-				case (0):
-					time_suffix = "am";
-					break;
-				case (1):
-					time_suffix = "pm";
-					break;
-				default:
-					time_suffix = "";
-					break;
-			}
-
-			day = day.TrimStart(new char[] { '0' });
-
-			displayString = string.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
-			conversation.displayDate = displayString;
+			conversation.displayDate = formatTimestamp(conversation.timestamp);
 
 			if (!string.IsNullOrEmpty(conversation.ticket_id_string))
 			{
@@ -463,6 +364,35 @@ namespace TicketToTalk
 			}
 
 			return conversation;
+		}
+
+		/// <summary>
+		/// Formats the timestamp.
+		/// </summary>
+		/// <returns>The timestamp.</returns>
+		/// <param name="timestamp">Timestamp.</param>
+		public string formatTimestamp(DateTime timestamp) 
+		{
+
+			string[] months =
+			{
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December"
+			};
+
+			var str = string.Format("{0} {1}, {2}", months[timestamp.Month - 1], timestamp.Day, timestamp.Year);
+
+			return str;
 		}
 
 		/// <summary>

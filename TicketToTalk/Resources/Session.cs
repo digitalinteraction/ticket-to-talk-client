@@ -17,7 +17,7 @@ namespace TicketToTalk
 		//public static string DB = "tickettotalk_2.db3";
 		//public static readonly string baseUrl = "http://homestead.app/api/";
 
-		public static string DB = "tickettotalk.ol.10.db3";
+		public static string DB = "tickettotalk.ol.12.db3";
 		public static readonly string baseUrl = "https://tickettotalk.openlab.ncl.ac.uk/api/";
 
 		public Session()
