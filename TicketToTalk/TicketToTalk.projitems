@@ -131,6 +131,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\HelpPopup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PersonPivot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\About.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Verification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

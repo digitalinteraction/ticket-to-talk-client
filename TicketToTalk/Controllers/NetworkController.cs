@@ -76,6 +76,8 @@ namespace TicketToTalk
 				Console.WriteLine("Network Timeout");
 			}
 
+			Debug.WriteLine(response);
+
 			// Check for success.
 			if (response == null)
 			{
@@ -146,6 +148,8 @@ namespace TicketToTalk
 				Console.WriteLine(ex);
 			}
 
+			Debug.WriteLine(response);
+
 			// Check for success.
 			if (response == null)
 			{
@@ -154,6 +158,8 @@ namespace TicketToTalk
 			else if (response.IsSuccessStatusCode)
 			{
 				string jsonString = await response.Content.ReadAsStringAsync();
+				Debug.WriteLine("Success");
+				Debug.WriteLine(jsonString);
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
@@ -202,7 +208,7 @@ namespace TicketToTalk
 
 			// Get response
 			var response = await client.PostAsync(uri, content);
-
+			Debug.WriteLine(response);
 			// Check for success.
 			if (response.IsSuccessStatusCode)
 			{
@@ -262,6 +268,7 @@ namespace TicketToTalk
 			catch (TaskCanceledException ex)
 			{
 			}
+			Debug.WriteLine(response);
 
 			if (response == null)
 			{

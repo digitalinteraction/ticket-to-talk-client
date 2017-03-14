@@ -55,6 +55,40 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Verifies the user.
+		/// </summary>
+		/// <returns>The user.</returns>
+		public async Task<bool> VerifyUser(string code)
+		{
+			var net = new NetworkController();
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+			parameters["code"] = code;
+
+			var jobject = await net.SendPostRequest("auth/verify", parameters);
+			if (jobject != null)
+			{
+				var jtoken = jobject.GetValue("data")["verified"];
+				var verified = jtoken.ToObject<bool>();
+
+				if (verified)
+				{
+					Session.activeUser.verified = true;
+					UpdateUserLocally(Session.activeUser);
+					return true;
+				}
+				else 
+				{
+					return false;
+				}
+			}
+			else 
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Adds the user locally.
 		/// </summary>
 		/// <returns>The user locally.</returns>

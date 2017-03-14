@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -129,8 +130,17 @@ namespace TicketToTalk
 			if (authed)
 			{
 				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
-				await Navigation.PushAsync(new SelectActivePerson());
-				Navigation.RemovePage(this);
+
+				if (Session.activeUser.verified)
+				{
+					await Navigation.PushAsync(new SelectActivePerson());
+					Navigation.RemovePage(this);
+				}
+				else 
+				{
+					await Navigation.PushAsync(new Verification(false));
+					Navigation.RemovePage(this);
+				}
 			}
 			else
 			{
