@@ -292,9 +292,6 @@ namespace TicketToTalk
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
 			var client = new HttpClient();
-#if __Android__
-			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
-#endif
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -315,8 +312,7 @@ namespace TicketToTalk
 				}
 				imageBytes = ms.ToArray();
 			}
-			// http://stackoverflow.com/questions/221925/creating-a-byte-array-from-a-stream
-			//var returned = await webClient.DownloadDataTaskAsync(url);
+
 			if (returned != null)
 			{
 				MediaController.WriteImageToFile(fileName, imageBytes);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -397,15 +399,52 @@ namespace TicketToTalk
 			var fileName = "u_" + user.id + ".jpg";
 
 #if __IOS__
-			await networkController.DownloadFile(user.pathToPhoto, fileName);
+			await DownloadProfilePicture();
 #else
-			await Task.Run(() => networkController.DownloadFile(user.pathToPhoto, fileName));
+			await Task.Run(() => DownloadProfilePictre());
 #endif
 			user.pathToPhoto = fileName;
 
 			UpdateUserLocally(user);
 
 			return MediaController.ReadBytesFromFile(user.pathToPhoto);
+		}
+
+		public async Task<bool> DownloadProfilePicture()
+		{
+			var client = new HttpClient();
+
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+			client.Timeout = new TimeSpan(0, 0, 100);
+
+			var url = new Uri(Session.baseUrl + "user/picture?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
+			Debug.WriteLine(url);
+
+			Console.WriteLine("Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				imageBytes = ms.ToArray();
+			}
+
+			if (returned != null)
+			{
+				var fileName = "u_" + Session.activeUser.id + ".jpg";
+				MediaController.WriteImageToFile(fileName, imageBytes);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// <summary>

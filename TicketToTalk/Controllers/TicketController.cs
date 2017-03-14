@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -475,14 +477,43 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket content.</returns>
 		/// <param name="filePath">File path.</param>
-		public async Task DownloadTicketContent(string filePath)
+		/// <exception cref="T:System.IO.FileNotFoundException"></exception>
+		public async Task DownloadTicketContent(Ticket ticket)
 		{
-			var net = new NetworkController();
+			var idx = ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal);
+			var fileName = ticket.pathToFile.Substring(idx + 1);
 
-			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
-			var fileName = filePath.Substring(idx + 1);
+			var client = new HttpClient();
 
-			await net.DownloadFile(filePath, fileName);
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+			client.Timeout = new TimeSpan(0, 0, 100);
+
+			var url = new Uri(Session.baseUrl + "tickets/download?ticket_id=" + ticket.id + "&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
+
+			Console.WriteLine("Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				imageBytes = ms.ToArray();
+			}
+
+			if (returned != null)
+			{
+				MediaController.WriteImageToFile(fileName, imageBytes);
+			}
+			else
+			{
+				//throw FileNotFoundException;
+			}
+
 		}
 
 		/// <summary>
