@@ -163,10 +163,15 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Resend_Clicked(object sender, EventArgs e)
+		async void Resend_Clicked(object sender, EventArgs e)
 		{
 			// TODO Implement resending email.
-			//throw NotImplementedException;
+			var userController = new UserController();
+			var sent = await userController.resendEmail();
+			if (sent) 
+			{
+				await DisplayAlert("Verification", "A new verification email has been sent to your email account.", "OK");
+			}
 		}
 	}
 }

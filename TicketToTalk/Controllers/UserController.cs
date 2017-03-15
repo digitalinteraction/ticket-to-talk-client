@@ -175,6 +175,27 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Resends a verification email.
+		/// </summary>
+		/// <returns>The email.</returns>
+		public async Task<bool> resendEmail()
+		{
+			var net = new NetworkController();
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["token"] = Session.Token.val;
+
+			var jobject = net.SendGetRequest("auth/verify/resend", parameters);
+			if (jobject == null)
+			{
+				return false;
+			}
+			else 
+			{
+				return true; 
+			}
+		}
+
+		/// <summary>
 		/// Authenticates the user.
 		/// </summary>
 		/// <returns>Is authenticated.</returns>
