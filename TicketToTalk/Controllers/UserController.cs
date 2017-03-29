@@ -68,12 +68,13 @@ namespace TicketToTalk
 			var jobject = await net.SendPostRequest("auth/verify", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("data")["verified"];
-				var verified = jtoken.ToObject<bool>();
+
+				var data = jobject.GetData();
+				var verified = data["verified"].ToObject<bool>();
 
 				if (verified)
 				{
-					Session.activeUser.verified = true;
+					Session.activeUser.verified = "1";
 					UpdateUserLocally(Session.activeUser);
 					return true;
 				}
@@ -146,8 +147,9 @@ namespace TicketToTalk
 			var jobject = await networkController.SendGenericPostRequest("user/update", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("User");
-				var returned = jtoken.ToObject<User>();
+
+				var data = jobject.GetData();
+				var returned = data["user"].ToObject<User>();
 
 				Session.activeUser.name = returned.name;
 				Session.activeUser.email = returned.email;
@@ -184,7 +186,7 @@ namespace TicketToTalk
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = net.SendGetRequest("auth/verify/resend", parameters);
+			var jobject = await net.SendGetRequest("auth/verify/resend", parameters);
 			if (jobject == null)
 			{
 				return false;
@@ -218,6 +220,7 @@ namespace TicketToTalk
 			else
 			{
 				Session.activeUser = user;
+				//credentials["api_key"] = Session.activeUser.api_key;
 			}
 
 			var net = new NetworkController();
@@ -234,7 +237,7 @@ namespace TicketToTalk
 			// if success.
 			if (code == 200)
 			{
-				var data = jobject.GetValue("data");
+				var data = jobject.GetData();
 				var jtoken = data["token"];
 				var token = new Token
 				{
@@ -281,9 +284,6 @@ namespace TicketToTalk
 			}
 			else
 			{
-				var errors = jobject.GetValue("errors");
-				var jerrors = errors["message"];
-				Console.WriteLine(jerrors.ToObject<string>());
 				return false;
 			}
 		}
@@ -326,7 +326,7 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
-				var data = jobject["data"];
+				var data = jobject.GetData();
 				var jtoken = data["token"];
 				var token = new Token
 				{
@@ -403,8 +403,8 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("invites");
-				var invitations = jtoken.ToObject<List<Invitation>>();
+				var data = jobject.GetData();
+				var invitations = data["invites"].ToObject<List<Invitation>>();
 
 				var personController = new PersonController();
 
@@ -453,11 +453,11 @@ namespace TicketToTalk
 
 			var fileName = "u_" + user.id + ".jpg";
 
-#if __IOS__
+//#if __IOS__
 			await DownloadProfilePicture();
-#else
-			await Task.Run(() => DownloadProfilePictre());
-#endif
+//#else
+			//await Task.Run(() => DownloadProfilePictre());
+//#endif
 			user.pathToPhoto = fileName;
 
 			UpdateUserLocally(user);

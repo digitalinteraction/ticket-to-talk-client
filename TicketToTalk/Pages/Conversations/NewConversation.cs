@@ -16,6 +16,8 @@ namespace TicketToTalk
 		private TimePicker timePicker;
 
 		private ConversationController conversationController = new ConversationController();
+		Button updateButton;
+		Conversation conversation;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewConversation"/> class.
@@ -121,6 +123,8 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public NewConversation(Conversation conversation)
 		{
+			this.conversation = conversation;
+
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Cancel",
@@ -135,13 +139,13 @@ namespace TicketToTalk
 				Text = "Select a date for the conversation."
 			};
 
-			var dates = conversationController.ParseDateToIntegers(conversation);
+			//var dates = conversationController.ParseDateToIntegers(conversation);
 
 			datepicker = new DatePicker
 			{
 				TextColor = ProjectResource.color_red,
 			};
-			datepicker.Date = new DateTime(dates[2], dates[1], dates[0]);
+			datepicker.Date = new DateTime(conversation.timestamp.Year, conversation.timestamp.Month, conversation.timestamp.Day);
 
 			datepicker.DateSelected += EntryChanged;
 
@@ -155,7 +159,7 @@ namespace TicketToTalk
 			{
 				TextColor = ProjectResource.color_red,
 			};
-			timePicker.Time = new TimeSpan(dates[3], dates[4], dates[5]);
+			timePicker.Time = new TimeSpan(conversation.timestamp.Hour, conversation.timestamp.Minute, conversation.timestamp.Second);
 
 			var notesLabel = new Label
 			{
@@ -171,7 +175,7 @@ namespace TicketToTalk
 
 			saveButton = new Button()
 			{
-				Text = "Save",
+				Text = "Update",
 				TextColor = ProjectResource.color_white,
 				BackgroundColor = ProjectResource.color_blue,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -179,7 +183,8 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 0, 0, 10),
 				IsEnabled = true
 			};
-			//saveButton.Clicked += SaveButton_Clicked;
+			//updateButton.Clicked += UpdateButton_Clicked;
+			saveButton.Clicked += SaveButton_Clicked;
 
 			var buttonStack = new StackLayout
 			{
@@ -260,26 +265,84 @@ namespace TicketToTalk
 			saveButton.IsEnabled = false;
 			var dateTime = string.Format("{0}-{1}-{2} {3}:{4}:{5}", datepicker.Date.Year, datepicker.Date.Month, datepicker.Date.Day, timePicker.Time.Hours, timePicker.Time.Minutes, timePicker.Time.Seconds);
 
-			var conversation = new Conversation();
-			conversation.person_id = Session.activePerson.id;
-			conversation.notes = notes.Text;
-			conversation.date = dateTime;
-
-			var returned = await conversationController.StoreConversationRemotely(conversation);
-			if (returned != null)
+			if (conversation != null)
 			{
-				conversationController.StoreConversationLocally(returned);
-				ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
-				ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
-			}
-			else
-			{
-				await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
-				saveButton.IsEnabled = true;
-			}
+				conversation.person_id = Session.activePerson.id;
+				conversation.notes = notes.Text;
+				conversation.date = dateTime;
 
-			await Navigation.PopModalAsync();
+				var returned = await conversationController.UpdateConversationRemotely(conversation);
+				if (returned != null)
+				{
+					conversationController.UpdateConversationLocally(returned);
+
+					var idx = ConversationsView.conversations.IndexOf(conversation);
+					ConversationsView.conversations[idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
+
+					var c_idx = ConversationSelect.conversations.IndexOf(conversation);
+					if (c_idx > 0) 
+					{
+						ConversationSelect.conversations[c_idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
+					}
+				}
+				else
+				{
+					await DisplayAlert("Edit Conversation", "Conversation could not be updated.", "OK");
+					saveButton.IsEnabled = true;
+				}
+
+				await Navigation.PopModalAsync();
+			}
+			else 
+			{
+				var o_conv = new Conversation();
+				o_conv.person_id = Session.activePerson.id;
+				o_conv.notes = notes.Text;
+				o_conv.date = dateTime;
+
+				var returned = await conversationController.StoreConversationRemotely(o_conv);
+				if (returned != null)
+				{
+					conversationController.StoreConversationLocally(returned);
+
+					ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
+					ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
+				}
+				else
+				{
+					await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
+					saveButton.IsEnabled = true;
+				}
+
+				await Navigation.PopModalAsync();
+			}
 		}
+
+		//private async void UpdateButton_Clicked(object sender, EventArgs e)
+		//{
+		//	saveButton.IsEnabled = false;
+		//	var dateTime = string.Format("{0}-{1}-{2} {3}:{4}:{5}", datepicker.Date.Year, datepicker.Date.Month, datepicker.Date.Day, timePicker.Time.Hours, timePicker.Time.Minutes, timePicker.Time.Seconds);
+
+		//	conversation.person_id = Session.activePerson.id;
+		//	conversation.notes = notes.Text;
+		//	conversation.date = dateTime;
+
+		//	var returned = await conversationController.UpdateConversationRemotely(conversation);
+		//	if (returned != null)
+		//	{
+		//		conversationController.UpdateConversationLocally(returned);
+		//		var idx = ConversationsView.conversations.IndexOf(conversation);
+		//		var c_idx = ConversationSelect.conversations.IndexOf(conversation);
+		//		ConversationsView.conversations[idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
+		//		ConversationSelect.conversations[c_idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
+		//	}
+		//	else
+		//	{
+		//		await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
+		//		saveButton.IsEnabled = true;
+		//	}
+
+		//	await Navigation.PopModalAsync();
+		//}
 	}
 }
-

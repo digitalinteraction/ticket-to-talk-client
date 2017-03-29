@@ -19,7 +19,7 @@ namespace TicketToTalk
 		private string _imageHash;
 		private bool _firstLogin;
 		private string _api_key;
-		private bool _verified;
+		private string _verified;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -147,7 +147,7 @@ namespace TicketToTalk
 			}
 		}
 
-		public bool verified
+		public string verified
 		{
 			get
 			{

@@ -109,7 +109,8 @@ namespace TicketToTalk
 			// If null the request failed.
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("Articles");
+				var data = jobject.GetData();
+				var jtoken = data["articles"];
 				return jtoken.ToObject<List<Article>>();
 			}
 			return null;
@@ -128,7 +129,7 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			var jobject = await net.SendGetRequest("articles/all", parameters);
-			var data = jobject.GetValue("data");
+			var data = jobject.GetData();
 			var jarticles = data["articles"];
 			var articles = jarticles.ToObject<Article[]>();
 
@@ -217,7 +218,7 @@ namespace TicketToTalk
 			var jobject = await net.SendPostRequest("articles/store", parameters);
 			if (jobject != null)
 			{
-				var data = jobject.GetValue("data");
+				var data = jobject.GetData();
 				var jarticle = data["article"];
 
 				var returned_article = jarticle.ToObject<Article>();
@@ -256,7 +257,7 @@ namespace TicketToTalk
 			var jobject = await net.SendPostRequest("articles/update", parameters);
 			if (jobject != null)
 			{
-				var data = jobject.GetValue("data");
+				var data = jobject.GetData();
 				var jarticle = data["article"];
 				var new_article = jarticle.ToObject<Article>();
 

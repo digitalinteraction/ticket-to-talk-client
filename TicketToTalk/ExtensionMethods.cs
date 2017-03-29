@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -118,6 +119,38 @@ namespace TicketToTalk
 			label.HorizontalTextAlignment = TextAlignment.Center;
 			label.HorizontalOptions = LayoutOptions.Center;
 			label.WidthRequest = Session.ScreenWidth * 0.8;
+		}
+
+		/// <summary>
+		/// Gets data from a API JSON response.
+		/// </summary>
+		/// <returns>The data.</returns>
+		/// <param name="res">Res.</param>
+		public static JToken GetData(this JObject res) 
+		{
+
+			var jstatus = res.GetValue("status");
+			var code = jstatus["code"].ToObject<int>();
+
+			var errors = res.GetValue("errors").ToObject<bool>();
+			var data = res.GetValue("data");
+
+			if (errors) 
+			{
+				switch (code) 
+				{
+					case 401:
+						throw new APIUnauthorisedException("Unauthorised Access");
+					case 403:
+						throw new APIUnauthorisedForResourceException("Unauthorised for resource");
+					case 404:
+						throw new APIResourceNotFoundException("Resource not found");
+					case 500:
+						throw new APIErrorException("API Error");
+				}
+			}
+
+			return data;
 		}
 	}
 }

@@ -92,7 +92,8 @@ namespace TicketToTalk
 			}
 			else
 			{
-				var jtoken = jobject.GetValue("conversation");
+				var data = jobject.GetData();
+				var jtoken = data["conversation"];
 				var conv = jtoken.ToObject<Conversation>();
 				return conv;
 			}
@@ -117,7 +118,8 @@ namespace TicketToTalk
 			// If null, request failed.
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("Conversation");
+				var data = jobject.GetData();
+				var jtoken = data["conversation"];
 				return jtoken.ToObject<Conversation>();
 			}
 
@@ -220,7 +222,8 @@ namespace TicketToTalk
 			}
 			else
 			{
-				var jtoken = jobject.GetValue("conversations");
+				var data = jobject.GetData();
+				var jtoken = data["conversations"];
 				var conv = jtoken.ToObject<List<Conversation>>();
 				return conv;
 			};

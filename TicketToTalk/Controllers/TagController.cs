@@ -90,7 +90,10 @@ namespace TicketToTalk
 
 			NetworkController net = new NetworkController();
 			var jobject = await net.SendPostRequest("tags/store", parameters);
-			var jtoken = jobject.GetValue("tag");
+
+			var data = jobject.GetData();
+
+			var jtoken = data["tag"];
 			var returned_tag = jtoken.ToObject<Tag>();
 
 			Console.WriteLine(tag);

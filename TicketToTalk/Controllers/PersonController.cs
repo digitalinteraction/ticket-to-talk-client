@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -249,7 +250,30 @@ namespace TicketToTalk
 			var jobject = await networkController.SendGetRequest("user/getpeople", parameters);
 
 			// Parsing JSON to People array
-			var jpeople = jobject.GetValue("people");
+
+			JToken data = null;
+			try
+			{
+				data = jobject.GetData();
+			}
+			catch (APIUnauthorisedException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIErrorException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIResourceNotFoundException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIUnauthorisedForResourceException e) 
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+
+			var jpeople = data["people"];
 			var peopleRaw = jpeople.ToObject<Person[]>();
 			Array.Sort(peopleRaw);
 
@@ -303,8 +327,7 @@ namespace TicketToTalk
 				personUserDB.Close();
 			}
 
-			var jtoken = jobject.GetValue("periods");
-			var periods = jtoken.ToObject<List<Period>>();
+			var periods = data["periods"].ToObject<List<Period>>();
 
 			var periodController = new PeriodController();
 			var personPeriodDB = new PersonPeriodDB();
@@ -419,7 +442,9 @@ namespace TicketToTalk
 			var jobject = await net.SendGenericPostRequest("people/store", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("person");
+
+				var data = jobject.GetData();
+				var jtoken = data["person"];
 				var stored_person = jtoken.ToObject<Person>();
 
 
@@ -514,7 +539,8 @@ namespace TicketToTalk
 			// Send request for all users associated with the person
 			var jobject = await networkController.SendGetRequest(url, parameters);
 
-			var jusers = jobject.GetValue("users");
+			var data = jobject.GetData();
+			var jusers = data["users"];
 			var users = jusers.ToObject<User[]>();
 
 			return new List<User>(users);
@@ -551,9 +577,10 @@ namespace TicketToTalk
 			var jobject = await networkController.SendGenericPostRequest("people/update", parameters);
 			if (jobject != null)
 			{
+				var data = jobject.GetData();
 
 				// Get person token
-				var jtoken = jobject.GetValue("Person");
+				var jtoken = data["person"];
 				var p = jtoken.ToObject<Person>();
 
 				// Update local copy

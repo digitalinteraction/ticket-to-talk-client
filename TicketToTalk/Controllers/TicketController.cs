@@ -58,9 +58,11 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
+
+				var data = jobject.GetData();
+
 				// Gets the ticket object.
-				var jtoken = jobject.GetValue("ticket");
-				var returned_ticket = jtoken.ToObject<Ticket>();
+				var returned_ticket = data["ticket"].ToObject<Ticket>();
 
 				// Add to the ticket displays.
 				var ticketController = new TicketController();
@@ -295,8 +297,9 @@ namespace TicketToTalk
 			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("Ticket");
-				var returned = jtoken.ToObject<Ticket>();
+
+				var data = jobject.GetData();
+				var returned = data["ticket"].ToObject<Ticket>();
 
 				return returned;
 			}
@@ -337,9 +340,10 @@ namespace TicketToTalk
 			var net = new NetworkController();
 			var jobject = await net.SendGetRequest("people/tickets", parameters);
 
+			var data = jobject.GetData();
+
 			// Parse JSON Tags to Tags
-			var jtoken = jobject.GetValue("tags");
-			var tags = jtoken.ToObject<Tag[]>();
+			var tags = data["tags"].ToObject<Tag[]>();
 			var tagController = new TagController();
 
 			foreach (Tag t in tags)
@@ -359,8 +363,7 @@ namespace TicketToTalk
 			}
 
 			// Parse JSON Tickets to Tickets
-			jtoken = jobject.GetValue("tickets");
-			var tickets = jtoken.ToObject<Ticket[]>();
+			var tickets = data["tickets"].ToObject<Ticket[]>();
 
 			foreach (Ticket t in tickets)
 			{
@@ -376,8 +379,7 @@ namespace TicketToTalk
 			}
 
 			// Parse JSON TicketTags to TicketTags
-			jtoken = jobject.GetValue("ticket_tags");
-			var ticket_tags = jtoken.ToObject<TicketTag[]>();
+			var ticket_tags = data["ticket_tags"].ToObject<TicketTag[]>();
 			var ticketTagDB = new TicketTagDB();
 			ticketTagDB.Open();
 			foreach (TicketTag tt in ticket_tags)

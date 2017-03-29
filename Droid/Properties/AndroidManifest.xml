@@ -6,7 +6,7 @@
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<application android:label="Ticket To Talk">
+	<application android:label="Ticket To Talk" android:largeHeap="true">
 		<provider android:name="android.support.v4.content.FileProvider" 
 				android:authorities="uk.ncl.ac.d.welsh.ticket_to_talk.fileprovider" 
 				android:exported="false" 
