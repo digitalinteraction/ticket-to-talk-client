@@ -39,7 +39,7 @@ namespace TicketToTalk
 
 			if (displayedTicket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
 			{
-				Task.Run(() => ticketController.DownloadTicketContent(ticket.pathToFile)).Wait();
+				Task.Run(() => ticketController.DownloadTicketContent(ticket)).Wait();
 
 				displayedTicket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
 				ticketController.UpdateTicketLocally(ticket);

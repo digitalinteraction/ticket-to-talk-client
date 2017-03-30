@@ -104,6 +104,28 @@ namespace TicketToTalk
 			}
 		}
 
+		[Ignore]
+		public DateTime timestamp 
+		{
+			get 
+			{
+				char[] delims = { ' ' };
+				string[] datetime = this.date.Split(delims);
+
+				char[] d_delims = { '-' };
+				string[] date = datetime[0].Split(d_delims);
+
+				char[] t_delims = { ':' };
+				string[] time = datetime[1].Split(t_delims);
+
+				return new DateTime(int.Parse(date[0]), int.Parse(date[1]), int.Parse(date[2]), int.Parse(time[0]), int.Parse(time[1]), int.Parse(time[2]));
+			}
+			set 
+			{
+				//timestamp = value;
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

@@ -124,10 +124,12 @@ namespace TicketToTalk
 			NetworkController net = new NetworkController();
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
+
 			var jobject = await net.SendGetRequest("inspiration/get", parameters);
 
-			var jtoken = jobject.GetValue("Inspirations");
-			var inspirations = jtoken.ToObject<List<Inspiration>>();
+			var data = jobject.GetData();
+			var inspirations = data["inspirations"].ToObject<List<Inspiration>>();
+
 			InspirationDB insDB = new InspirationDB();
 			foreach (Inspiration ins in inspirations)
 			{

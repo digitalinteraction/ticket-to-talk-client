@@ -266,7 +266,7 @@ namespace TicketToTalk
 			{
 				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 
-				await Navigation.PushAsync(new AllProfiles());
+				await Navigation.PushAsync(new Verification(true));
 				Navigation.RemovePage(this);
 			}
 			else

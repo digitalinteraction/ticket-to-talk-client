@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -150,7 +153,7 @@ namespace TicketToTalk
 		{
 			var fileName = "p_" + person.id + ".jpg";
 			//var downloaded = await networkController.DownloadFile(person.pathToPhoto, fileName);
-			var downloaded = await Task.Run(() => networkController.DownloadFile(person.pathToPhoto, fileName));
+			var downloaded = await Task.Run(() => DownloadProfilePicture(person.id));
 
 			if (downloaded)
 			{
@@ -163,6 +166,42 @@ namespace TicketToTalk
 			}
 
 			return MediaController.ReadBytesFromFile(person.pathToPhoto);
+		}
+
+		public async static Task<bool> DownloadProfilePicture(int id)
+		{
+			var client = new HttpClient();
+
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+			client.Timeout = new TimeSpan(0, 0, 100);
+
+			var url = new Uri(Session.baseUrl + "people/picture?&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key + "&person_id=" + id);
+
+			Console.WriteLine("Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				imageBytes = ms.ToArray();
+			}
+
+			if (returned != null)
+			{
+				var fileName = "u_" + Session.activeUser.id + ".jpg";
+				MediaController.WriteImageToFile(fileName, imageBytes);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -211,7 +250,30 @@ namespace TicketToTalk
 			var jobject = await networkController.SendGetRequest("user/getpeople", parameters);
 
 			// Parsing JSON to People array
-			var jpeople = jobject.GetValue("people");
+
+			JToken data = null;
+			try
+			{
+				data = jobject.GetData();
+			}
+			catch (APIUnauthorisedException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIErrorException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIResourceNotFoundException e)
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+			catch (APIUnauthorisedForResourceException e) 
+			{
+				Debug.WriteLine(e.StackTrace);
+			}
+
+			var jpeople = data["people"];
 			var peopleRaw = jpeople.ToObject<Person[]>();
 			Array.Sort(peopleRaw);
 
@@ -265,8 +327,7 @@ namespace TicketToTalk
 				personUserDB.Close();
 			}
 
-			var jtoken = jobject.GetValue("periods");
-			var periods = jtoken.ToObject<List<Period>>();
+			var periods = data["periods"].ToObject<List<Period>>();
 
 			var periodController = new PeriodController();
 			var personPeriodDB = new PersonPeriodDB();
@@ -381,7 +442,9 @@ namespace TicketToTalk
 			var jobject = await net.SendGenericPostRequest("people/store", parameters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("person");
+
+				var data = jobject.GetData();
+				var jtoken = data["person"];
 				var stored_person = jtoken.ToObject<Person>();
 
 
@@ -476,7 +539,8 @@ namespace TicketToTalk
 			// Send request for all users associated with the person
 			var jobject = await networkController.SendGetRequest(url, parameters);
 
-			var jusers = jobject.GetValue("users");
+			var data = jobject.GetData();
+			var jusers = data["users"];
 			var users = jusers.ToObject<User[]>();
 
 			return new List<User>(users);
@@ -513,9 +577,10 @@ namespace TicketToTalk
 			var jobject = await networkController.SendGenericPostRequest("people/update", parameters);
 			if (jobject != null)
 			{
+				var data = jobject.GetData();
 
 				// Get person token
-				var jtoken = jobject.GetValue("Person");
+				var jtoken = data["person"];
 				var p = jtoken.ToObject<Person>();
 
 				// Update local copy

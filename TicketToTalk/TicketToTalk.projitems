@@ -131,6 +131,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Help\HelpPopup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PersonPivot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\About.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Verification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\APIUnauthorisedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)APIUnauthorisedForResourceException.cs">
+      <Link>Exceptions\APIUnauthorisedForResourceException.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)APIResourceNotFoundException.cs">
+      <Link>Exceptions\APIResourceNotFoundException.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)APIErrorException.cs">
+      <Link>Exceptions\APIErrorException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -149,5 +160,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Views\Video\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\People\" />
     <Folder Include="$(MSBuildThisFileDirectory)Pages\Help\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Exceptions\" />
   </ItemGroup>
 </Project>

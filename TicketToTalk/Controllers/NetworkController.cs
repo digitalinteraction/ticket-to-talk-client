@@ -76,6 +76,8 @@ namespace TicketToTalk
 				Console.WriteLine("Network Timeout");
 			}
 
+			Debug.WriteLine(response);
+
 			// Check for success.
 			if (response == null)
 			{
@@ -107,7 +109,7 @@ namespace TicketToTalk
 		{
 			var client = new HttpClient();
 
-#if __Android__
+#if __ANDROID__
 			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
 #endif
 
@@ -146,6 +148,8 @@ namespace TicketToTalk
 				Console.WriteLine(ex);
 			}
 
+			Debug.WriteLine(response);
+
 			// Check for success.
 			if (response == null)
 			{
@@ -154,6 +158,8 @@ namespace TicketToTalk
 			else if (response.IsSuccessStatusCode)
 			{
 				string jsonString = await response.Content.ReadAsStringAsync();
+				Debug.WriteLine("Success");
+				Debug.WriteLine(jsonString);
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
@@ -202,7 +208,7 @@ namespace TicketToTalk
 
 			// Get response
 			var response = await client.PostAsync(uri, content);
-
+			Debug.WriteLine(response);
 			// Check for success.
 			if (response.IsSuccessStatusCode)
 			{
@@ -262,6 +268,7 @@ namespace TicketToTalk
 			catch (TaskCanceledException ex)
 			{
 			}
+			Debug.WriteLine(response);
 
 			if (response == null)
 			{
@@ -292,9 +299,6 @@ namespace TicketToTalk
 		public async Task<bool> DownloadFile(string path, string fileName)
 		{
 			var client = new HttpClient();
-#if __Android__
-			client = new HttpClient(new Xamarin.Android.Net.AndroidClientHandler ());
-#endif
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -315,8 +319,7 @@ namespace TicketToTalk
 				}
 				imageBytes = ms.ToArray();
 			}
-			// http://stackoverflow.com/questions/221925/creating-a-byte-array-from-a-stream
-			//var returned = await webClient.DownloadDataTaskAsync(url);
+
 			if (returned != null)
 			{
 				MediaController.WriteImageToFile(fileName, imageBytes);

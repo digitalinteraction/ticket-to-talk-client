@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -56,9 +58,11 @@ namespace TicketToTalk
 
 			if (jobject != null)
 			{
+
+				var data = jobject.GetData();
+
 				// Gets the ticket object.
-				var jtoken = jobject.GetValue("ticket");
-				var returned_ticket = jtoken.ToObject<Ticket>();
+				var returned_ticket = data["ticket"].ToObject<Ticket>();
 
 				// Add to the ticket displays.
 				var ticketController = new TicketController();
@@ -293,8 +297,9 @@ namespace TicketToTalk
 			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("Ticket");
-				var returned = jtoken.ToObject<Ticket>();
+
+				var data = jobject.GetData();
+				var returned = data["ticket"].ToObject<Ticket>();
 
 				return returned;
 			}
@@ -335,9 +340,10 @@ namespace TicketToTalk
 			var net = new NetworkController();
 			var jobject = await net.SendGetRequest("people/tickets", parameters);
 
+			var data = jobject.GetData();
+
 			// Parse JSON Tags to Tags
-			var jtoken = jobject.GetValue("tags");
-			var tags = jtoken.ToObject<Tag[]>();
+			var tags = data["tags"].ToObject<Tag[]>();
 			var tagController = new TagController();
 
 			foreach (Tag t in tags)
@@ -357,8 +363,7 @@ namespace TicketToTalk
 			}
 
 			// Parse JSON Tickets to Tickets
-			jtoken = jobject.GetValue("tickets");
-			var tickets = jtoken.ToObject<Ticket[]>();
+			var tickets = data["tickets"].ToObject<Ticket[]>();
 
 			foreach (Ticket t in tickets)
 			{
@@ -374,8 +379,7 @@ namespace TicketToTalk
 			}
 
 			// Parse JSON TicketTags to TicketTags
-			jtoken = jobject.GetValue("ticket_tags");
-			var ticket_tags = jtoken.ToObject<TicketTag[]>();
+			var ticket_tags = data["ticket_tags"].ToObject<TicketTag[]>();
 			var ticketTagDB = new TicketTagDB();
 			ticketTagDB.Open();
 			foreach (TicketTag tt in ticket_tags)
@@ -475,14 +479,43 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The ticket content.</returns>
 		/// <param name="filePath">File path.</param>
-		public async Task DownloadTicketContent(string filePath)
+		/// <exception cref="T:System.IO.FileNotFoundException"></exception>
+		public async Task DownloadTicketContent(Ticket ticket)
 		{
-			var net = new NetworkController();
+			var idx = ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal);
+			var fileName = ticket.pathToFile.Substring(idx + 1);
 
-			var idx = filePath.LastIndexOf("/", StringComparison.Ordinal);
-			var fileName = filePath.Substring(idx + 1);
+			var client = new HttpClient();
 
-			await net.DownloadFile(filePath, fileName);
+			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+			client.Timeout = new TimeSpan(0, 0, 100);
+
+			var url = new Uri(Session.baseUrl + "tickets/download?ticket_id=" + ticket.id + "&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
+
+			Console.WriteLine("Beginning Download");
+			var returned = await client.GetStreamAsync(url);
+			byte[] buffer = new byte[16 * 1024];
+			byte[] imageBytes;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				int read = 0;
+				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+				{
+					ms.Write(buffer, 0, read);
+				}
+				imageBytes = ms.ToArray();
+			}
+
+			if (returned != null)
+			{
+				MediaController.WriteImageToFile(fileName, imageBytes);
+			}
+			else
+			{
+				//throw FileNotFoundException;
+			}
+
 		}
 
 		/// <summary>

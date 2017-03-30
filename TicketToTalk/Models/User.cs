@@ -19,6 +19,7 @@ namespace TicketToTalk
 		private string _imageHash;
 		private bool _firstLogin;
 		private string _api_key;
+		private string _verified;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -141,6 +142,22 @@ namespace TicketToTalk
 				if (value != _api_key) 
 				{
 					_api_key = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public string verified
+		{
+			get
+			{
+				return _verified;
+			}
+			set
+			{
+				if (value != _verified)
+				{
+					_verified = value;
 					NotifyPropertyChanged();
 				}
 			}

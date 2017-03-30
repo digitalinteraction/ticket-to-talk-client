@@ -66,7 +66,6 @@ namespace TicketToTalk
 		public async Task<Conversation> StoreConversationRemotely(Conversation conversation)
 		{
 			// Get platform of the device.
-			// TODO: Remove after fix for getting standard dates across language settings.
 			var platform = string.Empty;
 #if __IOS__
 			platform = "iOS";
@@ -93,7 +92,8 @@ namespace TicketToTalk
 			}
 			else
 			{
-				var jtoken = jobject.GetValue("conversation");
+				var data = jobject.GetData();
+				var jtoken = data["conversation"];
 				var conv = jtoken.ToObject<Conversation>();
 				return conv;
 			}
@@ -104,12 +104,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The updated conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<Conversation> UpdateConversationRemotely(Conversation conversation)
+		public async Task<bool> UpdateConversationRemotely(Conversation conversation)
 		{
 			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["notes"] = conversation.notes;
+			parameters["datetime"] = conversation.date;
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
@@ -118,11 +119,16 @@ namespace TicketToTalk
 			// If null, request failed.
 			if (jobject != null)
 			{
-				var jtoken = jobject.GetValue("Conversation");
-				return jtoken.ToObject<Conversation>();
+				var data = jobject.GetData();
+
+				var returned = data["conversation"].ToObject<Conversation>();
+				returned = SetPropertiesForDisplay(returned);
+				UpdateConversationLocally(returned);
+
+				return true;
 			}
 
-			return null;
+			return false;
 		}
 
 		/// <summary>
@@ -131,14 +137,38 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void UpdateConversationLocally(Conversation conversation)
 		{
-			// Update conversation currently being displayed.
-			foreach (Conversation c in ConversationsView.conversations)
+
+			var idx = -1;
+			for (int i = 0; i < ConversationsView.conversations.Count; i++)
 			{
-				if (c.id == conversation.id)
+				if (conversation.id == ConversationsView.conversations[i].id)
 				{
-					c.notes = conversation.notes;
+					idx = i;
+					break;
 				}
 			}
+
+			ConversationsView.conversations[idx] = conversation;
+
+			idx = -1;
+			for (int i = 0; i < ConversationSelect.conversations.Count; i++)
+			{
+				if (conversation.id == ConversationSelect.conversations[i].id)
+				{
+					idx = i;
+					break;
+				}
+			}
+			if (idx > 1) 
+			{
+				ConversationSelect.conversations[idx] = conversation;
+			}
+
+			//ConversationView.conversation = conversation;
+			ConversationView.conversation.date = conversation.date;
+			ConversationView.conversation.timestamp = conversation.timestamp;
+			ConversationView.conversation.displayDate = conversation.displayDate;
+			ConversationView.conversation.notes = conversation.notes;
 
 			// Store in local DB.
 			convDB.Open();
@@ -221,7 +251,8 @@ namespace TicketToTalk
 			}
 			else
 			{
-				var jtoken = jobject.GetValue("conversations");
+				var data = jobject.GetData();
+				var jtoken = data["conversations"];
 				var conv = jtoken.ToObject<List<Conversation>>();
 				return conv;
 			};
@@ -340,108 +371,10 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public Conversation SetPropertiesForDisplay(Conversation conversation)
 		{
-			string[] months =
-			{
-				"January",
-				"February",
-				"March",
-				"April",
-				"May",
-				"June",
-				"July",
-				"August",
-				"September",
-				"October",
-				"November",
-				"December"
-			};
-
-			string displayString;
-			string day, month, year, hour, minutes, date_suffix;
-			int afterMid;
 
 			char[] delims = { ' ' };
-			string[] datetime = conversation.date.Split(delims);
 
-			if (conversation.date.Contains("/"))
-			{
-				char[] d_delims = { '/' };
-				string[] date = datetime[0].Split(d_delims);
-
-#if __IOS__
-
-				day = date[0];
-				month = months[Int32.Parse(date[1]) - 1];
-				year = date[2];
-
-#else
-
-				day = date[1];
-				month = months[int.Parse(date[0]) - 1];
-				year = date[2];
-
-#endif
-			}
-			else
-			{
-				char[] d_delims = { '-' };
-				string[] date = datetime[0].Split(d_delims);
-
-				day = date[2];
-				month = months[int.Parse(date[1]) - 1];
-				year = date[0];
-			}
-
-			char[] t_delims = { ':' };
-			string[] time = datetime[1].Split(t_delims);
-
-			hour = (int.Parse(time[0]) % 12).ToString();
-			afterMid = int.Parse(time[0]) / 12;
-
-			if (int.Parse(hour) == 0 && afterMid == 1)
-			{
-				hour = "12";
-			}
-
-			minutes = time[1];
-
-			switch (int.Parse(day))
-			{
-				case (1):
-				case (21):
-				case (31):
-					date_suffix = "st";
-					break;
-				case (2):
-				case (22):
-					date_suffix = "nd";
-					break;
-				case (3):
-				case (23):
-					date_suffix = "rd";
-					break;
-				default:
-					date_suffix = "th";
-					break;
-			}
-			var time_suffix = string.Empty;
-			switch (afterMid)
-			{
-				case (0):
-					time_suffix = "am";
-					break;
-				case (1):
-					time_suffix = "pm";
-					break;
-				default:
-					time_suffix = "";
-					break;
-			}
-
-			day = day.TrimStart(new char[] { '0' });
-
-			displayString = string.Format("{0} {1}{2}, {3}", month, day, date_suffix, year);
-			conversation.displayDate = displayString;
+			conversation.displayDate = formatTimestamp(conversation.timestamp);
 
 			if (!string.IsNullOrEmpty(conversation.ticket_id_string))
 			{
@@ -463,6 +396,35 @@ namespace TicketToTalk
 			}
 
 			return conversation;
+		}
+
+		/// <summary>
+		/// Formats the timestamp.
+		/// </summary>
+		/// <returns>The timestamp.</returns>
+		/// <param name="timestamp">Timestamp.</param>
+		public string formatTimestamp(DateTime timestamp) 
+		{
+
+			string[] months =
+			{
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December"
+			};
+
+			var str = string.Format("{0} {1}, {2}", months[timestamp.Month - 1], timestamp.Day, timestamp.Year);
+
+			return str;
 		}
 
 		/// <summary>

@@ -15,27 +15,27 @@ namespace TicketToTalk
 
 		public static ObservableCollection<ConversationItem> conversationItems = new ObservableCollection<ConversationItem>();
 		public static List<Ticket> tickets = new List<Ticket>();
-		private Conversation conversation;
+		public static Conversation conversation;
 		private ConversationController conversationController = new ConversationController();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationView"/> class.
 		/// </summary>
-		/// <param name="conversation">Conversation.</param>
-		public ConversationView(Conversation conversation)
+		/// <param name="conv">Conversation.</param>
+		public ConversationView(Conversation conv)
 		{
-			this.conversation = conversation;
+			conversation = conv;
 			conversationItems.Clear();
 			tickets.Clear();
 
 			// Wait for new ticket to be returned if added through this view.
 			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
 			{
-				var added = await conversationController.AddTicketToConversationRemotely(conversation, returned_ticket);
+				var added = await conversationController.AddTicketToConversationRemotely(conv, returned_ticket);
 				if (added)
 				{
-					conversationController.AddTicketToConversation(conversation, returned_ticket);
-					conversationController.AddTicketToDisplayedConversation(conversation, returned_ticket);
+					conversationController.AddTicketToConversation(conv, returned_ticket);
+					conversationController.AddTicketToDisplayedConversation(conv, returned_ticket);
 				}
 			});
 
@@ -47,7 +47,10 @@ namespace TicketToTalk
 				Command = new Command(ConversationOptions)
 			});
 
-			Title = conversation.displayDate;
+			// Set title
+			this.SetBinding(TitleProperty, "displayDate");
+			this.BindingContext = conversation;
+
 			var dateLabel = new Label
 			{
 				Text = "Time",
@@ -91,9 +94,11 @@ namespace TicketToTalk
 
 			var date = new Label
 			{
-				Text = timeText,
+				Text = conversation.displayDate,
 				TextColor = ProjectResource.color_red
 			};
+			date.SetBinding(Label.TextProperty, "displayDate");
+			date.BindingContext = conversation;
 
 			var notesLabel = new Label
 			{
