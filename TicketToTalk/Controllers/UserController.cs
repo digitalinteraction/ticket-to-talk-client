@@ -256,6 +256,8 @@ namespace TicketToTalk
 					returned_user.api_key = jtoken.ToObject<string>();
 					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
+
+					await DownloadUserProfilePicture();
 				}
 				else
 				{
@@ -451,6 +453,7 @@ namespace TicketToTalk
 		{
 			var user = Session.activeUser;
 
+			Debug.WriteLine(user);
 			var fileName = "u_" + user.id + ".jpg";
 
 //#if __IOS__
@@ -473,7 +476,7 @@ namespace TicketToTalk
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.Timeout = new TimeSpan(0, 0, 100);
 
-			var url = new Uri(Session.baseUrl + "user/picture?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
+			var url = new Uri(Session.baseUrl + "user/picture/get?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
 			Debug.WriteLine(url);
 
 			Console.WriteLine("Beginning Download");

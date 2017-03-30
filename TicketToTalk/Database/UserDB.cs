@@ -76,6 +76,7 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		public User GetUserByEmail(string email)
 		{
+			//var test = from n in _connection.<User>() where n.api_key == "" select 
 
 			var stored = _connection.Query<User>("SELECT * FROM User WHERE email = ?", email);
 			//foreach (User u in stored) 

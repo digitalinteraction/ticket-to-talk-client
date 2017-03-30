@@ -8,13 +8,13 @@ namespace TicketToTalk
 	{
 		public static Token Token;
 
-		public static User activeUser;
+		public static User activeUser = new User();
 		public static Person activePerson;
 
 		public static int ScreenWidth;
 		public static int ScreenHeight;
 
-		public static string DB = "tickettotalk_15.db3";
+		public const string DB = "t3.17.db3";
 		public static readonly string baseUrl = "http://localhost:8080/api/";
 
 		//public static string DB = "tickettotalk.ol.14.db3";
