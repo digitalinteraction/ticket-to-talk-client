@@ -271,21 +271,8 @@ namespace TicketToTalk
 				conversation.notes = notes.Text;
 				conversation.date = dateTime;
 
-				var returned = await conversationController.UpdateConversationRemotely(conversation);
-				if (returned != null)
-				{
-					conversationController.UpdateConversationLocally(returned);
-
-					var idx = ConversationsView.conversations.IndexOf(conversation);
-					ConversationsView.conversations[idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
-
-					var c_idx = ConversationSelect.conversations.IndexOf(conversation);
-					if (c_idx > 0) 
-					{
-						ConversationSelect.conversations[c_idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
-					}
-				}
-				else
+				var success = await conversationController.UpdateConversationRemotely(conversation);
+				if (!success)
 				{
 					await DisplayAlert("Edit Conversation", "Conversation could not be updated.", "OK");
 					saveButton.IsEnabled = true;
@@ -317,32 +304,5 @@ namespace TicketToTalk
 				await Navigation.PopModalAsync();
 			}
 		}
-
-		//private async void UpdateButton_Clicked(object sender, EventArgs e)
-		//{
-		//	saveButton.IsEnabled = false;
-		//	var dateTime = string.Format("{0}-{1}-{2} {3}:{4}:{5}", datepicker.Date.Year, datepicker.Date.Month, datepicker.Date.Day, timePicker.Time.Hours, timePicker.Time.Minutes, timePicker.Time.Seconds);
-
-		//	conversation.person_id = Session.activePerson.id;
-		//	conversation.notes = notes.Text;
-		//	conversation.date = dateTime;
-
-		//	var returned = await conversationController.UpdateConversationRemotely(conversation);
-		//	if (returned != null)
-		//	{
-		//		conversationController.UpdateConversationLocally(returned);
-		//		var idx = ConversationsView.conversations.IndexOf(conversation);
-		//		var c_idx = ConversationSelect.conversations.IndexOf(conversation);
-		//		ConversationsView.conversations[idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
-		//		ConversationSelect.conversations[c_idx].displayDate = conversationController.SetPropertiesForDisplay(returned).displayDate;
-		//	}
-		//	else
-		//	{
-		//		await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
-		//		saveButton.IsEnabled = true;
-		//	}
-
-		//	await Navigation.PopModalAsync();
-		//}
 	}
 }

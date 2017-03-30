@@ -86,9 +86,8 @@ namespace TicketToTalk
 			conversation.notes = editor.Text;
 			var conversationController = new ConversationController();
 			var updated = await conversationController.UpdateConversationRemotely(conversation);
-			if (updated != null)
+			if (updated)
 			{
-				conversationController.UpdateConversationLocally(updated);
 			}
 			else
 			{
@@ -99,5 +98,3 @@ namespace TicketToTalk
 		}
 	}
 }
-
-

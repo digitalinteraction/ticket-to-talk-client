@@ -104,12 +104,13 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The updated conversation.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public async Task<Conversation> UpdateConversationRemotely(Conversation conversation)
+		public async Task<bool> UpdateConversationRemotely(Conversation conversation)
 		{
 			// Build the parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["notes"] = conversation.notes;
+			parameters["datetime"] = conversation.date;
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
@@ -119,11 +120,15 @@ namespace TicketToTalk
 			if (jobject != null)
 			{
 				var data = jobject.GetData();
-				var jtoken = data["conversation"];
-				return jtoken.ToObject<Conversation>();
+
+				var returned = data["conversation"].ToObject<Conversation>();
+				returned = SetPropertiesForDisplay(returned);
+				UpdateConversationLocally(returned);
+
+				return true;
 			}
 
-			return null;
+			return false;
 		}
 
 		/// <summary>
@@ -132,14 +137,38 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void UpdateConversationLocally(Conversation conversation)
 		{
-			// Update conversation currently being displayed.
-			foreach (Conversation c in ConversationsView.conversations)
+
+			var idx = -1;
+			for (int i = 0; i < ConversationsView.conversations.Count; i++)
 			{
-				if (c.id == conversation.id)
+				if (conversation.id == ConversationsView.conversations[i].id)
 				{
-					c.notes = conversation.notes;
+					idx = i;
+					break;
 				}
 			}
+
+			ConversationsView.conversations[idx] = conversation;
+
+			idx = -1;
+			for (int i = 0; i < ConversationSelect.conversations.Count; i++)
+			{
+				if (conversation.id == ConversationSelect.conversations[i].id)
+				{
+					idx = i;
+					break;
+				}
+			}
+			if (idx > 1) 
+			{
+				ConversationSelect.conversations[idx] = conversation;
+			}
+
+			//ConversationView.conversation = conversation;
+			ConversationView.conversation.date = conversation.date;
+			ConversationView.conversation.timestamp = conversation.timestamp;
+			ConversationView.conversation.displayDate = conversation.displayDate;
+			ConversationView.conversation.notes = conversation.notes;
 
 			// Store in local DB.
 			convDB.Open();
