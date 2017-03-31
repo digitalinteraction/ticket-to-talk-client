@@ -19,7 +19,17 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectActivePerson()
 		{
-			people = Task.Run(() => personController.GetPeopleFromServer()).Result;
+
+			try
+			{
+				people = Task.Run(() => personController.GetPeopleFromServer()).Result;
+			}
+			catch (NoNetworkException ex)
+			{
+				people = new ObservableCollection<Person>(personController.GetPeople());
+				DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
+
 
 			foreach (Person p in people)
 			{

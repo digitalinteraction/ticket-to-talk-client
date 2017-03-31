@@ -249,7 +249,7 @@ namespace TicketToTalk
 
 			try
 			{
-				updated = await articleController.UpdateArticleRemotely(article);
+				updated = await articleController.UpdateArticleRemotely(new_article);
 
 				if (updated)
 				{

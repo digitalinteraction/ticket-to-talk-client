@@ -495,7 +495,29 @@ namespace TicketToTalk
 			Debug.WriteLine(url);
 
 			Console.WriteLine("Beginning Download");
-			var returned = await client.GetStreamAsync(url);
+
+			Stream returned = null;
+
+			try
+			{
+				returned = await client.GetStreamAsync(url);
+			}
+			catch (WebException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (TaskCanceledException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
 			using (MemoryStream ms = new MemoryStream())

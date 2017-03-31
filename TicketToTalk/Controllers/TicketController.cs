@@ -483,8 +483,7 @@ namespace TicketToTalk
 		public async Task DownloadTicketContent(Ticket ticket)
 		{
 			var idx = ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal);
-			var fileName = ticket.pathToFile.Substring(idx + 1);
-
+			var fileName = String.Format("t_{0}.jpg", ticket.id);
 			var client = new HttpClient();
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
@@ -494,7 +493,28 @@ namespace TicketToTalk
 			var url = new Uri(Session.baseUrl + "tickets/download?ticket_id=" + ticket.id + "&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
 
 			Console.WriteLine("Beginning Download");
-			var returned = await client.GetStreamAsync(url);
+			Stream returned = null;
+
+			try
+			{
+				returned = await client.GetStreamAsync(url);
+			}
+			catch (WebException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (TaskCanceledException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
 			using (MemoryStream ms = new MemoryStream())
