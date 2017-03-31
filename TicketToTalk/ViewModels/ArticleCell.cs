@@ -83,15 +83,25 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void DeleteCell_Clicked(object sender, EventArgs e)
+		async void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
 			var article = (Article)mi.BindingContext;
 
-			articleController.DeleteArticleLocally(article);
-			articleController.DeleteArticleRemotely(article);
-
-			AllArticles.ServerArticles.Remove(article);
+			bool deleted = false;
+			try
+			{
+				deleted = await articleController.DestoryArticle(article);
+				if (deleted) 
+				{
+					AllArticles.ServerArticles.Remove(article);
+				}
+			}
+			catch (NoNetworkException ex)
+			{
+				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
+				//await DisplayAlert("No Network", "Could not connect to server", "Dismiss");
+			}
 		}
 	}
 }

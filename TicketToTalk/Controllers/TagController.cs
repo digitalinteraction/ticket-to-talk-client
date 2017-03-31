@@ -84,7 +84,7 @@ namespace TicketToTalk
 		/// <param name="tag">Tag.</param>
 		public async Task<bool> AddTagToServer(Tag tag)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["text"] = tag.text;
 			parameters["token"] = Session.Token.val;
 

@@ -126,26 +126,42 @@ namespace TicketToTalk
 			await email.FadeTo(0, 500);
 
 			var userController = new UserController();
-			var authed = await userController.AuthenticateUser(email.Text, password.Text);
-			if (authed)
-			{
-				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 
-				var v = short.Parse(Session.activeUser.verified);
-				if (v > 0)
+			bool authed = false;
+
+			try
+			{
+				authed = await userController.AuthenticateUser(email.Text, password.Text);
+
+				if (authed)
 				{
-					await Navigation.PushAsync(new SelectActivePerson());
-					Navigation.RemovePage(this);
+					Session.activeUser.imageSource = await userController.GetUserProfilePicture();
+
+					var v = short.Parse(Session.activeUser.verified);
+					if (v > 0)
+					{
+						await Navigation.PushAsync(new SelectActivePerson());
+						Navigation.RemovePage(this);
+					}
+					else
+					{
+						await Navigation.PushAsync(new Verification(false));
+						Navigation.RemovePage(this);
+					}
 				}
-				else 
+				else
 				{
-					await Navigation.PushAsync(new Verification(false));
-					Navigation.RemovePage(this);
+					await DisplayAlert("Login", "Incorrect email or password", "OK");
+
+					await email.FadeTo(1, 500);
+					await password.FadeTo(1, 500);
+					await login.FadeTo(1, 500);
+					await register.FadeTo(1, 500);
 				}
 			}
-			else
+			catch (NoNetworkException ex)
 			{
-				await DisplayAlert("Login", "Incorrect email or password", "OK");
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
 
 				await email.FadeTo(1, 500);
 				await password.FadeTo(1, 500);

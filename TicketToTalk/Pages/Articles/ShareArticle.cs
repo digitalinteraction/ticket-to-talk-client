@@ -144,16 +144,30 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void SendButton_Clicked(object sender, EventArgs e)
 		{
-			ArticleController articleController = new ArticleController();
-			var shared = await articleController.ShareArticle(article, email.Text, includeNotes);
 
-			if (shared)
+			sendButton.IsEnabled = false;
+
+			ArticleController articleController = new ArticleController();
+
+			bool shared = false;
+			try 
 			{
-				await Navigation.PopModalAsync();
+				shared = await articleController.ShareArticle(article, email.Text, includeNotes);
+
+				if (shared)
+				{
+					await Navigation.PopModalAsync();
+				}
+				else
+				{
+					await DisplayAlert("Share Articles", "The article could not be shared", "OK");
+					sendButton.IsEnabled = true;
+				}
 			}
-			else
+			catch (NoNetworkException ex) 
 			{
-				await DisplayAlert("Share Articles", "The article could not be shared", "OK");
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+				sendButton.IsEnabled = true;
 			}
 		}
 

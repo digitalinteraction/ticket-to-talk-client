@@ -179,6 +179,7 @@ namespace TicketToTalk
 			var url = new Uri(Session.baseUrl + "people/picture?&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key + "&person_id=" + id);
 
 			Console.WriteLine("Beginning Download");
+			Debug.WriteLine(url);
 			var returned = await client.GetStreamAsync(url);
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
@@ -194,7 +195,7 @@ namespace TicketToTalk
 
 			if (returned != null)
 			{
-				var fileName = "u_" + Session.activeUser.id + ".jpg";
+				var fileName = "p_" + id + ".jpg";
 				MediaController.WriteImageToFile(fileName, imageBytes);
 				return true;
 			}
@@ -439,7 +440,7 @@ namespace TicketToTalk
 			}
 
 			var net = new NetworkController();
-			var jobject = await net.SendGenericPostRequest("people/store", parameters);
+			var jobject = await net.SendPostRequest("people/store", parameters);
 			if (jobject != null)
 			{
 
@@ -574,7 +575,7 @@ namespace TicketToTalk
 			}
 
 			// Make post request.
-			var jobject = await networkController.SendGenericPostRequest("people/update", parameters);
+			var jobject = await networkController.SendPostRequest("people/update", parameters);
 			if (jobject != null)
 			{
 				var data = jobject.GetData();

@@ -142,6 +142,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)APIErrorException.cs">
       <Link>Exceptions\APIErrorException.cs</Link>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\NoNetworkException.cs">
+      <Link>Exceptions\NoNetworkException.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

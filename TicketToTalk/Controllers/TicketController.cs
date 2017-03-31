@@ -54,7 +54,7 @@ namespace TicketToTalk
 			parameters["period"] = period;
 
 			// Send the request
-			var jobject = await net.SendGenericPostRequest("tickets/store", parameters);
+			var jobject = await net.SendPostRequest("tickets/store", parameters);
 
 			if (jobject != null)
 			{
@@ -284,7 +284,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public async Task<Ticket> UpdateTicketRemotely(Ticket ticket, string period)
 		{
-			IDictionary<string, string> paramters = new Dictionary<string, string>();
+			IDictionary<string, object> paramters = new Dictionary<string, object>();
 			paramters["ticket_id"] = ticket.id.ToString();
 			paramters["title"] = ticket.title;
 			paramters["description"] = ticket.description;

@@ -74,7 +74,7 @@ namespace TicketToTalk
 #endif
 
 			// Build the paramters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["datetime"] = conversation.date;
 			parameters["ticket_id_string"] = conversation.ticket_id_string;
 			parameters["platform"] = platform;
@@ -107,7 +107,7 @@ namespace TicketToTalk
 		public async Task<bool> UpdateConversationRemotely(Conversation conversation)
 		{
 			// Build the parameters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["notes"] = conversation.notes;
 			parameters["datetime"] = conversation.date;
@@ -314,7 +314,7 @@ namespace TicketToTalk
 		public async Task<bool> AddTicketToConversationRemotely(Conversation conversation, Ticket ticket)
 		{
 			// Build the parameters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
@@ -343,7 +343,7 @@ namespace TicketToTalk
 		{
 
 			// Build parameters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["conversation_id"] = conversation.id.ToString();
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;

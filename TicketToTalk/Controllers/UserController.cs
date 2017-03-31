@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -61,7 +62,7 @@ namespace TicketToTalk
 		public async Task<bool> VerifyUser(string code)
 		{
 			var net = new NetworkController();
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["token"] = Session.Token.val;
 			parameters["code"] = code;
 
@@ -144,7 +145,7 @@ namespace TicketToTalk
 				parameters["imageHash"] = image.HashArray();
 			}
 
-			var jobject = await networkController.SendGenericPostRequest("user/update", parameters);
+			var jobject = await networkController.SendPostRequest("user/update", parameters);
 			if (jobject != null)
 			{
 
@@ -205,7 +206,7 @@ namespace TicketToTalk
 		/// <param name="password">Password.</param>
 		public async Task<bool> AuthenticateUser(string email, string password)
 		{
-			IDictionary<string, string> credentials = new Dictionary<string, string>();
+			IDictionary<string, object> credentials = new Dictionary<string, object>();
 			credentials["email"] = email;
 			credentials["password"] = password.HashString();
 
@@ -224,7 +225,16 @@ namespace TicketToTalk
 			}
 
 			var net = new NetworkController();
-			var jobject = await net.SendPostRequest("auth/login", credentials);
+
+			JObject jobject = null;
+			try
+			{
+				jobject = await net.SendPostRequest("auth/login", credentials);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// fail if null response
 			if (jobject == null) return false;
@@ -233,6 +243,11 @@ namespace TicketToTalk
 			//var jtoken = status.
 			var jcode = status["code"];
 			var code = jcode.ToObject<int>();
+
+			if (jobject.GetValue("errors").ToObject<bool>()) 
+			{
+				return false;
+			}
 
 			// if success.
 			if (code == 200)
@@ -324,7 +339,7 @@ namespace TicketToTalk
 
 			// post to server.
 			var net = new NetworkController();
-			var jobject = await net.SendGenericPostRequest("auth/register", content);
+			var jobject = await net.SendPostRequest("auth/register", content);
 
 			if (jobject != null)
 			{
@@ -382,7 +397,7 @@ namespace TicketToTalk
 			parameters["person_id"] = person_id;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.SendGenericPostRequest("user/invitations/send", parameters);
+			var jobject = await networkController.SendPostRequest("user/invitations/send", parameters);
 
 			if (jobject != null)
 			{
@@ -513,7 +528,7 @@ namespace TicketToTalk
 		/// <param name="relation">Relation.</param>
 		public async Task<bool> AcceptInvitation(Invitation i, string relation)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["person_id"] = i.person.id.ToString();
 			parameters["relation"] = relation;
 			parameters["token"] = Session.Token.val;
@@ -542,7 +557,7 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public async Task<bool> RejectInvitation(Person p)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["person_id"] = p.id.ToString();
 			parameters["token"] = Session.Token.val;
 
