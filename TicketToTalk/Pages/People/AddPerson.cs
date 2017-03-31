@@ -375,23 +375,33 @@ namespace TicketToTalk
 				}
 			}
 
-			bool saved = await personController.AddPersonRemotely(tempPerson, relations[relationPicker.SelectedIndex], image);
+			bool saved = false;
 
-			if (saved)
+			try
 			{
-				if (isInTutorial)
+				saved = await personController.AddPersonRemotely(tempPerson, relations[relationPicker.SelectedIndex], image);
+
+				if (saved)
 				{
-					Application.Current.MainPage = new AddTicketPrompt();
-					isInTutorial = false;
+					if (isInTutorial)
+					{
+						Application.Current.MainPage = new AddTicketPrompt();
+						isInTutorial = false;
+					}
+					else
+					{
+						Application.Current.MainPage = new RootPage();
+					}
 				}
 				else
 				{
-					Application.Current.MainPage = new RootPage();
+					await DisplayAlert("Add Person", "Person could not be added.", "OK");
+					savePersonButton.IsEnabled = true;
 				}
 			}
-			else
+			catch (NoNetworkException ex)
 			{
-				await DisplayAlert("Add Person", "Person could not be added.", "OK");
+				await DisplayAlert("No Network", ex.Message, "OK");
 				savePersonButton.IsEnabled = true;
 			}
 		}
@@ -423,16 +433,26 @@ namespace TicketToTalk
 				}
 			}
 
-			var returned = await personController.UpdatePersonRemotely(p, relations[relationPicker.SelectedIndex], image);
+			Person returned = null;
 
-			if (returned != null)
+			try
 			{
-				await Navigation.PopModalAsync();
+				returned = await personController.UpdatePersonRemotely(p, relations[relationPicker.SelectedIndex], image);
+
+				if (returned != null)
+				{
+					await Navigation.PopModalAsync();
+				}
+				else
+				{
+					await DisplayAlert("Update Person", "Person could not be updated.", "OK");
+					savePersonButton.IsEnabled = true;
+				}
 			}
-			else
+			catch (NoNetworkException ex)
 			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
 				savePersonButton.IsEnabled = true;
-				await DisplayAlert("Update Person", "Person could not be updated.", "OK");
 			}
 		}
 	}

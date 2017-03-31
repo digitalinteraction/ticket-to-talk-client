@@ -368,13 +368,24 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person.</returns>
 		/// <param name="person">Person.</param>
-		public bool DestroyPerson(Person person)
+		public async Task<bool> DestroyPerson(Person person)
 		{
-			DeletePersonLocally(person.id);
-			var deleted = DeletePersonRemotely(person);
+
+			bool deleted = false;
+
+			try
+			{
+				deleted = await DeletePersonRemotely(person);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			if (deleted)
 			{
+				DeletePersonLocally(person.id);
+
 				var ticketController = new TicketController();
 				var mediaController = new MediaController();
 				var tickets = ticketController.GetTicketsByPerson(person.id);
@@ -401,13 +412,22 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if person was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="person">Person.</param>
-		public bool DeletePersonRemotely(Person person)
+		public async Task<bool> DeletePersonRemotely(Person person)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["person_id"] = person.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = networkController.SendDeleteRequest("people/destroy", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendDeleteRequest("people/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			if (jobject == null)
 			{
@@ -548,7 +568,16 @@ namespace TicketToTalk
 			string url = "people/getusers";
 
 			// Send request for all users associated with the person
-			var jobject = await networkController.SendGetRequest(url, parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendGetRequest(url, parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			var data = jobject.GetData();
 			var jusers = data["users"];

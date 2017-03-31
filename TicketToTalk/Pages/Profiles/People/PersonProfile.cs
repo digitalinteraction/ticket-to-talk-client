@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -34,7 +37,18 @@ namespace TicketToTalk
 
 			person.displayString = personController.GetDisplayString(person);
 
-			var users = Task.Run(() => personController.GetUsers(person.id)).Result;
+			var task = Task.Run(() => personController.GetUsers(person.id));
+			List<User> users = null;
+
+			try
+			{
+				users = task.Result;
+			}
+			catch (Exception ex)
+			{
+				users = new List<User>();
+				Debug.WriteLine(ex.Message);
+			}
 
 			var nameLabel = new Label
 			{
@@ -101,6 +115,18 @@ namespace TicketToTalk
 			{
 				Spacing = 4
 			};
+
+			if (users.Count == 0) 
+			{
+				viewersStack.Children.Add(new Label 
+				{
+					Text = "Contributors Unavailable",
+					HorizontalTextAlignment = TextAlignment.Center,
+					TextColor = ProjectResource.color_blue,
+					FontSize = 14,
+					HorizontalOptions = LayoutOptions.CenterAndExpand,
+				});
+			}
 
 			foreach (User u in users)
 			{
@@ -220,7 +246,18 @@ namespace TicketToTalk
 					var confirm = await DisplayAlert("Delete " + currentPerson.name, "Are you sure you want to delete " + currentPerson.name + "'s profile?", "Yes", "Cancel");
 					if (confirm)
 					{
-						var deleted = personController.DestroyPerson(currentPerson);
+
+						bool deleted = false;
+
+						try
+						{
+							deleted = await personController.DestroyPerson(currentPerson);
+						}
+						catch (NoNetworkException ex)
+						{
+							await DisplayAlert("No Network", ex.Message, "Dismiss");
+						}
+
 
 						if (deleted)
 						{
