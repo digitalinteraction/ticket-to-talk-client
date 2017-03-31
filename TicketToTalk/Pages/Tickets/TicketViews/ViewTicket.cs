@@ -136,8 +136,19 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case ("Delete"):
-					await Navigation.PopAsync();
-					ticketController.DestroyTicket(displayedTicket);
+
+					var deleted = false;
+
+					try
+					{
+						deleted = await ticketController.DestroyTicket(displayedTicket);
+						await Navigation.PopAsync();
+					}
+					catch (NoNetworkException ex)
+					{
+						await DisplayAlert("No Network", ex.Message, "Dismiss");
+					}
+
 					break;
 				case ("Edit Ticket"):
 

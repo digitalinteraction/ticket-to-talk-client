@@ -287,7 +287,7 @@ namespace TicketToTalk
 			ticket.access_level = ProjectResource.groups[access_level.SelectedIndex];
 
 			var ticketController = new TicketController();
-			Ticket returned = null;
+
 			if (ticket.mediaType.Equals("Picture"))
 			{
 				ticket.area = town_city.Text.Trim();
@@ -296,18 +296,29 @@ namespace TicketToTalk
 			{
 				ticket.area = " ";
 			}
-			returned = await ticketController.UpdateTicketRemotely(ticket, period.text);
 
-			if (returned != null)
+			Ticket returned = null;
+
+			try
 			{
-				ticketController.UpdateTicketLocally(returned);
-				ticketController.UpdateDisplayTicket(returned);
+				returned = await ticketController.UpdateTicketRemotely(ticket, period.text);
 
-				await Navigation.PopModalAsync();
+				if (returned != null)
+				{
+					ticketController.UpdateTicketLocally(returned);
+					ticketController.UpdateDisplayTicket(returned);
+
+					await Navigation.PopModalAsync();
+				}
+				else
+				{
+					await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+					saveButton.IsEnabled = true;
+				}
 			}
-			else
+			catch (NoNetworkException ex)
 			{
-				await DisplayAlert("Update Ticket", "Ticket could not be updated.", "OK");
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
 				saveButton.IsEnabled = true;
 			}
 		}

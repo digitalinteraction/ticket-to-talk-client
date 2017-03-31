@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -109,49 +110,66 @@ namespace TicketToTalk
 		/// Destroies the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void DestroyTicket(Ticket ticket)
+		public async Task<bool> DestroyTicket(Ticket ticket)
 		{
 
-			// Delete the tickets.
-			DeleteTicketLocally(ticket);
-			DeleteTicketRemotely(ticket);
+			var deleted = false;
 
-			// Remove the tickets from views.
-			switch (ticket.mediaType)
+			try
 			{
-				case ("Picture"):
-				case ("Photo"):
-					TicketsPicture.pictureTickets.Remove(ticket);
-					break;
-				case ("Sound"):
-				case ("Song"):
-				case ("Audio"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
-				case ("Video"):
-				case ("YouTube"):
-					TicketsVideos.videoTickets.Remove(ticket);
-					break;
+				deleted = await DeleteTicketRemotely(ticket);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
 			}
 
-			TicketsByPeriod.RemoveTicket(ticket);
-
-			bool inPeriodList = false;
-			foreach (Ticket t in DisplayTickets.displayTickets)
+			if (deleted) 
 			{
-				if (t.id == ticket.id)
+				// Delete the tickets.
+				DeleteTicketLocally(ticket);
+
+				// Remove the tickets from views.
+				switch (ticket.mediaType)
 				{
-					inPeriodList = true;
-
+					case ("Picture"):
+					case ("Photo"):
+						TicketsPicture.pictureTickets.Remove(ticket);
+						break;
+					case ("Sound"):
+					case ("Song"):
+					case ("Audio"):
+						TicketsSounds.soundTickets.Remove(ticket);
+						break;
+					case ("Video"):
+					case ("YouTube"):
+						TicketsVideos.videoTickets.Remove(ticket);
+						break;
 				}
-			}
-			if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
 
-			if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
-			{
-				var mediaController = new MediaController();
-				mediaController.DeleteFile(ticket.pathToFile);
+				TicketsByPeriod.RemoveTicket(ticket);
+
+				bool inPeriodList = false;
+				foreach (Ticket t in DisplayTickets.displayTickets)
+				{
+					if (t.id == ticket.id)
+					{
+						inPeriodList = true;
+
+					}
+				}
+				if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
+
+				if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
+				{
+					var mediaController = new MediaController();
+					mediaController.DeleteFile(ticket.pathToFile);
+				}
+
+				return true;
 			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -159,13 +177,23 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if ticket was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public bool DeleteTicketRemotely(Ticket ticket)
+		public async Task<bool> DeleteTicketRemotely(Ticket ticket)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = networkController.SendDeleteRequest("tickets/destroy", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendDeleteRequest("tickets/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject == null)
 			{
 				return false;
@@ -294,7 +322,17 @@ namespace TicketToTalk
 			paramters["period"] = period;
 			paramters["token"] = Session.Token.val;
 
-			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("tickets/update", paramters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -329,7 +367,7 @@ namespace TicketToTalk
 		/// Check for new tickets from the server.
 		/// </summary>
 		/// <returns>The tickets.</returns>
-		public async Task UpdateTicketsFromAPI()
+		public async Task GetRemoteTickets()
 		{
 			// Set parameters
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -338,7 +376,18 @@ namespace TicketToTalk
 
 			// Send GET request
 			var net = new NetworkController();
-			var jobject = await net.SendGetRequest("people/tickets", parameters);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendGetRequest("people/tickets", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 
 			var data = jobject.GetData();
 
@@ -482,7 +531,6 @@ namespace TicketToTalk
 		/// <exception cref="T:System.IO.FileNotFoundException"></exception>
 		public async Task DownloadTicketContent(Ticket ticket)
 		{
-			var idx = ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal);
 			var fileName = String.Format("t_{0}.jpg", ticket.id);
 			var client = new HttpClient();
 

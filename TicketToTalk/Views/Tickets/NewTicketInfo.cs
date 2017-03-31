@@ -519,24 +519,36 @@ namespace TicketToTalk
 			var selected_period = periods[period.SelectedIndex];
 
 			var ticketController = new TicketController();
-			var returned_ticket = await ticketController.AddTicketRemotely(ticket, media, selected_period);
-			if (returned_ticket != null)
-			{
-				MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
 
-				if (isInTutorial)
+			Ticket returned_ticket = null;
+
+			try
+			{
+				returned_ticket = await ticketController.AddTicketRemotely(ticket, media, selected_period);
+
+				if (returned_ticket != null)
 				{
-					isInTutorial = false;
-					Application.Current.MainPage = new FinishTutorialPage();
+					MessagingCenter.Send<NewTicketInfo, Ticket>(this, "ticket_added", returned_ticket);
+
+					if (isInTutorial)
+					{
+						isInTutorial = false;
+						Application.Current.MainPage = new FinishTutorialPage();
+					}
+					else
+					{
+						await Navigation.PopModalAsync();
+					}
 				}
 				else
 				{
-					await Navigation.PopModalAsync();
+					await Application.Current.MainPage.DisplayAlert("New Ticket", "Ticket to could not be uploaded", "OK");
+					saveButton.IsEnabled = true;
 				}
 			}
-
-			else
+			catch (NoNetworkException ex)
 			{
+				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
 				saveButton.IsEnabled = true;
 			}
 		}
