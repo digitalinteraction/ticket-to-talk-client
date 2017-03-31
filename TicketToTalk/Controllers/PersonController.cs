@@ -270,31 +270,19 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Sending request
-			var jobject = await networkController.SendGetRequest("user/getpeople", parameters);
+			JObject jobject = null;
 
-			// Parsing JSON to People array
-
-			JToken data = null;
 			try
 			{
-				data = jobject.GetData();
+				jobject = await networkController.SendGetRequest("user/getpeople", parameters);
 			}
-			catch (APIUnauthorisedException e)
+			catch (NoNetworkException ex)
 			{
-				Debug.WriteLine(e.StackTrace);
+				throw ex;
 			}
-			catch (APIErrorException e)
-			{
-				Debug.WriteLine(e.StackTrace);
-			}
-			catch (APIResourceNotFoundException e)
-			{
-				Debug.WriteLine(e.StackTrace);
-			}
-			catch (APIUnauthorisedForResourceException e) 
-			{
-				Debug.WriteLine(e.StackTrace);
-			}
+
+			// Parsing JSON to People array
+			var data = jobject.GetData();
 
 			var jpeople = data["people"];
 			var peopleRaw = jpeople.ToObject<Person[]>();

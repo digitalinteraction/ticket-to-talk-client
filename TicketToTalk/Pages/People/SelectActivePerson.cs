@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -20,22 +21,40 @@ namespace TicketToTalk
 		public SelectActivePerson()
 		{
 
+			// Try and get people from the server
 			try
 			{
-				people = Task.Run(() => personController.GetPeopleFromServer()).Result;
+				var task = Task.Run(() => personController.GetPeopleFromServer());
+
+				try
+				{
+					people = task.Result;
+				}
+				catch (Exception ex) 
+				{
+					throw ex;
+				}
+				foreach (Person p in people)
+				{
+					personController.AddPersonLocally(p);
+					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.relation = personController.GetRelationship(p.id);
+				}
+
 			}
-			catch (NoNetworkException ex)
+
+			// If network not available, use local records.
+			catch (Exception ex)
 			{
 				people = new ObservableCollection<Person>(personController.GetPeople());
+
+				foreach (Person p in people)
+				{
+					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.relation = personController.GetRelationship(p.id);
+				}
+
 				DisplayAlert("No Network", ex.Message, "Dismiss");
-			}
-
-
-			foreach (Person p in people)
-			{
-				personController.AddPersonLocally(p);
-				p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
-				p.relation = personController.GetRelationship(p.id);
 			}
 
 			Padding = new Thickness(20);
