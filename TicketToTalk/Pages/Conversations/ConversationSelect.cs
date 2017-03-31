@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -22,10 +23,21 @@ namespace TicketToTalk
 			Title = "Conversations";
 			var conversationController = new ConversationController();
 
-			var cs = Task.Run(() => conversationController.GetRemoteConversations()).Result;
+			var task = Task.Run(() => ConversationController.GetRemoteConversations(conversationController));
+			var cs = new List<Conversation>();
+			try
+			{
+				cs = task.Result;
+			}
+			catch (Exception ex)
+			{
+				cs = conversationController.GetLocalConversations();
+				Debug.WriteLine(ex);
+			}
 
 			foreach (Conversation converstaion in cs)
 			{
+				Debug.WriteLine(converstaion);
 				conversations.Add(conversationController.SetPropertiesForDisplay(converstaion));
 			}
 
@@ -52,13 +64,24 @@ namespace TicketToTalk
 
 				var conversation = (Conversation)e.SelectedItem;
 
-				await conversationController.AddTicketToConversationRemotely(conversation, ticket);
-				conversation = conversationController.AddTicketToConversation(conversation, ticket);
-				conversationController.UpdateConversationLocally(conversation);
+				var added = false;
 
-				await Navigation.PopModalAsync();
+				try
+				{
+					added = await conversationController.AddTicketToConversationRemotely(conversation, ticket);
 
-				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
+					conversation = conversationController.AddTicketToConversation(conversation, ticket);
+					conversationController.UpdateConversationLocally(conversation);
+
+					await Navigation.PopModalAsync();
+
+					((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
+				}
+				catch (NoNetworkException ex)
+				{
+					await DisplayAlert("No Network", ex.Message, "Dismiss");
+					((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
+				}
 			};
 
 			var label = new Label
@@ -98,6 +121,11 @@ namespace TicketToTalk
 					listView
 				}
 			};
+		}
+
+		object List<T>()
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>

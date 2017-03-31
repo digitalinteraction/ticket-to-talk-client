@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace TicketToTalk
 {
@@ -49,7 +50,7 @@ namespace TicketToTalk
 		/// Gets the conversations.
 		/// </summary>
 		/// <returns>The conversations.</returns>
-		public List<Conversation> GetConversationsRemotely()
+		public List<Conversation> GetLocalConversations()
 		{
 			convDB.Open();
 			var convs = new List<Conversation>(convDB.GetConversationsForPerson());
@@ -83,7 +84,16 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.SendPostRequest("conversations/store", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/store", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -114,7 +124,16 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.SendPostRequest("conversations/update", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/update", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, request failed.
 			if (jobject != null)
@@ -234,7 +253,7 @@ namespace TicketToTalk
 		/// Get a list of conversations for this person-user relationship from the server.
 		/// </summary>
 		/// <returns>The remote conversations.</returns>
-		public async Task<List<Conversation>> GetRemoteConversations()
+		public async static Task<List<Conversation>> GetRemoteConversations(ConversationController instance)
 		{
 			// Build paramters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -242,7 +261,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.SendGetRequest("conversations/get", parameters);
+			JObject jobject = null;
+			var networkController = new NetworkController();
+
+			try
+			{
+				jobject = await networkController.SendGetRequest("conversations/get", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, request failed.
 			if (jobject == null)
@@ -320,7 +349,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.SendPostRequest("conversations/tickets/add", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/tickets/add", parameters);
+
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, the request failed.
 			if (jobject == null)

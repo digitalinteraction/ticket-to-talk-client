@@ -16,7 +16,6 @@ namespace TicketToTalk
 		private TimePicker timePicker;
 
 		private ConversationController conversationController = new ConversationController();
-		Button updateButton;
 		Conversation conversation;
 
 		/// <summary>
@@ -271,14 +270,25 @@ namespace TicketToTalk
 				conversation.notes = notes.Text;
 				conversation.date = dateTime;
 
-				var success = await conversationController.UpdateConversationRemotely(conversation);
-				if (!success)
+				var success = false;
+
+				try
 				{
-					await DisplayAlert("Edit Conversation", "Conversation could not be updated.", "OK");
+					success	= await conversationController.UpdateConversationRemotely(conversation);
+
+					if (!success)
+					{
+						await DisplayAlert("Edit Conversation", "Conversation could not be updated.", "OK");
+						saveButton.IsEnabled = true;
+					}
+
+					await Navigation.PopModalAsync();
+				}
+				catch (NoNetworkException ex)
+				{
+					await DisplayAlert("No Network", ex.Message, "Dismiss");
 					saveButton.IsEnabled = true;
 				}
-
-				await Navigation.PopModalAsync();
 			}
 			else 
 			{
@@ -287,21 +297,32 @@ namespace TicketToTalk
 				o_conv.notes = notes.Text;
 				o_conv.date = dateTime;
 
-				var returned = await conversationController.StoreConversationRemotely(o_conv);
-				if (returned != null)
-				{
-					conversationController.StoreConversationLocally(returned);
+				Conversation returned = null;
 
-					ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
-					ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
-				}
-				else
+				try
 				{
-					await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
+					returned = await conversationController.StoreConversationRemotely(o_conv);
+
+					if (returned != null)
+					{
+						conversationController.StoreConversationLocally(returned);
+
+						ConversationsView.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
+						ConversationSelect.conversations.Add(conversationController.SetPropertiesForDisplay(returned));
+					}
+					else
+					{
+						await DisplayAlert("New Conversation", "Conversation could not be added.", "OK");
+						saveButton.IsEnabled = true;
+					}
+
+					await Navigation.PopModalAsync();
+				}
+				catch (NoNetworkException ex)
+				{
+					await DisplayAlert("No Network", ex.Message, "Dismiss");
 					saveButton.IsEnabled = true;
 				}
-
-				await Navigation.PopModalAsync();
 			}
 		}
 	}

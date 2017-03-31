@@ -22,7 +22,7 @@ namespace TicketToTalk
 			Padding = new Thickness(20);
 			conversations.Clear();
 
-			var cs = Task.Run(() => conversationController.GetRemoteConversations()).Result;
+			var cs = Task.Run(() => ConversationController.GetRemoteConversations(conversationController)).Result;
 
 			Title = "Converations";
 
