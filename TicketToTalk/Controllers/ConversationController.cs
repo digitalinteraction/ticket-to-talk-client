@@ -12,7 +12,6 @@ namespace TicketToTalk
 	public class ConversationController
 	{
 		NetworkController networkController = new NetworkController();
-		ConversationDB convDB = new ConversationDB();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationController"/> class.
@@ -27,9 +26,10 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void StoreConversationLocally(Conversation conversation)
 		{
-			convDB.Open();
-			convDB.AddConversation(conversation);
-			convDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Insert(conversation);
+			}
 		}
 
 		/// <summary>
@@ -39,9 +39,12 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Conversation GetConversationLocally(int id)
 		{
-			convDB.Open();
-			var conversation = convDB.GetConversation(id);
-			convDB.Close();
+			Conversation conversation;
+
+			lock (Session.connection)
+			{
+				conversation = (from n in Session.connection.Table<Conversation>() where n.id == id select n).FirstOrDefault();
+			}
 
 			return conversation;
 		}
@@ -52,9 +55,17 @@ namespace TicketToTalk
 		/// <returns>The conversations.</returns>
 		public List<Conversation> GetLocalConversations()
 		{
-			convDB.Open();
-			var convs = new List<Conversation>(convDB.GetConversationsForPerson());
-			convDB.Close();
+			List<Conversation> convs = new List<Conversation>();
+
+			lock (Session.connection)
+			{
+				var q = from c in Session.connection.Table<Conversation>() where c.person_id == Session.activePerson.id select c;
+
+				foreach (Conversation c in q)
+				{
+					convs.Add(c);
+				}
+			}
 
 			return convs;
 		}
@@ -142,7 +153,7 @@ namespace TicketToTalk
 
 				var returned = data["conversation"].ToObject<Conversation>();
 				returned = SetPropertiesForDisplay(returned);
-				UpdateConversationLocally(returned);
+				UpdateConversationViews(returned);
 
 				return true;
 			}
@@ -154,7 +165,7 @@ namespace TicketToTalk
 		/// Updates the conversation locally.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public void UpdateConversationLocally(Conversation conversation)
+		public void UpdateConversationViews(Conversation conversation)
 		{
 
 			var idx = -1;
@@ -190,10 +201,16 @@ namespace TicketToTalk
 			ConversationView.conversation.notes = conversation.notes;
 
 			// Store in local DB.
-			convDB.Open();
-			convDB.DeleteConversation(conversation.id);
-			convDB.AddConversation(conversation);
-			convDB.Close();
+
+			UpdateLocalConversation(conversation);
+		}
+
+		public void UpdateLocalConversation(Conversation conversation)
+		{
+			lock (Session.connection)
+			{
+				Session.connection.Update(conversation);
+			}
 		}
 
 		/// <summary>
@@ -202,9 +219,10 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void DeleteConversationLocally(Conversation conversation)
 		{
-			convDB.Open();
-			convDB.DeleteConversation(conversation.id);
-			convDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Delete(conversation);
+			}
 		}
 
 		/// <summary>
@@ -236,7 +254,7 @@ namespace TicketToTalk
 		/// Destroies the conversation.
 		/// </summary>
 		/// <param name="conversation">Conversation.</param>
-		public async void DestroyConversation(Conversation conversation)
+		public async Task DestroyConversation(Conversation conversation)
 		{
 			// Delete conversation remotely.
 			var deleted = await DeleteConversationRemotely(conversation);

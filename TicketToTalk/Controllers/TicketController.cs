@@ -15,7 +15,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class TicketController
 	{
-		private TicketDB ticketDB = new TicketDB();
+		//private TicketDB ticketDB = new TicketDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -31,9 +31,11 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void AddTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.AddTicket(ticket);
-			ticketDB.Close();
+
+			lock (Session.connection)
+			{
+				Session.connection.Insert(ticket);
+			}
 		}
 
 		/// <summary>
@@ -173,6 +175,28 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
+		/// Gets the tickets by period identifier.
+		/// </summary>
+		/// <returns>The tickets by period identifier.</returns>
+		/// <param name="period_id">Period identifier.</param>
+		public List<Ticket> GetTicketsByPeriodID(int period_id)
+		{
+			List<Ticket> tickets = new List<Ticket>();
+
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.period_id == period_id select t;
+
+				foreach (Ticket t in q) 
+				{
+					tickets.Add(t);
+				}
+			}
+
+			return tickets;
+		}
+
+		/// <summary>
 		/// Deletes the ticket remotely.
 		/// </summary>
 		/// <returns><c>true</c>, if ticket was deleted remotely, <c>false</c> otherwise.</returns>
@@ -210,11 +234,19 @@ namespace TicketToTalk
 		/// <returns>The tickets.</returns>
 		public List<Ticket> GetTickets()
 		{
-			ticketDB.Open();
-			var raw_tickets = ticketDB.GetTicketsByPerson(Session.activePerson.id);
-			ticketDB.Close();
+			List<Ticket> tickets = new List<Ticket>();
 
-			return FilterTicketsForUserType(raw_tickets);
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+
+				foreach (Ticket t in q) 
+				{
+					tickets.Add(t);
+				}
+			}
+
+			return FilterTicketsForUserType(tickets);
 		}
 
 		/// <summary>
@@ -261,9 +293,18 @@ namespace TicketToTalk
 		/// <param name="person_id">Person identifier.</param>
 		public List<Ticket> GetTicketsByPerson(int person_id)
 		{
-			ticketDB.Open();
-			var tickets = ticketDB.GetTicketsByPerson(person_id);
-			ticketDB.Close();
+			List<Ticket> tickets = new List<Ticket>();
+
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+
+				foreach (Ticket t in q)
+				{
+					tickets.Add(t);
+				}
+			}
+
 			return tickets;
 		}
 
@@ -274,9 +315,13 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Ticket GetTicket(int id)
 		{
-			ticketDB.Open();
-			var ticket = ticketDB.GetTicket(id);
-			ticketDB.Close();
+			Ticket ticket;
+
+			lock (Session.connection)
+			{
+				ticket = (from t in Session.connection.Table<Ticket>() where t.id == id select t).FirstOrDefault();
+			}
+
 			return ticket;
 		}
 
@@ -287,9 +332,10 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void DeleteTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.DeleteTicket(ticket.id);
-			ticketDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Delete(ticket);
+			}
 		}
 
 		/// <summary>
@@ -299,10 +345,10 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void UpdateTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.DeleteTicket(ticket.id);
-			ticketDB.AddTicket(ticket);
-			ticketDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Update(ticket);
+			}
 		}
 
 		/// <summary>
@@ -355,12 +401,17 @@ namespace TicketToTalk
 		{
 			var ttDB = new TicketTagDB();
 			ttDB.Open();
-			foreach (Tag t in tags)
-			{
-				var ttr = new TicketTag(ticket.id, t.id);
-				ttDB.AddTicketTagRelationship(ttr);
-			}
+
 			ttDB.Close();
+
+			lock (Session.connection)
+			{
+				foreach (Tag t in tags)
+				{
+					var ttr = new TicketTag(ticket.id, t.id);
+					Session.connection.Insert(ttr);
+				}
+			}
 		}
 
 		/// <summary>
@@ -429,24 +480,26 @@ namespace TicketToTalk
 
 			// Parse JSON TicketTags to TicketTags
 			var ticket_tags = data["ticket_tags"].ToObject<TicketTag[]>();
-			var ticketTagDB = new TicketTagDB();
-			ticketTagDB.Open();
-			foreach (TicketTag tt in ticket_tags)
+
+			lock (Session.connection)
 			{
-				var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
-				if (stored == null)
+				foreach (TicketTag tt in ticket_tags)
 				{
-					Console.WriteLine("New ticket_tag, adding...");
-					ticketTagDB.AddTicketTagRelationship(tt);
-				}
-				else if (stored.GetHashCode() != tt.GetHashCode())
-				{
-					Console.WriteLine("Updating ticket_tag");
-					ticketTagDB.DeleteRelation(stored.id);
-					ticketTagDB.AddTicketTagRelationship(tt);
+					var stored = (from t in Session.connection.Table<TicketTag>() where t.ticket_id == tt.ticket_id && t.tag_id == tt.tag_id select t).FirstOrDefault();
+
+					//var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
+					if (stored == null)
+					{
+						Console.WriteLine("New ticket_tag, adding...");
+						Session.connection.Insert(tt);
+					}
+					else if (stored.GetHashCode() != tt.GetHashCode())
+					{
+						Console.WriteLine("Updating ticket_tag");
+						Session.connection.Update(tt);
+					}
 				}
 			}
-			ticketTagDB.Close();
 		}
 
 		/// <summary>

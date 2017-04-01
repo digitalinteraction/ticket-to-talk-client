@@ -38,6 +38,7 @@ namespace TicketToTalk
 
 			if (removed)
 			{
+				// TODO FIX NOT REMOVING TICKET FROM LOCAL CONVERSATION
 				conversationController.RemoveTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
 				ConversationView.conversationItems.Remove(conversationItem);
 				ConversationSelect.conversations.Remove(conversationItem.conversation);

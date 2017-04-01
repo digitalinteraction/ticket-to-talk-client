@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -71,7 +71,7 @@ namespace TicketToTalk
 					added = await conversationController.AddTicketToConversationRemotely(conversation, ticket);
 
 					conversation = conversationController.AddTicketToConversation(conversation, ticket);
-					conversationController.UpdateConversationLocally(conversation);
+					conversationController.UpdateConversationViews(conversation);
 
 					await Navigation.PopModalAsync();
 

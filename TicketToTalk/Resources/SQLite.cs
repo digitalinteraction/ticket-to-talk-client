@@ -53,6 +53,7 @@ using Sqlite3 = SQLitePCL.raw;
 #else
 using Sqlite3DatabaseHandle = System.IntPtr;
 using Sqlite3Statement = System.IntPtr;
+using TicketToTalk;
 #endif
 
 namespace SQLite
@@ -3196,6 +3197,11 @@ namespace SQLite
 			var query = Take(1);
 			return query.ToList<T>().FirstOrDefault();
 		}
+
+		//public static implicit operator List<T>(TableQuery<Conversation> v)
+		//{
+		//	throw new NotImplementedException();
+		//}
 	}
 
 	public static class SQLite3

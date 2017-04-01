@@ -18,7 +18,6 @@ namespace TicketToTalk
 	public class UserController
 	{
 
-		private UserDB userDB = new UserDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -35,9 +34,14 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public User GetLocalUserByID(int id)
 		{
-			userDB.Open();
-			var user = userDB.GetUser(id);
-			userDB.Close();
+			User user = new User();
+
+			lock(Session.connection) 
+			{
+				user = (from n in Session.connection.Table<User>() where n.id == id select n).FirstOrDefault();
+			}
+
+			Debug.WriteLine(user);
 
 			return user;
 		}
@@ -49,9 +53,15 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		public User GetLocalUserByEmail(string email)
 		{
-			userDB.Open();
-			var user = userDB.GetUserByEmail(email);
-			userDB.Close();
+			User user = new User();
+
+			lock (Session.connection)
+			{
+				user = (from n in Session.connection.Table<User>() where n.email == email select n).FirstOrDefault();
+			}
+
+			Debug.WriteLine(user);
+
 			return user;
 		}
 
@@ -97,9 +107,10 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void AddUserLocally(User user)
 		{
-			userDB.Open();
-			userDB.AddUser(user);
-			userDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Insert(user);
+			}
 		}
 
 		/// <summary>
@@ -109,9 +120,10 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeleteUserLocally(int id)
 		{
-			userDB.Open();
-			userDB.DeleteUser(id);
-			userDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Delete<User>(id);
+			}
 		}
 
 		/// <summary>
@@ -121,8 +133,10 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void UpdateUserLocally(User user)
 		{
-			DeleteUserLocally(user.id);
-			AddUserLocally(user);
+			lock(Session.connection) 
+			{
+				Session.connection.Update(user);
+			}
 		}
 
 		/// <summary>
@@ -560,9 +574,11 @@ namespace TicketToTalk
 			if (jobject != null)
 			{
 				var pu = new PersonUser(i.person.id, Session.activeUser.id, i.group, relation);
-				var puDB = new PersonUserDB();
-				puDB.AddPersonUser(pu);
-				puDB.Close();
+
+				lock(Session.connection) 
+				{
+					Session.connection.Insert(pu);
+				}
 
 				return true;
 			}
