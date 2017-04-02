@@ -18,6 +18,7 @@ namespace TicketToTalk
 		private Button recordMediaButton = new Button();
 		private Button searchButton;
 		private string searchLink;
+		private InspirationController inspirationController;
 
 		public static bool tutorialShown;
 
@@ -26,6 +27,9 @@ namespace TicketToTalk
 		/// </summary>
 		public InspirationView()
 		{
+
+			this.inspirationController = new InspirationController();
+
 			question = new Label
 			{
 				HorizontalOptions = LayoutOptions.Start,
@@ -57,9 +61,8 @@ namespace TicketToTalk
 			// Check for new inspirations.
 			var task = Task.Run(() => this.GetIns()).Result;
 
-			InspirationDB insDB = new InspirationDB();
-			inspiration = PopulateVariables(insDB.GetRandomInspiration());
-			insDB.close();
+			inspiration = inspirationController.GetRandomInspiration();
+			inspiration = PopulateVariables(inspiration);
 
 			SetViewToInspiration();
 
@@ -130,21 +133,19 @@ namespace TicketToTalk
 			var data = jobject.GetData();
 			var inspirations = data["inspirations"].ToObject<List<Inspiration>>();
 
-			InspirationDB insDB = new InspirationDB();
 			foreach (Inspiration ins in inspirations)
 			{
-				var stored = insDB.GetInspiration(ins.id);
+				var stored = inspirationController.GetInspiration(ins.id);
 				if (stored == null)
 				{
-					insDB.AddInspiration(ins);
+					inspirationController.AddInspirationLocally(ins);
 				}
 				else if (stored.GetHashCode() != ins.GetHashCode())
 				{
-					insDB.DeleteInspiration(ins.id);
-					insDB.AddInspiration(ins);
+					inspirationController.UpdateInspirationLocally(ins);
 				}
 			}
-			insDB.close();
+			//insDB.close();
 
 			return inspirations;
 		}
@@ -157,16 +158,14 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void NextButton_Clicked(object sender, EventArgs e)
 		{
-			InspirationDB insDB = new InspirationDB();
-			var newIns = insDB.GetRandomInspiration();
+			var newIns = inspirationController.GetRandomInspiration();
 
 			while (newIns.Equals(inspiration))
 			{
-				newIns = insDB.GetRandomInspiration();
+				newIns = inspirationController.GetRandomInspiration();
 			}
 
 			inspiration = PopulateVariables(newIns);
-			insDB.close();
 
 			SetViewToInspiration();
 		}

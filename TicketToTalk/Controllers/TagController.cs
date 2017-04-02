@@ -9,8 +9,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class TagController
 	{
-		private TagDB tagDB = new TagDB();
-
 		public TagController()
 		{
 		}

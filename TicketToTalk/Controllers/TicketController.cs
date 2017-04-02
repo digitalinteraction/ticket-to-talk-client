@@ -399,11 +399,6 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void AddTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
-			var ttDB = new TicketTagDB();
-			ttDB.Open();
-
-			ttDB.Close();
-
 			lock (Session.connection)
 			{
 				foreach (Tag t in tags)

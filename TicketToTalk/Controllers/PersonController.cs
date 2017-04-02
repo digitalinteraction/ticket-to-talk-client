@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -175,10 +175,7 @@ namespace TicketToTalk
 			{
 				person.pathToPhoto = fileName;
 
-				while (PersonDB.locked) { }
-				PersonDB.locked = true;
 				UpdatePersonLocally(person);
-				PersonDB.locked = false;
 			}
 
 			return MediaController.ReadBytesFromFile(person.pathToPhoto);
@@ -241,6 +238,24 @@ namespace TicketToTalk
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Gets the user person relation.
+		/// </summary>
+		/// <returns>The user person relation.</returns>
+		/// <param name="user_id">User identifier.</param>
+		/// <param name="person_id">Person identifier.</param>
+		public PersonUser GetUserPersonRelation(int user_id, int person_id)
+		{
+			PersonUser pu;
+
+			lock (Session.connection)
+			{
+				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == user_id && p.person_id == person_id select p).FirstOrDefault();
+			}
+
+			return pu;
 		}
 
 		/// <summary>
@@ -422,14 +437,22 @@ namespace TicketToTalk
 				}
 
 				var relation = GetRelation(person.id);
-				var personUserDB = new PersonUserDB();
-				personUserDB.DeleteRelation(relation.id);
+
+				DeleteRelation(relation);
 
 				AllProfiles.people.Remove(person);
 
 				return true;
 			}
 			return false;
+		}
+
+		public void DeleteRelation(PersonUser relation)
+		{
+			lock (Session.connection)
+			{
+				Session.connection.Delete(relation);
+			}
 		}
 
 		/// <summary>
