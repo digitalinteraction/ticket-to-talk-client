@@ -88,18 +88,6 @@ namespace TicketToTalk
 			Content = stack;
 
 			Debug.WriteLine(Session.activeUser);
-
-			//if (Session.activeUser.firstLogin && !promptShown)
-			//{
-			//	var canSkip = true;
-			//	if (people.Count == 0)
-			//	{
-			//		canSkip = false;
-			//	}
-			//	var t = new AddNewPersonPrompt(canSkip);
-			//	Application.Current.MainPage = t;
-			//	promptShown = true;
-			//}
 		}
 
 		/// <summary>
@@ -156,7 +144,7 @@ namespace TicketToTalk
 					canSkip = false;
 				}
 				var t = new AddNewPersonPrompt(canSkip);
-				Application.Current.MainPage = new ContentPage();
+				Application.Current.MainPage = t;
 				promptShown = true;
 			}
 		}

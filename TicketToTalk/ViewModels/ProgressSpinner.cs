@@ -24,5 +24,20 @@ namespace TicketToTalk
 			AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.PositionProportional);
 			AbsoluteLayout.SetLayoutBounds(this, new Rectangle(0.5, 0.5, Session.ScreenWidth, Session.ScreenHeight));
 		}
+
+		public ProgressSpinner(object binding, Color backgroundColor, Color spinnerColor)
+		{
+			this.Color = spinnerColor;
+			this.VerticalOptions = LayoutOptions.CenterAndExpand;
+			this.HeightRequest = Session.ScreenHeight;
+			this.BackgroundColor = backgroundColor;
+			this.VerticalOptions = LayoutOptions.CenterAndExpand;
+			this.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
+			this.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
+			this.BindingContext = binding;
+
+			AbsoluteLayout.SetLayoutFlags(this, AbsoluteLayoutFlags.PositionProportional);
+			AbsoluteLayout.SetLayoutBounds(this, new Rectangle(0.5, 0.5, Session.ScreenWidth, Session.ScreenHeight));
+		}
 	}
 }

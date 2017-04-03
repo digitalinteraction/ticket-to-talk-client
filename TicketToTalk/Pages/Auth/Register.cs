@@ -19,14 +19,18 @@ namespace TicketToTalk
 		private Entry confirmPasswordEntry;
 		private Button savePersonButton;
 		private MediaFile file;
+		private ProgressSpinner indicator;
 
 		private UserController userController = new UserController();
+		ScrollView scrollView;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Register"/> class.
 		/// </summary>
 		public Register()
 		{
+
+			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
 
 			// Set title.
 			Title = "Register";
@@ -129,6 +133,7 @@ namespace TicketToTalk
 			var detailsStack = new StackLayout
 			{
 				Padding = new Thickness(20, 10, 20, 20),
+				VerticalOptions = LayoutOptions.StartAndExpand,
 				Children =
 				{
 					nameLabel,
@@ -173,10 +178,41 @@ namespace TicketToTalk
 					buttonStack
 				}
 			};
-			Content = new ScrollView
+
+			//Content = new ScrollView
+			//{
+			//	Content = contentStack
+			//};
+
+			//var scrollView = new ScrollView
+			//{
+			//	Content = contentStack
+			//};
+
+			//var layout = new AbsoluteLayout();
+
+			//AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, Session.ScreenHeight, Session.ScreenWidth));
+			//AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
+
+			//layout.Children.Add(scrollView);
+			////layout.Children.Add(indicator);
+
+			//Content = scrollView;
+
+			var layout = new AbsoluteLayout();
+
+			scrollView = new ScrollView
 			{
 				Content = contentStack
 			};
+
+			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
+			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(scrollView);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>
@@ -233,11 +269,16 @@ namespace TicketToTalk
 		/// </summary>
 		private async void RegisterProfile(object sender, EventArgs e)
 		{
+
+			IsBusy = true;
+
 			savePersonButton.IsEnabled = false;
 
 			bool registered = false;
 			if (string.Compare(passwordEntry.Text, confirmPasswordEntry.Text, StringComparison.Ordinal) != 0)
 			{
+				IsBusy = false;
+
 				await DisplayAlert("Register", "Password and Confirm Password do not match.", "OK");
 				return;
 			}
@@ -267,17 +308,23 @@ namespace TicketToTalk
 					{
 						Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 
+						IsBusy = false;
+
 						await Navigation.PushAsync(new Verification(true));
 						Navigation.RemovePage(this);
 					}
 					else
 					{
+						IsBusy = false;
+
 						await DisplayAlert("Register", "Your profile could not be registered.", "OK");
 						savePersonButton.IsEnabled = true;
 					}
 				}
 				catch (NoNetworkException ex)
 				{
+					IsBusy = false;
+
 					Debug.WriteLine(ex.StackTrace);
 
 					await DisplayAlert("No Network", ex.Message, "Dismiss");
