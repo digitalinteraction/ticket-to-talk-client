@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -34,11 +35,20 @@ namespace TicketToTalk
 			var conversationItem = (ConversationItem)mi.BindingContext;
 
 			var conversationController = new ConversationController();
-			var removed = await conversationController.RemoveTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
+
+			bool removed = false;
+
+			try
+			{
+				removed = await conversationController.RemoveTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
+			}
+			catch (NoNetworkException ex)
+			{
+				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
 
 			if (removed)
 			{
-				// TODO FIX NOT REMOVING TICKET FROM LOCAL CONVERSATION
 				conversationController.RemoveTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
 				ConversationView.conversationItems.Remove(conversationItem);
 				ConversationSelect.conversations.Remove(conversationItem.conversation);

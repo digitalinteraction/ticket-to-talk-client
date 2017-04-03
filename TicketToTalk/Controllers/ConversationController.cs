@@ -237,7 +237,16 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.SendGetRequest("conversations/destroy", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendGetRequest("conversations/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -257,7 +266,16 @@ namespace TicketToTalk
 		public async Task DestroyConversation(Conversation conversation)
 		{
 			// Delete conversation remotely.
-			var deleted = await DeleteConversationRemotely(conversation);
+			bool deleted = false;
+
+			try
+			{
+				deleted = await DeleteConversationRemotely(conversation);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If successfully deleted...
 			if (deleted)
@@ -419,7 +437,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.SendPostRequest("conversations/tickets/remove", parameters);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/tickets/remove", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, request failed.
 			if (jobject == null)

@@ -100,7 +100,6 @@ namespace TicketToTalk
 			catch (NoNetworkException ex)
 			{
 				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
-				//await DisplayAlert("No Network", "Could not connect to server", "Dismiss");
 			}
 		}
 	}

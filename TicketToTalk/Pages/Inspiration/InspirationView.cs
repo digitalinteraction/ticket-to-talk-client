@@ -21,6 +21,7 @@ namespace TicketToTalk
 		private InspirationController inspirationController;
 
 		public static bool tutorialShown;
+		bool no_ins = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.InspirationView"/> class.
@@ -29,6 +30,18 @@ namespace TicketToTalk
 		{
 
 			this.inspirationController = new InspirationController();
+			// Check for new inspirations.
+
+			var task = Task.Run(() => inspirationController.GetInspirationsFromServer());
+
+			try
+			{
+				task.Wait();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+			}
 
 			question = new Label
 			{
@@ -58,13 +71,18 @@ namespace TicketToTalk
 			};
 			searchButton.Clicked += SearchButton_Clicked;
 
-			// Check for new inspirations.
-			var task = Task.Run(() => this.GetIns()).Result;
-
 			inspiration = inspirationController.GetRandomInspiration();
-			inspiration = PopulateVariables(inspiration);
 
-			SetViewToInspiration();
+			if (inspiration != null)
+			{
+				inspiration = PopulateVariables(inspiration);
+
+				SetViewToInspiration();
+			}
+			else 
+			{
+				no_ins = true;
+			}
 
 			recordMediaButton.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			recordMediaButton.WidthRequest = 125;
@@ -94,17 +112,39 @@ namespace TicketToTalk
 				}
 			};
 
-			var content = new StackLayout
+			StackLayout content = null;
+
+			if (no_ins)
 			{
-				Padding = new Thickness(20),
-				Spacing = 12,
-				Children = {
-					question,
-					promptLabel,
-					searchButton,
-					buttonStack
-				}
-			};
+				content = new StackLayout
+				{
+					Padding = new Thickness(20),
+					Spacing = 12,
+					Children = {
+						new Label
+						{
+							Text = "Please connect to a network to view inspirations.",
+							TextColor = ProjectResource.color_dark,
+							FontSize = 16,
+							FontAttributes = FontAttributes.Bold
+						}
+					}
+				};
+			}
+			else 
+			{
+				content = new StackLayout
+					{
+						Padding = new Thickness(20),
+						Spacing = 12,
+						Children = {
+						question,
+						promptLabel,
+						searchButton,
+						buttonStack
+					}
+				};
+			}
 
 			Content = new StackLayout
 			{
@@ -115,39 +155,6 @@ namespace TicketToTalk
 					content
 				}
 			};
-		}
-
-		/// <summary>
-		/// Gets inspirations from the server.
-		/// </summary>
-		/// <returns>The ins.</returns>
-		private async Task<List<Inspiration>> GetIns()
-		{
-			// Send get request for inspirations
-			NetworkController net = new NetworkController();
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
-			parameters["token"] = Session.Token.val;
-
-			var jobject = await net.SendGetRequest("inspiration/get", parameters);
-
-			var data = jobject.GetData();
-			var inspirations = data["inspirations"].ToObject<List<Inspiration>>();
-
-			foreach (Inspiration ins in inspirations)
-			{
-				var stored = inspirationController.GetInspiration(ins.id);
-				if (stored == null)
-				{
-					inspirationController.AddInspirationLocally(ins);
-				}
-				else if (stored.GetHashCode() != ins.GetHashCode())
-				{
-					inspirationController.UpdateInspirationLocally(ins);
-				}
-			}
-			//insDB.close();
-
-			return inspirations;
 		}
 
 		/// <summary>
