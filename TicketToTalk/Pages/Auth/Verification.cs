@@ -36,8 +36,9 @@ namespace TicketToTalk
 
 			code = new Entry
 			{
-				TextColor = ProjectResource.color_red,
+				TextColor = ProjectResource.color_white,
 				WidthRequest = (Session.ScreenWidth * 0.5),
+				BackgroundColor = ProjectResource.color_red,
 			};
 			code.Focus();
 			code.TextChanged += Entry_TextChanged;

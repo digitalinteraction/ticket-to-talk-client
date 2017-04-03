@@ -53,7 +53,7 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		public User GetLocalUserByEmail(string email)
 		{
-			User user = new User();
+			User user;
 
 			lock (Session.Connection)
 			{
@@ -316,7 +316,7 @@ namespace TicketToTalk
 					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
 
-					await DownloadUserProfilePicture();
+					await Task.Run(() => DownloadUserProfilePicture());
 				}
 				else
 				{

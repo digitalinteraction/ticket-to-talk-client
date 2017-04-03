@@ -77,17 +77,34 @@ namespace TicketToTalk
 				tableSection.Add(personCell);
 			}
 
+
 			if (people.Count != 0)
 			{
 				tableView.Root.Add(tableSection);
 			}
 
-			Content = new StackLayout
+			//Content = new StackLayout
+			//{
+			//	Children = {
+			//		tableView
+			//	}
+			//};
+
+			var stack = new StackLayout();
+			stack.Children.Add(tableView);
+			Content = stack;
+
+			if (Session.activeUser.firstLogin && !promptShown)
 			{
-				Children = {
-					tableView
+				var canSkip = true;
+				if (people.Count == 0)
+				{
+					canSkip = false;
 				}
-			};
+				var t = new AddNewPersonPrompt(canSkip);
+				Application.Current.MainPage = t;
+				promptShown = true;
+			}
 		}
 
 		/// <summary>
@@ -136,16 +153,17 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-			if (Session.activeUser.firstLogin && !promptShown)
-			{
-				var canSkip = true;
-				if (people.Count == 0)
-				{
-					canSkip = false;
-				}
-				Application.Current.MainPage = new AddNewPersonPrompt(canSkip);
-				promptShown = true;
-			}
+			//if (Session.activeUser.firstLogin && !promptShown)
+			//{
+			//	var canSkip = true;
+			//	if (people.Count == 0)
+			//	{
+			//		canSkip = false;
+			//	}
+			//	var t = new AddNewPersonPrompt(canSkip);
+			//	Application.Current.MainPage = new ContentPage();
+			//	promptShown = true;
+			//}
 		}
 	}
 }

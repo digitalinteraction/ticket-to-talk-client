@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="my_images" path="uk.ncl.ac.d.welsh.ticket_to_talk/files/Pictures" />
-    <external-path name="my_movies" path="uk.ncl.ac.d.welsh.ticket_to_talk/files/Movies" />
+    <external-path name="my_images" path="uk.ncl.ac.openlab.ticket-to-talk/files/Pictures" />
+    <external-path name="my_movies" path="uk.ncl.ac.openlab.ticket-to-talk/files/Movies" />
 </paths>
