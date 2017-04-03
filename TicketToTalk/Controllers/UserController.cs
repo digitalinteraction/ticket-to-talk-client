@@ -76,7 +76,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 			parameters["code"] = code;
 
-			var jobject = await net.SendPostRequest("auth/verify", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendPostRequest("auth/verify", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -159,7 +169,17 @@ namespace TicketToTalk
 				parameters["imageHash"] = image.HashArray();
 			}
 
-			var jobject = await networkController.SendPostRequest("user/update", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("user/update", parameters);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -201,7 +221,17 @@ namespace TicketToTalk
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await net.SendGetRequest("auth/verify/resend", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendGetRequest("auth/verify/resend", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject == null)
 			{
 				return false;
@@ -353,7 +383,17 @@ namespace TicketToTalk
 
 			// post to server.
 			var net = new NetworkController();
-			var jobject = await net.SendPostRequest("auth/register", content);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendPostRequest("auth/register", content);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			if (jobject != null)
 			{

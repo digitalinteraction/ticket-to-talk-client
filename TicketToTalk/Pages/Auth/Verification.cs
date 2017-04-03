@@ -115,7 +115,19 @@ namespace TicketToTalk
 			send.IsEnabled = false;
 			var c = code.Text.ToUpper().Trim();
 			var userController = new UserController();
-			var verified = await userController.VerifyUser(c);
+
+			bool verified = false;
+
+			try
+			{
+				verified = await userController.VerifyUser(c);
+			}
+			catch (Exception ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+				send.IsEnabled = true;
+			}
+
 			if (verified)
 			{
 				// Launch next screen.
@@ -166,7 +178,17 @@ namespace TicketToTalk
 		public async void Resend_Clicked(object sender, EventArgs e)
 		{
 			var userController = new UserController();
-			var sent = await userController.resendEmail();
+			bool sent = false;
+
+			try
+			{
+				sent = await userController.resendEmail();
+			}
+			catch (NoNetworkException ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
+
 			if (sent) 
 			{
 				await DisplayAlert("Verification", "A new verification email has been sent to your email account.", "OK");

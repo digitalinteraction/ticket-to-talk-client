@@ -235,7 +235,7 @@ namespace TicketToTalk
 		{
 			savePersonButton.IsEnabled = false;
 
-			var registered = false;
+			bool registered = false;
 			if (string.Compare(passwordEntry.Text, confirmPasswordEntry.Text, StringComparison.Ordinal) != 0)
 			{
 				await DisplayAlert("Register", "Password and Confirm Password do not match.", "OK");
@@ -259,20 +259,30 @@ namespace TicketToTalk
 					}
 				}
 
-				registered = await userController.RegisterNewUser(user, image);
-			}
+				try
+				{
+					registered = await userController.RegisterNewUser(user, image);
 
-			if (registered)
-			{
-				Session.activeUser.imageSource = await userController.GetUserProfilePicture();
+					if (registered)
+					{
+						Session.activeUser.imageSource = await userController.GetUserProfilePicture();
 
-				await Navigation.PushAsync(new Verification(true));
-				Navigation.RemovePage(this);
-			}
-			else
-			{
-				await DisplayAlert("Register", "Your profile could not be registered.", "OK");
-				savePersonButton.IsEnabled = true;
+						await Navigation.PushAsync(new Verification(true));
+						Navigation.RemovePage(this);
+					}
+					else
+					{
+						await DisplayAlert("Register", "Your profile could not be registered.", "OK");
+						savePersonButton.IsEnabled = true;
+					}
+				}
+				catch (NoNetworkException ex)
+				{
+					Debug.WriteLine(ex.StackTrace);
+
+					await DisplayAlert("No Network", ex.Message, "Dismiss");
+					this.savePersonButton.IsEnabled = true;
+				}
 			}
 		}
 	}
