@@ -41,7 +41,10 @@ namespace TicketToTalk
 			{
 				Task.Run(() => ticketController.DownloadTicketContent(ticket)).Wait();
 
-				displayedTicket.pathToFile = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal) + 1);
+				var ext = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf('.'));
+				var fileName = String.Format("t_{0}{1}", ticket.id, ext);
+
+				displayedTicket.pathToFile = fileName;
 				ticketController.UpdateTicketLocally(ticket);
 			}
 
@@ -119,6 +122,7 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
+				Debug.WriteLine(e);
 				return false;
 			}
 
@@ -136,8 +140,22 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case ("Delete"):
-					await Navigation.PopAsync();
-					ticketController.DestroyTicket(displayedTicket);
+
+					var deleted = false;
+
+					try
+					{
+						deleted = await ticketController.DestroyTicket(displayedTicket);
+						if (deleted) 
+						{
+							await Navigation.PopAsync();
+						}
+					}
+					catch (NoNetworkException ex)
+					{
+						await DisplayAlert("No Network", ex.Message, "Dismiss");
+					}
+
 					break;
 				case ("Edit Ticket"):
 

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -17,7 +18,6 @@ namespace TicketToTalk
 	public class UserController
 	{
 
-		private UserDB userDB = new UserDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -34,9 +34,14 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public User GetLocalUserByID(int id)
 		{
-			userDB.Open();
-			var user = userDB.GetUser(id);
-			userDB.Close();
+			User user = new User();
+
+			lock(Session.connection) 
+			{
+				user = (from n in Session.connection.Table<User>() where n.id == id select n).FirstOrDefault();
+			}
+
+			Debug.WriteLine(user);
 
 			return user;
 		}
@@ -48,9 +53,15 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		public User GetLocalUserByEmail(string email)
 		{
-			userDB.Open();
-			var user = userDB.GetUserByEmail(email);
-			userDB.Close();
+			User user = new User();
+
+			lock (Session.connection)
+			{
+				user = (from n in Session.connection.Table<User>() where n.email == email select n).FirstOrDefault();
+			}
+
+			Debug.WriteLine(user);
+
 			return user;
 		}
 
@@ -61,7 +72,7 @@ namespace TicketToTalk
 		public async Task<bool> VerifyUser(string code)
 		{
 			var net = new NetworkController();
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["token"] = Session.Token.val;
 			parameters["code"] = code;
 
@@ -96,9 +107,10 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void AddUserLocally(User user)
 		{
-			userDB.Open();
-			userDB.AddUser(user);
-			userDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Insert(user);
+			}
 		}
 
 		/// <summary>
@@ -108,9 +120,10 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeleteUserLocally(int id)
 		{
-			userDB.Open();
-			userDB.DeleteUser(id);
-			userDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Delete<User>(id);
+			}
 		}
 
 		/// <summary>
@@ -120,8 +133,10 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void UpdateUserLocally(User user)
 		{
-			DeleteUserLocally(user.id);
-			AddUserLocally(user);
+			lock(Session.connection) 
+			{
+				Session.connection.Update(user);
+			}
 		}
 
 		/// <summary>
@@ -144,7 +159,7 @@ namespace TicketToTalk
 				parameters["imageHash"] = image.HashArray();
 			}
 
-			var jobject = await networkController.SendGenericPostRequest("user/update", parameters);
+			var jobject = await networkController.SendPostRequest("user/update", parameters);
 			if (jobject != null)
 			{
 
@@ -205,7 +220,7 @@ namespace TicketToTalk
 		/// <param name="password">Password.</param>
 		public async Task<bool> AuthenticateUser(string email, string password)
 		{
-			IDictionary<string, string> credentials = new Dictionary<string, string>();
+			IDictionary<string, object> credentials = new Dictionary<string, object>();
 			credentials["email"] = email;
 			credentials["password"] = password.HashString();
 
@@ -224,7 +239,16 @@ namespace TicketToTalk
 			}
 
 			var net = new NetworkController();
-			var jobject = await net.SendPostRequest("auth/login", credentials);
+
+			JObject jobject = null;
+			try
+			{
+				jobject = await net.SendPostRequest("auth/login", credentials);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// fail if null response
 			if (jobject == null) return false;
@@ -233,6 +257,11 @@ namespace TicketToTalk
 			//var jtoken = status.
 			var jcode = status["code"];
 			var code = jcode.ToObject<int>();
+
+			if (jobject.GetValue("errors").ToObject<bool>()) 
+			{
+				return false;
+			}
 
 			// if success.
 			if (code == 200)
@@ -256,6 +285,8 @@ namespace TicketToTalk
 					returned_user.api_key = jtoken.ToObject<string>();
 					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
+
+					await DownloadUserProfilePicture();
 				}
 				else
 				{
@@ -322,7 +353,7 @@ namespace TicketToTalk
 
 			// post to server.
 			var net = new NetworkController();
-			var jobject = await net.SendGenericPostRequest("auth/register", content);
+			var jobject = await net.SendPostRequest("auth/register", content);
 
 			if (jobject != null)
 			{
@@ -380,7 +411,7 @@ namespace TicketToTalk
 			parameters["person_id"] = person_id;
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await networkController.SendGenericPostRequest("user/invitations/send", parameters);
+			var jobject = await networkController.SendPostRequest("user/invitations/send", parameters);
 
 			if (jobject != null)
 			{
@@ -451,6 +482,7 @@ namespace TicketToTalk
 		{
 			var user = Session.activeUser;
 
+			Debug.WriteLine(user);
 			var fileName = "u_" + user.id + ".jpg";
 
 //#if __IOS__
@@ -473,11 +505,33 @@ namespace TicketToTalk
 			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			client.Timeout = new TimeSpan(0, 0, 100);
 
-			var url = new Uri(Session.baseUrl + "user/picture?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
+			var url = new Uri(Session.baseUrl + "user/picture/get?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
 			Debug.WriteLine(url);
 
 			Console.WriteLine("Beginning Download");
-			var returned = await client.GetStreamAsync(url);
+
+			Stream returned = null;
+
+			try
+			{
+				returned = await client.GetStreamAsync(url);
+			}
+			catch (WebException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (TaskCanceledException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
 			using (MemoryStream ms = new MemoryStream())
@@ -510,7 +564,7 @@ namespace TicketToTalk
 		/// <param name="relation">Relation.</param>
 		public async Task<bool> AcceptInvitation(Invitation i, string relation)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["person_id"] = i.person.id.ToString();
 			parameters["relation"] = relation;
 			parameters["token"] = Session.Token.val;
@@ -520,9 +574,11 @@ namespace TicketToTalk
 			if (jobject != null)
 			{
 				var pu = new PersonUser(i.person.id, Session.activeUser.id, i.group, relation);
-				var puDB = new PersonUserDB();
-				puDB.AddPersonUser(pu);
-				puDB.Close();
+
+				lock(Session.connection) 
+				{
+					Session.connection.Insert(pu);
+				}
 
 				return true;
 			}
@@ -539,7 +595,7 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public async Task<bool> RejectInvitation(Person p)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["person_id"] = p.id.ToString();
 			parameters["token"] = Session.Token.val;
 

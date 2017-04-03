@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -14,7 +15,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class TicketController
 	{
-		private TicketDB ticketDB = new TicketDB();
+		//private TicketDB ticketDB = new TicketDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -30,9 +31,11 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void AddTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.AddTicket(ticket);
-			ticketDB.Close();
+
+			lock (Session.connection)
+			{
+				Session.connection.Insert(ticket);
+			}
 		}
 
 		/// <summary>
@@ -54,7 +57,7 @@ namespace TicketToTalk
 			parameters["period"] = period;
 
 			// Send the request
-			var jobject = await net.SendGenericPostRequest("tickets/store", parameters);
+			var jobject = await net.SendPostRequest("tickets/store", parameters);
 
 			if (jobject != null)
 			{
@@ -109,49 +112,88 @@ namespace TicketToTalk
 		/// Destroies the ticket.
 		/// </summary>
 		/// <param name="ticket">Ticket.</param>
-		public void DestroyTicket(Ticket ticket)
+		public async Task<bool> DestroyTicket(Ticket ticket)
 		{
 
-			// Delete the tickets.
-			DeleteTicketLocally(ticket);
-			DeleteTicketRemotely(ticket);
+			var deleted = false;
 
-			// Remove the tickets from views.
-			switch (ticket.mediaType)
+			try
 			{
-				case ("Picture"):
-				case ("Photo"):
-					TicketsPicture.pictureTickets.Remove(ticket);
-					break;
-				case ("Sound"):
-				case ("Song"):
-				case ("Audio"):
-					TicketsSounds.soundTickets.Remove(ticket);
-					break;
-				case ("Video"):
-				case ("YouTube"):
-					TicketsVideos.videoTickets.Remove(ticket);
-					break;
+				deleted = await DeleteTicketRemotely(ticket);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
 			}
 
-			TicketsByPeriod.RemoveTicket(ticket);
-
-			bool inPeriodList = false;
-			foreach (Ticket t in DisplayTickets.displayTickets)
+			if (deleted) 
 			{
-				if (t.id == ticket.id)
-				{
-					inPeriodList = true;
+				// Delete the tickets.
+				DeleteTicketLocally(ticket);
 
+				// Remove the tickets from views.
+				switch (ticket.mediaType)
+				{
+					case ("Picture"):
+					case ("Photo"):
+						TicketsPicture.pictureTickets.Remove(ticket);
+						break;
+					case ("Sound"):
+					case ("Song"):
+					case ("Audio"):
+						TicketsSounds.soundTickets.Remove(ticket);
+						break;
+					case ("Video"):
+					case ("YouTube"):
+						TicketsVideos.videoTickets.Remove(ticket);
+						break;
+				}
+
+				TicketsByPeriod.RemoveTicket(ticket);
+
+				bool inPeriodList = false;
+				foreach (Ticket t in DisplayTickets.displayTickets)
+				{
+					if (t.id == ticket.id)
+					{
+						inPeriodList = true;
+
+					}
+				}
+				if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
+
+				if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
+				{
+					var mediaController = new MediaController();
+					mediaController.DeleteFile(ticket.pathToFile);
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Gets the tickets by period identifier.
+		/// </summary>
+		/// <returns>The tickets by period identifier.</returns>
+		/// <param name="period_id">Period identifier.</param>
+		public List<Ticket> GetTicketsByPeriodID(int period_id)
+		{
+			List<Ticket> tickets = new List<Ticket>();
+
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.period_id == period_id select t;
+
+				foreach (Ticket t in q) 
+				{
+					tickets.Add(t);
 				}
 			}
-			if (inPeriodList) { DisplayTickets.displayTickets.Remove(ticket); }
 
-			if (!(ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)))
-			{
-				var mediaController = new MediaController();
-				mediaController.DeleteFile(ticket.pathToFile);
-			}
+			return tickets;
 		}
 
 		/// <summary>
@@ -159,13 +201,23 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if ticket was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="ticket">Ticket.</param>
-		public bool DeleteTicketRemotely(Ticket ticket)
+		public async Task<bool> DeleteTicketRemotely(Ticket ticket)
 		{
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["ticket_id"] = ticket.id.ToString();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = networkController.SendDeleteRequest("tickets/destroy", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendDeleteRequest("tickets/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject == null)
 			{
 				return false;
@@ -182,11 +234,19 @@ namespace TicketToTalk
 		/// <returns>The tickets.</returns>
 		public List<Ticket> GetTickets()
 		{
-			ticketDB.Open();
-			var raw_tickets = ticketDB.GetTicketsByPerson(Session.activePerson.id);
-			ticketDB.Close();
+			List<Ticket> tickets = new List<Ticket>();
 
-			return FilterTicketsForUserType(raw_tickets);
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+
+				foreach (Ticket t in q) 
+				{
+					tickets.Add(t);
+				}
+			}
+
+			return FilterTicketsForUserType(tickets);
 		}
 
 		/// <summary>
@@ -233,9 +293,18 @@ namespace TicketToTalk
 		/// <param name="person_id">Person identifier.</param>
 		public List<Ticket> GetTicketsByPerson(int person_id)
 		{
-			ticketDB.Open();
-			var tickets = ticketDB.GetTicketsByPerson(person_id);
-			ticketDB.Close();
+			List<Ticket> tickets = new List<Ticket>();
+
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+
+				foreach (Ticket t in q)
+				{
+					tickets.Add(t);
+				}
+			}
+
 			return tickets;
 		}
 
@@ -246,9 +315,13 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Ticket GetTicket(int id)
 		{
-			ticketDB.Open();
-			var ticket = ticketDB.GetTicket(id);
-			ticketDB.Close();
+			Ticket ticket;
+
+			lock (Session.connection)
+			{
+				ticket = (from t in Session.connection.Table<Ticket>() where t.id == id select t).FirstOrDefault();
+			}
+
 			return ticket;
 		}
 
@@ -259,9 +332,10 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void DeleteTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.DeleteTicket(ticket.id);
-			ticketDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Delete(ticket);
+			}
 		}
 
 		/// <summary>
@@ -271,10 +345,10 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void UpdateTicketLocally(Ticket ticket)
 		{
-			ticketDB.Open();
-			ticketDB.DeleteTicket(ticket.id);
-			ticketDB.AddTicket(ticket);
-			ticketDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Update(ticket);
+			}
 		}
 
 		/// <summary>
@@ -284,7 +358,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public async Task<Ticket> UpdateTicketRemotely(Ticket ticket, string period)
 		{
-			IDictionary<string, string> paramters = new Dictionary<string, string>();
+			IDictionary<string, object> paramters = new Dictionary<string, object>();
 			paramters["ticket_id"] = ticket.id.ToString();
 			paramters["title"] = ticket.title;
 			paramters["description"] = ticket.description;
@@ -294,7 +368,17 @@ namespace TicketToTalk
 			paramters["period"] = period;
 			paramters["token"] = Session.Token.val;
 
-			var jobject = await networkController.SendPostRequest("tickets/update", paramters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("tickets/update", paramters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -315,21 +399,21 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void AddTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
-			var ttDB = new TicketTagDB();
-			ttDB.Open();
-			foreach (Tag t in tags)
+			lock (Session.connection)
 			{
-				var ttr = new TicketTag(ticket.id, t.id);
-				ttDB.AddTicketTagRelationship(ttr);
+				foreach (Tag t in tags)
+				{
+					var ttr = new TicketTag(ticket.id, t.id);
+					Session.connection.Insert(ttr);
+				}
 			}
-			ttDB.Close();
 		}
 
 		/// <summary>
 		/// Check for new tickets from the server.
 		/// </summary>
 		/// <returns>The tickets.</returns>
-		public async Task UpdateTicketsFromAPI()
+		public async Task GetRemoteTickets()
 		{
 			// Set parameters
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -338,7 +422,18 @@ namespace TicketToTalk
 
 			// Send GET request
 			var net = new NetworkController();
-			var jobject = await net.SendGetRequest("people/tickets", parameters);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendGetRequest("people/tickets", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 
 			var data = jobject.GetData();
 
@@ -380,24 +475,26 @@ namespace TicketToTalk
 
 			// Parse JSON TicketTags to TicketTags
 			var ticket_tags = data["ticket_tags"].ToObject<TicketTag[]>();
-			var ticketTagDB = new TicketTagDB();
-			ticketTagDB.Open();
-			foreach (TicketTag tt in ticket_tags)
+
+			lock (Session.connection)
 			{
-				var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
-				if (stored == null)
+				foreach (TicketTag tt in ticket_tags)
 				{
-					Console.WriteLine("New ticket_tag, adding...");
-					ticketTagDB.AddTicketTagRelationship(tt);
-				}
-				else if (stored.GetHashCode() != tt.GetHashCode())
-				{
-					Console.WriteLine("Updating ticket_tag");
-					ticketTagDB.DeleteRelation(stored.id);
-					ticketTagDB.AddTicketTagRelationship(tt);
+					var stored = (from t in Session.connection.Table<TicketTag>() where t.ticket_id == tt.ticket_id && t.tag_id == tt.tag_id select t).FirstOrDefault();
+
+					//var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
+					if (stored == null)
+					{
+						Console.WriteLine("New ticket_tag, adding...");
+						Session.connection.Insert(tt);
+					}
+					else if (stored.GetHashCode() != tt.GetHashCode())
+					{
+						Console.WriteLine("Updating ticket_tag");
+						Session.connection.Update(tt);
+					}
 				}
 			}
-			ticketTagDB.Close();
 		}
 
 		/// <summary>
@@ -407,6 +504,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public Image GetTicketImage(Ticket ticket)
 		{
+			// TODO fix not finding image
 			bool download_finished = false;
 			var ticket_photo = new Image();
 			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
@@ -482,9 +580,8 @@ namespace TicketToTalk
 		/// <exception cref="T:System.IO.FileNotFoundException"></exception>
 		public async Task DownloadTicketContent(Ticket ticket)
 		{
-			var idx = ticket.pathToFile.LastIndexOf("/", StringComparison.Ordinal);
-			var fileName = ticket.pathToFile.Substring(idx + 1);
-
+			var ext = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf('.'));
+			var fileName = String.Format("t_{0}{1}", ticket.id, ext);
 			var client = new HttpClient();
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";
@@ -494,7 +591,28 @@ namespace TicketToTalk
 			var url = new Uri(Session.baseUrl + "tickets/download?ticket_id=" + ticket.id + "&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
 
 			Console.WriteLine("Beginning Download");
-			var returned = await client.GetStreamAsync(url);
+			Stream returned = null;
+
+			try
+			{
+				returned = await client.GetStreamAsync(url);
+			}
+			catch (WebException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (TaskCanceledException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+
 			byte[] buffer = new byte[16 * 1024];
 			byte[] imageBytes;
 			using (MemoryStream ms = new MemoryStream())

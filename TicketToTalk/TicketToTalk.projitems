@@ -64,16 +64,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\MediaController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewAudioTicket.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\AreaDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\ArticleDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\InspirationDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonUserDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\TagDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketAreaDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\TicketTagDB.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\UserDB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TicketController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AreaController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TagController.cs" />
@@ -81,9 +71,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IImageResizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\UserController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Period.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\PeriodDB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PersonPeriod.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\PersonPeriodDB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\PeriodController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SendInvitation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\SeeInvitations.cs" />
@@ -101,7 +89,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\NewConversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\ConversationController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Database\ConversationDB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\ConversationView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Conversations\ConversationSelect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConversationCell.cs" />
@@ -142,6 +129,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)APIErrorException.cs">
       <Link>Exceptions\APIErrorException.cs</Link>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Articles\NoNetworkException.cs">
+      <Link>Exceptions\NoNetworkException.cs</Link>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controllers\InspirationController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
@@ -151,7 +142,6 @@
     <Folder Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\" />
     <Folder Include="$(MSBuildThisFileDirectory)Pages\Inspiration\" />
     <Folder Include="$(MSBuildThisFileDirectory)Services\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Database\" />
     <Folder Include="$(MSBuildThisFileDirectory)Pages\Conversations\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\" />
     <Folder Include="$(MSBuildThisFileDirectory)Views\Audio\" />

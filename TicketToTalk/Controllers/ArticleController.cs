@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace TicketToTalk
 {
@@ -11,7 +12,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class ArticleController
 	{
-		private ArticleDB articleDB = new ArticleDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -27,15 +27,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void AddArticleLocally(Article article)
 		{
-			articleDB.Open();
-
-			// Checks if the article already exists, if null, the article is added.
-			if (articleDB.GetArticle(article.id) == null)
+			lock(Session.connection) 
 			{
-				articleDB.AddArticle(article);
+				Session.connection.Insert(article);
 			}
-
-			articleDB.Close();
 		}
 
 		/// <summary>
@@ -44,9 +39,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void DeleteArticleLocally(Article article)
 		{
-			articleDB.Open();
-			articleDB.DeleteArticle(article.id);
-			articleDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Delete(article);
+			}
 		}
 
 		/// <summary>
@@ -54,15 +50,24 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if article was deleted remotely, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
-		public bool DeleteArticleRemotely(Article article)
+		public async Task<bool> DeleteArticleRemotely(Article article)
 		{
 			// Create parameters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["token"] = Session.Token.val;
 
+			JObject jobject = null;
+
 			// Sends delete request.
-			var jobject = networkController.SendDeleteRequest("articles/destroy", parameters);
+			try
+			{
+				jobject = await networkController.SendDeleteRequest("articles/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, request failed.
 			if (jobject != null)
@@ -80,11 +85,22 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns><c>true</c>, if article was destoried, <c>false</c> otherwise.</returns>
 		/// <param name="article">Article.</param>
-		public bool DestoryArticle(Article article)
+		public async Task<bool> DestoryArticle(Article article)
 		{
 
+			bool destroyed = false;
+
+			try
+			{
+				destroyed = await DeleteArticleRemotely(article);
+			}
+			catch (NoNetworkException ex) 
+			{
+				throw ex;
+			}
+
 			// If article was destroyed remotely, remove the article locally.
-			if (DeleteArticleRemotely(article))
+			if (destroyed)
 			{
 				DeleteArticleLocally(article);
 				AllArticles.ServerArticles.Remove(article);
@@ -151,7 +167,7 @@ namespace TicketToTalk
 		public async Task<bool> AcceptSharedArticle(Article article)
 		{
 			// Builds the parameters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["token"] = Session.Token.val;
 			parameters["article_id"] = article.id.ToString();
 
@@ -183,14 +199,22 @@ namespace TicketToTalk
 		{
 			// TODO: Stop crash if recipient is not registered with the system.
 			// Build the paramters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["email"] = email;
 			parameters["includeNotes"] = includeNotes.ToString();
 			parameters["token"] = Session.Token.val;
 
 			// Send the request.
-			var jobject = await networkController.SendPostRequest("articles/share/send", parameters);
+			JObject jobject = null;
+			try
+			{
+				jobject = await networkController.SendPostRequest("articles/share/send", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, the request failed.
 			if (jobject != null)
@@ -208,14 +232,23 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public async Task<bool> AddArticleRemotely(Article article)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["title"] = article.title;
 			parameters["notes"] = article.notes;
 			parameters["link"] = article.link;
 			parameters["token"] = Session.Token.val;
 
 			NetworkController net = new NetworkController();
-			var jobject = await net.SendPostRequest("articles/store", parameters);
+			JObject jobject = null;
+			try
+			{
+				jobject = await net.SendPostRequest("articles/store", parameters);
+			}
+			catch (NoNetworkException ex) 
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 				var data = jobject.GetData();
@@ -246,7 +279,7 @@ namespace TicketToTalk
 		{
 			Console.WriteLine("Updating article");
 
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["title"] = article.title;
 			parameters["notes"] = article.notes;
@@ -295,7 +328,7 @@ namespace TicketToTalk
 		public async Task<bool> RejectShared(Article article)
 		{
 			// Build the parameters.
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["article_id"] = article.id.ToString();
 			parameters["token"] = Session.Token.val;
 
@@ -364,10 +397,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void UpdateArticleLocally(Article article)
 		{
-			articleDB.Open();
-			articleDB.DeleteArticle(article.id);
-			articleDB.AddArticle(article);
-			articleDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Update(article);
+			}
 		}
 	}
 }

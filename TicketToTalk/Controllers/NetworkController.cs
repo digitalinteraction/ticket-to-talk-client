@@ -28,8 +28,6 @@ namespace TicketToTalk
 		public NetworkController()
 		{
 			client = new HttpClient();
-			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-			client.DefaultRequestHeaders.Host = "danielwelsh.uk";
 			client.Timeout = new TimeSpan(0, 0, 100);
 		}
 
@@ -73,7 +71,18 @@ namespace TicketToTalk
 			}
 			catch (TaskCanceledException ex)
 			{
-				Console.WriteLine("Network Timeout");
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex) 
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (WebException ex) 
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 
 			Debug.WriteLine(response);
@@ -105,7 +114,7 @@ namespace TicketToTalk
 		/// <returns>The post request.</returns>
 		/// <param name="URL">URL.</param>
 		/// <param name="parameters">Parameters.</param>
-		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, string> parameters)
+		public async Task<JObject> SendPostRequest(string URL, IDictionary<string, object> parameters)
 		{
 			var client = new HttpClient();
 
@@ -142,10 +151,20 @@ namespace TicketToTalk
 			catch (WebException ex)
 			{
 				Console.WriteLine("Network Timeout");
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 			catch (TaskCanceledException ex)
 			{
 				Console.WriteLine(ex);
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Console.WriteLine(ex);
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 
 			Debug.WriteLine(response);
@@ -263,10 +282,18 @@ namespace TicketToTalk
 			}
 			catch (WebException ex)
 			{
-				Console.WriteLine("Network Timeout");
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 			catch (TaskCanceledException ex)
 			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex) 
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 			Debug.WriteLine(response);
 
@@ -307,28 +334,58 @@ namespace TicketToTalk
 			var url = new Uri(Session.baseUrl + "media/get?fileName=" + path + "&token=" + Session.Token.val) + "&api_key=" + Session.activeUser.api_key;
 
 			Console.WriteLine("Beginning Download");
-			var returned = await client.GetStreamAsync(url);
-			byte[] buffer = new byte[16 * 1024];
-			byte[] imageBytes;
-			using (MemoryStream ms = new MemoryStream())
+
+			Stream returned = null;
+
+			try 
 			{
-				int read = 0;
-				while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
-				{
-					ms.Write(buffer, 0, read);
-				}
-				imageBytes = ms.ToArray();
+				returned = await client.GetStreamAsync(url);
+			}
+			catch (WebException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (TaskCanceledException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
+			}
+			catch (HttpRequestException ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 
 			if (returned != null)
 			{
-				MediaController.WriteImageToFile(fileName, imageBytes);
-				return true;
+				byte[] buffer = new byte[16 * 1024];
+				byte[] imageBytes;
+				using (MemoryStream ms = new MemoryStream())
+				{
+					int read = 0;
+					while ((read = returned.Read(buffer, 0, buffer.Length)) > 0)
+					{
+						ms.Write(buffer, 0, read);
+					}
+					imageBytes = ms.ToArray();
+				}
+
+				if (returned != null)
+				{
+					MediaController.WriteImageToFile(fileName, imageBytes);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
-			else
+			else 
 			{
 				return false;
 			}
+
 		}
 
 		/// <summary>

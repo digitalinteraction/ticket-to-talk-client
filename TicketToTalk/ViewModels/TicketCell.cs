@@ -29,14 +29,22 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void DeleteCell_Clicked(object sender, EventArgs e)
+		public async void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
 
 			var ticket = (Ticket)mi.BindingContext;
 
 			var ticketController = new TicketController();
-			ticketController.DestroyTicket(ticket);
+
+			try
+			{
+				await ticketController.DestroyTicket(ticket);
+			}
+			catch (NoNetworkException ex)
+			{
+				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
 		}
 	}
 }

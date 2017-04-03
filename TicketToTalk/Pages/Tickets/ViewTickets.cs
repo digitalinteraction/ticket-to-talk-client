@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -22,7 +23,17 @@ namespace TicketToTalk
 			Title = "Tickets";
 
 			var ticketController = new TicketController();
-			Task.Run(() => ticketController.UpdateTicketsFromAPI()).Wait();
+
+			var task = Task.Run(() => ticketController.GetRemoteTickets());
+
+			try
+			{
+				task.Wait();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.StackTrace);
+			}
 
 			tickets = ticketController.GetTickets();
 

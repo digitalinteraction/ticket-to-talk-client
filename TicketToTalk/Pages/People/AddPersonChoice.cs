@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -37,7 +38,17 @@ namespace TicketToTalk
 			joinPersonButton.Clicked += JoinPersonButton_Clicked;
 
 			// Get invitations
-			rawInvites = Task.Run(() => userController.GetInvitations()).Result;
+			var task = Task.Run(() => userController.GetInvitations());
+
+			try
+			{
+				rawInvites = task.Result;
+			}
+			catch (Exception ex)
+			{
+				rawInvites = new List<Invitation>();
+				Debug.WriteLine(ex);
+			}
 
 			if (rawInvites.Count > 0)
 			{

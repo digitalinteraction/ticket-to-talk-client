@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 
 namespace TicketToTalk
 {
+	[Serializable]
 	public class APIUnauthorisedException: Exception
 	{
 

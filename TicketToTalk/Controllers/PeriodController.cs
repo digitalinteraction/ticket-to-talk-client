@@ -9,9 +9,9 @@ namespace TicketToTalk
 	public class PeriodController
 	{
 
-		private PeriodDB periodDB = new PeriodDB();
-		private PersonPeriodDB personPeriodDB = new PersonPeriodDB();
-		private TicketDB ticketDB = new TicketDB();
+		//private PeriodDB periodDB = new PeriodDB();
+		//private PersonPeriodDB personPeriodDB = new PersonPeriodDB();
+		//private TicketDB ticketDB = new TicketDB();
 		private TicketController ticketController = new TicketController();
 
 		/// <summary>
@@ -28,9 +28,12 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Period GetPeriod(int id) 
 		{
-			periodDB.Open();
-			var period = periodDB.GetPeriod(id);
-			periodDB.Close();
+			Period period;
+
+			lock (Session.connection)
+			{
+				period = (from p in Session.connection.Table<Period>() where p.id == id select p).FirstOrDefault();
+			}
 
 			return period;
 		}
@@ -41,13 +44,28 @@ namespace TicketToTalk
 		/// <returns>The all periods.</returns>
 		public List<Period> GetAllLocalPeriods() 
 		{
-			personPeriodDB.Open();
-			var relations = personPeriodDB.GetRelationByPersonID(Session.activePerson.id);
+
+			List<PersonPeriod> relations = new List<PersonPeriod>();
+
+			lock (Session.connection)
+			{
+				var q = from p in Session.connection.Table<PersonPeriod>() where p.person_id == Session.activePerson.id select p;
+
+				foreach (PersonPeriod p in q) 
+				{
+					relations.Add(p);
+				}
+			}
 
 			var periods = new List<Period>();
-			foreach (PersonPeriod pp in relations) 
+
+			lock (Session.connection)
 			{
-				periods.Add(GetPeriod(pp.period_id));
+				foreach (PersonPeriod pp in relations)
+				{
+					var period = (from p in Session.connection.Table<Period>() where p.id == pp.period_id select p).FirstOrDefault();
+					periods.Add(period);
+				}
 			}
 
 			return periods;
@@ -60,9 +78,10 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void AddLocalPeriod(Period p) 
 		{
-			periodDB.Open();
-			periodDB.AddPeriod(p);
-			periodDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Insert(p);
+			}
 		}
 
 		/// <summary>
@@ -96,8 +115,21 @@ namespace TicketToTalk
 		/// <param name="period_id">Period identifier.</param>
 		public List<Ticket> GetTicketsInPeriod(int period_id) 
 		{
-			ticketDB.Open();
-			var all_tickets = ticketDB.GetTicketsByPeriodID(period_id);
+			//ticketDB.Open();
+			//var all_tickets = ticketDB.GetTicketsByPeriodID(period_id);
+
+			List<Ticket> all_tickets = new List<Ticket>();
+
+			lock (Session.connection)
+			{
+				var q = from t in Session.connection.Table<Ticket>() where t.period_id == period_id select t;
+
+				foreach (Ticket t in q) 
+				{
+					all_tickets.Add(t);
+				}
+			}
+
 			var tickets = new List<Ticket>();
 
 			if (all_tickets != null) 
@@ -111,8 +143,6 @@ namespace TicketToTalk
 				}
 			}
 
-			ticketDB.Close();
-
 			return tickets;
 		}
 
@@ -123,9 +153,7 @@ namespace TicketToTalk
 		/// <param name="period_id">Period identifier.</param>
 		public int GetPeriodTicketCount(int period_id) 
 		{
-			ticketDB.Open();
-			var tickets = ticketDB.GetTicketsByPeriodID(period_id);
-			ticketDB.Close();
+			List<Ticket> tickets = ticketController.GetTicketsByPeriodID(period_id);
 
 			return ticketController.FilterTicketsForUserType(tickets).Count;
 		}

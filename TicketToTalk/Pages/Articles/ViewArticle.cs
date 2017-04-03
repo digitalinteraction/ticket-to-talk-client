@@ -142,9 +142,24 @@ namespace TicketToTalk
 			{
 				case ("Delete"):
 					var articleController = new ArticleController();
-					articleController.DestoryArticle(currentArticle);
-					await Navigation.PopAsync();
+
+					bool deleted = false;
+					try
+					{
+						deleted = await articleController.DestoryArticle(currentArticle);
+						if (deleted) 
+						{
+							await Navigation.PopAsync();
+							break;
+						}
+					}
+					catch (NoNetworkException ex) 
+					{
+						
+						await DisplayAlert("No Network", ex.Message, "Dismiss");
+					}
 					break;
+					
 				case ("Edit"):
 					var nav = new NavigationPage(new AddArticle(currentArticle));
 					nav.BarTextColor = ProjectResource.color_white;

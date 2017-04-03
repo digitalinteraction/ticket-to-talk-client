@@ -31,7 +31,19 @@ namespace TicketToTalk
 			});
 
 			var personController = new PersonController();
-			people = Task.Run(() => personController.GetPeopleFromServer()).Result;
+
+			var task = Task.Run(() => personController.GetPeopleFromServer());
+
+			try
+			{
+				people = task.Result;
+			}
+			catch (Exception ex)
+			{
+				people = new ObservableCollection<Person>(personController.GetPeople());
+				Debug.WriteLine(ex.StackTrace);
+			}
+
 			var tableView = new TableView
 			{
 				Intent = TableIntent.Form,

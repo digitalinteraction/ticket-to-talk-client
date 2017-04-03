@@ -9,8 +9,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class TagController
 	{
-		private TagDB tagDB = new TagDB();
-
 		public TagController()
 		{
 		}
@@ -22,9 +20,10 @@ namespace TicketToTalk
 		/// <param name="tag">Tag.</param>
 		public void AddTagLocally(Tag tag) 
 		{
-			tagDB.Open();
-			tagDB.AddTag(tag);
-			tagDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Insert(tag);
+			}
 		}
 
 		/// <summary>
@@ -32,11 +31,12 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tag locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void DeleteTagLocally(int id) 
+		public void DeleteTagLocally(Tag tag) 
 		{
-			tagDB.Open();
-			tagDB.DeleteTag(id);
-			tagDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Delete(tag);
+			}
 		}
 
 		/// <summary>
@@ -46,8 +46,10 @@ namespace TicketToTalk
 		/// <param name="t">T.</param>
 		public void UpdateTagLocally(Tag t) 
 		{
-			DeleteTagLocally(t.id);
-			AddTagLocally(t);
+			lock (Session.connection)
+			{
+				Session.connection.Update(t);
+			}
 		}
 
 		/// <summary>
@@ -57,24 +59,32 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Tag GetTag(int id) 
 		{
-			tagDB.Open();
-			var tag = tagDB.GetTag(id);
-			tagDB.Close();
+			Tag tag;
+
+			lock (Session.connection)
+			{
+				tag = (from t in Session.connection.Table<Tag>() where t.id == id select t).FirstOrDefault();
+			}
+
 			return tag;
 		}
 
 		public List<Tag> GetTags() 
 		{
-			tagDB.Open();
-			var tags = tagDB.GetTags();
-			tagDB.Close();
 
-			var list = new List<Tag>();
-			foreach (Tag t in tags) 
+			List<Tag> tags = new List<Tag>();
+
+			lock (Session.connection)
 			{
-				list.Add(t);
+				var q = from t in Session.connection.Table<Tag>() select t;
+
+				foreach (Tag tag in q) 
+				{
+					tags.Add(tag);
+				}
 			}
-			return list;
+
+			return tags;
 		}
 
 		/// <summary>
@@ -84,7 +94,7 @@ namespace TicketToTalk
 		/// <param name="tag">Tag.</param>
 		public async Task<bool> AddTagToServer(Tag tag)
 		{
-			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
 			parameters["text"] = tag.text;
 			parameters["token"] = Session.Token.val;
 

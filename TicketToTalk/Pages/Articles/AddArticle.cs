@@ -185,7 +185,7 @@ namespace TicketToTalk
 		/// Saves the article.
 		/// </summary>
 		/// <returns>The article.</returns>
-		public async void SaveArticle(object sender, EventArgs e)
+		public async void SaveArticle(object sender, EventArgs e) 
 		{
 			saveButton.IsEnabled = false;
 
@@ -202,15 +202,24 @@ namespace TicketToTalk
 				link = post_link
 			};
 
-			var added =  await articleController.AddArticleRemotely(article);
-
-			if (added)
+			try 
 			{
-				await Navigation.PopModalAsync();
+				var added = await articleController.AddArticleRemotely(article);
+
+				if (added)
+				{
+					await Navigation.PopModalAsync();
+				}
+				else
+				{
+					await DisplayAlert("Articles", "Article could not be saved.", "OK");
+					saveButton.IsEnabled = true;
+				}
 			}
-			else
-			{ 
-				await DisplayAlert("Articles", "Article could not be saved.", "OK");
+			catch (NoNetworkException ex) 
+			{
+				Debug.WriteLine(ex);
+				await DisplayAlert("No Network", "You are not connected to the internet.", "Dismiss");
 				saveButton.IsEnabled = true;
 			}
 		}
@@ -236,15 +245,26 @@ namespace TicketToTalk
 				link = post_link
 			};
 
-			bool added = await articleController.UpdateArticleRemotely(new_article);
+			bool updated = false;
 
-			if (added)
+			try
 			{
-				await Navigation.PopModalAsync();
+				updated = await articleController.UpdateArticleRemotely(new_article);
+
+				if (updated)
+				{
+					await Navigation.PopModalAsync();
+				}
+				else
+				{
+					await DisplayAlert("Articles", "Article could not be updated.", "OK");
+					saveButton.IsEnabled = true;
+				}
 			}
-			else 
+			catch (NoNetworkException ex)
 			{
-				await DisplayAlert("Articles", "Article could not updated.", "OK");
+				Debug.WriteLine(ex);
+				await DisplayAlert("No Network", "You are not connected to the internet.", "Dismiss");
 				saveButton.IsEnabled = true;
 			}
 		}
