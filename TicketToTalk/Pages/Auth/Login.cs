@@ -16,6 +16,8 @@ namespace TicketToTalk
 		private Entry password;
 		private Button login;
 		private Button register;
+		private ActivityIndicator indicator = null;
+		ScrollView scrollView;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Login"/> class.
@@ -26,6 +28,8 @@ namespace TicketToTalk
 			BackgroundColor = ProjectResource.color_blue;
 
 			NavigationPage.SetHasNavigationBar(this, false);
+
+			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
 
 			Title = "Title";
 
@@ -102,14 +106,24 @@ namespace TicketToTalk
 					email,
 					password,
 					login,
-					register
+					register,
 				}
 			};
 
-			Content = new ScrollView
+			var layout = new AbsoluteLayout();
+
+			scrollView = new ScrollView 
 			{
 				Content = stack
 			};
+
+			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, Session.ScreenHeight, Session.ScreenWidth));
+			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(scrollView);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>
@@ -125,6 +139,10 @@ namespace TicketToTalk
 			await password.FadeTo(0, 500);
 			await email.FadeTo(0, 500);
 
+			IsBusy = true;
+
+			Debug.WriteLine(IsBusy);
+
 			var userController = new UserController();
 
 			bool authed = false;
@@ -133,6 +151,9 @@ namespace TicketToTalk
 			{
 				authed = await userController.AuthenticateUser(email.Text, password.Text);
 
+				Debug.WriteLine(indicator.IsRunning);
+				Debug.WriteLine(indicator.IsVisible);
+
 				if (authed)
 				{
 					Session.activeUser.imageSource = await userController.GetUserProfilePicture();
@@ -140,17 +161,24 @@ namespace TicketToTalk
 					var v = short.Parse(Session.activeUser.verified);
 					if (v > 0)
 					{
+						
+						IsBusy = false;
+
 						await Navigation.PushAsync(new SelectActivePerson());
 						Navigation.RemovePage(this);
 					}
 					else
 					{
+						IsBusy = false;
+
 						await Navigation.PushAsync(new Verification(false));
 						Navigation.RemovePage(this);
 					}
 				}
 				else
 				{
+					IsBusy = false;
+
 					await DisplayAlert("Login", "Incorrect email or password", "OK");
 
 					await email.FadeTo(1, 500);
@@ -161,6 +189,8 @@ namespace TicketToTalk
 			}
 			catch (NoNetworkException ex)
 			{
+				IsBusy = false;
+
 				await DisplayAlert("No Network", ex.Message, "Dismiss");
 
 				await email.FadeTo(1, 500);
@@ -196,6 +226,16 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void Entry_TextChanged(object sender, EventArgs e)
 		{
+			if (sender == email) 
+			{
+				email.Focus();
+				//scrollView.ScrollToAsync(email, ScrollToPosition.End, true);
+			}
+			if (sender == password)
+			{
+				password.Focus();
+				//scrollView.ScrollToAsync(password, ScrollToPosition.End, true);
+			}
 			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
 				&& (!string.IsNullOrEmpty(password.Text));
 

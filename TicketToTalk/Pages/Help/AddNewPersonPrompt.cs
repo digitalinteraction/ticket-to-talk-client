@@ -20,13 +20,14 @@ namespace TicketToTalk
 		/// </summary>
 		public AddNewPersonPrompt(bool canSkip)
 		{
-
+			
 			Padding = new Thickness(20);
 			BackgroundColor = ProjectResource.color_red;
 
 			var icon = new Image
 			{
 				Source = "face_white_icon.png",
+				//Source = "swap_icon.png",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				HeightRequest = 50,

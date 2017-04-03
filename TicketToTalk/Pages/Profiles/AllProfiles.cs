@@ -77,17 +77,17 @@ namespace TicketToTalk
 				tableSection.Add(personCell);
 			}
 
+
 			if (people.Count != 0)
 			{
 				tableView.Root.Add(tableSection);
 			}
 
-			Content = new StackLayout
-			{
-				Children = {
-					tableView
-				}
-			};
+			var stack = new StackLayout();
+			stack.Children.Add(tableView);
+			Content = stack;
+
+			Debug.WriteLine(Session.activeUser);
 		}
 
 		/// <summary>
@@ -143,7 +143,8 @@ namespace TicketToTalk
 				{
 					canSkip = false;
 				}
-				Application.Current.MainPage = new AddNewPersonPrompt(canSkip);
+				var t = new AddNewPersonPrompt(canSkip);
+				Application.Current.MainPage = t;
 				promptShown = true;
 			}
 		}

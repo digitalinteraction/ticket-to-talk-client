@@ -22,9 +22,9 @@
 		{
 			Area area;
 
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				area = (from n in Session.connection.Table<Area>() where n.id == id select n).FirstOrDefault();
+				area = (from n in Session.Connection.Table<Area>() where n.id == id select n).FirstOrDefault();
 			}
 
 			return area;
@@ -37,9 +37,9 @@
 		/// <param name="area">Area.</param>
 		public void AddAreaLocally(Area area)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Insert(area);
+				Session.Connection.Insert(area);
 			}
 		}
 
@@ -51,9 +51,9 @@
 		public void DeleteAreaLocally(Area area)
 		{
 
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Delete<Area>(area);
+				Session.Connection.Delete<Area>(area);
 			}
 		}
 
@@ -64,9 +64,9 @@
 		/// <param name="area">Area.</param>
 		public void UpdateAreaLocally(Area area)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Update(area);
+				Session.Connection.Update(area);
 			}
 		}
 	}

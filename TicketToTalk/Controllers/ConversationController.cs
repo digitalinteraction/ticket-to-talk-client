@@ -26,9 +26,9 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void StoreConversationLocally(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(conversation);
+				Session.Connection.Insert(conversation);
 			}
 		}
 
@@ -41,9 +41,9 @@ namespace TicketToTalk
 		{
 			Conversation conversation;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				conversation = (from n in Session.connection.Table<Conversation>() where n.id == id select n).FirstOrDefault();
+				conversation = (from n in Session.Connection.Table<Conversation>() where n.id == id select n).FirstOrDefault();
 			}
 
 			return conversation;
@@ -57,9 +57,9 @@ namespace TicketToTalk
 		{
 			List<Conversation> convs = new List<Conversation>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from c in Session.connection.Table<Conversation>() where c.person_id == Session.activePerson.id select c;
+				var q = from c in Session.Connection.Table<Conversation>() where c.person_id == Session.activePerson.id select c;
 
 				foreach (Conversation c in q)
 				{
@@ -207,9 +207,9 @@ namespace TicketToTalk
 
 		public void UpdateLocalConversation(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(conversation);
+				Session.Connection.Update(conversation);
 			}
 		}
 
@@ -219,9 +219,9 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void DeleteConversationLocally(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(conversation);
+				Session.Connection.Delete(conversation);
 			}
 		}
 
@@ -237,7 +237,16 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.SendGetRequest("conversations/destroy", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendGetRequest("conversations/destroy", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, the request failed.
 			if (jobject == null)
@@ -257,7 +266,16 @@ namespace TicketToTalk
 		public async Task DestroyConversation(Conversation conversation)
 		{
 			// Delete conversation remotely.
-			var deleted = await DeleteConversationRemotely(conversation);
+			bool deleted = false;
+
+			try
+			{
+				deleted = await DeleteConversationRemotely(conversation);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If successfully deleted...
 			if (deleted)
@@ -314,6 +332,8 @@ namespace TicketToTalk
 		public Conversation AddTicketToConversation(Conversation conversation, Ticket ticket)
 		{
 
+			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
+
 			// If the ticket string is empty, the ticket string becomes the ticket id.
 			if ((string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
@@ -322,22 +342,22 @@ namespace TicketToTalk
 			}
 
 			// Split the string for an array of all ticket ids.
-			char[] delims = { ' ' };
-			string[] str = conversation.ticket_id_string.Split(delims);
+			//char[] delims = { ' ' };
+			//string[] str = conversation.ticket_id_string.Split(delims);
 
 			// Convert list into string.
-			var list = new List<string>(str);
+			var list = new List<string>(conversation.ticket_id_string.Split(' '));
 
 			// Add new id to the list.
 			list.Add(ticket.id.ToString());
 
-			var temp = "";
+			var str = "";
 			foreach (string s in list)
 			{
-				temp = string.Format("{0} ", s);
+				str += string.Format("{0} ", s);
 			}
 
-			conversation.ticket_id_string = temp.TrimEnd();
+			conversation.ticket_id_string = str.Trim();
 			return conversation;
 		}
 
@@ -349,7 +369,18 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public Conversation RemoveTicketFromConversation(Conversation conversation, Ticket ticket)
 		{
-			return null;
+			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
+			var ticket_ids = new List<string>(conversation.ticket_id_string.Split(' '));
+
+			ticket_ids.Remove(ticket.id.ToString());
+
+			var str = string.Join(" ", ticket_ids.ToArray());
+
+			Debug.WriteLine(str);
+
+			conversation.ticket_id_string = str;
+
+			return conversation;
 		}
 
 		/// <summary>
@@ -406,7 +437,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 
 			// Send request.
-			var jobject = await networkController.SendPostRequest("conversations/tickets/remove", parameters);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/tickets/remove", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			// If null, request failed.
 			if (jobject == null)

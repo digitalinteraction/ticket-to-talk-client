@@ -341,7 +341,16 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case "Delete":
-					await conversationController.DestroyConversation(conversation);
+
+					try
+					{
+						await conversationController.DestroyConversation(conversation);
+					}
+					catch (NoNetworkException ex)
+					{
+						await DisplayAlert("No Network", ex.Message, "Dismiss");
+					}
+
 					break;
 				case "Edit":
 					var nav = new NavigationPage(new NewConversation(conversation));

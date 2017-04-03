@@ -36,9 +36,9 @@ namespace TicketToTalk
 		{
 			User user = new User();
 
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				user = (from n in Session.connection.Table<User>() where n.id == id select n).FirstOrDefault();
+				user = (from n in Session.Connection.Table<User>() where n.id == id select n).FirstOrDefault();
 			}
 
 			Debug.WriteLine(user);
@@ -53,11 +53,11 @@ namespace TicketToTalk
 		/// <param name="email">Email.</param>
 		public User GetLocalUserByEmail(string email)
 		{
-			User user = new User();
+			User user;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				user = (from n in Session.connection.Table<User>() where n.email == email select n).FirstOrDefault();
+				user = (from n in Session.Connection.Table<User>() where n.email == email select n).FirstOrDefault();
 			}
 
 			Debug.WriteLine(user);
@@ -76,7 +76,17 @@ namespace TicketToTalk
 			parameters["token"] = Session.Token.val;
 			parameters["code"] = code;
 
-			var jobject = await net.SendPostRequest("auth/verify", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendPostRequest("auth/verify", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -107,9 +117,9 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void AddUserLocally(User user)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Insert(user);
+				Session.Connection.Insert(user);
 			}
 		}
 
@@ -120,9 +130,9 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeleteUserLocally(int id)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Delete<User>(id);
+				Session.Connection.Delete<User>(id);
 			}
 		}
 
@@ -133,9 +143,9 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void UpdateUserLocally(User user)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Update(user);
+				Session.Connection.Update(user);
 			}
 		}
 
@@ -159,7 +169,17 @@ namespace TicketToTalk
 				parameters["imageHash"] = image.HashArray();
 			}
 
-			var jobject = await networkController.SendPostRequest("user/update", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("user/update", parameters);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+
 			if (jobject != null)
 			{
 
@@ -201,7 +221,17 @@ namespace TicketToTalk
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters["token"] = Session.Token.val;
 
-			var jobject = await net.SendGetRequest("auth/verify/resend", parameters);
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendGetRequest("auth/verify/resend", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
 			if (jobject == null)
 			{
 				return false;
@@ -286,7 +316,9 @@ namespace TicketToTalk
 					userController.AddUserLocally(returned_user);
 					Session.activeUser = returned_user;
 
-					await DownloadUserProfilePicture();
+					await Task.Run(() => DownloadUserProfilePicture());
+					Debug.WriteLine("UPDATED USER");
+					Debug.WriteLine(userController.GetLocalUserByID(returned_user.id));
 				}
 				else
 				{
@@ -304,6 +336,7 @@ namespace TicketToTalk
 						}
 						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
+
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;
 
@@ -353,7 +386,17 @@ namespace TicketToTalk
 
 			// post to server.
 			var net = new NetworkController();
-			var jobject = await net.SendPostRequest("auth/register", content);
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await net.SendPostRequest("auth/register", content);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
 
 			if (jobject != null)
 			{
@@ -575,9 +618,9 @@ namespace TicketToTalk
 			{
 				var pu = new PersonUser(i.person.id, Session.activeUser.id, i.group, relation);
 
-				lock(Session.connection) 
+				lock(Session.Connection) 
 				{
-					Session.connection.Insert(pu);
+					Session.Connection.Insert(pu);
 				}
 
 				return true;

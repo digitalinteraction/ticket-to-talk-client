@@ -37,9 +37,9 @@ namespace TicketToTalk
 
 			Person person;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				person = (from p in Session.connection.Table<Person>() where p.id == id select p).FirstOrDefault();
+				person = (from p in Session.Connection.Table<Person>() where p.id == id select p).FirstOrDefault();
 			}
 
 			return person;
@@ -55,9 +55,9 @@ namespace TicketToTalk
 			List<PersonUser> relations = new List<PersonUser>();
 			List<Person> people = new List<Person>();
 
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				var q = from r in Session.connection.Table<PersonUser>() where r.user_id == Session.activeUser.id select r;
+				var q = from r in Session.Connection.Table<PersonUser>() where r.user_id == Session.activeUser.id select r;
 
 				foreach (PersonUser p in q) 
 				{
@@ -68,7 +68,7 @@ namespace TicketToTalk
 				{
 					if (pu.user_id == Session.activeUser.id)
 					{
-						var person = (from p in Session.connection.Table<Person>() where p.id == pu.person_id select p).FirstOrDefault();
+						var person = (from p in Session.Connection.Table<Person>() where p.id == pu.person_id select p).FirstOrDefault();
 						people.Add(person);
 					}
 				}
@@ -84,9 +84,9 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeletePersonLocally(Person person)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(person);
+				Session.Connection.Delete(person);
 			}
 		}
 
@@ -102,9 +102,9 @@ namespace TicketToTalk
 			if (GetPerson(p.id) == null)
 			{
 
-				lock (Session.connection)
+				lock (Session.Connection)
 				{
-					Session.connection.Insert(p);
+					Session.Connection.Insert(p);
 				}
 			}
 
@@ -117,9 +117,9 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void UpdatePersonLocally(Person p)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(p);
+				Session.Connection.Update(p);
 			}
 		}
 
@@ -129,9 +129,9 @@ namespace TicketToTalk
 		/// <param name="pu">Pu.</param>
 		public void UpdateRelationshipLocally(PersonUser pu)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(pu);
+				Session.Connection.Update(pu);
 			}
 		}
 
@@ -250,9 +250,9 @@ namespace TicketToTalk
 		{
 			PersonUser pu;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == user_id && p.person_id == person_id select p).FirstOrDefault();
+				pu = (from p in Session.Connection.Table<PersonUser>() where p.user_id == user_id && p.person_id == person_id select p).FirstOrDefault();
 			}
 
 			return pu;
@@ -359,9 +359,9 @@ namespace TicketToTalk
 				{
 					var relation = new PersonUser(p.id, Session.activeUser.id, p.pivot.user_type, p.pivot.relation);
 
-					lock (Session.connection)
+					lock (Session.Connection)
 					{
-						Session.connection.Insert(relation);
+						Session.Connection.Insert(relation);
 					}
 
 					p.pivot.relation = null;
@@ -389,13 +389,13 @@ namespace TicketToTalk
 
 				PersonPeriod spp;
 
-				lock (Session.connection)
+				lock (Session.Connection)
 				{
-					spp = (from personPeriod in Session.connection.Table<PersonPeriod>() where personPeriod.person_id == pp.person_id && personPeriod.period_id == pp.period_id select personPeriod).FirstOrDefault();
+					spp = (from personPeriod in Session.Connection.Table<PersonPeriod>() where personPeriod.person_id == pp.person_id && personPeriod.period_id == pp.period_id select personPeriod).FirstOrDefault();
 
 					if (spp == null)
 					{
-						Session.connection.Insert(pp);
+						Session.Connection.Insert(pp);
 					}
 				}
 			}
@@ -449,9 +449,9 @@ namespace TicketToTalk
 
 		public void DeleteRelation(PersonUser relation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(relation);
+				Session.Connection.Delete(relation);
 			}
 		}
 
@@ -547,9 +547,9 @@ namespace TicketToTalk
 					user_type = "Admin"
 				};
 
-				lock (Session.connection)
+				lock (Session.Connection)
 				{
-					Session.connection.Insert(pu);
+					Session.Connection.Insert(pu);
 				}
 
 				AddStockPeriods(stored_person);
@@ -571,9 +571,9 @@ namespace TicketToTalk
 		{
 			PersonUser pu;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == Session.activeUser.id select p).FirstOrDefault();
+				pu = (from p in Session.Connection.Table<PersonUser>() where p.user_id == Session.activeUser.id select p).FirstOrDefault();
 			}
 
 			return pu.relationship;
@@ -589,9 +589,9 @@ namespace TicketToTalk
 
 			PersonUser pu;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == Session.activeUser.id && p.person_id == person_id select p).FirstOrDefault();
+				pu = (from p in Session.Connection.Table<PersonUser>() where p.user_id == Session.activeUser.id && p.person_id == person_id select p).FirstOrDefault();
 			}
 
 			return pu;
@@ -604,12 +604,12 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void AddStockPeriods(Person p)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
 				for (int i = 1; i < 5; i++)
 				{
 					var pp = new PersonPeriod(p.id, i);
-					Session.connection.Insert(pp);
+					Session.Connection.Insert(pp);
 				}
 			}
 		}

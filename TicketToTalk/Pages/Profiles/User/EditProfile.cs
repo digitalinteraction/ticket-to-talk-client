@@ -225,7 +225,18 @@ namespace TicketToTalk
 			user.email = email.Text;
 			user.password = password.Text;
 
-			var returned = await userController.UpdateUserRemotely(user, image);
+			User returned = null;
+
+			try
+			{
+				returned = await userController.UpdateUserRemotely(user, image);
+			}
+			catch (NoNetworkException ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+				saveButton.IsEnabled = true;
+			}
+
 			if (returned != null)
 			{
 				Session.activeUser.name = returned.name;

@@ -22,8 +22,7 @@ namespace TicketToTalk
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
 			var userController = new UserController();
-			Debug.WriteLine("QUERY");
-			userController.GetLocalUserByID(36);
+			Debug.WriteLine(userController.GetLocalUserByEmail("d.welsh@ncl.ac.uk"));
 
 			MainPage = nav;
 		}

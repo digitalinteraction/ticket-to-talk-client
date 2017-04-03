@@ -129,11 +129,6 @@ namespace TicketToTalk
 			};
 		}
 
-		object List<T>()
-		{
-			throw new NotImplementedException();
-		}
-
 		/// <summary>
 		/// Creates a new conversation.
 		/// </summary>

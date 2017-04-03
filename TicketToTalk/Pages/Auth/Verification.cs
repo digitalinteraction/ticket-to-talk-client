@@ -36,8 +36,9 @@ namespace TicketToTalk
 
 			code = new Entry
 			{
-				TextColor = ProjectResource.color_red,
+				TextColor = ProjectResource.color_white,
 				WidthRequest = (Session.ScreenWidth * 0.5),
+				BackgroundColor = ProjectResource.color_red,
 			};
 			code.Focus();
 			code.TextChanged += Entry_TextChanged;
@@ -115,14 +116,30 @@ namespace TicketToTalk
 			send.IsEnabled = false;
 			var c = code.Text.ToUpper().Trim();
 			var userController = new UserController();
-			var verified = await userController.VerifyUser(c);
+
+			bool verified = false;
+
+			try
+			{
+				verified = await userController.VerifyUser(c);
+			}
+			catch (Exception ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+				send.IsEnabled = true;
+			}
+
 			if (verified)
 			{
 				// Launch next screen.
 				if (firstLogin) 
 				{
-					await Navigation.PushAsync(new AllProfiles());
-					Navigation.RemovePage(this);
+					var t = new AddNewPersonPrompt(false);
+					Application.Current.MainPage = t;
+					AllProfiles.promptShown = true;
+
+					//await Navigation.PushAsync(new AllProfiles());
+					//Navigation.RemovePage(this);
 				}
 				else 
 				{
@@ -166,7 +183,17 @@ namespace TicketToTalk
 		public async void Resend_Clicked(object sender, EventArgs e)
 		{
 			var userController = new UserController();
-			var sent = await userController.resendEmail();
+			bool sent = false;
+
+			try
+			{
+				sent = await userController.resendEmail();
+			}
+			catch (NoNetworkException ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
+
 			if (sent) 
 			{
 				await DisplayAlert("Verification", "A new verification email has been sent to your email account.", "OK");

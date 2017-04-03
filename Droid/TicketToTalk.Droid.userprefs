@@ -1,0 +1,18 @@
+﻿<Properties StartupConfiguration="{BB52CBA1-6A03-4FB2-B92E-238352078CD9}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="packages.config">
+    <Files>
+      <File FileName="EnvironmentVariables.txt" Line="1" Column="1" />
+      <File FileName="MainApplication.cs" Line="1" Column="1" />
+      <File FileName="packages.config" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.Droid PreferredExecutionTarget="Android.00d73336895c1db7" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../TicketToTalk/Database/UserDB.cs" line="81" offsetX="740" offsetY="1200" expression="_connection.DatabasePath" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MultiItemStartupConfigurations />
+</Properties>

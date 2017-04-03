@@ -20,9 +20,9 @@ namespace TicketToTalk
 		/// <param name="tag">Tag.</param>
 		public void AddTagLocally(Tag tag) 
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(tag);
+				Session.Connection.Insert(tag);
 			}
 		}
 
@@ -33,9 +33,9 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeleteTagLocally(Tag tag) 
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(tag);
+				Session.Connection.Delete(tag);
 			}
 		}
 
@@ -46,9 +46,9 @@ namespace TicketToTalk
 		/// <param name="t">T.</param>
 		public void UpdateTagLocally(Tag t) 
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(t);
+				Session.Connection.Update(t);
 			}
 		}
 
@@ -61,9 +61,9 @@ namespace TicketToTalk
 		{
 			Tag tag;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				tag = (from t in Session.connection.Table<Tag>() where t.id == id select t).FirstOrDefault();
+				tag = (from t in Session.Connection.Table<Tag>() where t.id == id select t).FirstOrDefault();
 			}
 
 			return tag;
@@ -74,9 +74,9 @@ namespace TicketToTalk
 
 			List<Tag> tags = new List<Tag>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from t in Session.connection.Table<Tag>() select t;
+				var q = from t in Session.Connection.Table<Tag>() select t;
 
 				foreach (Tag tag in q) 
 				{
