@@ -314,6 +314,8 @@ namespace TicketToTalk
 		public Conversation AddTicketToConversation(Conversation conversation, Ticket ticket)
 		{
 
+			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
+
 			// If the ticket string is empty, the ticket string becomes the ticket id.
 			if ((string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
@@ -322,22 +324,22 @@ namespace TicketToTalk
 			}
 
 			// Split the string for an array of all ticket ids.
-			char[] delims = { ' ' };
-			string[] str = conversation.ticket_id_string.Split(delims);
+			//char[] delims = { ' ' };
+			//string[] str = conversation.ticket_id_string.Split(delims);
 
 			// Convert list into string.
-			var list = new List<string>(str);
+			var list = new List<string>(conversation.ticket_id_string.Split(' '));
 
 			// Add new id to the list.
 			list.Add(ticket.id.ToString());
 
-			var temp = "";
+			var str = "";
 			foreach (string s in list)
 			{
-				temp = string.Format("{0} ", s);
+				str += string.Format("{0} ", s);
 			}
 
-			conversation.ticket_id_string = temp.TrimEnd();
+			conversation.ticket_id_string = str.Trim();
 			return conversation;
 		}
 
@@ -349,7 +351,18 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public Conversation RemoveTicketFromConversation(Conversation conversation, Ticket ticket)
 		{
-			return null;
+			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
+			var ticket_ids = new List<string>(conversation.ticket_id_string.Split(' '));
+
+			ticket_ids.Remove(ticket.id.ToString());
+
+			var str = string.Join(" ", ticket_ids.ToArray());
+
+			Debug.WriteLine(str);
+
+			conversation.ticket_id_string = str;
+
+			return conversation;
 		}
 
 		/// <summary>
