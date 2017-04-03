@@ -29,22 +29,6 @@ namespace TicketToTalk
 
 			NavigationPage.SetHasNavigationBar(this, false);
 
-			//indicator = new ActivityIndicator
-			//{
-			//	Color = ProjectResource.color_white,
-			//	BackgroundColor = ProjectResource.color_grey_transparent,
-			//	VerticalOptions = LayoutOptions.CenterAndExpand,
-			//	HeightRequest = Session.ScreenHeight
-			//};
-
-			//indicator.VerticalOptions = LayoutOptions.CenterAndExpand;
-			//indicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
-			//indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
-			//indicator.BindingContext = this;
-
-			//AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.PositionProportional);
-			//AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, Session.ScreenWidth, Session.ScreenHeight));
-
 			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
 
 			Title = "Title";

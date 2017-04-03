@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace TicketToTalk
 		private PersonController personController = new PersonController();
 		private ObservableCollection<Person> people = new ObservableCollection<Person>();
 		public static bool promptShown = false;
+		private ProgressSpinner indicator;
+		StackLayout compRegLayout;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectActivePerson"/> class.
@@ -22,41 +25,7 @@ namespace TicketToTalk
 		public SelectActivePerson()
 		{
 
-			// Try and get people from the server
-			try
-			{
-				var task = Task.Run(() => personController.GetPeopleFromServer());
-
-				try
-				{
-					people = task.Result;
-				}
-				catch (Exception ex) 
-				{
-					throw ex;
-				}
-				foreach (Person p in people)
-				{
-					personController.AddPersonLocally(p);
-					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
-					p.relation = personController.GetRelationship(p.id);
-				}
-
-			}
-
-			// If network not available, use local records.
-			catch (Exception ex)
-			{
-				people = new ObservableCollection<Person>(personController.GetPeople());
-
-				foreach (Person p in people)
-				{
-					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
-					p.relation = personController.GetRelationship(p.id);
-				}
-
-				DisplayAlert("No Network", ex.Message, "Dismiss");
-			}
+			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
 
 			Padding = new Thickness(20);
 
@@ -100,11 +69,13 @@ namespace TicketToTalk
 			};
 			continueButton.Clicked += (sender, e) =>
 			{
-				Navigation.PushAsync(new AllProfiles());
-				Navigation.RemovePage(this);
+
+				var t = new AddNewPersonPrompt(false);
+				Application.Current.MainPage = t;
+				AllProfiles.promptShown = true;
 			};
 
-			var compRegLayout = new StackLayout
+			compRegLayout = new StackLayout
 			{
 				Spacing = 10,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -116,20 +87,14 @@ namespace TicketToTalk
 				}
 			};
 
-			if (people.Count > 0)
+			Content = new StackLayout
 			{
-				Content = new StackLayout
-				{
-					Children = {
+				Children = {
+					indicator,
 					label,
 					peopleListView
 				}
-				};
-			}
-			else
-			{
-				Content = compRegLayout;
-			}
+			};
 		}
 
 		/// <summary>
@@ -156,6 +121,62 @@ namespace TicketToTalk
 			else 
 			{
 				Application.Current.MainPage = new RootPage();
+			}
+		}
+
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+
+			this.IsBusy = true;
+
+			// Try and get people from the server
+			try
+			{
+				//var task = Task.Run(() => personController.GetPeopleFromServer());
+				var returned_people = new ObservableCollection<Person>();
+
+				try
+				{
+					//returned_people = task.Result;
+					returned_people = await Task.Run(() => personController.GetPeopleFromServer());
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
+				foreach (Person p in returned_people)
+				{
+					personController.AddPersonLocally(p);
+					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.relation = personController.GetRelationship(p.id);
+					people.Add(p);
+				}
+
+				this.IsBusy = false;
+
+			}
+
+			// If network not available, use local records.
+			catch (Exception ex)
+			{
+				var stored_people = new ObservableCollection<Person>(personController.GetPeople());
+
+				foreach (Person p in stored_people)
+				{
+					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.relation = personController.GetRelationship(p.id);
+					people.Add(p);
+				}
+
+				this.IsBusy = false;
+
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
+
+			if (people.Count == 0)
+			{
+				Content = compRegLayout;
 			}
 		}
 	}
