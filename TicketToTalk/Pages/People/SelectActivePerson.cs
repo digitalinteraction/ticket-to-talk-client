@@ -14,6 +14,7 @@ namespace TicketToTalk
 	{
 		private PersonController personController = new PersonController();
 		private ObservableCollection<Person> people = new ObservableCollection<Person>();
+		public static bool promptShown = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.SelectActivePerson"/> class.
@@ -141,7 +142,21 @@ namespace TicketToTalk
 			var p = (Person)e.SelectedItem;
 			Session.activePerson = p;
 
-			Application.Current.MainPage = new RootPage();
+			if (Session.activeUser.firstLogin && !AllProfiles.promptShown)
+			{
+				var canSkip = true;
+				if (people.Count == 0)
+				{
+					canSkip = false;
+				}
+				var t = new AddNewPersonPrompt(canSkip);
+				Application.Current.MainPage = t;
+				AllProfiles.promptShown = true;
+			}
+			else 
+			{
+				Application.Current.MainPage = new RootPage();
+			}
 		}
 	}
 }

@@ -32,6 +32,7 @@ namespace TicketToTalk
 			indicator.Color = ProjectResource.color_white;
 			indicator.VerticalOptions = LayoutOptions.CenterAndExpand;
 			indicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
+			indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
 			indicator.BindingContext = this;
 
 			AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.PositionProportional);
@@ -229,12 +230,12 @@ namespace TicketToTalk
 			if (sender == email) 
 			{
 				email.Focus();
-				scrollView.ScrollToAsync(email, ScrollToPosition.End, true);
+				//scrollView.ScrollToAsync(email, ScrollToPosition.End, true);
 			}
 			if (sender == password)
 			{
 				password.Focus();
-				scrollView.ScrollToAsync(password, ScrollToPosition.End, true);
+				//scrollView.ScrollToAsync(password, ScrollToPosition.End, true);
 			}
 			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
 				&& (!string.IsNullOrEmpty(password.Text));

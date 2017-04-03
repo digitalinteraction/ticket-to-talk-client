@@ -317,6 +317,8 @@ namespace TicketToTalk
 					Session.activeUser = returned_user;
 
 					await Task.Run(() => DownloadUserProfilePicture());
+					Debug.WriteLine("UPDATED USER");
+					Debug.WriteLine(userController.GetLocalUserByID(returned_user.id));
 				}
 				else
 				{
@@ -334,6 +336,7 @@ namespace TicketToTalk
 						}
 						local_user.pathToPhoto = "u_" + local_user.id + ".jpg";
 					}
+
 
 					returned_user.pathToPhoto = local_user.pathToPhoto;
 

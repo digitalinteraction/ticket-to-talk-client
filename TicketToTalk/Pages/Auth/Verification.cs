@@ -134,8 +134,12 @@ namespace TicketToTalk
 				// Launch next screen.
 				if (firstLogin) 
 				{
-					await Navigation.PushAsync(new AllProfiles());
-					Navigation.RemovePage(this);
+					var t = new AddNewPersonPrompt(false);
+					Application.Current.MainPage = t;
+					AllProfiles.promptShown = true;
+
+					//await Navigation.PushAsync(new AllProfiles());
+					//Navigation.RemovePage(this);
 				}
 				else 
 				{
