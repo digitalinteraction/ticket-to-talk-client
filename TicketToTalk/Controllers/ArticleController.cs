@@ -27,9 +27,9 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void AddArticleLocally(Article article)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Insert(article);
+				Session.Connection.Insert(article);
 			}
 		}
 
@@ -39,9 +39,9 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void DeleteArticleLocally(Article article)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Delete(article);
+				Session.Connection.Delete(article);
 			}
 		}
 
@@ -397,9 +397,9 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void UpdateArticleLocally(Article article)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(article);
+				Session.Connection.Update(article);
 			}
 		}
 	}

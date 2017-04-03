@@ -30,9 +30,9 @@ namespace TicketToTalk
 		{
 			Period period;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				period = (from p in Session.connection.Table<Period>() where p.id == id select p).FirstOrDefault();
+				period = (from p in Session.Connection.Table<Period>() where p.id == id select p).FirstOrDefault();
 			}
 
 			return period;
@@ -47,9 +47,9 @@ namespace TicketToTalk
 
 			List<PersonPeriod> relations = new List<PersonPeriod>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from p in Session.connection.Table<PersonPeriod>() where p.person_id == Session.activePerson.id select p;
+				var q = from p in Session.Connection.Table<PersonPeriod>() where p.person_id == Session.activePerson.id select p;
 
 				foreach (PersonPeriod p in q) 
 				{
@@ -59,11 +59,11 @@ namespace TicketToTalk
 
 			var periods = new List<Period>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
 				foreach (PersonPeriod pp in relations)
 				{
-					var period = (from p in Session.connection.Table<Period>() where p.id == pp.period_id select p).FirstOrDefault();
+					var period = (from p in Session.Connection.Table<Period>() where p.id == pp.period_id select p).FirstOrDefault();
 					periods.Add(period);
 				}
 			}
@@ -78,9 +78,9 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void AddLocalPeriod(Period p) 
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(p);
+				Session.Connection.Insert(p);
 			}
 		}
 
@@ -120,9 +120,9 @@ namespace TicketToTalk
 
 			List<Ticket> all_tickets = new List<Ticket>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from t in Session.connection.Table<Ticket>() where t.period_id == period_id select t;
+				var q = from t in Session.Connection.Table<Ticket>() where t.period_id == period_id select t;
 
 				foreach (Ticket t in q) 
 				{

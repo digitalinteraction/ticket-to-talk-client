@@ -26,9 +26,9 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void StoreConversationLocally(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(conversation);
+				Session.Connection.Insert(conversation);
 			}
 		}
 
@@ -41,9 +41,9 @@ namespace TicketToTalk
 		{
 			Conversation conversation;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				conversation = (from n in Session.connection.Table<Conversation>() where n.id == id select n).FirstOrDefault();
+				conversation = (from n in Session.Connection.Table<Conversation>() where n.id == id select n).FirstOrDefault();
 			}
 
 			return conversation;
@@ -57,9 +57,9 @@ namespace TicketToTalk
 		{
 			List<Conversation> convs = new List<Conversation>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from c in Session.connection.Table<Conversation>() where c.person_id == Session.activePerson.id select c;
+				var q = from c in Session.Connection.Table<Conversation>() where c.person_id == Session.activePerson.id select c;
 
 				foreach (Conversation c in q)
 				{
@@ -207,9 +207,9 @@ namespace TicketToTalk
 
 		public void UpdateLocalConversation(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(conversation);
+				Session.Connection.Update(conversation);
 			}
 		}
 
@@ -219,9 +219,9 @@ namespace TicketToTalk
 		/// <param name="conversation">Conversation.</param>
 		public void DeleteConversationLocally(Conversation conversation)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(conversation);
+				Session.Connection.Delete(conversation);
 			}
 		}
 

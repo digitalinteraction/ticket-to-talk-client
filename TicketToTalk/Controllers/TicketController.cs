@@ -32,9 +32,9 @@ namespace TicketToTalk
 		public void AddTicketLocally(Ticket ticket)
 		{
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(ticket);
+				Session.Connection.Insert(ticket);
 			}
 		}
 
@@ -183,9 +183,9 @@ namespace TicketToTalk
 		{
 			List<Ticket> tickets = new List<Ticket>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from t in Session.connection.Table<Ticket>() where t.period_id == period_id select t;
+				var q = from t in Session.Connection.Table<Ticket>() where t.period_id == period_id select t;
 
 				foreach (Ticket t in q) 
 				{
@@ -236,9 +236,9 @@ namespace TicketToTalk
 		{
 			List<Ticket> tickets = new List<Ticket>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+				var q = from t in Session.Connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
 
 				foreach (Ticket t in q) 
 				{
@@ -295,9 +295,9 @@ namespace TicketToTalk
 		{
 			List<Ticket> tickets = new List<Ticket>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from t in Session.connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
+				var q = from t in Session.Connection.Table<Ticket>() where t.person_id == Session.activePerson.id select t;
 
 				foreach (Ticket t in q)
 				{
@@ -317,9 +317,9 @@ namespace TicketToTalk
 		{
 			Ticket ticket;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				ticket = (from t in Session.connection.Table<Ticket>() where t.id == id select t).FirstOrDefault();
+				ticket = (from t in Session.Connection.Table<Ticket>() where t.id == id select t).FirstOrDefault();
 			}
 
 			return ticket;
@@ -332,9 +332,9 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void DeleteTicketLocally(Ticket ticket)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Delete(ticket);
+				Session.Connection.Delete(ticket);
 			}
 		}
 
@@ -345,9 +345,9 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void UpdateTicketLocally(Ticket ticket)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(ticket);
+				Session.Connection.Update(ticket);
 			}
 		}
 
@@ -399,12 +399,12 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public void AddTagRelationsLocally(List<Tag> tags, Ticket ticket)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
 				foreach (Tag t in tags)
 				{
 					var ttr = new TicketTag(ticket.id, t.id);
-					Session.connection.Insert(ttr);
+					Session.Connection.Insert(ttr);
 				}
 			}
 		}
@@ -476,22 +476,22 @@ namespace TicketToTalk
 			// Parse JSON TicketTags to TicketTags
 			var ticket_tags = data["ticket_tags"].ToObject<TicketTag[]>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
 				foreach (TicketTag tt in ticket_tags)
 				{
-					var stored = (from t in Session.connection.Table<TicketTag>() where t.ticket_id == tt.ticket_id && t.tag_id == tt.tag_id select t).FirstOrDefault();
+					var stored = (from t in Session.Connection.Table<TicketTag>() where t.ticket_id == tt.ticket_id && t.tag_id == tt.tag_id select t).FirstOrDefault();
 
 					//var stored = ticketTagDB.GetRelationByTicketAndTagID(tt.ticket_id, tt.tag_id);
 					if (stored == null)
 					{
 						Console.WriteLine("New ticket_tag, adding...");
-						Session.connection.Insert(tt);
+						Session.Connection.Insert(tt);
 					}
 					else if (stored.GetHashCode() != tt.GetHashCode())
 					{
 						Console.WriteLine("Updating ticket_tag");
-						Session.connection.Update(tt);
+						Session.Connection.Update(tt);
 					}
 				}
 			}

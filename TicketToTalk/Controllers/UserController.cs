@@ -36,9 +36,9 @@ namespace TicketToTalk
 		{
 			User user = new User();
 
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				user = (from n in Session.connection.Table<User>() where n.id == id select n).FirstOrDefault();
+				user = (from n in Session.Connection.Table<User>() where n.id == id select n).FirstOrDefault();
 			}
 
 			Debug.WriteLine(user);
@@ -55,9 +55,9 @@ namespace TicketToTalk
 		{
 			User user = new User();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				user = (from n in Session.connection.Table<User>() where n.email == email select n).FirstOrDefault();
+				user = (from n in Session.Connection.Table<User>() where n.email == email select n).FirstOrDefault();
 			}
 
 			Debug.WriteLine(user);
@@ -107,9 +107,9 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void AddUserLocally(User user)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Insert(user);
+				Session.Connection.Insert(user);
 			}
 		}
 
@@ -120,9 +120,9 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public void DeleteUserLocally(int id)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Delete<User>(id);
+				Session.Connection.Delete<User>(id);
 			}
 		}
 
@@ -133,9 +133,9 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public void UpdateUserLocally(User user)
 		{
-			lock(Session.connection) 
+			lock(Session.Connection) 
 			{
-				Session.connection.Update(user);
+				Session.Connection.Update(user);
 			}
 		}
 
@@ -575,9 +575,9 @@ namespace TicketToTalk
 			{
 				var pu = new PersonUser(i.person.id, Session.activeUser.id, i.group, relation);
 
-				lock(Session.connection) 
+				lock(Session.Connection) 
 				{
-					Session.connection.Insert(pu);
+					Session.Connection.Insert(pu);
 				}
 
 				return true;

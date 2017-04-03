@@ -27,9 +27,9 @@ namespace TicketToTalk
 
 			List<Inspiration> inspirations = new List<Inspiration>();
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				var q = from i in Session.connection.Table<Inspiration>() select i;
+				var q = from i in Session.Connection.Table<Inspiration>() select i;
 
 				foreach (Inspiration i in q) 
 				{
@@ -106,9 +106,9 @@ namespace TicketToTalk
 		{
 			Inspiration inspiration = null;
 
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				inspiration = (from i in Session.connection.Table<Inspiration>() where i.id == id select i).FirstOrDefault();
+				inspiration = (from i in Session.Connection.Table<Inspiration>() where i.id == id select i).FirstOrDefault();
 			}
 
 			return inspiration;
@@ -120,9 +120,9 @@ namespace TicketToTalk
 		/// <param name="ins">Ins.</param>
 		public void AddInspirationLocally(Inspiration ins)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Insert(ins);
+				Session.Connection.Insert(ins);
 			}
 		}
 
@@ -132,9 +132,9 @@ namespace TicketToTalk
 		/// <param name="ins">Ins.</param>
 		public void UpdateInspirationLocally(Inspiration ins)
 		{
-			lock (Session.connection)
+			lock (Session.Connection)
 			{
-				Session.connection.Update(ins);
+				Session.Connection.Update(ins);
 			}
 		}
 	}

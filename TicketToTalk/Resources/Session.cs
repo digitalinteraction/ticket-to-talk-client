@@ -24,7 +24,7 @@ namespace TicketToTalk
 		public static readonly string baseUrl = "https://tickettotalk.openlab.ncl.ac.uk/api/";
 
 		private static SQLiteConnection _connection = null;
-		public static SQLiteConnection connection 
+		public static SQLiteConnection Connection 
 		{
 			get
 			{
