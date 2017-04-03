@@ -504,6 +504,7 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public Image GetTicketImage(Ticket ticket)
 		{
+			// TODO fix not finding image
 			bool download_finished = false;
 			var ticket_photo = new Image();
 			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
@@ -579,7 +580,8 @@ namespace TicketToTalk
 		/// <exception cref="T:System.IO.FileNotFoundException"></exception>
 		public async Task DownloadTicketContent(Ticket ticket)
 		{
-			var fileName = String.Format("t_{0}.jpg", ticket.id);
+			var ext = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf('.'));
+			var fileName = String.Format("t_{0}{1}", ticket.id, ext);
 			var client = new HttpClient();
 
 			client.DefaultRequestHeaders.Host = "tickettotalk.openlab.ncl.ac.uk";

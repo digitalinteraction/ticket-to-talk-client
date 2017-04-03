@@ -134,6 +134,7 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
+				Debug.WriteLine(e.StackTrace);
 				return false;
 			}
 

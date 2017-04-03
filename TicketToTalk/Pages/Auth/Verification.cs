@@ -110,7 +110,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void CheckVerification(object sender, EventArgs e)
+		public async void CheckVerification(object sender, EventArgs e)
 		{
 			send.IsEnabled = false;
 			var c = code.Text.ToUpper().Trim();
@@ -144,7 +144,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void Entry_TextChanged(object sender, TextChangedEventArgs e)
+		public void Entry_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			if (!string.IsNullOrEmpty(code.Text) && code.Text.Length == 6)
 			{
@@ -163,9 +163,8 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void Resend_Clicked(object sender, EventArgs e)
+		public async void Resend_Clicked(object sender, EventArgs e)
 		{
-			// TODO Implement resending email.
 			var userController = new UserController();
 			var sent = await userController.resendEmail();
 			if (sent) 

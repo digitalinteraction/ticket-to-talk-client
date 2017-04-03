@@ -39,7 +39,7 @@ namespace TicketToTalk
 
 			try
 			{
-				var deleted = await ticketController.DestroyTicket(ticket);
+				await ticketController.DestroyTicket(ticket);
 			}
 			catch (NoNetworkException ex)
 			{

@@ -86,7 +86,7 @@ namespace TicketToTalk
 				case ("Delete"):
 					var ticketController = new TicketController();
 					await Navigation.PopAsync();
-					ticketController.DestroyTicket(ticket);
+					await ticketController.DestroyTicket(ticket);
 					break;
 				case ("Display Information"):
 					await Navigation.PushAsync(new EditTicket(ticket));
@@ -128,6 +128,7 @@ namespace TicketToTalk
 			}
 			catch (Exception e)
 			{
+				Debug.WriteLine(e.StackTrace);
 				return false;
 			}
 

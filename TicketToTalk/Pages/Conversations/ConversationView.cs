@@ -70,27 +70,27 @@ namespace TicketToTalk
 				hour = "12";
 			}
 
-			var time_suffix = string.Empty;
-			switch (afterMid)
-			{
-				case (0):
-					time_suffix = "am";
-					break;
-				case (1):
-					time_suffix = "pm";
-					break;
-				default:
-					time_suffix = "";
-					break;
-			}
+			//var time_suffix = string.Empty;
+			//switch (afterMid)
+			//{
+			//	case (0):
+			//		time_suffix = "am";
+			//		break;
+			//	case (1):
+			//		time_suffix = "pm";
+			//		break;
+			//	default:
+			//		time_suffix = "";
+			//		break;
+			//}
 
-			var minutes = time[1];
+			//var minutes = time[1];
 
-			var timeText = string.Format("{0}:{1} {2}", hour, minutes, time_suffix);
-			if (int.Parse(minutes) < 10)
-			{
-				timeText = string.Format("{0}:0{1} {2}", hour, minutes, time_suffix);
-			}
+			//var timeText = string.Format("{0}:{1} {2}", hour, minutes, time_suffix);
+			//if (int.Parse(minutes) < 10)
+			//{
+			//	timeText = string.Format("{0}:0{1} {2}", hour, minutes, time_suffix);
+			//}
 
 			var date = new Label
 			{
@@ -341,7 +341,7 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case "Delete":
-					conversationController.DestroyConversation(conversation);
+					await conversationController.DestroyConversation(conversation);
 					break;
 				case "Edit":
 					var nav = new NavigationPage(new NewConversation(conversation));

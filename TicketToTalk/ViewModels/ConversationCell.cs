@@ -52,14 +52,14 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		void DeleteCell_Clicked(object sender, EventArgs e)
+		public async void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
 
 			var conversation = (Conversation)mi.BindingContext;
 
 			var conversationController = new ConversationController();
-			conversationController.DestroyConversation(conversation);
+			await conversationController.DestroyConversation(conversation);
 		}
 	}
 }

@@ -70,10 +70,16 @@ namespace TicketToTalk
 				{
 					added = await conversationController.AddTicketToConversationRemotely(conversation, ticket);
 
-					conversation = conversationController.AddTicketToConversation(conversation, ticket);
-					conversationController.UpdateConversationViews(conversation);
+					if (added) 
+					{
+						conversation = conversationController.AddTicketToConversation(conversation, ticket);
+						conversationController.UpdateConversationViews(conversation);
 
-					await Navigation.PopModalAsync();
+						await Navigation.PopModalAsync();
+
+					}
+
+					await DisplayAlert("Select a Conversation", "Ticket could not be added to the selected conversation.", "OK");
 
 					((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 				}
