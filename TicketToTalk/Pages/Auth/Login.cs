@@ -16,7 +16,7 @@ namespace TicketToTalk
 		private Entry password;
 		private Button login;
 		private Button register;
-		private ActivityIndicator indicator = new ActivityIndicator();
+		private ActivityIndicator indicator = null;
 		ScrollView scrollView;
 
 		/// <summary>
@@ -29,14 +29,23 @@ namespace TicketToTalk
 
 			NavigationPage.SetHasNavigationBar(this, false);
 
-			indicator.Color = ProjectResource.color_white;
-			indicator.VerticalOptions = LayoutOptions.CenterAndExpand;
-			indicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
-			indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
-			indicator.BindingContext = this;
+			//indicator = new ActivityIndicator
+			//{
+			//	Color = ProjectResource.color_white,
+			//	BackgroundColor = ProjectResource.color_grey_transparent,
+			//	VerticalOptions = LayoutOptions.CenterAndExpand,
+			//	HeightRequest = Session.ScreenHeight
+			//};
 
-			AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.PositionProportional);
-			AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, 0.25, 0.25));
+			//indicator.VerticalOptions = LayoutOptions.CenterAndExpand;
+			//indicator.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
+			//indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
+			//indicator.BindingContext = this;
+
+			//AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.PositionProportional);
+			//AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, Session.ScreenWidth, Session.ScreenHeight));
+
+			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
 
 			Title = "Title";
 
@@ -148,6 +157,8 @@ namespace TicketToTalk
 
 			IsBusy = true;
 
+			Debug.WriteLine(IsBusy);
+
 			var userController = new UserController();
 
 			bool authed = false;
@@ -156,6 +167,9 @@ namespace TicketToTalk
 			{
 				authed = await userController.AuthenticateUser(email.Text, password.Text);
 
+				Debug.WriteLine(indicator.IsRunning);
+				Debug.WriteLine(indicator.IsVisible);
+
 				if (authed)
 				{
 					Session.activeUser.imageSource = await userController.GetUserProfilePicture();
@@ -163,6 +177,7 @@ namespace TicketToTalk
 					var v = short.Parse(Session.activeUser.verified);
 					if (v > 0)
 					{
+						
 						IsBusy = false;
 
 						await Navigation.PushAsync(new SelectActivePerson());

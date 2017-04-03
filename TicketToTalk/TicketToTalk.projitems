@@ -133,6 +133,7 @@
       <Link>Exceptions\NoNetworkException.cs</Link>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\InspirationController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ProgressSpinner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

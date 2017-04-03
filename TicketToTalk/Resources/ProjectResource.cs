@@ -12,6 +12,9 @@ namespace TicketToTalk
 		public static readonly Color color_dark = Color.FromHex("233D4D");
 		public static readonly Color color_grey = Color.FromHex("DAE2DF");
 
+		public static readonly Color color_blue_transparent = new Color(0, 206, 203, 0.2);
+		public static readonly Color color_grey_transparent = new Color(218, 226, 223, 0.2);
+
 		public static readonly string[] relations =
 		{
 			"Father",
