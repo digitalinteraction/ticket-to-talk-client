@@ -163,6 +163,7 @@ namespace TicketToTalk
 			catch (Exception ex)
 			{
 				Console.WriteLine("Error taking picture");
+				Debug.WriteLine(ex.StackTrace);
 			}
 		}
 

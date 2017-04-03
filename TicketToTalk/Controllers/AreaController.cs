@@ -6,8 +6,6 @@
 	public class AreaController
 	{
 
-		private AreaDB areaDB = new AreaDB();
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.AreaController"/> class.
 		/// </summary>
@@ -22,9 +20,13 @@
 		/// <param name="id">Identifier.</param>
 		public Area GetArea(int id)
 		{
-			areaDB.Open();
-			var area = areaDB.GetArea(id);
-			areaDB.Close();
+			Area area;
+
+			lock(Session.connection) 
+			{
+				area = (from n in Session.connection.Table<Area>() where n.id == id select n).FirstOrDefault();
+			}
+
 			return area;
 		}
 
@@ -35,9 +37,10 @@
 		/// <param name="area">Area.</param>
 		public void AddAreaLocally(Area area)
 		{
-			areaDB.Open();
-			areaDB.AddArea(area);
-			areaDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Insert(area);
+			}
 		}
 
 		/// <summary>
@@ -45,11 +48,13 @@
 		/// </summary>
 		/// <returns>The area locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void DeleteAreaLocally(int id)
+		public void DeleteAreaLocally(Area area)
 		{
-			areaDB.Open();
-			areaDB.DeleteArea(id);
-			areaDB.Close();
+
+			lock(Session.connection) 
+			{
+				Session.connection.Delete<Area>(area);
+			}
 		}
 
 		/// <summary>
@@ -59,8 +64,10 @@
 		/// <param name="area">Area.</param>
 		public void UpdateAreaLocally(Area area)
 		{
-			DeleteAreaLocally(area.id);
-			AddAreaLocally(area);
+			lock(Session.connection) 
+			{
+				Session.connection.Update(area);
+			}
 		}
 	}
 }

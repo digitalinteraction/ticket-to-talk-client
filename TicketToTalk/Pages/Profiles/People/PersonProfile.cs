@@ -61,9 +61,7 @@ namespace TicketToTalk
 			nameLabel.SetBinding(Label.TextProperty, "name");
 			nameLabel.BindingContext = currentPerson;
 
-			PersonUserDB puDB = new PersonUserDB();
-			var personUser = puDB.GetRelationByUserAndPersonID(Session.activeUser.id, currentPerson.id);
-			puDB.Close();
+			var personUser = personController.GetUserPersonRelation(Session.activeUser.id, currentPerson.id);
 
 			pivot = new PersonPivot();
 			pivot.relation = personUser.relationship;

@@ -12,7 +12,6 @@ namespace TicketToTalk
 	/// </summary>
 	public class ArticleController
 	{
-		private ArticleDB articleDB = new ArticleDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -28,15 +27,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void AddArticleLocally(Article article)
 		{
-			articleDB.Open();
-
-			// Checks if the article already exists, if null, the article is added.
-			if (articleDB.GetArticle(article.id) == null)
+			lock(Session.connection) 
 			{
-				articleDB.AddArticle(article);
+				Session.connection.Insert(article);
 			}
-
-			articleDB.Close();
 		}
 
 		/// <summary>
@@ -45,9 +39,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void DeleteArticleLocally(Article article)
 		{
-			articleDB.Open();
-			articleDB.DeleteArticle(article.id);
-			articleDB.Close();
+			lock(Session.connection) 
+			{
+				Session.connection.Delete(article);
+			}
 		}
 
 		/// <summary>
@@ -402,10 +397,10 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public void UpdateArticleLocally(Article article)
 		{
-			articleDB.Open();
-			articleDB.DeleteArticle(article.id);
-			articleDB.AddArticle(article);
-			articleDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Update(article);
+			}
 		}
 	}
 }

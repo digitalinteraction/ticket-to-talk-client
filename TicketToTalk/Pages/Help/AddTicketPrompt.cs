@@ -135,6 +135,7 @@ namespace TicketToTalk
 			catch (Exception ex)
 			{
 				Console.WriteLine("Error in taking photo.");
+				Debug.WriteLine(ex.StackTrace);
 			}
 		}
 
@@ -169,9 +170,9 @@ namespace TicketToTalk
 			catch (Exception ex)
 			{
 				Console.WriteLine("Error in adding running tutorial.");
+				Debug.WriteLine(ex.StackTrace);
 			}
 		}
-
 	}
 }
 

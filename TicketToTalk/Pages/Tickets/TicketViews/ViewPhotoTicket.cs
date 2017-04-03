@@ -65,7 +65,7 @@ namespace TicketToTalk
 				case ("Delete"):
 					var ticketController = new TicketController();
 					await Navigation.PopAsync();
-					ticketController.DestroyTicket(Ticket);
+					await ticketController.DestroyTicket(Ticket);
 					break;
 				case ("Display Information"):
 					await Navigation.PushAsync(new EditTicket(Ticket));

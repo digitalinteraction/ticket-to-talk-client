@@ -10,6 +10,7 @@ namespace TicketToTalk
 	public partial class TicketsByAgePage : ContentPage
 	{
 		ObservableCollection<Ticket> tickets { get; set; } = new ObservableCollection<Ticket>();
+		TicketController ticketController = new TicketController();
 
 		/// <summary>
 		/// Initializes a new instance of the Tickets by age View.
@@ -28,8 +29,7 @@ namespace TicketToTalk
 			var person = Session.activePerson;
 
 			// Check if ticket year falls within bounds.
-			TicketDB ticketDB = new TicketDB();
-			var rawTickets = ticketDB.GetTicketsByPerson(person.id);
+			var rawTickets = ticketController.GetTicketsByPerson(person.id);
 			foreach (Ticket t in rawTickets)
 			{
 				int tYear = int.Parse(t.year);

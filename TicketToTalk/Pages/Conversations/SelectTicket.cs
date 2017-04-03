@@ -1,4 +1,4 @@
-﻿// Author: Daniel Welsh - d.welsh@ncl.ac.uk
+// Author: Daniel Welsh - d.welsh@ncl.ac.uk
 // Created on: 06/09/2016
 //
 // SelectTicket.cs
@@ -114,7 +114,7 @@ namespace TicketToTalk
 			if (added)
 			{
 				conversationController.AddTicketToConversation(conversation, ticket);
-				conversationController.UpdateConversationLocally(conversation);
+				conversationController.UpdateConversationViews(conversation);
 				conversationController.AddTicketToDisplayedConversation(conversation, ticket);
 
 				await Navigation.PopModalAsync();

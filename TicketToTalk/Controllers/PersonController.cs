@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ namespace TicketToTalk
 	public class PersonController
 	{
 
-		private PersonDB personDB = new PersonDB();
+		//private PersonDB personDB = new PersonDB();
 		private NetworkController networkController = new NetworkController();
 
 		/// <summary>
@@ -34,9 +34,14 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public Person GetPerson(int id)
 		{
-			personDB.Open();
-			var person = personDB.GetPerson(id);
-			personDB.Close();
+
+			Person person;
+
+			lock (Session.connection)
+			{
+				person = (from p in Session.connection.Table<Person>() where p.id == id select p).FirstOrDefault();
+			}
+
 			return person;
 		}
 
@@ -46,22 +51,30 @@ namespace TicketToTalk
 		/// <returns>The people.</returns>
 		public List<Person> GetPeople()
 		{
-			var personUserDB = new PersonUserDB();
-			var relations = personUserDB.GetRelationByUserID(Session.activeUser.id);
+			//var personUserDB = new PersonUserDB();
+			List<PersonUser> relations = new List<PersonUser>();
+			List<Person> people = new List<Person>();
 
-			var list = new List<Person>();
-			personDB.Open();
-
-			foreach (PersonUser pu in relations)
+			lock(Session.connection) 
 			{
-				if (pu.user_id == Session.activeUser.id)
+				var q = from r in Session.connection.Table<PersonUser>() where r.user_id == Session.activeUser.id select r;
+
+				foreach (PersonUser p in q) 
 				{
-					list.Add(personDB.GetPerson(pu.person_id));
+					relations.Add(p);
+				}
+
+				foreach (PersonUser pu in relations)
+				{
+					if (pu.user_id == Session.activeUser.id)
+					{
+						var person = (from p in Session.connection.Table<Person>() where p.id == pu.person_id select p).FirstOrDefault();
+						people.Add(person);
+					}
 				}
 			}
 
-			personDB.Close();
-			return list;
+			return people;
 		}
 
 		/// <summary>
@@ -69,11 +82,12 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The person locally.</returns>
 		/// <param name="id">Identifier.</param>
-		public void DeletePersonLocally(int id)
+		public void DeletePersonLocally(Person person)
 		{
-			personDB.Open();
-			personDB.DeletePerson(id);
-			personDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Delete(person);
+			}
 		}
 
 		/// <summary>
@@ -87,9 +101,11 @@ namespace TicketToTalk
 
 			if (GetPerson(p.id) == null)
 			{
-				personDB.Open();
-				personDB.AddPerson(p);
-				personDB.Close();
+
+				lock (Session.connection)
+				{
+					Session.connection.Insert(p);
+				}
 			}
 
 		}
@@ -101,8 +117,10 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void UpdatePersonLocally(Person p)
 		{
-			DeletePersonLocally(p.id);
-			AddPersonLocally(p);
+			lock (Session.connection)
+			{
+				Session.connection.Update(p);
+			}
 		}
 
 		/// <summary>
@@ -111,12 +129,10 @@ namespace TicketToTalk
 		/// <param name="pu">Pu.</param>
 		public void UpdateRelationshipLocally(PersonUser pu)
 		{
-			var puDB = new PersonUserDB();
-
-			puDB.DeleteRelation(pu.id);
-			puDB.AddPersonUser(pu);
-
-			puDB.Close();
+			lock (Session.connection)
+			{
+				Session.connection.Update(pu);
+			}
 		}
 
 		/// <summary>
@@ -159,10 +175,7 @@ namespace TicketToTalk
 			{
 				person.pathToPhoto = fileName;
 
-				while (PersonDB.locked) { }
-				PersonDB.locked = true;
 				UpdatePersonLocally(person);
-				PersonDB.locked = false;
 			}
 
 			return MediaController.ReadBytesFromFile(person.pathToPhoto);
@@ -225,6 +238,24 @@ namespace TicketToTalk
 			{
 				return false;
 			}
+		}
+
+		/// <summary>
+		/// Gets the user person relation.
+		/// </summary>
+		/// <returns>The user person relation.</returns>
+		/// <param name="user_id">User identifier.</param>
+		/// <param name="person_id">Person identifier.</param>
+		public PersonUser GetUserPersonRelation(int user_id, int person_id)
+		{
+			PersonUser pu;
+
+			lock (Session.connection)
+			{
+				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == user_id && p.person_id == person_id select p).FirstOrDefault();
+			}
+
+			return pu;
 		}
 
 		/// <summary>
@@ -324,25 +355,27 @@ namespace TicketToTalk
 					}
 				}
 
-				var personUserDB = new PersonUserDB();
 				if (!inSet)
 				{
 					var relation = new PersonUser(p.id, Session.activeUser.id, p.pivot.user_type, p.pivot.relation);
-					personUserDB.AddPersonUser(relation);
+
+					lock (Session.connection)
+					{
+						Session.connection.Insert(relation);
+					}
 
 					p.pivot.relation = null;
 					p.pivot.user_type = null;
 					p.pivot = null;
 					AddPersonLocally(p);
 				}
-				personUserDB.Close();
 			}
 
 			var periods = data["periods"].ToObject<List<Period>>();
 
 			var periodController = new PeriodController();
-			var personPeriodDB = new PersonPeriodDB();
-			personPeriodDB.Open();
+			//var personPeriodDB = new PersonPeriodDB();
+			//personPeriodDB.Open();
 			foreach (Period p in periods)
 			{
 				var temp = periodController.GetPeriod(p.id);
@@ -352,11 +385,18 @@ namespace TicketToTalk
 				}
 
 				var pp = new PersonPeriod((int.Parse(p.pivot.person_id)), int.Parse(p.pivot.period_id));
-				var spp = personPeriodDB.GetRelationByPersonAndPeriodID(pp.person_id, pp.period_id);
+				//var spp = personPeriodDB.GetRelationByPersonAndPeriodID(pp.person_id, pp.period_id);
 
-				if (spp == null)
+				PersonPeriod spp;
+
+				lock (Session.connection)
 				{
-					personPeriodDB.AddPersonPeriodRelationship(pp);
+					spp = (from personPeriod in Session.connection.Table<PersonPeriod>() where personPeriod.person_id == pp.person_id && personPeriod.period_id == pp.period_id select personPeriod).FirstOrDefault();
+
+					if (spp == null)
+					{
+						Session.connection.Insert(pp);
+					}
 				}
 			}
 
@@ -384,7 +424,7 @@ namespace TicketToTalk
 
 			if (deleted)
 			{
-				DeletePersonLocally(person.id);
+				DeletePersonLocally(person);
 
 				var ticketController = new TicketController();
 				var mediaController = new MediaController();
@@ -397,14 +437,22 @@ namespace TicketToTalk
 				}
 
 				var relation = GetRelation(person.id);
-				var personUserDB = new PersonUserDB();
-				personUserDB.DeleteRelation(relation.id);
+
+				DeleteRelation(relation);
 
 				AllProfiles.people.Remove(person);
 
 				return true;
 			}
 			return false;
+		}
+
+		public void DeleteRelation(PersonUser relation)
+		{
+			lock (Session.connection)
+			{
+				Session.connection.Delete(relation);
+			}
 		}
 
 		/// <summary>
@@ -491,7 +539,6 @@ namespace TicketToTalk
 				AddPersonLocally(stored_person);
 				Session.activePerson = stored_person;
 
-				var personUserDB = new PersonUserDB();
 				var pu = new PersonUser
 				{
 					user_id = Session.activeUser.id,
@@ -499,7 +546,11 @@ namespace TicketToTalk
 					relationship = relation,
 					user_type = "Admin"
 				};
-				personUserDB.AddPersonUser(pu);
+
+				lock (Session.connection)
+				{
+					Session.connection.Insert(pu);
+				}
 
 				AddStockPeriods(stored_person);
 
@@ -518,10 +569,14 @@ namespace TicketToTalk
 		/// <param name="id">Identifier.</param>
 		public string GetRelationship(int id)
 		{
-			var personUserDB = new PersonUserDB();
-			var relation = personUserDB.GetRelationByUserAndPersonID(Session.activeUser.id, id);
-			personUserDB.Close();
-			return relation.relationship;
+			PersonUser pu;
+
+			lock (Session.connection)
+			{
+				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == Session.activeUser.id select p).FirstOrDefault();
+			}
+
+			return pu.relationship;
 		}
 
 		/// <summary>
@@ -531,11 +586,15 @@ namespace TicketToTalk
 		/// <param name="person_id">Person identifier.</param>
 		public PersonUser GetRelation(int person_id)
 		{
-			var personUserDB = new PersonUserDB();
-			var relation = personUserDB.GetRelationByUserAndPersonID(Session.activeUser.id, person_id);
-			personUserDB.Close();
 
-			return relation;
+			PersonUser pu;
+
+			lock (Session.connection)
+			{
+				pu = (from p in Session.connection.Table<PersonUser>() where p.user_id == Session.activeUser.id && p.person_id == person_id select p).FirstOrDefault();
+			}
+
+			return pu;
 		}
 
 		/// <summary>
@@ -545,14 +604,14 @@ namespace TicketToTalk
 		/// <param name="p">P.</param>
 		public void AddStockPeriods(Person p)
 		{
-			var ppDB = new PersonPeriodDB();
-			ppDB.Open();
-			for (int i = 1; i < 5; i++)
+			lock (Session.connection)
 			{
-				var pp = new PersonPeriod(p.id, i);
-				ppDB.AddPersonPeriodRelationship(pp);
+				for (int i = 1; i < 5; i++)
+				{
+					var pp = new PersonPeriod(p.id, i);
+					Session.connection.Insert(pp);
+				}
 			}
-			ppDB.Close();
 		}
 
 		/// <summary>

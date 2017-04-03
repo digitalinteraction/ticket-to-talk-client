@@ -258,9 +258,7 @@ namespace TicketToTalk
 			{
 				Title = "Edit Person";
 
-				var puDB = new PersonUserDB();
-				var personUser = puDB.GetRelationByUserAndPersonID(Session.activeUser.id, person.id);
-				puDB.Close();
+				var personUser = personController.GetUserPersonRelation(Session.activeUser.id, person.id);
 
 				var ridx = 0;
 				for (int i = 0; i < ProjectResource.relations.Length; i++)
