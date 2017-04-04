@@ -563,6 +563,82 @@ namespace TicketToTalk
 
 			return dates;
 		}
+
+		/// <summary>
+		/// Gets the tickets in conversation from API.
+		/// </summary>
+		/// <returns>The tickets in conversation from API.</returns>
+		/// <param name="conversation">Conversation.</param>
+		public async Task<List<Ticket>> getTicketsInConversationFromAPI(Conversation conversation)
+		{
+			IDictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters["conversation_id"] = conversation.id.ToString();
+			parameters["token"] = Session.Token.val;
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendGetRequest("conversations/get/tickets", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
+			if (jobject != null)
+			{
+				var data = jobject.GetData();
+				var tickets = data["tickets"].ToObject<List<Ticket>>();
+
+				lock (Session.Connection)
+				{
+					foreach (Ticket ti in tickets)
+					{
+						if ((from t in Session.Connection.Table<Ticket>() where t.id == ti.id select t).Count() > 0)
+						{
+							Session.Connection.Update(ti);
+						}
+						else 
+						{
+							Session.Connection.Insert(ti);
+						}
+					}
+				}
+
+				return tickets;
+			}
+			else 
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the tickets in conversation locally.
+		/// </summary>
+		/// <returns>The tickets in conversation locally.</returns>
+		/// <param name="conversation">Conversation.</param>
+		public List<Ticket> getTicketsInConversationLocally(Conversation conversation) 
+		{
+			var ticket_ids = new List<string>(conversation.ticket_id_string.Trim().Split(' '));
+			var tickets = new List<Ticket>();
+			var ticketController = new TicketController();
+
+			lock (Session.Connection)
+			{
+				foreach (string s in ticket_ids) 
+				{
+					var ticket = ticketController.GetTicket(int.Parse(s));
+					if (ticket != null) 
+					{
+						tickets.Add(ticket);
+					}
+				}
+			}
+
+			return tickets;
+		}
 	}
 }
 

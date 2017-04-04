@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -13,12 +14,15 @@ namespace TicketToTalk
 		public static bool tutorialShown = false;
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 		private ConversationController conversationController = new ConversationController();
+		private ProgressSpinner indicator;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationsView"/> class.
 		/// </summary>
 		public ConversationsView()
 		{
+			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
+
 			Padding = new Thickness(20);
 			conversations.Clear();
 
@@ -45,25 +49,25 @@ namespace TicketToTalk
 			listView.BindingContext = conversations;
 			listView.SeparatorColor = Color.Transparent;
 			listView.ItemTemplate = new DataTemplate(typeof(ConversationCell));
-			listView.ItemSelected += async (sender, e) =>
-			{
-				if (e.SelectedItem == null)
-				{
-					return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
-				}
 
-				var conversation = (Conversation)e.SelectedItem;
-				await Navigation.PushAsync(new ConversationView(conversation));
+			listView.ItemSelected += ListView_ItemSelected;
 
-				((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
-			};
-
-			Content = new StackLayout
+			var stack = new StackLayout
 			{
 				Children = {
 					listView
 				}
 			};
+
+			var layout = new AbsoluteLayout();
+
+			AbsoluteLayout.SetLayoutBounds(stack, new Rectangle(0.5, 0.5, 1, 1));
+			AbsoluteLayout.SetLayoutFlags(stack, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(stack);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 
@@ -96,6 +100,40 @@ namespace TicketToTalk
 				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
 				tutorialShown = true;
 			}
+		}
+
+		public async void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+		{
+			if (e.SelectedItem == null)
+			{
+				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
+			}
+
+			IsBusy = true;
+
+			var conversation = (Conversation)e.SelectedItem;
+
+			var nav = new ConversationView(conversation);
+			var ready = false;
+
+			try
+			{
+				ready = await nav.SetUpConversation();
+
+				if (ready) 
+				{
+					IsBusy = false;
+					await Navigation.PushAsync(nav);
+				}
+			}
+			catch (NoNetworkException ex)
+			{
+				IsBusy = false;
+				Debug.WriteLine(ex.StackTrace);
+				await DisplayAlert("No Network", ex.Message, "Dismiss");
+			}
+
+			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 	}
 }

@@ -77,18 +77,18 @@ namespace TicketToTalk
 						returned_ticket.displayIcon = "photo_icon.png";
 						ext = ".jpg";
 						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsPicture.pictureTickets.Add(returned_ticket);
+						ViewTickets.ticketPhotos.Add(returned_ticket);
 						break;
 					case ("Sound"):
 						returned_ticket.displayIcon = "audio_icon.png";
 						ext = ".wav";
 						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsSounds.soundTickets.Add(returned_ticket);
+						ViewTickets.ticketSongs.Add(returned_ticket);
 						break;
 					case ("Video"):
 					case ("YouTube"):
 						returned_ticket.displayIcon = "video_icon.png";
-						TicketsVideos.videoTickets.Add(returned_ticket);
+						ViewTickets.ticketVideo.Add(returned_ticket);
 						break;
 				}
 
@@ -136,16 +136,16 @@ namespace TicketToTalk
 				{
 					case ("Picture"):
 					case ("Photo"):
-						TicketsPicture.pictureTickets.Remove(ticket);
+						ViewTickets.ticketPhotos.Remove(ticket);
 						break;
 					case ("Sound"):
 					case ("Song"):
 					case ("Audio"):
-						TicketsSounds.soundTickets.Remove(ticket);
+						ViewTickets.ticketSongs.Remove(ticket);
 						break;
 					case ("Video"):
 					case ("YouTube"):
-						TicketsVideos.videoTickets.Remove(ticket);
+						ViewTickets.ticketVideo.Remove(ticket);
 						break;
 				}
 

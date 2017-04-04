@@ -15,6 +15,7 @@ namespace TicketToTalk
 		private Label ticketTitleLabel;
 		private int currentIndex = 0;
 		private Label descriptionLabel;
+		private ContentView mediaContent = new ContentView();
 
 		private Conversation conversation;
 
@@ -32,6 +33,10 @@ namespace TicketToTalk
 			this.conversation = conversation;
 
 			Title = "Conversation";
+
+			var contentPlaceholder = new ContentView();
+			contentPlaceholder.SetBinding(ContentView.ContentProperty, "Content");
+			contentPlaceholder.BindingContext = mediaContent;
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -66,6 +71,10 @@ namespace TicketToTalk
 			{
 				Padding = new Thickness(0),
 				Spacing = 0,
+				Children =
+				{
+					contentPlaceholder
+				}
 			};
 
 			ticketTitleLabel = new Label
@@ -142,27 +151,36 @@ namespace TicketToTalk
 				case ("Picture"):
 				case ("Photo"):
 
-					var image = ticketController.GetTicketImage(ticket);
-					image.WidthRequest = Session.ScreenWidth;
-					image.HeightRequest = Session.ScreenWidth;
-					image.Aspect = Aspect.AspectFill;
+					//var image = ticketController.GetTicketImage(ticket);
+					//image.WidthRequest = Session.ScreenWidth;
+					//image.HeightRequest = Session.ScreenWidth;
+					//image.Aspect = Aspect.AspectFill;
 
-					ticketStack.Children.Clear();
-					ticketStack.Children.Add(image);
+					//ticketStack.Children.Clear();
+					//ticketStack.Children.Add(image);
+
+					mediaContent.Content = new PictureLayout(ticket.pathToFile);
+
 					break;
 				case ("Sound"):
 				case ("Song"):
 				case ("Audio"):
 
-					var audioPlayer = new AudioPlayerLayout(ticket);
-					ticketStack.Children.Clear();
-					ticketStack.Children.Add(audioPlayer);
+					//var audioPlayer = new AudioPlayerLayout(ticket);
+					//ticketStack.Children.Clear();
+					//ticketStack.Children.Add(audioPlayer);
+
+					mediaContent.Content = new AudioPlayerLayout(ticket);
+
 					break;
 				case ("Video"):
 				case ("YouTube"):
-					var youtubePlayer = new YouTubePlayer(ticket.pathToFile);
-					ticketStack.Children.Clear();
-					ticketStack.Children.Add(youtubePlayer);
+					//var youtubePlayer = new YouTubePlayer(ticket.pathToFile);
+					//ticketStack.Children.Clear();
+					//ticketStack.Children.Add(youtubePlayer);
+
+					mediaContent.Content = new YouTubePlayer(ticket.pathToFile);
+
 					break;
 			}
 
