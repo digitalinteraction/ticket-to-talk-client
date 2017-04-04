@@ -14,6 +14,7 @@ namespace TicketToTalk
 	{
 		public static Ticket displayedTicket { get; set; }
 		private TicketController ticketController = new TicketController();
+		ContentView mediaContent = new ContentView();
 
 		/// <summary>
 		/// Initializes a view of the ticket content.
@@ -37,50 +38,16 @@ namespace TicketToTalk
 				Command = new Command(DisplayInfo)
 			});
 
-			if (displayedTicket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
-			{
-				Task.Run(() => ticketController.DownloadTicketContent(ticket)).Wait();
-
-				var ext = ticket.pathToFile.Substring(ticket.pathToFile.LastIndexOf('.'));
-				var fileName = String.Format("t_{0}{1}", ticket.id, ext);
-
-				displayedTicket.pathToFile = fileName;
-				ticketController.UpdateTicketLocally(ticket);
-			}
-
-			displayedTicket.displayString = ticketController.GetDisplayString(displayedTicket);
-
-			ContentView mediaContent = null;
-
-			var hasPerms = Task.Run(() => CheckStoragePerms()).Result;
-			if (!hasPerms)
-			{
-				Navigation.PopAsync();
-			}
-			else
-			{
-				switch (displayedTicket.mediaType)
-				{
-					case ("Picture"):
-						mediaContent = new PictureLayout(ticket.pathToFile);
-						break;
-					case ("Sound"):
-						mediaContent = new AudioPlayerLayout(ticket);
-						break;
-					case ("Video"):
-						break;
-					case ("YouTube"):
-						mediaContent = new YouTubePlayer(ticket.pathToFile);
-						break;
-				}
-			}
+			var contHolder = new ContentView();
+			contHolder.SetBinding(ContentView.ContentProperty, "Content");
+			contHolder.BindingContext = mediaContent;
 
 			var content = new StackLayout
 			{
 				Spacing = 12,
 				Children =
 				{
-					mediaContent,
+					contHolder,
 					new TicketInfo()
 				}
 			};
@@ -176,6 +143,60 @@ namespace TicketToTalk
 
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Sets up ticket for display.
+		/// </summary>
+		public async Task<bool> SetUpTicketForDisplay()
+		{
+			if (displayedTicket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
+			{
+				try
+				{
+					await ticketController.DownloadTicketContent(displayedTicket);
+				}
+				catch (NoNetworkException ex)
+				{
+					Debug.WriteLine(ex.StackTrace);
+					return false;
+				}
+
+				var ext = displayedTicket.pathToFile.Substring(displayedTicket.pathToFile.LastIndexOf('.'));
+				var fileName = String.Format("t_{0}{1}", displayedTicket.id, ext);
+
+				displayedTicket.pathToFile = fileName;
+				ticketController.UpdateTicketLocally(displayedTicket);
+			}
+
+			displayedTicket.displayString = ticketController.GetDisplayString(displayedTicket);
+
+			//mediaContent = new ContentView();
+
+			var hasPerms = await CheckStoragePerms();
+			if (!hasPerms)
+			{
+				await Navigation.PopAsync();
+			}
+			else
+			{
+				switch (displayedTicket.mediaType)
+				{
+					case ("Picture"):
+						mediaContent.Content = new PictureLayout(displayedTicket.pathToFile).Content;
+						break;
+					case ("Sound"):
+						mediaContent.Content = new AudioPlayerLayout(displayedTicket).Content;
+						break;
+					case ("Video"):
+						break;
+					case ("YouTube"):
+						mediaContent.Content = new YouTubePlayer(displayedTicket.pathToFile).Content;
+						break;
+				}
+			}
+
+			return true;
 		}
 	}
 }

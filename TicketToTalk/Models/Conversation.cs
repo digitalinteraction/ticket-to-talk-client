@@ -16,6 +16,7 @@ namespace TicketToTalk
 		private string _ticket_id_string;
 		private string _displayDate = String.Empty;
 		private int _ticketCount = 0;
+		private DateTime _timestamp = DateTime.MinValue;
 
 		[PrimaryKey]
 		public int id { get; set; }
@@ -109,20 +110,26 @@ namespace TicketToTalk
 		{
 			get 
 			{
-				char[] delims = { ' ' };
-				string[] datetime = this.date.Split(delims);
+				if (this._timestamp == DateTime.MinValue) 
+				{
+					string[] datetime = this.date.Split(' ');
 
-				char[] d_delims = { '-' };
-				string[] date = datetime[0].Split(d_delims);
+					string[] date = datetime[0].Split('-');
 
-				char[] t_delims = { ':' };
-				string[] time = datetime[1].Split(t_delims);
+					string[] time = datetime[1].Split(':');
 
-				return new DateTime(int.Parse(date[0]), int.Parse(date[1]), int.Parse(date[2]), int.Parse(time[0]), int.Parse(time[1]), int.Parse(time[2]));
+					this._timestamp = new DateTime(int.Parse(date[0]), int.Parse(date[1]), int.Parse(date[2]), int.Parse(time[0]), int.Parse(time[1]), int.Parse(time[2]));
+				}
+
+				return this._timestamp;
 			}
 			set 
 			{
-				//timestamp = value;
+				if (value != _timestamp)
+				{
+					this._timestamp = value;
+					NotifyPropertyChanged();
+				}
 			}
 		}
 

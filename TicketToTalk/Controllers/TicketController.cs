@@ -77,28 +77,29 @@ namespace TicketToTalk
 						returned_ticket.displayIcon = "photo_icon.png";
 						ext = ".jpg";
 						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsPicture.pictureTickets.Add(returned_ticket);
+						ViewTickets.ticketPhotos.Add(returned_ticket);
 						break;
 					case ("Sound"):
 						returned_ticket.displayIcon = "audio_icon.png";
 						ext = ".wav";
 						returned_ticket.pathToFile = "t_" + returned_ticket.id + ext;
-						TicketsSounds.soundTickets.Add(returned_ticket);
+						ViewTickets.ticketSongs.Add(returned_ticket);
 						break;
 					case ("Video"):
 					case ("YouTube"):
 						returned_ticket.displayIcon = "video_icon.png";
-						TicketsVideos.videoTickets.Add(returned_ticket);
+						ViewTickets.ticketVideo.Add(returned_ticket);
 						break;
 				}
+
+				// Add to view
+				TicketsByPeriod.AddTicket(returned_ticket);
+				DisplayTickets.displayTickets.Add(returned_ticket);
 
 				// Save the file.
 				MediaController.WriteImageToFile("t_" + returned_ticket.id + ext, media);
 
 				ticketController.AddTicketLocally(returned_ticket);
-
-				// Add to view
-				TicketsByPeriod.AddTicket(returned_ticket);
 
 				return returned_ticket;
 			}
@@ -136,16 +137,16 @@ namespace TicketToTalk
 				{
 					case ("Picture"):
 					case ("Photo"):
-						TicketsPicture.pictureTickets.Remove(ticket);
+						ViewTickets.ticketPhotos.Remove(ticket);
 						break;
 					case ("Sound"):
 					case ("Song"):
 					case ("Audio"):
-						TicketsSounds.soundTickets.Remove(ticket);
+						ViewTickets.ticketSongs.Remove(ticket);
 						break;
 					case ("Video"):
 					case ("YouTube"):
-						TicketsVideos.videoTickets.Remove(ticket);
+						ViewTickets.ticketVideo.Remove(ticket);
 						break;
 				}
 
@@ -498,51 +499,6 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the ticket image.
-		/// </summary>
-		/// <returns>The ticket image.</returns>
-		/// <param name="ticket">Ticket.</param>
-		public Image GetTicketImage(Ticket ticket)
-		{
-			// TODO fix not finding image
-			bool download_finished = false;
-			var ticket_photo = new Image();
-			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
-			{
-				var net = new NetworkController();
-
-				var fileName = string.Empty;
-				switch (ticket.mediaType)
-				{
-					case ("Picture"):
-						fileName = "t_" + ticket.id + ".jpg";
-						break;
-					case ("Sound"):
-						fileName = "t_" + ticket.id + ".wav";
-						break;
-				}
-
-				var task = Task.Run(() => net.DownloadFile(ticket.pathToFile, fileName)).Result;
-				ticket.pathToFile = fileName;
-
-				while (!download_finished)
-				{
-				}
-
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
-
-				var ticketController = new TicketController();
-				ticketController.UpdateTicketLocally(ticket);
-			}
-			else
-			{
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
-			}
-
-			return ticket_photo;
-		}
-
-		/// <summary>
 		/// extracts video code from the url
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>
@@ -628,6 +584,8 @@ namespace TicketToTalk
 			if (returned != null)
 			{
 				MediaController.WriteImageToFile(fileName, imageBytes);
+				ticket.pathToFile = fileName;
+				UpdateTicketLocally(ticket);
 			}
 			else
 			{

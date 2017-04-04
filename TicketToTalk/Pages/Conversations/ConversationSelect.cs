@@ -23,7 +23,7 @@ namespace TicketToTalk
 			Title = "Conversations";
 			var conversationController = new ConversationController();
 
-			var task = Task.Run(() => ConversationController.GetRemoteConversations(conversationController));
+			var task = Task.Run(() => conversationController.GetRemoteConversations());
 			var cs = new List<Conversation>();
 			try
 			{
@@ -73,7 +73,7 @@ namespace TicketToTalk
 					if (added) 
 					{
 						conversation = conversationController.AddTicketToConversation(conversation, ticket);
-						conversationController.UpdateConversationViews(conversation);
+						conversationController.UpdateConversationViews(conversationController.SetPropertiesForDisplay(conversation));
 
 						await Navigation.PopModalAsync();
 

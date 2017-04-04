@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketToTalk.iOS", "TicketToTalk.iOS.csproj", "{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhone.ActiveCfg = Release|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhone.Build.0 = Release|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{F28404C3-39F1-4FA3-AFE8-8BA7D3F9D9DF}.Debug|iPhone.Build.0 = Debug|iPhone
+	EndGlobalSection
+EndGlobal

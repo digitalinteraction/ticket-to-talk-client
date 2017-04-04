@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -11,6 +12,7 @@ namespace TicketToTalk
 	{
 
 		public static ObservableCollection<Ticket> displayTickets = new ObservableCollection<Ticket>();
+		private ProgressSpinner indicator;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.DisplayTickets"/> class.
@@ -19,6 +21,9 @@ namespace TicketToTalk
 		/// <param name="title">Title.</param>
 		public DisplayTickets(List<Ticket> tickets, string title)
 		{
+
+			indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
+
 			displayTickets.Clear();
 			foreach (Ticket t in tickets)
 			{
@@ -78,7 +83,7 @@ namespace TicketToTalk
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
 
-			Content = new StackLayout
+			var stack = new StackLayout
 			{
 				Spacing = 12,
 				Children =
@@ -86,6 +91,16 @@ namespace TicketToTalk
 					ticketsListView
 				}
 			};
+
+			var layout = new AbsoluteLayout();
+
+			AbsoluteLayout.SetLayoutBounds(stack, new Rectangle(0.5, 0.5, 1, 1));
+			AbsoluteLayout.SetLayoutFlags(stack, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(stack);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>
@@ -94,7 +109,7 @@ namespace TicketToTalk
 		/// <returns>The selection.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private async void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -104,9 +119,25 @@ namespace TicketToTalk
 			Ticket ticket = (Ticket)e.SelectedItem;
 			ToolbarItems.Clear();
 
-			var nav = new ViewTicket(ticket);
+			IsBusy = true;
 
-			Navigation.PushAsync(nav);
+			var nav = new ViewTicket(ticket);
+			var ready = await nav.SetUpTicketForDisplay();
+
+			if (ready)
+			{
+				IsBusy = false;
+
+				await Navigation.PushAsync(nav);
+			}
+			else 
+			{
+				IsBusy = false;
+
+				await DisplayAlert("No Network", "Ticket could not be downloaded", "OK");
+			}
+
+
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 

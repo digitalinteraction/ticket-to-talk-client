@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -12,11 +13,19 @@ namespace TicketToTalk
 	public class ViewTickets : TabbedPage
 	{
 
-		public List<Ticket> tickets = new List<Ticket>();
+		public static List<Ticket> tickets = new List<Ticket>();
+		public static ObservableCollection<Ticket> ticketVideo = new ObservableCollection<Ticket>();
+		public static ObservableCollection<Ticket> ticketPhotos = new ObservableCollection<Ticket>();
+		public static ObservableCollection<Ticket> ticketSongs = new ObservableCollection<Ticket>();
 		public static bool tutorialShown = false;
 
 		public ViewTickets()
 		{
+			tickets.Clear();
+			ticketVideo.Clear();
+			ticketSongs.Clear();
+			ticketPhotos.Clear();
+
 			NavigationPage.SetHasNavigationBar(this, false);
 
 			// Set title
@@ -47,9 +56,6 @@ namespace TicketToTalk
 			this.Children.Add(nav);
 
 			// Sort tickets into songs.
-			List<Ticket> ticketSongs = new List<Ticket>();
-			List<Ticket> ticketPhotos = new List<Ticket>();
-			List<Ticket> ticketVideo = new List<Ticket>();
 			foreach (Ticket t in tickets)
 			{
 				switch (t.mediaType)
@@ -68,14 +74,14 @@ namespace TicketToTalk
 						break;
 				}
 			}
-			nav = new NavigationPage(new TicketsSounds(ticketSongs));
+			nav = new NavigationPage(new TicketsSounds());
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.Title = "Sounds";
 			nav.Icon = "ic_audiotrack_white_.png";
 			this.Children.Add(nav);
 
-			nav = new NavigationPage(new TicketsPicture(ticketPhotos));
+			nav = new NavigationPage(new TicketsPicture());
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.Title = "Pictures";
@@ -83,7 +89,7 @@ namespace TicketToTalk
 			this.Children.Add(nav);
 
 			// Set areas
-			nav = new NavigationPage(new TicketsVideos(ticketVideo));
+			nav = new NavigationPage(new TicketsVideos());
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.Icon = "ic_videocam_white_.png";

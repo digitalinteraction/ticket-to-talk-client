@@ -8,7 +8,7 @@ namespace TicketToTalk
 	/// Title page.
 	/// Handles loggin in and launches user registration.
 	/// </summary>
-	public partial class Login : ContentPage
+	public partial class Login : LoadingPage
 	{
 		private Label title;
 		private Label loadTime;
@@ -16,7 +16,7 @@ namespace TicketToTalk
 		private Entry password;
 		private Button login;
 		private Button register;
-		private ActivityIndicator indicator = null;
+		//private ActivityIndicator indicator = null;
 		ScrollView scrollView;
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace TicketToTalk
 
 			NavigationPage.SetHasNavigationBar(this, false);
 
-			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
+			indicator = new ProgressSpinner(this, ProjectResource.color_blue_transparent, ProjectResource.color_white);
 
 			Title = "Title";
 
@@ -95,7 +95,7 @@ namespace TicketToTalk
 			};
 			register.Clicked += HandleRegister;
 
-			var stack = new StackLayout
+			var pageContent = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				Spacing = 12,
@@ -114,7 +114,7 @@ namespace TicketToTalk
 
 			scrollView = new ScrollView 
 			{
-				Content = stack
+				Content = pageContent
 			};
 
 			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, Session.ScreenHeight, Session.ScreenWidth));
@@ -124,6 +124,8 @@ namespace TicketToTalk
 			layout.Children.Add(indicator);
 
 			Content = layout;
+
+			//this.stack.Content = scrollView.Content;
 		}
 
 		/// <summary>
@@ -161,11 +163,17 @@ namespace TicketToTalk
 					var v = short.Parse(Session.activeUser.verified);
 					if (v > 0)
 					{
-						
-						IsBusy = false;
 
-						await Navigation.PushAsync(new SelectActivePerson());
-						Navigation.RemovePage(this);
+						var nav = new SelectActivePerson();
+						var ready = await nav.SetUpSelectActivePerson();
+
+						if (ready) 
+						{
+							IsBusy = false;
+
+							await Navigation.PushAsync(nav);
+							Navigation.RemovePage(this);
+						}
 					}
 					else
 					{
