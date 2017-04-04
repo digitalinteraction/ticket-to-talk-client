@@ -49,7 +49,7 @@ namespace TicketToTalk
 				cs = new List<Conversation>();
 			}
 
-			Title = "Converations";
+			Title = "Conversations";
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -130,6 +130,8 @@ namespace TicketToTalk
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
+			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
+
 			IsBusy = true;
 
 			var conversation = (Conversation)e.SelectedItem;
@@ -153,8 +155,6 @@ namespace TicketToTalk
 				Debug.WriteLine(ex.StackTrace);
 				await DisplayAlert("No Network", ex.Message, "Dismiss");
 			}
-
-			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 	}
 }

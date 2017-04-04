@@ -37,7 +37,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The conversation.</returns>
 		/// <param name="id">Identifier.</param>
-		public Conversation GetConversationLocally(int id)
+		public Conversation GetAllLocalConversations(int id)
 		{
 			Conversation conversation;
 
@@ -152,7 +152,7 @@ namespace TicketToTalk
 				var data = jobject.GetData();
 
 				var returned = data["conversation"].ToObject<Conversation>();
-				returned = SetPropertiesForDisplay(returned);
+				returned = SetPropertiesForDisplay(conversation);
 				UpdateConversationViews(returned);
 
 				return true;
@@ -337,14 +337,14 @@ namespace TicketToTalk
 		public Conversation AddTicketToConversation(Conversation conversation, Ticket ticket)
 		{
 
-			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
-
 			// If the ticket string is empty, the ticket string becomes the ticket id.
 			if ((string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
 				conversation.ticket_id_string = ticket.id.ToString();
 				return conversation;
 			}
+
+			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
 
 			// Split the string for an array of all ticket ids.
 			//char[] delims = { ' ' };

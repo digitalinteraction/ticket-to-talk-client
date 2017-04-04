@@ -2,7 +2,10 @@
 // Created on: 06/09/2016
 //
 // SelectTicket.cs
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -33,34 +36,6 @@ namespace TicketToTalk
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(Cancel)
 			});
-
-			var rawTickets = ticketController.GetTickets();
-			rawTickets.Sort();
-
-			foreach (Ticket t in rawTickets)
-			{
-				switch (t.mediaType)
-				{
-					case "Photo":
-					case "Picture":
-						t.displayIcon = "photo_icon.png";
-						break;
-					case "Video":
-					case "YouTube":
-						t.displayIcon = "video_icon.png";
-						break;
-					case "Audio":
-					case "Song":
-					case "Sound":
-						t.displayIcon = "audio_icon.png";
-						break;
-					case "Area":
-						t.displayIcon = "area_icon.png";
-						break;
-				}
-
-				tickets.Add(t);
-			}
 
 			var listView = new ListView();
 
@@ -124,6 +99,54 @@ namespace TicketToTalk
 				await DisplayAlert("Conversation", "Ticket could not be added to the conversation", "OK");
 				await Navigation.PopModalAsync();
 			}
+		}
+
+		/// <summary>
+		/// Sets up page.
+		/// </summary>
+		/// <returns>The up page.</returns>
+		public async Task<bool> SetUpPage() 
+		{
+
+			try
+			{
+				await Task.Run(() => ticketController.GetRemoteTickets());
+			}
+			catch (NoNetworkException ex)
+			{
+				Debug.WriteLine(ex);
+			}
+
+			var local_tickets = ticketController.GetTickets();
+			local_tickets.Sort();
+
+			foreach (Ticket t in local_tickets)
+			{
+				
+				switch (t.mediaType)
+				{
+					case "Photo":
+					case "Picture":
+						t.displayIcon = "photo_icon.png";
+						break;
+					case "Video":
+					case "YouTube":
+						t.displayIcon = "video_icon.png";
+						break;
+					case "Audio":
+					case "Song":
+					case "Sound":
+						t.displayIcon = "audio_icon.png";
+						break;
+					case "Area":
+						t.displayIcon = "area_icon.png";
+						break;
+				}
+
+				tickets.Add(t);
+			}
+
+			return true;
 		}
 	}
 }

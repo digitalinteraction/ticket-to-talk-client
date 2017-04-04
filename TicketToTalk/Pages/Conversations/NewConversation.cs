@@ -269,6 +269,7 @@ namespace TicketToTalk
 				conversation.person_id = Session.activePerson.id;
 				conversation.notes = notes.Text;
 				conversation.date = dateTime;
+				conversation.timestamp = new DateTime(datepicker.Date.Year, datepicker.Date.Month, datepicker.Date.Day, timePicker.Time.Hours, timePicker.Time.Minutes, timePicker.Time.Seconds);
 
 				var success = false;
 

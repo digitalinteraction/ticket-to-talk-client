@@ -208,6 +208,7 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void Previous_Clicked(object sender, EventArgs e)
 		{
+			// TODO fix index out of range
 			currentIndex--;
 			currentIndex = currentIndex % tickets.Count;
 			SetTicketStack(tickets[currentIndex]);

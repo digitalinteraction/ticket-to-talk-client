@@ -62,47 +62,12 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark
 			};
 
-			char[] del = { ' ' };
-			string[] dt = conversation.date.Split(del);
-			del = new char[] { ':' };
-			string[] time = dt[1].Split(del);
-
-			string hour = (int.Parse(time[0]) % 12).ToString();
-			int afterMid = int.Parse(time[0]) / 12;
-
-			if (int.Parse(hour) == 0 && afterMid == 1)
-			{
-				hour = "12";
-			}
-
-			//var time_suffix = string.Empty;
-			//switch (afterMid)
-			//{
-			//	case (0):
-			//		time_suffix = "am";
-			//		break;
-			//	case (1):
-			//		time_suffix = "pm";
-			//		break;
-			//	default:
-			//		time_suffix = "";
-			//		break;
-			//}
-
-			//var minutes = time[1];
-
-			//var timeText = string.Format("{0}:{1} {2}", hour, minutes, time_suffix);
-			//if (int.Parse(minutes) < 10)
-			//{
-			//	timeText = string.Format("{0}:0{1} {2}", hour, minutes, time_suffix);
-			//}
-
 			var date = new Label
 			{
 				Text = conversation.displayDate,
 				TextColor = ProjectResource.color_red
 			};
-			date.SetBinding(Label.TextProperty, "displayDate");
+			date.SetBinding(Label.TextProperty, new Binding(path: "timestamp", stringFormat: "{0:hh:mm tt}" ));
 			date.BindingContext = conversation;
 
 			var notesLabel = new Label
@@ -167,17 +132,12 @@ namespace TicketToTalk
 
 			var ticketsListView = new ListView();
 
-			//ticketsListView.ItemsSource = conversationItems;
-
 			ticketsListView.SetBinding(ListView.ItemsSourceProperty, ".");
 			ticketsListView.BindingContext = conversationItems;
 
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
-
-			//peopleListView.SetBinding(ListView.ItemsSourceProperty, ".");
-			//peopleListView.BindingContext = people;
 
 			var startConversation = new Button
 			{
@@ -228,18 +188,27 @@ namespace TicketToTalk
 			{
 				case "Create a New Ticket":
 					var nav = new NavigationPage(new SelectNewTicketType());
-					nav.BarBackgroundColor = ProjectResource.color_blue;
-					nav.BarTextColor = ProjectResource.color_white;
+					nav.SetNavHeaders();
 
 					await Navigation.PushModalAsync(nav);
 
 					break;
 				case "Add an Existing Ticket":
-					nav = new NavigationPage(new SelectTicket(conversation));
-					nav.BarBackgroundColor = ProjectResource.color_blue;
-					nav.BarTextColor = ProjectResource.color_white;
 
-					await Navigation.PushModalAsync(nav);
+					IsBusy = true;
+
+					var page = new SelectTicket(conversation);
+					var ready = await page.SetUpPage();
+
+					if (ready) 
+					{
+						nav = new NavigationPage(page);
+						nav.SetNavHeaders();
+
+						IsBusy = false;
+						await Navigation.PushModalAsync(nav);
+					}
+
 					break;
 			}
 		}
@@ -289,14 +258,38 @@ namespace TicketToTalk
 		{
 			if (!(string.IsNullOrEmpty(conversation.ticket_id_string)))
 			{
-				var nav = new NavigationPage(new PlayConversation(conversation, tickets));
-				nav.BarBackgroundColor = ProjectResource.color_blue;
-				nav.BarTextColor = ProjectResource.color_white;
+				IsBusy = true;
+
+				var ticketController = new TicketController();
+
+				foreach (Ticket t in tickets) 
+				{
+					if (t.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
+					{
+						try
+						{
+							await Task.Run(() => ticketController.DownloadTicketContent(t));
+
+							var ext = t.pathToFile.Substring(t.pathToFile.LastIndexOf('.'));
+							t.pathToFile = string.Format("t_{0}{1}", t.id, ext);
+
+						}
+						catch (NoNetworkException ex)
+						{
+							tickets.Remove(t);
+							Debug.WriteLine(ex);
+						}
+					}
+				}
+
+				IsBusy = false;
 
 				await Navigation.PushAsync(new PlayConversation(conversation, tickets));
 			}
 			else
 			{
+				IsBusy = false;
+
 				await DisplayAlert("Start Conversation", "You need to add tickets to the conversation before starting.", "OK");
 			}
 		}
@@ -336,7 +329,7 @@ namespace TicketToTalk
 			tickets.Clear();
 			conversationItems.Clear();
 
-			if (conversation.ticket_id_string.Trim() == "") 
+			if (conversation.ticket_id_string == null || conversation.ticket_id_string.Trim() == "") 
 			{
 				return true;
 			}
@@ -422,69 +415,6 @@ namespace TicketToTalk
 			}
 
 			return true;
-
-			// Parse tickets to conversation items
-
-
-			// Add items to conversation
-
-			//if (conversation.ticket_id_string != null)
-			//{
-				
-			//	string[] ticket_ids = conversation.ticket_id_string.Trim().Split(' ');
-			//	//var ticketController = new TicketController();
-
-			//	if (!(string.IsNullOrEmpty(ticket_ids[0])))
-			//	{
-			//		tickets = new List<Ticket>();
-			//		foreach (string s in ticket_ids)
-			//		{
-			//			if (!(string.IsNullOrEmpty(s)))
-			//			{
-			//				var ticket = ticketController.GetTicket(int.Parse(s));
-
-			//				if (ticket == null) 
-			//				{
-			//					try
-			//					{
-			//						await ticketController.GetRemoteTickets();
-			//					}
-			//					catch (NoNetworkException ex)
-			//					{
-			//						throw ex;
-			//					}
-
-			//					ticket = ticketController.GetTicket(int.Parse(s));
-			//				} 
-
-			//				tickets.Add(ticket);
-
-			//				switch (ticket.mediaType)
-			//				{
-			//					case "Photo":
-			//					case "Picture":
-			//						ticket.displayIcon = "photo_icon.png";
-			//						break;
-			//					case "Video":
-			//					case "YouTube":
-			//						ticket.displayIcon = "video_icon.png";
-			//						break;
-			//					case "Sound":
-			//					case "Song":
-			//						ticket.displayIcon = "audio_icon.png";
-			//						break;
-			//					case "Area":
-			//						ticket.displayIcon = "area_icon.png";
-			//						break;
-			//				}
-
-			//				var convItem = new ConversationItem(conversation, ticket);
-			//				conversationItems.Add(convItem);
-			//			}
-			//		}
-			//	}
-			//}
-			//return true;
 		}
 
 		/// <summary>

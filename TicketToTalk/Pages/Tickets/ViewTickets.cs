@@ -13,7 +13,7 @@ namespace TicketToTalk
 	public class ViewTickets : TabbedPage
 	{
 
-		public List<Ticket> tickets = new List<Ticket>();
+		public static List<Ticket> tickets = new List<Ticket>();
 		public static ObservableCollection<Ticket> ticketVideo = new ObservableCollection<Ticket>();
 		public static ObservableCollection<Ticket> ticketPhotos = new ObservableCollection<Ticket>();
 		public static ObservableCollection<Ticket> ticketSongs = new ObservableCollection<Ticket>();
@@ -21,7 +21,7 @@ namespace TicketToTalk
 
 		public ViewTickets()
 		{
-
+			tickets.Clear();
 			ticketVideo.Clear();
 			ticketSongs.Clear();
 			ticketPhotos.Clear();
