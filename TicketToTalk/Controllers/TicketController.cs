@@ -498,51 +498,6 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Gets the ticket image.
-		/// </summary>
-		/// <returns>The ticket image.</returns>
-		/// <param name="ticket">Ticket.</param>
-		public Image GetTicketImage(Ticket ticket)
-		{
-			// TODO fix not finding image
-			bool download_finished = false;
-			var ticket_photo = new Image();
-			if (ticket.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal))
-			{
-				var net = new NetworkController();
-
-				var fileName = string.Empty;
-				switch (ticket.mediaType)
-				{
-					case ("Picture"):
-						fileName = "t_" + ticket.id + ".jpg";
-						break;
-					case ("Sound"):
-						fileName = "t_" + ticket.id + ".wav";
-						break;
-				}
-
-				var task = Task.Run(() => net.DownloadFile(ticket.pathToFile, fileName)).Result;
-				ticket.pathToFile = fileName;
-
-				while (!download_finished)
-				{
-				}
-
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
-
-				var ticketController = new TicketController();
-				ticketController.UpdateTicketLocally(ticket);
-			}
-			else
-			{
-				ticket_photo.Source = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(ticket.pathToFile)));
-			}
-
-			return ticket_photo;
-		}
-
-		/// <summary>
 		/// extracts video code from the url
 		/// </summary>
 		/// <returns>The youtube to ticket.</returns>

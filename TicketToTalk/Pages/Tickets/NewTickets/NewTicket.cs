@@ -19,7 +19,6 @@ namespace TicketToTalk
 		public static ActivityIndicator indicator;
 		ScrollView scrollView;
 		AbsoluteLayout layout = new AbsoluteLayout();
-		//public static bool Busy = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicket"/> class.
@@ -38,7 +37,6 @@ namespace TicketToTalk
 			// Set title.
 			Title = "New Ticket";
 			ContentView mediaContent = null;
-			//NewTicketInfo ticketInf = null;
 
 			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
 			if (!hasPerms)
@@ -62,11 +60,6 @@ namespace TicketToTalk
 						break;
 				}
 			}
-
-			//indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
-			//indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "Busy");
-			//indicator.SetBinding(ActivityIndicator.IsRunningProperty, "Busy");
-			//indicator.BindingContext = this;
 
 			indicator = new ActivityIndicator
 			{

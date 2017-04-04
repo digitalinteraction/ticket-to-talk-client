@@ -346,10 +346,6 @@ namespace TicketToTalk
 
 			conversation.ticket_id_string = conversation.ticket_id_string.Trim();
 
-			// Split the string for an array of all ticket ids.
-			//char[] delims = { ' ' };
-			//string[] str = conversation.ticket_id_string.Split(delims);
-
 			// Convert list into string.
 			var list = new List<string>(conversation.ticket_id_string.Split(' '));
 

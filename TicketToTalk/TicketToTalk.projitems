@@ -43,14 +43,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\People\PersonProfile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Profiles\User\UserProfile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsByPeriod.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketsByAgePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\DisplayTickets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\ViewTickets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPerson.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\People\AddPersonChoice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Inspiration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\NewTicket.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewPhotoTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\EditTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\NewTickets\SelectNewTicketType.cs" />
@@ -63,7 +61,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioRecorder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\MediaController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Tickets\TicketViews\ViewAudioTicket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TicketController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\AreaController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\TagController.cs" />

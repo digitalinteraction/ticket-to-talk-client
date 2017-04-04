@@ -34,15 +34,16 @@ namespace TicketToTalk
 			tickets.Clear();
 
 			// Wait for new ticket to be returned if added through this view.
-			MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
-			{
-				var added = await conversationController.AddTicketToConversationRemotely(conv, returned_ticket);
-				if (added)
-				{
-					conversationController.AddTicketToConversation(conv, returned_ticket);
-					conversationController.AddTicketToDisplayedConversation(conv, returned_ticket);
-				}
-			});
+			//MessagingCenter.Subscribe<NewTicketInfo, Ticket>(this, "ticket_added", async (sender, returned_ticket) =>
+			//{
+			//	var added = await conversationController.AddTicketToConversationRemotely(conv, returned_ticket);
+			//	if (added)
+			//	{
+			//		conversationController.AddTicketToConversation(conv, returned_ticket);
+			//		conversationController.UpdateConversationViews(conv);
+			//		conversationController.AddTicketToDisplayedConversation(conv, returned_ticket);
+			//	}
+			//});
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -182,17 +183,17 @@ namespace TicketToTalk
 		/// </summary>
 		private async void NewTicket()
 		{
-			var action = await DisplayActionSheet("Add a New Ticket", "Cancel", null, "Create a New Ticket", "Add an Existing Ticket");
+			var action = await DisplayActionSheet("Add a New Ticket", "Cancel", null, "Add an Existing Ticket");
 
 			switch (action)
 			{
-				case "Create a New Ticket":
-					var nav = new NavigationPage(new SelectNewTicketType());
-					nav.SetNavHeaders();
+				//case "Create a New Ticket":
+				//	var nav = new NavigationPage(new SelectNewTicketType());
+				//	nav.SetNavHeaders();
 
-					await Navigation.PushModalAsync(nav);
+				//	await Navigation.PushModalAsync(nav);
 
-					break;
+				//	break;
 				case "Add an Existing Ticket":
 
 					IsBusy = true;
@@ -202,7 +203,7 @@ namespace TicketToTalk
 
 					if (ready) 
 					{
-						nav = new NavigationPage(page);
+						var nav = new NavigationPage(page);
 						nav.SetNavHeaders();
 
 						IsBusy = false;
@@ -445,6 +446,14 @@ namespace TicketToTalk
 					await Navigation.PushModalAsync(nav);
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Ons the disappearing.
+		/// </summary>
+		protected override void OnDisappearing()
+		{
+			//MessagingCenter.Unsubscribe<NewTicketInfo, Ticket>(this, "ticket_added");
 		}
 	}
 }
