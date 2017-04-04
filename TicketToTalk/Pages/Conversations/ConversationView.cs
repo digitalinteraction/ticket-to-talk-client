@@ -348,7 +348,19 @@ namespace TicketToTalk
 
 			try
 			{
-				r_tickets = await conversationController.getTicketsInConversationFromAPI(conversation);
+				var s_tickets = await conversationController.getTicketsInConversationFromAPI(conversation);
+
+				for (int i = 0; i < s_tickets.Count; i++) 
+				{
+					var localTicket = ticketController.GetTicket(s_tickets[i].id);
+					if (localTicket != null) 
+					{
+						s_tickets[i] = localTicket;
+					}
+				}
+
+				r_tickets = s_tickets;
+
 			}
 			// Get tickets locally if no connection
 			catch (NoNetworkException ex)
@@ -370,12 +382,11 @@ namespace TicketToTalk
 						var ext = t.pathToFile.Substring(t.pathToFile.LastIndexOf('.'));
 						t.pathToFile = string.Format("t_{0}{1}", t.id, ext);
 
-						ticketController.UpdateTicketLocally(t);
 					}
 					catch (NoNetworkException ex)
 					{
+						r_tickets.Remove(t);
 						Debug.WriteLine(ex);
-						return false;
 					}
 				}
 			}

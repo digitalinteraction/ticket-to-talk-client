@@ -628,6 +628,8 @@ namespace TicketToTalk
 			if (returned != null)
 			{
 				MediaController.WriteImageToFile(fileName, imageBytes);
+				ticket.pathToFile = fileName;
+				UpdateTicketLocally(ticket);
 			}
 			else
 			{

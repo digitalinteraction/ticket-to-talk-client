@@ -289,7 +289,7 @@ namespace TicketToTalk
 		/// Get a list of conversations for this person-user relationship from the server.
 		/// </summary>
 		/// <returns>The remote conversations.</returns>
-		public async static Task<List<Conversation>> GetRemoteConversations(ConversationController instance)
+		public async Task<List<Conversation>> GetRemoteConversations()
 		{
 			// Build paramters.
 			IDictionary<string, string> parameters = new Dictionary<string, string>();
@@ -298,7 +298,6 @@ namespace TicketToTalk
 
 			// Send the request.
 			JObject jobject = null;
-			var networkController = new NetworkController();
 
 			try
 			{
@@ -319,6 +318,12 @@ namespace TicketToTalk
 				var data = jobject.GetData();
 				var jtoken = data["conversations"];
 				var conv = jtoken.ToObject<List<Conversation>>();
+
+				foreach (Conversation c in conv) 
+				{
+					StoreConversationLocally(c);
+				}
+
 				return conv;
 			};
 		}
@@ -595,11 +600,9 @@ namespace TicketToTalk
 				{
 					foreach (Ticket ti in tickets)
 					{
-						if ((from t in Session.Connection.Table<Ticket>() where t.id == ti.id select t).Count() > 0)
-						{
-							Session.Connection.Update(ti);
-						}
-						else 
+
+						var localTicket = (from t in Session.Connection.Table<Ticket>() where t.id == ti.id select t).FirstOrDefault();
+						if (localTicket == null)
 						{
 							Session.Connection.Insert(ti);
 						}

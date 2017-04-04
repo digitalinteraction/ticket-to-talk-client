@@ -128,8 +128,11 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-			this.IsBusy = true;
 
+		}
+
+		public async Task<bool> SetUpSelectActivePerson() 
+		{
 			// Try and get people from the server
 			try
 			{
@@ -148,13 +151,10 @@ namespace TicketToTalk
 				foreach (Person p in returned_people)
 				{
 					personController.AddPersonLocally(p);
-					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
 					p.relation = personController.GetRelationship(p.id);
 					people.Add(p);
 				}
-
-				this.IsBusy = false;
-
 			}
 
 			// If network not available, use local records.
@@ -164,12 +164,10 @@ namespace TicketToTalk
 
 				foreach (Person p in stored_people)
 				{
-					p.imageSource = Task.Run(() => personController.GetPersonProfilePicture(p)).Result;
+					p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
 					p.relation = personController.GetRelationship(p.id);
 					people.Add(p);
 				}
-
-				this.IsBusy = false;
 
 				await DisplayAlert("No Network", ex.Message, "Dismiss");
 			}
@@ -178,6 +176,8 @@ namespace TicketToTalk
 			{
 				Content = compRegLayout;
 			}
+
+			return true;
 		}
 	}
 }

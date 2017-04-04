@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -26,7 +27,27 @@ namespace TicketToTalk
 			Padding = new Thickness(20);
 			conversations.Clear();
 
-			var cs = Task.Run(() => ConversationController.GetRemoteConversations(conversationController)).Result;
+			List<Conversation> cs = null;
+
+			//var cs = Task.Run(() => conversationController.GetRemoteConversations()).Result;
+
+			var task = Task.Run(() => conversationController.GetRemoteConversations());
+
+			try
+			{
+				cs = task.Result;	
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+
+				cs = conversationController.GetLocalConversations();
+			}
+
+			if (cs == null) 
+			{
+				cs = new List<Conversation>();
+			}
 
 			Title = "Converations";
 
