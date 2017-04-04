@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Plugin.Permissions;
@@ -12,6 +13,14 @@ namespace TicketToTalk
 	/// </summary>
 	public class NewTicket : ContentPage
 	{
+
+		public static bool isInTutorial = false;
+		private ContentView ticketInf = new ContentView();
+		public static ActivityIndicator indicator;
+		ScrollView scrollView;
+		AbsoluteLayout layout = new AbsoluteLayout();
+		//public static bool Busy = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicket"/> class.
 		/// </summary>
@@ -29,7 +38,7 @@ namespace TicketToTalk
 			// Set title.
 			Title = "New Ticket";
 			ContentView mediaContent = null;
-			NewTicketInfo ticketInf = null;
+			//NewTicketInfo ticketInf = null;
 
 			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
 			if (!hasPerms)
@@ -54,20 +63,47 @@ namespace TicketToTalk
 				}
 			}
 
+			//indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
+			//indicator.SetBinding(ActivityIndicator.IsVisibleProperty, "Busy");
+			//indicator.SetBinding(ActivityIndicator.IsRunningProperty, "Busy");
+			//indicator.BindingContext = this;
+
+			indicator = new ActivityIndicator
+			{
+				BackgroundColor = ProjectResource.color_white_transparent,
+				Color = ProjectResource.color_dark,
+				IsVisible = false,
+				IsEnabled = false
+			};
+
 			var stack = new StackLayout
 			{
+				VerticalOptions = LayoutOptions.StartAndExpand,
 				Spacing = 0,
 				Children =
 				{
 					mediaContent,
-					ticketInf
+					ticketInf,
 				}
 			};
 
-			Content = new ScrollView
+			scrollView = new ScrollView
 			{
 				Content = stack
 			};
+
+			layout.HeightRequest = Session.ScreenHeight;
+
+			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
+			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
+
+			AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, 1.0, 1.0));
+			AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(scrollView);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>

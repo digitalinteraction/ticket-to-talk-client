@@ -11,19 +11,11 @@ namespace TicketToTalk
 	public class TicketsSounds : ContentPage
 	{
 
-		public static ObservableCollection<Ticket> soundTickets = new ObservableCollection<Ticket>();
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.MyPage"/> class.
 		/// </summary>
-		public TicketsSounds(List<Ticket> tickets)
+		public TicketsSounds()
 		{
-			soundTickets.Clear();
-			foreach (Ticket t in tickets)
-			{
-				soundTickets.Add(t);
-			}
-
 			// Set Padding
 			Padding = new Thickness(20);
 			Title = "Sounds";
@@ -41,7 +33,7 @@ namespace TicketToTalk
 			var ticketsListView = new ListView();
 
 			// Set display icons
-			foreach (Ticket t in soundTickets)
+			foreach (Ticket t in ViewTickets.ticketSongs)
 			{
 				switch (t.mediaType)
 				{
@@ -63,7 +55,7 @@ namespace TicketToTalk
 
 			//ticketsListView.ItemsSource = pictureTickets;
 			ticketsListView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
-			ticketsListView.BindingContext = soundTickets;
+			ticketsListView.BindingContext = ViewTickets.ticketSongs;
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;

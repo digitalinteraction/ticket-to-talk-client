@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -17,6 +18,7 @@ namespace TicketToTalk
 		public static List<Ticket> tickets = new List<Ticket>();
 		public static Conversation conversation;
 		private ConversationController conversationController = new ConversationController();
+		private ProgressSpinner indicator;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationView"/> class.
@@ -24,6 +26,9 @@ namespace TicketToTalk
 		/// <param name="conv">Conversation.</param>
 		public ConversationView(Conversation conv)
 		{
+
+			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
+
 			conversation = conv;
 			conversationItems.Clear();
 			tickets.Clear();
@@ -151,48 +156,6 @@ namespace TicketToTalk
 				}
 			};
 
-			if (conversation.ticket_id_string != null)
-			{
-				char[] delims = { ' ' };
-				string[] ticket_ids = conversation.ticket_id_string.Split(delims);
-
-				var ticketController = new TicketController();
-				if (!(string.IsNullOrEmpty(ticket_ids[0])))
-				{
-					tickets = new List<Ticket>();
-					foreach (string s in ticket_ids)
-					{
-						if (!(string.IsNullOrEmpty(s)))
-						{
-							var ticket = ticketController.GetTicket(int.Parse(s));
-							tickets.Add(ticket);
-
-							switch (ticket.mediaType)
-							{
-								case "Photo":
-								case "Picture":
-									ticket.displayIcon = "photo_icon.png";
-									break;
-								case "Video":
-								case "YouTube":
-									ticket.displayIcon = "video_icon.png";
-									break;
-								case "Sound":
-								case "Song":
-									ticket.displayIcon = "audio_icon.png";
-									break;
-								case "Area":
-									ticket.displayIcon = "area_icon.png";
-									break;
-							}
-
-							var convItem = new ConversationItem(conversation, ticket);
-							conversationItems.Add(convItem);
-						}
-					}
-				}
-			}
-
 			// Format image cell
 			var cell = new DataTemplate(typeof(ConversationItemCell));
 
@@ -203,10 +166,18 @@ namespace TicketToTalk
 			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
 
 			var ticketsListView = new ListView();
-			ticketsListView.ItemsSource = conversationItems;
+
+			//ticketsListView.ItemsSource = conversationItems;
+
+			ticketsListView.SetBinding(ListView.ItemsSourceProperty, ".");
+			ticketsListView.BindingContext = conversationItems;
+
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
+
+			//peopleListView.SetBinding(ListView.ItemsSourceProperty, ".");
+			//peopleListView.BindingContext = people;
 
 			var startConversation = new Button
 			{
@@ -218,7 +189,7 @@ namespace TicketToTalk
 			};
 			startConversation.Clicked += StartConversation_Clicked;
 
-			Content = new StackLayout
+			var stack = new StackLayout
 			{
 				Padding = new Thickness(20),
 				Spacing = 5,
@@ -234,6 +205,16 @@ namespace TicketToTalk
 					startConversation
 				}
 			};
+
+			var layout = new AbsoluteLayout();
+
+			AbsoluteLayout.SetLayoutBounds(stack, new Rectangle(0.5, 0.5, 1, 1));
+			AbsoluteLayout.SetLayoutFlags(stack, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(stack);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>
@@ -268,17 +249,34 @@ namespace TicketToTalk
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private async void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
 				return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
 			}
 
+			IsBusy = true;
+
 			var convItem = (ConversationItem)e.SelectedItem;
 			Ticket ticket = convItem.ticket;
 
-			Navigation.PushAsync(new ViewTicket(ticket));
+			var nav = new ViewTicket(ticket);
+			var ready = await nav.SetUpTicketForDisplay();
+
+			if (ready)
+			{
+				IsBusy = false;
+				await Navigation.PushAsync(nav);
+			}
+			else
+			{
+				IsBusy = false;
+
+				await DisplayAlert("No Network", "Ticket could not be downloaded", "OK");
+			}
+
+
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
 		}
 
@@ -329,6 +327,164 @@ namespace TicketToTalk
 				Navigation.PushModalAsync(new HelpPopup(text, "chat_white_icon.png"));
 				tutorialShown = true;
 			}
+		}
+
+		public async Task<bool> SetUpConversation() 
+		{
+			var ticketController = new TicketController();
+
+			tickets.Clear();
+			conversationItems.Clear();
+
+			if (conversation.ticket_id_string.Trim() == "") 
+			{
+				return true;
+			}
+
+			// Get tickets in conversation
+
+			// Get tickets from server if connection
+			List<Ticket> r_tickets = null;
+
+			try
+			{
+				var s_tickets = await conversationController.getTicketsInConversationFromAPI(conversation);
+
+				for (int i = 0; i < s_tickets.Count; i++) 
+				{
+					var localTicket = ticketController.GetTicket(s_tickets[i].id);
+					if (localTicket != null) 
+					{
+						s_tickets[i] = localTicket;
+					}
+				}
+
+				r_tickets = s_tickets;
+
+			}
+			// Get tickets locally if no connection
+			catch (NoNetworkException ex)
+			{
+				Debug.WriteLine(ex);
+
+				r_tickets = conversationController.getTicketsInConversationLocally(conversation);
+			}
+
+			// Download all ticket content
+			foreach (Ticket t in r_tickets) 
+			{
+				if (t.pathToFile.StartsWith("ticket_to_talk", StringComparison.Ordinal)) 
+				{
+					try
+					{
+						await Task.Run(() => ticketController.DownloadTicketContent(t));
+
+						var ext = t.pathToFile.Substring(t.pathToFile.LastIndexOf('.'));
+						t.pathToFile = string.Format("t_{0}{1}", t.id, ext);
+
+					}
+					catch (NoNetworkException ex)
+					{
+						r_tickets.Remove(t);
+						Debug.WriteLine(ex);
+					}
+				}
+			}
+
+			// Exit if network exception
+
+			// Add tickets to conversation
+			foreach (Ticket ticket in r_tickets) 
+			{
+				tickets.Add(ticket);
+
+				switch (ticket.mediaType)
+				{
+					case "Photo":
+					case "Picture":
+						ticket.displayIcon = "photo_icon.png";
+						break;
+					case "Video":
+					case "YouTube":
+						ticket.displayIcon = "video_icon.png";
+						break;
+					case "Sound":
+					case "Song":
+						ticket.displayIcon = "audio_icon.png";
+						break;
+					case "Area":
+						ticket.displayIcon = "area_icon.png";
+						break;
+				}
+
+				var convItem = new ConversationItem(conversation, ticket);
+				conversationItems.Add(convItem);
+			}
+
+			return true;
+
+			// Parse tickets to conversation items
+
+
+			// Add items to conversation
+
+			//if (conversation.ticket_id_string != null)
+			//{
+				
+			//	string[] ticket_ids = conversation.ticket_id_string.Trim().Split(' ');
+			//	//var ticketController = new TicketController();
+
+			//	if (!(string.IsNullOrEmpty(ticket_ids[0])))
+			//	{
+			//		tickets = new List<Ticket>();
+			//		foreach (string s in ticket_ids)
+			//		{
+			//			if (!(string.IsNullOrEmpty(s)))
+			//			{
+			//				var ticket = ticketController.GetTicket(int.Parse(s));
+
+			//				if (ticket == null) 
+			//				{
+			//					try
+			//					{
+			//						await ticketController.GetRemoteTickets();
+			//					}
+			//					catch (NoNetworkException ex)
+			//					{
+			//						throw ex;
+			//					}
+
+			//					ticket = ticketController.GetTicket(int.Parse(s));
+			//				} 
+
+			//				tickets.Add(ticket);
+
+			//				switch (ticket.mediaType)
+			//				{
+			//					case "Photo":
+			//					case "Picture":
+			//						ticket.displayIcon = "photo_icon.png";
+			//						break;
+			//					case "Video":
+			//					case "YouTube":
+			//						ticket.displayIcon = "video_icon.png";
+			//						break;
+			//					case "Sound":
+			//					case "Song":
+			//						ticket.displayIcon = "audio_icon.png";
+			//						break;
+			//					case "Area":
+			//						ticket.displayIcon = "area_icon.png";
+			//						break;
+			//				}
+
+			//				var convItem = new ConversationItem(conversation, ticket);
+			//				conversationItems.Add(convItem);
+			//			}
+			//		}
+			//	}
+			//}
+			//return true;
 		}
 
 		/// <summary>

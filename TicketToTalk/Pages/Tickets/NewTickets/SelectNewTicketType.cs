@@ -189,11 +189,16 @@ namespace TicketToTalk
 
 			try
 			{
+				//var nav = new NavigationPage(page);
+				//nav.BarTextColor = ProjectResource.color_white;
+				//nav.BarBackgroundColor = ProjectResource.color_blue;
+				//Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
+				//Navigation.RemovePage(this);
+
 				var nav = new NavigationPage(page);
-				nav.BarTextColor = ProjectResource.color_white;
-				nav.BarBackgroundColor = ProjectResource.color_blue;
-				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				Navigation.RemovePage(this);
+				nav.SetNavHeaders();
+				await Navigation.PushModalAsync(nav);
+				//Navigation.RemovePage(this);
 			}
 			catch (Exception ex)
 			{

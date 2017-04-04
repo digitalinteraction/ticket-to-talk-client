@@ -134,6 +134,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controllers\InspirationController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ProgressSpinner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoadingPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
