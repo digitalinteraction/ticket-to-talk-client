@@ -92,13 +92,14 @@ namespace TicketToTalk
 						break;
 				}
 
+				// Add to view
+				TicketsByPeriod.AddTicket(returned_ticket);
+				DisplayTickets.displayTickets.Add(returned_ticket);
+
 				// Save the file.
 				MediaController.WriteImageToFile("t_" + returned_ticket.id + ext, media);
 
 				ticketController.AddTicketLocally(returned_ticket);
-
-				// Add to view
-				TicketsByPeriod.AddTicket(returned_ticket);
 
 				return returned_ticket;
 			}
