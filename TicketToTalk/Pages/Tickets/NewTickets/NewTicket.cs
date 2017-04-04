@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Plugin.Permissions;
@@ -12,6 +13,21 @@ namespace TicketToTalk
 	/// </summary>
 	public class NewTicket : ContentPage
 	{
+		private Picker access_level;
+		private Editor description;
+		private Picker period;
+		private List<Period> periods;
+		private Button saveButton;
+		private Entry title;
+		private Entry town_city;
+		private Picker yearPicker;
+
+		private string mediaType;
+		private string filePath;
+		private byte[] media;
+
+		public static bool isInTutorial = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.NewTicket"/> class.
 		/// </summary>
@@ -60,7 +76,7 @@ namespace TicketToTalk
 				Children =
 				{
 					mediaContent,
-					ticketInf
+					ticketInf,
 				}
 			};
 

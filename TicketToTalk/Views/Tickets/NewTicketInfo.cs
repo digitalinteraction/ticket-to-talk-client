@@ -240,7 +240,7 @@ namespace TicketToTalk
 				{
 					headerStack,
 					detailsStack,
-					buttonStack
+					//buttonStack
 				}
 			};
 
