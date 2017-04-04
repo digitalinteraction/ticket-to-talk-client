@@ -240,7 +240,7 @@ namespace TicketToTalk
 				{
 					headerStack,
 					detailsStack,
-					//buttonStack
+					buttonStack
 				}
 			};
 
@@ -481,6 +481,9 @@ namespace TicketToTalk
 		{
 
 			saveButton.IsEnabled = false;
+			NewTicket.indicator.IsEnabled = true;
+			NewTicket.indicator.IsVisible = true;
+			NewTicket.indicator.IsRunning = true;
 
 			var year = int.Parse(Session.activePerson.birthYear) + yearPicker.SelectedIndex;
 			var ticket = new Ticket
@@ -533,21 +536,34 @@ namespace TicketToTalk
 					if (isInTutorial)
 					{
 						isInTutorial = false;
+						NewTicket.indicator.IsVisible = false;
+						NewTicket.indicator.IsRunning = false;
+						NewTicket.indicator.IsEnabled = false;
 						Application.Current.MainPage = new FinishTutorialPage();
 					}
 					else
 					{
+						NewTicket.indicator.IsVisible = false;
+						NewTicket.indicator.IsRunning = false;
+						NewTicket.indicator.IsEnabled = false;
 						await Navigation.PopModalAsync();
 					}
 				}
 				else
 				{
+					NewTicket.indicator.IsVisible = false;
+					NewTicket.indicator.IsRunning = false;
+					NewTicket.indicator.IsEnabled = false;
 					await Application.Current.MainPage.DisplayAlert("New Ticket", "Ticket to could not be uploaded", "OK");
 					saveButton.IsEnabled = true;
 				}
 			}
 			catch (NoNetworkException ex)
 			{
+				NewTicket.indicator.IsVisible = false;
+				NewTicket.indicator.IsRunning = false;
+				NewTicket.indicator.IsEnabled = false;
+
 				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
 				saveButton.IsEnabled = true;
 			}

@@ -73,7 +73,7 @@ namespace TicketToTalk
 					if (added) 
 					{
 						conversation = conversationController.AddTicketToConversation(conversation, ticket);
-						conversationController.UpdateConversationViews(conversation);
+						conversationController.UpdateConversationViews(conversationController.SetPropertiesForDisplay(conversation));
 
 						await Navigation.PopModalAsync();
 
