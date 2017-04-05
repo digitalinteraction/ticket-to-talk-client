@@ -27,7 +27,6 @@ namespace TicketToTalk
 			var icon = new Image
 			{
 				Source = "face_white_icon.png",
-				//Source = "swap_icon.png",
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				HeightRequest = 50,

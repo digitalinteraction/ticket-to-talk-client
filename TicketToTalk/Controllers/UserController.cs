@@ -484,7 +484,8 @@ namespace TicketToTalk
 
 				foreach (Invitation i in invitations)
 				{
-					i.imageSource = await personController.GetPersonProfilePictureForInvite(i.person);
+					await personController.DownloadPersonProfilePicture(i.person);
+					i.imageSource = ImageSource.FromStream(() => new MemoryStream(MediaController.ReadBytesFromFile(String.Format("p_{0}.jpg", i.person.id))));
 				}
 
 				return invitations;
