@@ -29,8 +29,13 @@ namespace TicketToTalk
 		{
 			this.Color = spinnerColor;
 			this.VerticalOptions = LayoutOptions.CenterAndExpand;
-			this.HeightRequest = Session.ScreenHeight;
-			this.BackgroundColor = backgroundColor;
+
+#if __ANDROID__
+            this.HeightRequest = Session.ScreenHeight * 0.1;
+#else
+            this.HeightRequest = Session.ScreenHeight;
+            this.BackgroundColor = backgroundColor;
+#endif
 			this.VerticalOptions = LayoutOptions.CenterAndExpand;
 			this.SetBinding(ActivityIndicator.IsRunningProperty, "IsBusy");
 			this.SetBinding(ActivityIndicator.IsVisibleProperty, "IsBusy");
