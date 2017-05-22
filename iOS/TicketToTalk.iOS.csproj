@@ -165,6 +165,7 @@
     <Compile Include="Helpers\AudioRecorderImplementation.cs" />
     <Compile Include="Helpers\AudioPlayerImplementation.cs" />
     <Compile Include="Helpers\ImageResizerImplementation.cs" />
+    <Compile Include="Helpers\CameraIOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\photo_icon.png" />

@@ -246,22 +246,33 @@ namespace TicketToTalk
 		private async void OnPlaceholderTap()
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
-			MediaFile file = null;
+
+			CameraController.MediaReady += (file) =>
+			{
+				if (file != null)
+				{
+					personImage.Source = ImageSource.FromFile(file.Path);
+                	this.file = file;
+				}
+			};
+
 			switch (action)
 			{
 				case ("Take a Photo"):
 					file = await CameraController.TakePicture("temp_profile");
+
 					break;
 				case ("Select a Photo From Library"):
 					file = await CameraController.SelectPicture();
 					break;
 			}
 
-			if (file != null)
-			{
-				personImage.Source = ImageSource.FromFile(file.Path);
-				this.file = file;
-			}
+			//CameraController.TakePhoto(this, null);
+		}
+
+		protected void Complete(MediaFile file)
+		{
+
 		}
 
 		/// <summary>

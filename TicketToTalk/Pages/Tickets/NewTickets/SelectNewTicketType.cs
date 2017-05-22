@@ -107,14 +107,31 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void PhotoButton_Clicked(object sender, EventArgs e)
 		{
+			CameraController.MediaReady += async (f) => 
+			{
+				var page = new NewTicket("Picture", f.Path);
+
+				try
+				{
+					var nav = new NavigationPage(page);
+					nav.SetNavHeaders();
+					await Navigation.PushModalAsync(nav);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Error taking picture");
+					Debug.WriteLine(ex.StackTrace);
+				}
+			};
+
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			switch (action)
 			{
 				case ("Take a Photo"):
-					TakePicture();
+					await CameraController.TakePicture("temp_ticket");
 					break;
 				case ("Select a Photo From Library"):
-					SelectPicture();
+					await CameraController.SelectPicture();
 					break;
 			}
 		}
@@ -123,79 +140,66 @@ namespace TicketToTalk
 		/// Selects the picture.
 		/// </summary>
 		/// <returns>The picture.</returns>
-		private async void TakePicture()
-		{
-			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-			{
-				await DisplayAlert("No Camera", "No camera avaialble.", "OK");
-				return;
-			}
+		//private async void TakePicture()
+		//{
 
-			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-			{
+		//	if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+		//	{
+		//		await DisplayAlert("No Camera", "No camera avaialble.", "OK");
+		//		return;
+		//	}
 
-				Directory = "TicketToTalk",
-				Name = "ticket.jpg"
-			});
+		//	var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+		//	{
 
-			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", "Photo Added!", "OK");
+		//		Directory = "TicketToTalk",
+		//		Name = "ticket.jpg"
+		//	});
 
-			var page = new NewTicket("Picture", file.Path);
+		//	// App will not progress to new ticket screen on android without this...
+		//	await DisplayAlert("File Location", "Photo Added!", "OK");
 
-			try
-			{
-				var nav = new NavigationPage(page);
-				nav.BarTextColor = ProjectResource.color_white;
-				nav.BarBackgroundColor = ProjectResource.color_blue;
-				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				Navigation.RemovePage(this);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error taking picture");
-				Debug.WriteLine(ex.StackTrace);
-			}
-		}
+
+		//}
 
 		/// <summary>
 		/// Selects a picture from the library.
 		/// </summary>
-		public async void SelectPicture()
-		{
-			if (!CrossMedia.Current.IsPickPhotoSupported)
-			{
-				await DisplayAlert("Select Photo", "Photo select not supported", "OK");
-				return;
-			}
+		//public async void SelectPicture()
+		//{
+		//	if (!CrossMedia.Current.IsPickPhotoSupported)
+		//	{
+		//		await DisplayAlert("Select Photo", "Photo select not supported", "OK");
+		//		return;
+		//	}
 
-			var file = await CrossMedia.Current.PickPhotoAsync();
-			if (file == null) { return; }
+		//	var file = await CrossMedia.Current.PickPhotoAsync();
+		//	if (file == null) { return; }
 
-			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", "Photo Added!", "OK");
+		//	// App will not progress to new ticket screen on android without this...
+		//	await DisplayAlert("File Location", "Photo Added!", "OK");
 
-			Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
-			var page = new NewTicket("Picture", file.Path);
+		//	Debug.WriteLine("SelectNewTicketType: File path = " + file.Path);
+		//	var page = new NewTicket("Picture", file.Path);
 
-			try
-			{
-				//var nav = new NavigationPage(page);
-				//nav.BarTextColor = ProjectResource.color_white;
-				//nav.BarBackgroundColor = ProjectResource.color_blue;
-				//Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				//Navigation.RemovePage(this);
+		//	try
+		//	{
+		//		//var nav = new NavigationPage(page);
+		//		//nav.BarTextColor = ProjectResource.color_white;
+		//		//nav.BarBackgroundColor = ProjectResource.color_blue;
+		//		//Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
+		//		//Navigation.RemovePage(this);
 
-				var nav = new NavigationPage(page);
-				nav.SetNavHeaders();
-				await Navigation.PushModalAsync(nav);
-				//Navigation.RemovePage(this);
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex);
-			}
-		}
+		//		var nav = new NavigationPage(page);
+		//		nav.SetNavHeaders();
+		//		await Navigation.PushModalAsync(nav);
+		//		//Navigation.RemovePage(this);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Debug.WriteLine(ex);
+		//	}
+		//}
 
 		/// <summary>
 		/// Yous the tube cell tapped.

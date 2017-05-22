@@ -1,11 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Xamarin.Forms;
 
 namespace TicketToTalk
 {
+
 	public class CameraController
 	{
+		public static event MediaReadyHandler MediaReady;
+		public delegate void MediaReadyHandler(MediaFile file);
+
 		public CameraController()
 		{
 		}
@@ -19,6 +25,7 @@ namespace TicketToTalk
 		{
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
 			{
+				Console.WriteLine("Camera is not available");
 				return null;
 			}
 
@@ -27,6 +34,23 @@ namespace TicketToTalk
 				Directory = "TicketToTalk",
 				Name = name
 			});
+
+			try
+			{
+				//file = await CrossMedia.Current.PickPhotoAsync();
+				Device.BeginInvokeOnMainThread( async () => { 
+					var f = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+					{
+						Directory = "TicketToTalk",
+						Name = name
+					});
+					MediaReady(f);
+				});
+			}
+			catch (Exception e) 
+			{
+				Console.WriteLine(e);
+			}
 
 			if (file == null)
 			{
@@ -44,12 +68,27 @@ namespace TicketToTalk
 		/// <returns>The picture.</returns>
 		public static async Task<MediaFile> SelectPicture()
 		{
+			await CrossMedia.Current.Initialize();
+
 			if (!CrossMedia.Current.IsPickPhotoSupported)
 			{
 				return null;
 			}
 
-			var file = await CrossMedia.Current.PickPhotoAsync();
+			MediaFile file = null;
+			try
+			{
+				//file = await CrossMedia.Current.PickPhotoAsync();
+				Device.BeginInvokeOnMainThread( async () => { 
+					var f = await CrossMedia.Current.PickPhotoAsync();
+					MediaReady(f);
+				});
+			}
+			catch (Exception e) 
+			{
+				Console.WriteLine(e);
+			}
+
 			if (file == null)
 			{
 				return null;
@@ -58,6 +97,30 @@ namespace TicketToTalk
 			{
 				return file;
 			}
+		}
+
+		/// <summary>
+		/// Takes the photo.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		public static async void TakePhoto(object sender, EventArgs args)
+		{
+			Device.BeginInvokeOnMainThread(async () =>
+			{
+				//Ask the user if they want to use the camera or pick from the gallery
+				var action = await Application.Current.MainPage.DisplayActionSheet("Add Photo", "Cancel", null, "Choose Existing", "Take Photo");
+				Console.WriteLine(action);
+
+				if (action == "Choose Existing")
+				{
+					DependencyService.Get<CameraInterface>().BringUpPhotoGallery();
+				}
+				else if (action == "Take Photo")
+				{
+					DependencyService.Get<CameraInterface>().BringUpCamera();
+				}
+			});
 		}
 	}
 }
