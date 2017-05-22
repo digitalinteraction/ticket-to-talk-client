@@ -8,5 +8,5 @@
     <Watch file="../TicketToTalk/Database/UserDB.cs" line="81" offsetX="740" offsetY="1200" expression="_connection.DatabasePath" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.CD4FE253-7C53-4E99-8717-C800B2B74D1C" />
+  <MonoDevelop.Ide.ItemProperties.TicketToTalk.iOS PreferredExecutionTarget="Xamarin.Player.XamarinStudio.DefaultPlayerExecutionTarget" />
 </Properties>
