@@ -45,13 +45,10 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
-		$1.DirectoryNamespaceAssociation = None
-		$1.ResourceNamePolicy = FileFormatDefault
 		$0.TextStylePolicy = $2
 		$2.inheritsSet = null
 		$2.scope = application/json
 		$0.StandardHeader = $3
 		$3.Text = @Author: ${AuthorName} - ${AuthorEmail}\nCreated on: ${Date}\n\n${FileName}
-		$3.IncludeInNewFiles = True
 	EndGlobalSection
 EndGlobal
