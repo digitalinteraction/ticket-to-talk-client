@@ -80,30 +80,6 @@ namespace TicketToTalk
 		}
 
 		/// <summary>
-		/// Takes the picture.
-		/// </summary>
-		/// <returns>The picture.</returns>
-		public async Task<MediaFile> TakePicture()
-		{
-			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-			{
-				return null;
-			}
-
-			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-			{
-
-				Directory = "TicketToTalk",
-				Name = "ticket.jpg"
-			});
-
-			if (file == null)
-				return null;
-
-			return file;
-		}
-
-		/// <summary>
 		/// Deletes the file.
 		/// </summary>
 		/// <param name="fileName">File name.</param>

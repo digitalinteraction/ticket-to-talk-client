@@ -153,7 +153,8 @@ namespace TicketToTalk
 			conversationLog.Finish = DateTime.Now;
 			conversationLog.TicketLogs = ticketLogs;
 
-			Console.WriteLine(conversationLog);
+			var controller = new ConversationController();
+			var stored = await controller.storeConversationLog(conversationLog);
 
 			await Navigation.PushModalAsync(nav);
 			Navigation.RemovePage(this);

@@ -152,22 +152,27 @@ namespace TicketToTalk
 		private async void OnImageTap(object obj)
 		{
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
-			MediaFile file = null;
+
+			var cameraController = new CameraController();
+
+			cameraController.MediaReady += (file) => 
+			{
+				if (file != null)
+				{
+					var bytes = MediaController.ReadBytesFromFile(file.Path);
+					profile.profilePic.Source = ImageSource.FromFile(file.Path);
+					image = bytes;
+				}
+			};
+
 			switch (action)
 			{
 				case ("Take a Photo"):
-					file = await CameraController.TakePicture("temp_profile");
+					await cameraController.TakePicture("temp_profile");
 					break;
 				case ("Select a Photo From Library"):
-					file = await CameraController.SelectPicture();
+					await cameraController.SelectPicture();
 					break;
-			}
-
-			if (file != null)
-			{
-				var bytes = MediaController.ReadBytesFromFile(file.Path);
-				profile.profilePic.Source = ImageSource.FromFile(file.Path);
-				image = bytes;
 			}
 		}
 

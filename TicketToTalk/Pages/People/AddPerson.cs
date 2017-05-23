@@ -300,9 +300,10 @@ namespace TicketToTalk
 		/// <returns>The placeholder tap.</returns>
 		private async void OnPlaceholderTap()
 		{
-			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library"); 
+			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
+			var cameraController = new CameraController();
 
-			CameraController.MediaReady += (file) => 
+			cameraController.MediaReady += (file) => 
 			{
 				if (file != null)
 				{
@@ -314,10 +315,10 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case ("Take a Photo"):
-					file = await CameraController.TakePicture("temp_profile");
+					file = await cameraController.TakePicture("temp_profile");
 					break;
 				case ("Select a Photo From Library"):
-					file = await CameraController.SelectPicture();
+					file = await cameraController.SelectPicture();
 					break;
 			}
 		}

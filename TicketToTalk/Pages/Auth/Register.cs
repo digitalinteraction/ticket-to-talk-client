@@ -24,12 +24,13 @@ namespace TicketToTalk
 		private UserController userController = new UserController();
 		ScrollView scrollView;
 
+		CameraController cameraContoller = new CameraController();
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Register"/> class.
 		/// </summary>
 		public Register()
 		{
-
 			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
 
 			// Set title.
@@ -245,9 +246,10 @@ namespace TicketToTalk
 		/// <returns>The placeholder tap.</returns>
 		private async void OnPlaceholderTap()
 		{
+			var cameraController = new CameraController();
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 
-			CameraController.MediaReady += (file) =>
+			cameraController.MediaReady += (file) =>
 			{
 				if (file != null)
 				{
@@ -259,11 +261,11 @@ namespace TicketToTalk
 			switch (action)
 			{
 				case ("Take a Photo"):
-					file = await CameraController.TakePicture("temp_profile");
+					file = await cameraController.TakePicture("temp_profile");
 
 					break;
 				case ("Select a Photo From Library"):
-					file = await CameraController.SelectPicture();
+					file = await cameraController.SelectPicture();
 					break;
 			}
 
