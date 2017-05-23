@@ -87,93 +87,38 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void Button_Clicked(object sender, EventArgs e)
 		{
+			var cameraController = new CameraController();
+
+			cameraController.MediaReady += (f) =>
+			{
+				var page = new NewTicket("Picture", f.Path);
+
+				try
+				{
+					var nav = new NavigationPage(page);
+					nav.BarTextColor = ProjectResource.color_white;
+					nav.BarBackgroundColor = ProjectResource.color_blue;
+					NewTicketInfo.isInTutorial = true;
+					Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
+					Navigation.RemovePage(this);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Error taking picture");
+					Debug.WriteLine(ex.StackTrace);
+				}
+			};
+
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 			switch (action)
 			{
 				case ("Take a Photo"):
-					TakePicture();
+					await cameraController.TakePicture("temp_ticket");
 					break;
 				case ("Select a Photo From Library"):
-					SelectPicture();
+					await cameraController.SelectPicture();
 					break;
-			}
-		}
-
-		/// <summary>
-		/// Selects the picture.
-		/// </summary>
-		/// <returns>The picture.</returns>
-		private async void TakePicture()
-		{
-			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-			{
-				await DisplayAlert("No Camera", "No camera avaialble.", "OK");
-				return;
-			}
-
-			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-			{
-
-				Directory = "TicketToTalk",
-				Name = "ticket.jpg"
-			});
-
-			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", "Photo Added!", "OK");
-
-			var page = new NewTicket("Picture", file.Path);
-
-			try
-			{
-				var nav = new NavigationPage(page);
-				nav.BarTextColor = ProjectResource.color_white;
-				nav.BarBackgroundColor = ProjectResource.color_blue;
-				NewTicketInfo.isInTutorial = true;
-				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				Navigation.RemovePage(this);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error in taking photo.");
-				Debug.WriteLine(ex.StackTrace);
-			}
-		}
-
-		/// <summary>
-		/// Selects a picture from the library.
-		/// </summary>
-		public async void SelectPicture()
-		{
-			if (!CrossMedia.Current.IsPickPhotoSupported)
-			{
-				await DisplayAlert("Select Photo", "Photo select not supported", "OK");
-				return;
-			}
-
-			var file = await CrossMedia.Current.PickPhotoAsync();
-			if (file == null) { return; }
-
-			// App will not progress to new ticket screen on android without this...
-			await DisplayAlert("File Location", "Photo Added!", "OK");
-
-			var page = new NewTicket("Picture", file.Path);
-
-			try
-			{
-				var nav = new NavigationPage(page);
-				nav.BarTextColor = ProjectResource.color_white;
-				nav.BarBackgroundColor = ProjectResource.color_blue;
-				NewTicketInfo.isInTutorial = true;
-				Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-				Navigation.RemovePage(this);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error in adding running tutorial.");
-				Debug.WriteLine(ex.StackTrace);
 			}
 		}
 	}
 }
-
-

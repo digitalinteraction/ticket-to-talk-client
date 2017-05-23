@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -21,6 +22,10 @@ namespace TicketToTalk
 
 		private TicketController ticketController = new TicketController();
 
+		private ConversationLog conversationLog;
+		private List<TicketLog> ticketLogs;
+		private TicketLog currentTicket;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.PlayConversation"/> class.
 		/// </summary>
@@ -31,6 +36,13 @@ namespace TicketToTalk
 			tickets.Shuffle();
 			this.tickets = tickets;
 			this.conversation = conversation;
+			ticketLogs = new List<TicketLog>();
+			conversationLog = new ConversationLog
+			{
+				ConversationId = conversation.id,
+				Start = DateTime.Now
+			};
+			currentTicket = new TicketLog();
 
 			Title = "Conversation";
 
@@ -136,6 +148,14 @@ namespace TicketToTalk
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
 
+			ticketLogs[ticketLogs.Count - 1].Finish = DateTime.Now;
+
+			conversationLog.Finish = DateTime.Now;
+			conversationLog.TicketLogs = ticketLogs;
+
+			var controller = new ConversationController();
+			var stored = await controller.storeConversationLog(conversationLog);
+
 			await Navigation.PushModalAsync(nav);
 			Navigation.RemovePage(this);
 		}
@@ -146,18 +166,19 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		private void SetTicketStack(Ticket ticket)
 		{
+			// Start ticket log.
+
+			var tLog = new TicketLog()
+			{
+				TicketId = ticket.id,
+				Start = DateTime.Now
+			};
+			ticketLogs.Add(tLog);
+
 			switch (ticket.mediaType)
 			{
 				case ("Picture"):
 				case ("Photo"):
-
-					//var image = ticketController.GetTicketImage(ticket);
-					//image.WidthRequest = Session.ScreenWidth;
-					//image.HeightRequest = Session.ScreenWidth;
-					//image.Aspect = Aspect.AspectFill;
-
-					//ticketStack.Children.Clear();
-					//ticketStack.Children.Add(image);
 
 					mediaContent.Content = new PictureLayout(ticket.pathToFile);
 
@@ -166,18 +187,11 @@ namespace TicketToTalk
 				case ("Song"):
 				case ("Audio"):
 
-					//var audioPlayer = new AudioPlayerLayout(ticket);
-					//ticketStack.Children.Clear();
-					//ticketStack.Children.Add(audioPlayer);
-
 					mediaContent.Content = new AudioPlayerLayout(ticket);
 
 					break;
 				case ("Video"):
 				case ("YouTube"):
-					//var youtubePlayer = new YouTubePlayer(ticket.pathToFile);
-					//ticketStack.Children.Clear();
-					//ticketStack.Children.Add(youtubePlayer);
 
 					mediaContent.Content = new YouTubePlayer(ticket.pathToFile);
 
@@ -198,6 +212,8 @@ namespace TicketToTalk
 			currentIndex++;
 			currentIndex = currentIndex % tickets.Count;
 
+			ticketLogs[ticketLogs.Count - 1].Finish = DateTime.Now;
+
 			SetTicketStack(tickets[currentIndex]);
 		}
 
@@ -208,9 +224,11 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private void Previous_Clicked(object sender, EventArgs e)
 		{
-			// TODO fix index out of range
 			currentIndex--;
 			currentIndex = currentIndex % tickets.Count;
+
+			ticketLogs[ticketLogs.Count - 1].Finish = DateTime.Now;
+
 			SetTicketStack(tickets[currentIndex]);
 		}
 	}

@@ -189,7 +189,7 @@ namespace TicketToTalk
 					break;
 				}
 			}
-			if (idx > 1) 
+			if (idx > 1)
 			{
 				ConversationSelect.conversations[idx] = conversation;
 			}
@@ -319,7 +319,7 @@ namespace TicketToTalk
 				var jtoken = data["conversations"];
 				var conv = jtoken.ToObject<List<Conversation>>();
 
-				foreach (Conversation c in conv) 
+				foreach (Conversation c in conv)
 				{
 					StoreConversationLocally(c);
 				}
@@ -502,7 +502,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The timestamp.</returns>
 		/// <param name="timestamp">Timestamp.</param>
-		public string formatTimestamp(DateTime timestamp) 
+		public string formatTimestamp(DateTime timestamp)
 		{
 
 			string[] months =
@@ -607,7 +607,7 @@ namespace TicketToTalk
 
 				return tickets;
 			}
-			else 
+			else
 			{
 				return null;
 			}
@@ -618,7 +618,7 @@ namespace TicketToTalk
 		/// </summary>
 		/// <returns>The tickets in conversation locally.</returns>
 		/// <param name="conversation">Conversation.</param>
-		public List<Ticket> getTicketsInConversationLocally(Conversation conversation) 
+		public List<Ticket> getTicketsInConversationLocally(Conversation conversation)
 		{
 			var ticket_ids = new List<string>(conversation.ticket_id_string.Trim().Split(' '));
 			var tickets = new List<Ticket>();
@@ -626,10 +626,10 @@ namespace TicketToTalk
 
 			lock (Session.Connection)
 			{
-				foreach (string s in ticket_ids) 
+				foreach (string s in ticket_ids)
 				{
 					var ticket = ticketController.GetTicket(int.Parse(s));
-					if (ticket != null) 
+					if (ticket != null)
 					{
 						tickets.Add(ticket);
 					}
@@ -637,6 +637,38 @@ namespace TicketToTalk
 			}
 
 			return tickets;
+		}
+
+		/// <summary>
+		/// Stores the conversation log.
+		/// </summary>
+		/// <returns>The conversation log.</returns>
+		/// <param name="conversationLog">Conversation log.</param>
+		public async Task<bool> storeConversationLog(ConversationLog conversationLog)
+		{
+			IDictionary<string, object> parameters = new Dictionary<string, object>();
+			parameters["conversationLog"] = conversationLog;
+			parameters["token"] = Session.Token.val;
+
+			JObject jobject = null;
+
+			try
+			{
+				jobject = await networkController.SendPostRequest("conversations/logs/store", parameters);
+			}
+			catch (NoNetworkException ex)
+			{
+				throw ex;
+			}
+
+			if (jobject != null)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

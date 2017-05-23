@@ -203,51 +203,51 @@ namespace TicketToTalk
 			}
 		}
 
-		/// <summary>
-		/// Selects the picture.
-		/// </summary>
-		/// <returns>The picture.</returns>
-		private async void TakePicture()
-		{
-			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-			{
-				await DisplayAlert("No Camera", "No camera avaialble.", "OK");
-				return;
-			}
+		///// <summary>
+		///// Selects the picture.
+		///// </summary>
+		///// <returns>The picture.</returns>
+		//private async void TakePicture()
+		//{
+		//	if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+		//	{
+		//		await DisplayAlert("No Camera", "No camera avaialble.", "OK");
+		//		return;
+		//	}
 
-			var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-			{
-				Directory = "TicketToTalk",
-				Name = "ticket.jpg"
-			});
+		//	var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+		//	{
+		//		Directory = "TicketToTalk",
+		//		Name = "ticket.jpg"
+		//	});
 
-			if (file == null)
-				return;
+		//	if (file == null)
+		//		return;
 
-			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
-			nav.BarTextColor = ProjectResource.color_white;
-			nav.BarBackgroundColor = ProjectResource.color_blue;
+		//	var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+		//	nav.BarTextColor = ProjectResource.color_white;
+		//	nav.BarBackgroundColor = ProjectResource.color_blue;
 
-			await Navigation.PushModalAsync(nav);
-		}
+		//	await Navigation.PushModalAsync(nav);
+		//}
 
-		private async void SelectPicture()
-		{
-			if (!CrossMedia.Current.IsPickPhotoSupported)
-			{
-				await DisplayAlert("Select Photo", "Photo select not supported", "OK");
-				return;
-			}
+		//private async void SelectPicture()
+		//{
+		//	if (!CrossMedia.Current.IsPickPhotoSupported)
+		//	{
+		//		await DisplayAlert("Select Photo", "Photo select not supported", "OK");
+		//		return;
+		//	}
 
-			var file = await CrossMedia.Current.PickPhotoAsync();
-			if (file == null) { return; }
+		//	var file = await CrossMedia.Current.PickPhotoAsync();
+		//	if (file == null) { return; }
 
-			var nav = new NavigationPage(new NewTicket("Picture", file.Path));
-			nav.BarTextColor = ProjectResource.color_white;
-			nav.BarBackgroundColor = ProjectResource.color_blue;
+		//	var nav = new NavigationPage(new NewTicket("Picture", file.Path));
+		//	nav.BarTextColor = ProjectResource.color_white;
+		//	nav.BarBackgroundColor = ProjectResource.color_blue;
 
-			await Navigation.PushModalAsync(nav);
-		}
+		//	await Navigation.PushModalAsync(nav);
+		//}
 
 		/// <summary>
 		/// Populates the variables.
@@ -316,22 +316,39 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void RecordMediaButton_Clicked(object sender, EventArgs e)
 		{
+			NavigationPage nav = null;
+
 			switch (inspiration.mediaType.Trim())
 			{
 				case ("Picture"):
+
+					var cameraController = new CameraController();
+
+					cameraController.MediaReady += async (file) => 
+					{
+						if (file == null)
+							return;
+
+						nav = new NavigationPage(new NewTicket("Picture", file.Path));
+						nav.BarTextColor = ProjectResource.color_white;
+						nav.BarBackgroundColor = ProjectResource.color_blue;
+
+						await Navigation.PushModalAsync(nav);
+					};
+
 					var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");
 					switch (action)
 					{
 						case ("Take a Photo"):
-							TakePicture();
+							await cameraController.TakePicture("temp_ticket");
 							break;
 						case ("Select a Photo From Library"):
-							SelectPicture();
+							await cameraController.SelectPicture();
 							break;
 					}
 					break;
 				case ("Sound"):
-					var nav = new NavigationPage(new AudioRecorder());
+					nav = new NavigationPage(new AudioRecorder());
 					nav.BarTextColor = ProjectResource.color_white;
 					nav.BarBackgroundColor = ProjectResource.color_blue;
 

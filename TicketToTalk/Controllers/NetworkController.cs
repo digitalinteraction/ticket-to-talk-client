@@ -141,6 +141,8 @@ namespace TicketToTalk
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
+			Debug.WriteLine(jsonCredentials);
+
 			//var response = null;
 			HttpResponseMessage response = null;
 			try
