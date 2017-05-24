@@ -4,6 +4,7 @@
 // ViewArticles.cs
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -11,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// View articles.
 	/// </summary>
-	public class ViewSharedArticles : ContentPage
+	public class ViewSharedArticles : TrackedContentPage
 	{
 
 		public static ObservableCollection<Article> articles = new ObservableCollection<Article>();
@@ -21,7 +22,10 @@ namespace TicketToTalk
 		/// </summary>
 		public ViewSharedArticles(List<Article> shared)
 		{
+            TrackedName = "View Shared Articles";
+
 			articles.Clear();
+
 			Title = "Shared Articles";
 
 			foreach (Article a in shared)

@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Finish tutorial page.
 	/// </summary>
-	public class FinishTutorialPage : ContentPage
+	public class FinishTutorialPage : TrackedContentPage
 	{
 
 		/// <summary>
@@ -20,6 +20,8 @@ namespace TicketToTalk
 		/// </summary>
 		public FinishTutorialPage()
 		{
+
+            TrackedName = "Finish Tutorial Page";
 
 			BackgroundColor = ProjectResource.color_red;
 

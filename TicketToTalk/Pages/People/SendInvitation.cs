@@ -6,7 +6,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Send invitation.
 	/// </summary>
-	public class SendInvitation : ContentPage
+	public class SendInvitation : TrackedContentPage
 	{
 
 		private Entry email;
@@ -21,6 +21,9 @@ namespace TicketToTalk
 		/// </summary>
 		public SendInvitation(Person person)
 		{
+
+            TrackedName = "Send Invitation";
+
 			this.Title = "Invite";
 			this.person = person;
 

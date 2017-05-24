@@ -444,7 +444,6 @@ namespace TicketToTalk
 
 			foreach (Tag t in tags)
 			{
-				Console.WriteLine(t);
 				var storedTag = tagController.GetTag(t.id);
 				if (storedTag == null)
 				{

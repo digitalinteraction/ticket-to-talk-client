@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -14,15 +15,18 @@ namespace TicketToTalk
 		/// </summary>
 		public App()
 		{
+			GoogleAnalytics.Current.Config.TrackingId = "UA-99820535-1";
+			GoogleAnalytics.Current.Config.AppId = "ticket-to-talk";
+			GoogleAnalytics.Current.Config.AppName = "Ticket to Talk";
+			GoogleAnalytics.Current.Config.AppVersion = "1.0";
+			GoogleAnalytics.Current.InitTracker();
+
 			var periodController = new PeriodController();
 			periodController.InitStockPeriods();
 
 			var nav = new NavigationPage(new Login());
 			nav.BarTextColor = ProjectResource.color_white;
 			nav.BarBackgroundColor = ProjectResource.color_blue;
-
-			var userController = new UserController();
-			Debug.WriteLine(userController.GetLocalUserByEmail("d.welsh@ncl.ac.uk"));
 
 			MainPage = nav;
 		}

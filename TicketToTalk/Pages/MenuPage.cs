@@ -6,7 +6,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Menu page.
 	/// </summary>
-	public class MenuPage : ContentPage
+	public class MenuPage : TrackedContentPage
 	{
 		public ListView Menu { get; set; }
 
@@ -15,6 +15,9 @@ namespace TicketToTalk
 		/// </summary>
 		public MenuPage()
 		{
+
+            TrackedName = "Menu";
+
 			NavigationPage.SetHasNavigationBar(this, false);
 			Icon = "menu_icon.png";
 			Title = "Menu"; // The Title property must be set.

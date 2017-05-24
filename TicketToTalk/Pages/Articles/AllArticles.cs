@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -10,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// View a list of all articles.
 	/// </summary>
-	public class AllArticles : ContentPage
+	public class AllArticles : TrackedContentPage
 	{
 		public static ObservableCollection<Article> ServerArticles = new ObservableCollection<Article>();
 		private ArticleController articleController = new ArticleController();
@@ -22,16 +23,13 @@ namespace TicketToTalk
 		/// </summary>
 		public AllArticles()
 		{
+            TrackedName = "All Articles";
+            
 			ServerArticles.Clear();
 			Title = "Articles";
 
 			ServerArticles = Task.Run(() => articleController.GetAllArticles()).Result;
 			SharedArticles = Task.Run(() => articleController.GetSharedArticles()).Result;
-
-			foreach (Article a in ServerArticles)
-			{
-				Console.WriteLine(a);
-			}
 
 			ToolbarItems.Add(new ToolbarItem
 			{
@@ -129,5 +127,3 @@ namespace TicketToTalk
 		}
 	}
 }
-
-

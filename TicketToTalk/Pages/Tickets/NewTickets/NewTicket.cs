@@ -11,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// New ticket.
 	/// </summary>
-	public class NewTicket : ContentPage
+	public class NewTicket : TrackedContentPage
 	{
 
 		public static bool isInTutorial = false;
@@ -27,6 +27,9 @@ namespace TicketToTalk
 		/// <param name="filePath">File path.</param>
 		public NewTicket(string mediaType, string filePath)
 		{
+
+            TrackedName = "New Ticket";
+
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Cancel",

@@ -8,7 +8,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Select new ticket type.
 	/// </summary>
-	public class SelectNewTicketType : ContentPage
+	public class SelectNewTicketType : TrackedContentPage
 	{
 
 		/// <summary>
@@ -16,6 +16,8 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectNewTicketType()
 		{
+
+            TrackedName = "Select New Ticket Type";
 
 			Title = "New Ticket";
 

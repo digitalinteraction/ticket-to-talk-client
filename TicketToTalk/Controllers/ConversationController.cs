@@ -377,8 +377,6 @@ namespace TicketToTalk
 
 			var str = string.Join(" ", ticket_ids.ToArray());
 
-			Debug.WriteLine(str);
-
 			conversation.ticket_id_string = str;
 
 			return conversation;

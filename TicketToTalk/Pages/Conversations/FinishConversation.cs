@@ -11,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Finish conversation.
 	/// </summary>
-	public class FinishConversation : ContentPage
+	public class FinishConversation : TrackedContentPage
 	{
 
 		private Conversation conversation;
@@ -22,6 +22,9 @@ namespace TicketToTalk
 		/// </summary>
 		public FinishConversation(Conversation conversation)
 		{
+
+            TrackedName = "Finish Conversation";
+
 			Padding = new Thickness(20);
 			this.conversation = conversation;
 			Title = "Finish Conversation";

@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Person profile.
 	/// </summary>
-	public class PersonProfile : ContentPage
+	public class PersonProfile : TrackedContentPage
 	{
 
 		public static Person currentPerson;
@@ -23,6 +23,9 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public PersonProfile(Person person)
 		{
+
+            TrackedName = "Person Profile";
+
 			currentPerson = person;
 
 			Title = "Profile";

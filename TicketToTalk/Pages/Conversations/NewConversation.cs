@@ -8,7 +8,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// New conversation.
 	/// </summary>
-	public class NewConversation : ContentPage
+	public class NewConversation : TrackedContentPage
 	{
 		private DatePicker datepicker;
 		private Editor notes;
@@ -23,6 +23,9 @@ namespace TicketToTalk
 		/// </summary>
 		public NewConversation()
 		{
+
+            TrackedName = "New Conversation";
+
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Cancel",

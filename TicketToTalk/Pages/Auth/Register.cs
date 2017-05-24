@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using ImageCircle.Forms.Plugin.Abstractions;
+using Plugin.GoogleAnalytics;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
@@ -10,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Register.
 	/// </summary>
-	public class Register : ContentPage
+	public class Register : TrackedContentPage
 	{
 		private Image personImage;
 		private Entry nameEntry;
@@ -31,6 +32,9 @@ namespace TicketToTalk
 		/// </summary>
 		public Register()
 		{
+
+            TrackedName = "Register";
+            
 			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
 
 			// Set title.

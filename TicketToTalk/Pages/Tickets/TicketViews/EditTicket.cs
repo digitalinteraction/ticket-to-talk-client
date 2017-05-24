@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Display ticket info.
 	/// </summary>
-	public class EditTicket : ContentPage
+	public class EditTicket : TrackedContentPage
 	{
 		private string[] accessLevels = ProjectResource.groups;
 
@@ -27,6 +27,8 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket: ticket to display</param>
 		public EditTicket(Ticket ticket)
 		{
+
+            TrackedName = "Edit Ticket";
 
 			ToolbarItems.Add(new ToolbarItem
 			{

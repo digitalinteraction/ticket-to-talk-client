@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -23,7 +24,8 @@ namespace TicketToTalk
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Login"/> class.
 		/// </summary>
 		public Login()
-		{
+        {
+            TrackedName = "Login";
 
 			BackgroundColor = ProjectResource.color_blue;
 
@@ -143,8 +145,6 @@ namespace TicketToTalk
 
 			IsBusy = true;
 
-			Debug.WriteLine(IsBusy);
-
 			var userController = new UserController();
 
 			bool authed = false;
@@ -152,9 +152,6 @@ namespace TicketToTalk
 			try
 			{
 				authed = await userController.AuthenticateUser(email.Text, password.Text);
-
-				Debug.WriteLine(indicator.IsRunning);
-				Debug.WriteLine(indicator.IsVisible);
 
 				if (authed)
 				{

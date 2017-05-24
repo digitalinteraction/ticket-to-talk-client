@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace TicketToTalk
 {
-	public class AudioRecorder : ContentPage
+	public class AudioRecorder : TrackedContentPage
 	{
 		private bool recording = false;
 		private Image record;
@@ -21,6 +21,9 @@ namespace TicketToTalk
 		/// </summary>
 		public AudioRecorder()
 		{
+
+            TrackedName = "Record Audio";
+
 			Title = "New Audio Ticket";
 
 			ToolbarItems.Add(new ToolbarItem

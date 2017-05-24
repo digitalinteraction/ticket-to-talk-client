@@ -3,7 +3,7 @@
 //
 // ShareArticle.cs
 using System;
-
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Share article.
 	/// </summary>
-	public class ShareArticle : ContentPage
+	public class ShareArticle : TrackedContentPage
 	{
 		private Entry email;
 		private Button sendButton;
@@ -25,6 +25,8 @@ namespace TicketToTalk
 		/// </summary>
 		public ShareArticle(Article article)
 		{
+            TrackedName = "Share Article";
+
 			Title = "Share Article";
 			this.article = article;
 

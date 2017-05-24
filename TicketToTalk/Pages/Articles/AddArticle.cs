@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Plugin.GoogleAnalytics;
 using TicketToTalk;
 using Xamarin.Forms;
 
@@ -9,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Add article.
 	/// </summary>
-	public class AddArticle : ContentPage
+	public class AddArticle : TrackedContentPage
 	{
 		private Entry title;
 		private Editor notes;
@@ -25,6 +26,7 @@ namespace TicketToTalk
 		/// </summary>
 		public AddArticle(Article article)
 		{
+            TrackedName = "Add Article";
 
 			ToolbarItems.Add(new ToolbarItem
 			{

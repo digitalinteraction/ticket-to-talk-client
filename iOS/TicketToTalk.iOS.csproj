@@ -9,6 +9,7 @@
     <RootNamespace>TicketToTalk.iOS</RootNamespace>
     <AssemblyName>TicketToTalk.iOS</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <ReleaseVersion>0.2</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -123,6 +124,12 @@
     <Reference Include="Xamarin.Forms.Xaml">
       <HintPath>..\packages\Xamarin.Forms.2.3.4.247\lib\Xamarin.iOS10\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.GoogleAnalytics.Abstractions">
+      <HintPath>..\packages\ksemenenko.GoogleAnalytics.1.0.3\lib\XamariniOS10\Plugin.GoogleAnalytics.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.GoogleAnalytics">
+      <HintPath>..\packages\ksemenenko.GoogleAnalytics.1.0.3\lib\XamariniOS10\Plugin.GoogleAnalytics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />
@@ -223,6 +230,7 @@
     <BundleResource Include="Resources\YFNE.jpg" />
     <BundleResource Include="Resources\ic_info_3x.png" />
     <BundleResource Include="Resources\swap_icon.png" />
+    <BundleResource Include="Resources\clipboard_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />

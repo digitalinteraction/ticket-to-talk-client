@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Tickets picture.
 	/// </summary>
-	public class TicketsPicture : ContentPage
+	public class TicketsPicture : TrackedContentPage
 	{
 		
 		/// <summary>
@@ -15,6 +15,9 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketsPicture()
 		{
+
+            TrackedName = "Photo Tickets";
+
 			// Set Padding
 			Padding = new Thickness(20);
 			Title = "Pictures";

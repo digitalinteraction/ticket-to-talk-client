@@ -7,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Tickets videos.
 	/// </summary>
-	public class TicketsVideos : ContentPage
+	public class TicketsVideos : TrackedContentPage
 	{
 
 		/// <summary>
@@ -15,6 +15,8 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketsVideos()
 		{
+
+            TrackedName = "Video Tickets";
 			
 			// Set Padding
 			Padding = new Thickness(20);

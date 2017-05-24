@@ -13,7 +13,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Add ticket prompt.
 	/// </summary>
-	public class AddTicketPrompt : ContentPage
+	public class AddTicketPrompt : TrackedContentPage
 	{
 
 		/// <summary>
@@ -21,6 +21,8 @@ namespace TicketToTalk
 		/// </summary>
 		public AddTicketPrompt()
 		{
+
+            TrackedName = "Add Ticket Prompt";
 
 			AddPerson.isInTutorial = false;
 			SeeInvite.isInTutorial = false;

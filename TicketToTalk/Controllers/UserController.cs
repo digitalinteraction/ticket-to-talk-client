@@ -41,8 +41,6 @@ namespace TicketToTalk
 				user = (from n in Session.Connection.Table<User>() where n.id == id select n).FirstOrDefault();
 			}
 
-			Debug.WriteLine(user);
-
 			return user;
 		}
 
@@ -59,8 +57,6 @@ namespace TicketToTalk
 			{
 				user = (from n in Session.Connection.Table<User>() where n.email == email select n).FirstOrDefault();
 			}
-
-			Debug.WriteLine(user);
 
 			return user;
 		}
@@ -136,12 +132,41 @@ namespace TicketToTalk
 			}
 		}
 
-		/// <summary>
-		/// Updates the user locally.
-		/// </summary>
-		/// <returns>The user locally.</returns>
-		/// <param name="user">User.</param>
-		public void UpdateUserLocally(User user)
+        /// <summary>
+        /// Accepts the study.
+        /// </summary>
+        /// <returns>The study.</returns>
+        public async Task<bool> AcceptStudy()
+        {
+
+			IDictionary<string, string> paramaters = new Dictionary<string, string>();
+			paramaters["token"] = Session.Token.val;
+
+            JObject jobject = null;
+
+            try
+            {
+                jobject = await networkController.SendGetRequest("user/participate", paramaters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (jobject != null) 
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the user locally.
+        /// </summary>
+        /// <returns>The user locally.</returns>
+        /// <param name="user">User.</param>
+        public void UpdateUserLocally(User user)
 		{
 			lock(Session.Connection) 
 			{
@@ -317,8 +342,6 @@ namespace TicketToTalk
 					Session.activeUser = returned_user;
 
 					await Task.Run(() => DownloadUserProfilePicture());
-					Debug.WriteLine("UPDATED USER");
-					Debug.WriteLine(userController.GetLocalUserByID(returned_user.id));
 				}
 				else
 				{
@@ -526,13 +549,12 @@ namespace TicketToTalk
 		{
 			var user = Session.activeUser;
 
-			Debug.WriteLine(user);
 			var fileName = "u_" + user.id + ".jpg";
 
 //#if __IOS__
 			await DownloadProfilePicture();
 //#else
-			//await Task.Run(() => DownloadProfilePictre());
+			await DownloadProfilePicture();
 //#endif
 			user.pathToPhoto = fileName;
 
@@ -550,7 +572,6 @@ namespace TicketToTalk
 			client.Timeout = new TimeSpan(0, 0, 100);
 
 			var url = new Uri(Session.baseUrl + "user/picture/get?token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
-			Debug.WriteLine(url);
 
 			Console.WriteLine("Beginning Download");
 

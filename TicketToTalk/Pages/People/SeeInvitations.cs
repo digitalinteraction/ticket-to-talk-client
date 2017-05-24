@@ -11,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// See invitations.
 	/// </summary>
-	public class SeeInvitations : ContentPage
+	public class SeeInvitations : TrackedContentPage
 	{
 
 		public static ObservableCollection<Invitation> invitations = new ObservableCollection<Invitation>();
@@ -21,6 +21,9 @@ namespace TicketToTalk
 		/// </summary>
 		public SeeInvitations(List<Invitation> invites)
 		{
+
+            TrackedName = "See Invitations";
+
 			invitations.Clear();
 			foreach (Invitation i in invites)
 			{

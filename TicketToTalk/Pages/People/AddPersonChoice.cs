@@ -6,13 +6,16 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	public class AddPersonChoice : ContentPage
+	public class AddPersonChoice : TrackedContentPage
 	{
 		private UserController userController = new UserController();
 		private List<Invitation> rawInvites;
 
 		public AddPersonChoice()
 		{
+
+            TrackedName = "Add Person Choice";
+
 			Title = "New Person";
 			var newPersonButton = new Button
 			{
