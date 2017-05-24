@@ -192,7 +192,6 @@ namespace TicketToTalk
 			var url = new Uri(Session.baseUrl + "people/picture?&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key + "&person_id=" + id);
 
 			Console.WriteLine("Beginning Download");
-			Debug.WriteLine(url);
 
 			Stream returned = null;
 

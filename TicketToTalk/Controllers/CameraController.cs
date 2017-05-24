@@ -27,7 +27,7 @@ namespace TicketToTalk
 
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
 			{
-				Console.WriteLine("Camera is not available");
+                await Application.Current.MainPage.DisplayAlert("Take a Photo", "The camera is not available.", "OK");
 				return null;
 			}
 
@@ -100,30 +100,6 @@ namespace TicketToTalk
 				return file;
 			}
 		}
-
-		///// <summary>
-		///// Takes the photo.
-		///// </summary>
-		///// <param name="sender">Sender.</param>
-		///// <param name="args">Arguments.</param>
-		//public async void TakePhoto(object sender, EventArgs args)
-		//{
-		//	Device.BeginInvokeOnMainThread(async () =>
-		//	{
-		//		//Ask the user if they want to use the camera or pick from the gallery
-		//		var action = await Application.Current.MainPage.DisplayActionSheet("Add Photo", "Cancel", null, "Choose Existing", "Take Photo");
-		//		Console.WriteLine(action);
-
-		//		if (action == "Choose Existing")
-		//		{
-		//			DependencyService.Get<CameraInterface>().BringUpPhotoGallery();
-		//		}
-		//		else if (action == "Take Photo")
-		//		{
-		//			DependencyService.Get<CameraInterface>().BringUpCamera();
-		//		}
-		//	});
-		//}
 	}
 }
 

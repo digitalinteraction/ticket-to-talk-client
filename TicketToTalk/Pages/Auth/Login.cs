@@ -143,8 +143,6 @@ namespace TicketToTalk
 
 			IsBusy = true;
 
-			Debug.WriteLine(IsBusy);
-
 			var userController = new UserController();
 
 			bool authed = false;
@@ -152,9 +150,6 @@ namespace TicketToTalk
 			try
 			{
 				authed = await userController.AuthenticateUser(email.Text, password.Text);
-
-				Debug.WriteLine(indicator.IsRunning);
-				Debug.WriteLine(indicator.IsVisible);
 
 				if (authed)
 				{

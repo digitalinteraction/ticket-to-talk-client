@@ -28,11 +28,6 @@ namespace TicketToTalk
 			ServerArticles = Task.Run(() => articleController.GetAllArticles()).Result;
 			SharedArticles = Task.Run(() => articleController.GetSharedArticles()).Result;
 
-			foreach (Article a in ServerArticles)
-			{
-				Console.WriteLine(a);
-			}
-
 			ToolbarItems.Add(new ToolbarItem
 			{
 				Text = "Add",

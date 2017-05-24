@@ -27,7 +27,6 @@ namespace TicketToTalk.iOS
 		{
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 			var url = NSUrl.FromString(path);
-			Debug.WriteLine(url);
 
 			_player = AVAudioPlayer.FromUrl(url);
 			//_player.Volume = 1f;

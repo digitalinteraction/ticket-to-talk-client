@@ -37,11 +37,9 @@ namespace TicketToTalk.iOS
 		public void Record(string fileName)
 		{
 			this.fileName = fileName;
-			//Declare string for application temp path and tack on the file extension
-			//string fileName = string.Format("{0}.wav", DateTime.Now.ToString("yyyyMMddHHmmss"));
-			string audioFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
-
-			Console.WriteLine("Audio File Path: " + audioFilePath);
+            //Declare string for application temp path and tack on the file extension
+            //string fileName = string.Format("{0}.wav", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            string audioFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 
 			url = NSUrl.FromFilename(audioFilePath);
 			//set up the NSObject Array of values that will be combined with the keys to make the NSDictionary

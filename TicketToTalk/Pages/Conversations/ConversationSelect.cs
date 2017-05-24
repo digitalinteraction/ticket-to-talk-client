@@ -37,7 +37,6 @@ namespace TicketToTalk
 
 			foreach (Conversation converstaion in cs)
 			{
-				Debug.WriteLine(converstaion);
 				conversations.Add(conversationController.SetPropertiesForDisplay(converstaion));
 			}
 

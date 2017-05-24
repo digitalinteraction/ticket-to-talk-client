@@ -50,5 +50,7 @@ Global
 		$2.scope = application/json
 		$0.StandardHeader = $3
 		$3.Text = @Author: ${AuthorName} - ${AuthorEmail}\nCreated on: ${Date}\n\n${FileName}
+		$0.VersionControlPolicy = $4
+		version = 0.2
 	EndGlobalSection
 EndGlobal

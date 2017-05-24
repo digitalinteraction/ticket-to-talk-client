@@ -85,8 +85,6 @@ namespace TicketToTalk
 				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 
-			Debug.WriteLine(response);
-
 			// Check for success.
 			if (response == null)
 			{
@@ -141,8 +139,6 @@ namespace TicketToTalk
 			string jsonCredentials = JsonConvert.SerializeObject(parameters);
 			HttpContent content = new StringContent(jsonCredentials, Encoding.UTF8, "application/json");
 
-			Debug.WriteLine(jsonCredentials);
-
 			//var response = null;
 			HttpResponseMessage response = null;
 			try
@@ -152,24 +148,19 @@ namespace TicketToTalk
 			}
 			catch (WebException ex)
 			{
-				Console.WriteLine("Network Timeout");
 				Debug.WriteLine(ex.StackTrace);
 				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 			catch (TaskCanceledException ex)
 			{
-				Console.WriteLine(ex);
 				Debug.WriteLine(ex.StackTrace);
 				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
 			catch (HttpRequestException ex)
 			{
-				Console.WriteLine(ex);
 				Debug.WriteLine(ex.StackTrace);
 				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
-
-			Debug.WriteLine(response);
 
 			// Check for success.
 			if (response == null)
@@ -179,8 +170,6 @@ namespace TicketToTalk
 			else if (response.IsSuccessStatusCode)
 			{
 				string jsonString = await response.Content.ReadAsStringAsync();
-				Debug.WriteLine("Success");
-				Debug.WriteLine(jsonString);
 				JObject jobject = JObject.Parse(jsonString);
 				return jobject;
 			}
@@ -229,7 +218,6 @@ namespace TicketToTalk
 
 			// Get response
 			var response = await client.PostAsync(uri, content);
-			Debug.WriteLine(response);
 			// Check for success.
 			if (response.IsSuccessStatusCode)
 			{
@@ -297,7 +285,6 @@ namespace TicketToTalk
 				Debug.WriteLine(ex.StackTrace);
 				throw new NoNetworkException("No network available, check you are connected to the internet.");
 			}
-			Debug.WriteLine(response);
 
 			if (response == null)
 			{
