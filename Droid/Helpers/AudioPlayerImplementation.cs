@@ -14,6 +14,9 @@ namespace TicketToTalk.Droid
 	{
 		MediaPlayer player = new MediaPlayer();
 		private bool finished = false;
+        private DateTime startTime;
+        private int elapsed;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Droid.AudioPlayerImplementation"/> class.
 		/// </summary>
@@ -52,6 +55,8 @@ namespace TicketToTalk.Droid
 		/// <returns>The playback.</returns>
 		public void PausePlayback()
 		{
+            elapsed = GetCurrentTime();
+
 			player.Pause();
 		}
 
@@ -62,6 +67,8 @@ namespace TicketToTalk.Droid
 		public void PlayAudioFile()
 		{
 			player.Start();
+
+            startTime = DateTime.Now;
 		}
 
 		/// <summary>
@@ -70,6 +77,9 @@ namespace TicketToTalk.Droid
 		/// <returns>The play back.</returns>
 		public void ResumePlayBack()
 		{
+            startTime = DateTime.Now;
+            startTime.AddSeconds( elapsed * (-1));
+
 			player.Start();
 		}
 
@@ -90,7 +100,12 @@ namespace TicketToTalk.Droid
 		/// <returns>The duration.</returns>
 		public int GetDuration()
 		{
-			return player.Duration;
+            Console.WriteLine(player.Duration);
+
+            var duration = (double)player.Duration / 1000;
+            Debug.WriteLine("DURR:" + duration);
+
+            return (int) duration;
 		}
 
 		/// <summary>
@@ -101,6 +116,7 @@ namespace TicketToTalk.Droid
 		void Player_Completion(object sender, EventArgs e)
 		{
 			player.Stop();
+            player.Release();
 
 			finished = true;
 
@@ -113,7 +129,8 @@ namespace TicketToTalk.Droid
 		/// <returns>The current time.</returns>
 		public int GetCurrentTime()
 		{
-			return player.CurrentPosition;
+            //return player.CurrentPosition;
+            return (int)(DateTime.Now - startTime).TotalSeconds;
 		}
 
 		/// <summary>
