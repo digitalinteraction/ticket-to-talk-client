@@ -132,12 +132,41 @@ namespace TicketToTalk
 			}
 		}
 
-		/// <summary>
-		/// Updates the user locally.
-		/// </summary>
-		/// <returns>The user locally.</returns>
-		/// <param name="user">User.</param>
-		public void UpdateUserLocally(User user)
+        /// <summary>
+        /// Accepts the study.
+        /// </summary>
+        /// <returns>The study.</returns>
+        public async Task<bool> AcceptStudy()
+        {
+
+			IDictionary<string, string> paramaters = new Dictionary<string, string>();
+			paramaters["token"] = Session.Token.val;
+
+            JObject jobject = null;
+
+            try
+            {
+                jobject = await networkController.SendGetRequest("user/participate", paramaters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            if (jobject != null) 
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the user locally.
+        /// </summary>
+        /// <returns>The user locally.</returns>
+        /// <param name="user">User.</param>
+        public void UpdateUserLocally(User user)
 		{
 			lock(Session.Connection) 
 			{

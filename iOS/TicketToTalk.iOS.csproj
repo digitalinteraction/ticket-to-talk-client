@@ -224,6 +224,7 @@
     <BundleResource Include="Resources\YFNE.jpg" />
     <BundleResource Include="Resources\ic_info_3x.png" />
     <BundleResource Include="Resources\swap_icon.png" />
+    <BundleResource Include="Resources\clipboard_white_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\red_add.png" />

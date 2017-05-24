@@ -135,6 +135,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ConversationLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TicketLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CameraInterface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Participate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />
