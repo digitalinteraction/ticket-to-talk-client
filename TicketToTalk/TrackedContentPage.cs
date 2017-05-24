@@ -3,6 +3,7 @@
 //
 // TrackedContentPage.cs
 using System;
+using System.Diagnostics;
 using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
@@ -22,7 +23,7 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
-            GoogleAnalytics.Current.Tracker.SendView(TrackedName);
+            GoogleAnalytics.Current.Tracker.SendView(this.GetType().Name);
 		}
     }
 }

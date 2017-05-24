@@ -15,9 +15,9 @@ namespace TicketToTalk
 		/// </summary>
 		public App()
 		{
-			GoogleAnalytics.Current.Config.TrackingId = "UA-99820535-1";
+			GoogleAnalytics.Current.Config.TrackingId = "UA-99833865-1";
 			GoogleAnalytics.Current.Config.AppId = "ticket-to-talk";
-			GoogleAnalytics.Current.Config.AppName = "Ticket to Talk";
+			GoogleAnalytics.Current.Config.AppName = "ticket-to-talk";
 			GoogleAnalytics.Current.Config.AppVersion = "1.0";
 			GoogleAnalytics.Current.InitTracker();
 
