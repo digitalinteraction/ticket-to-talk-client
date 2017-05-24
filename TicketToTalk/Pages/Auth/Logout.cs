@@ -1,4 +1,5 @@
 ﻿using System;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -6,7 +7,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Logout.
 	/// </summary>
-	public class Logout : ContentPage
+	public class Logout : TrackedContentPage
 	{
 
 		/// <summary>
@@ -14,6 +15,8 @@ namespace TicketToTalk
 		/// </summary>
 		public Logout()
 		{
+            TrackedName = "Logout";
+
 			Session.activeUser = null;
 			Session.activePerson = null;
 			Session.Token = null;

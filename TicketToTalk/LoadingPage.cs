@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	public class LoadingPage : ContentPage
+    public class LoadingPage : TrackedContentPage
 	{
 
 		public AbsoluteLayout layout = new AbsoluteLayout();

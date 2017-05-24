@@ -8,10 +8,13 @@ using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	public class About : ContentPage
+	public class About : TrackedContentPage
 	{
 		public About()
 		{
+
+            TrackedName = "About";
+
 			this.Padding = 20;
 			this.Title = "About";
 

@@ -11,9 +11,8 @@ namespace TicketToTalk
 	/// <summary>
 	/// A page to add a person.
 	/// </summary>
-	public class AddPerson : ContentPage
-	{
-
+	public class AddPerson : TrackedContentPage
+    {
 		private PersonController personController = new PersonController();
 		public static bool isInTutorial = false;
 
@@ -45,6 +44,9 @@ namespace TicketToTalk
 		/// </summary>
 		public AddPerson(Person person)
 		{
+
+            TrackedName = "Add Person";
+
 			this.person = person;
 			Title = "New Person";
 

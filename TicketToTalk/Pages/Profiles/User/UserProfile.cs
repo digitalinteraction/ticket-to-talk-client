@@ -6,7 +6,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// User profile view.
 	/// </summary>
-	public class UserProfile : ContentPage
+	public class UserProfile : TrackedContentPage
 	{
 
 		/// <summary>
@@ -15,6 +15,8 @@ namespace TicketToTalk
 		/// <param name="user">User.</param>
 		public UserProfile()
 		{
+            TrackedName = "User Profile";
+
 			Title = "Your Profile";
 
 			ToolbarItems.Add(new ToolbarItem

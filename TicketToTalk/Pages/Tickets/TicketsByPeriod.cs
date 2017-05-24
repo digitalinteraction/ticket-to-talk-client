@@ -11,13 +11,14 @@ namespace TicketToTalk
 	/// <summary>
 	/// Tickets by period.
 	/// </summary>
-	public class TicketsByPeriod : ContentPage
+	public class TicketsByPeriod : TrackedContentPage
 	{
 		public static List<Ticket> tickets;
 		public static ObservableCollection<ticketPeriodContainer> periodContainers = new ObservableCollection<ticketPeriodContainer>();
 
 		public class ticketPeriodContainer : INotifyPropertyChanged
 		{
+
 			private string _ticketCount = String.Empty;
 
 			public Period period { get; set; }
@@ -88,6 +89,9 @@ namespace TicketToTalk
 		/// <param name="ticket_input">Tickets.</param>
 		public TicketsByPeriod(List<Ticket> ticket_input)
 		{
+
+            TrackedName = "Tickets By Period";
+
 			periodContainers.Clear();
 			tickets = ticket_input;
 			if (Session.activePerson != null)

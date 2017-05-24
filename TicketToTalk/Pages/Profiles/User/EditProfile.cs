@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Edit profile.
 	/// </summary>
-	public class EditProfile : ContentPage
+	public class EditProfile : TrackedContentPage
 	{
 		private Entry confirmPassword;
 		private Entry email;
@@ -27,6 +27,8 @@ namespace TicketToTalk
 		/// </summary>
 		public EditProfile()
 		{
+
+            TrackedName = "Edit User Profile";
 
 			Title = "Edit Profile";
 

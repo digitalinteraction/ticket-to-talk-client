@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Conversations view.
 	/// </summary>
-	public class ConversationsView : ContentPage
+	public class ConversationsView : TrackedContentPage
 	{
 		public static bool tutorialShown = false;
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
@@ -22,6 +22,9 @@ namespace TicketToTalk
 		/// </summary>
 		public ConversationsView()
 		{
+
+            TrackedName = "Conversation Select";
+
 			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
 
 			Padding = new Thickness(20);

@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// See invite.
 	/// </summary>
-	public class SeeInvite : ContentPage
+	public class SeeInvite : TrackedContentPage
 	{
 		private Person person;
 		private Button button;
@@ -26,6 +26,9 @@ namespace TicketToTalk
 		/// <param name="person">Person.</param>
 		public SeeInvite(Invitation invitation)
 		{
+
+            TrackedName = "See Invite";
+
 			person = invitation.person;
 			Title = person.name;
 

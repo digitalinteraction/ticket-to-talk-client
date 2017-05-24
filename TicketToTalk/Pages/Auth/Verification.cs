@@ -5,11 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-	public class Verification : ContentPage
+	public class Verification : TrackedContentPage
 	{
 
 		Entry code;
@@ -19,6 +20,8 @@ namespace TicketToTalk
 
 		public Verification(bool firstLogin)
 		{
+            TrackedName = "Verfication";
+
 			this.firstLogin = firstLogin;
 
 			NavigationPage.SetHasNavigationBar(this, false);

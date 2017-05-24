@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Inspiration view.
 	/// </summary>
-	public class InspirationView : ContentPage
+	public class InspirationView : TrackedContentPage
 	{
 		private Inspiration inspiration;
 		private Label question;
@@ -28,6 +28,8 @@ namespace TicketToTalk
 		/// </summary>
 		public InspirationView()
 		{
+
+            TrackedName = "Inspiration";
 
 			this.inspirationController = new InspirationController();
 			// Check for new inspirations.

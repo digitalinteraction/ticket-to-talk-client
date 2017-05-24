@@ -8,7 +8,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Tickets in area.
 	/// </summary>
-	public class DisplayTickets : ContentPage
+	public class DisplayTickets : TrackedContentPage
 	{
 
 		public static ObservableCollection<Ticket> displayTickets = new ObservableCollection<Ticket>();
@@ -21,6 +21,8 @@ namespace TicketToTalk
 		/// <param name="title">Title.</param>
 		public DisplayTickets(List<Ticket> tickets, string title)
 		{
+
+            TrackedName = "Display: " + title;
 
 			indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
 

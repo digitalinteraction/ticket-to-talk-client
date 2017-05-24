@@ -5,7 +5,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Help.
 	/// </summary>
-	public class Help : ContentPage
+	public class Help : TrackedContentPage
 	{
 		
 		/// <summary>
@@ -13,6 +13,8 @@ namespace TicketToTalk
 		/// </summary>
 		public Help()
 		{
+
+            TrackedName = "Help";
 
 			Title = "Help";
 

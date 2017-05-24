@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Conversation select.
 	/// </summary>
-	public class ConversationSelect : ContentPage
+	public class ConversationSelect : TrackedContentPage
 	{
 		public static ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
 
@@ -19,6 +19,9 @@ namespace TicketToTalk
 		/// </summary>
 		public ConversationSelect(Ticket ticket)
 		{
+
+            TrackedName = "Conversation Select";
+
 			conversations.Clear();
 			Title = "Conversations";
 			var conversationController = new ConversationController();
@@ -148,6 +151,7 @@ namespace TicketToTalk
 		{
 			Navigation.PopModalAsync();
 		}
+
 	}
 }
 

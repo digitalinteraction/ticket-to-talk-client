@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -23,7 +24,8 @@ namespace TicketToTalk
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Login"/> class.
 		/// </summary>
 		public Login()
-		{
+        {
+            TrackedName = "Login";
 
 			BackgroundColor = ProjectResource.color_blue;
 

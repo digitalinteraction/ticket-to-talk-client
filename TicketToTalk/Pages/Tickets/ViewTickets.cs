@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -103,6 +104,8 @@ namespace TicketToTalk
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
+
+            GoogleAnalytics.Current.Tracker.SendView("View Tickets");
 
 			if (Session.activeUser.firstLogin && !tutorialShown)
 			{

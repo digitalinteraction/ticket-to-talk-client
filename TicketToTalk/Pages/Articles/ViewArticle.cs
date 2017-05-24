@@ -1,4 +1,5 @@
 ﻿using System;
+using Plugin.GoogleAnalytics;
 using TicketToTalk;
 using Xamarin.Forms;
 
@@ -7,13 +8,15 @@ namespace TicketToTalk
 	/// <summary>
 	/// View an article.
 	/// </summary>
-	public class ViewArticle : ContentPage
+	public class ViewArticle : TrackedContentPage
 	{
 		public static Article currentArticle;
 		public static bool tutorialShown;
 
 		public ViewArticle(Article article)
 		{
+            TrackedName = "View Article";
+
 			currentArticle = article;
 
 			this.SetBinding(TitleProperty, "title");

@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-    public class Participate : ContentPage
+    public class Participate : TrackedContentPage
     {
 
         Button accept;
@@ -20,6 +21,8 @@ namespace TicketToTalk
 
         public Participate()
         {
+            TrackedName = "Participate";
+
             userController = new UserController();
 
 			NavigationPage.SetHasNavigationBar(this, false);

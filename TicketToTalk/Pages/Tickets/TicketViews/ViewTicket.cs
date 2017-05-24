@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// View ticket.
 	/// </summary>
-	public partial class ViewTicket : ContentPage
+	public partial class ViewTicket : TrackedContentPage
 	{
 		public static Ticket displayedTicket { get; set; }
 		private TicketController ticketController = new TicketController();
@@ -22,6 +22,9 @@ namespace TicketToTalk
 		/// <param name="ticket">Ticket.</param>
 		public ViewTicket(Ticket ticket)
 		{
+
+            TrackedName = "View Ticket";
+
 			NavigationPage.SetHasBackButton(this, true);
 
 			displayedTicket = ticket;

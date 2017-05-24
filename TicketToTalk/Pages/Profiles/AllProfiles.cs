@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// View all profiles.
 	/// </summary>
-	public class AllProfiles : ContentPage
+	public class AllProfiles : TrackedContentPage
 	{
 		public static bool promptShown = false;
 		public static ObservableCollection<Person> people = new ObservableCollection<Person>();
@@ -20,6 +20,9 @@ namespace TicketToTalk
 		/// </summary>
 		public AllProfiles()
 		{
+
+            TrackedName = "All Profiles";
+
 			people.Clear();
 			this.Title = "Profiles";
 

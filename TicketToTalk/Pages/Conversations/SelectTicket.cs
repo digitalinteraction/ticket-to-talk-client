@@ -14,7 +14,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Select a ticket to add to a conversation.
 	/// </summary>
-	public class SelectTicket : ContentPage
+	public class SelectTicket : TrackedContentPage
 	{
 
 		private TicketController ticketController = new TicketController();
@@ -26,6 +26,9 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectTicket(Conversation conversation)
 		{
+
+            TrackedName = "Select Ticket";
+
 			this.conversation = conversation;
 
 			Title = "Select a Ticket";

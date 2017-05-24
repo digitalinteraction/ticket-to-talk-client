@@ -3,7 +3,7 @@
 //
 // ViewSharedArticle.cs
 using System;
-
+using Plugin.GoogleAnalytics;
 using Xamarin.Forms;
 
 namespace TicketToTalk
@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// View shared article.
 	/// </summary>
-	public class ViewSharedArticle : ContentPage
+	public class ViewSharedArticle : TrackedContentPage
 	{
 		private Article article;
 		private ArticleController articleController = new ArticleController();
@@ -23,6 +23,8 @@ namespace TicketToTalk
 		/// <param name="article">Article.</param>
 		public ViewSharedArticle(Article article)
 		{
+            TrackedName = "View Shared Article";
+
 			this.Title = "Article";
 			this.article = article;
 

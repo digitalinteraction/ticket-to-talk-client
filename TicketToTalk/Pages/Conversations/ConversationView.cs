@@ -10,7 +10,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Conversation view.
 	/// </summary>
-	public class ConversationView : ContentPage
+	public class ConversationView : TrackedContentPage
 	{
 		public static bool tutorialShown = false;
 
@@ -26,6 +26,8 @@ namespace TicketToTalk
 		/// <param name="conv">Conversation.</param>
 		public ConversationView(Conversation conv)
 		{
+
+            TrackedName = "Conversation View";
 
 			indicator = new ProgressSpinner(this, ProjectResource.color_white_transparent, ProjectResource.color_dark);
 

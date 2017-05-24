@@ -8,7 +8,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// My page.
 	/// </summary>
-	public class TicketsSounds : ContentPage
+	public class TicketsSounds : TrackedContentPage
 	{
 
 		/// <summary>
@@ -16,6 +16,9 @@ namespace TicketToTalk
 		/// </summary>
 		public TicketsSounds()
 		{
+
+            TrackedName = "Sound Tickets";
+
 			// Set Padding
 			Padding = new Thickness(20);
 			Title = "Sounds";

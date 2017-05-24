@@ -9,7 +9,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Play conversation.
 	/// </summary>
-	public class PlayConversation : ContentPage
+	public class PlayConversation : TrackedContentPage
 	{
 		private StackLayout ticketStack;
 		private List<Ticket> tickets;
@@ -33,6 +33,9 @@ namespace TicketToTalk
 		/// <param name="tickets">Tickets.</param>
 		public PlayConversation(Conversation conversation, List<Ticket> tickets)
 		{
+
+            TrackedName = "Play Conversation";
+
 			tickets.Shuffle();
 			this.tickets = tickets;
 			this.conversation = conversation;

@@ -11,7 +11,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Select active person.
 	/// </summary>
-	public class SelectActivePerson : ContentPage
+	public class SelectActivePerson : TrackedContentPage
 	{
 		private PersonController personController = new PersonController();
 		private ObservableCollection<Person> people = new ObservableCollection<Person>();
@@ -24,6 +24,8 @@ namespace TicketToTalk
 		/// </summary>
 		public SelectActivePerson()
 		{
+
+            TrackedName = "Select Active Person";
 
 			indicator = new ProgressSpinner(this, ProjectResource.color_grey_transparent);
 

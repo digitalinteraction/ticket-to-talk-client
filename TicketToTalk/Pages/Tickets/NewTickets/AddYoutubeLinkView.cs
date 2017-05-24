@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Add a youtube link view.
 	/// </summary>
-	public class AddYoutubeLinkView : ContentPage
+	public class AddYoutubeLinkView : TrackedContentPage
 	{
 		private Button button;
 		private Entry link;
@@ -22,6 +22,9 @@ namespace TicketToTalk
 		/// </summary>
 		public AddYoutubeLinkView()
 		{
+
+            TrackedName = "Add YouTube Video";
+
 			Title = "Add a Video";
 
 			ToolbarItems.Add(new ToolbarItem

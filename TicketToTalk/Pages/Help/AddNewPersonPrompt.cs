@@ -12,7 +12,7 @@ namespace TicketToTalk
 	/// <summary>
 	/// Add new person prompt.
 	/// </summary>
-	public class AddNewPersonPrompt : ContentPage
+	public class AddNewPersonPrompt : TrackedContentPage
 	{
 
 		/// <summary>
@@ -20,7 +20,9 @@ namespace TicketToTalk
 		/// </summary>
 		public AddNewPersonPrompt(bool canSkip)
 		{
-			
+
+            TrackedName = "Add New Conversation Prompt";
+
 			Padding = new Thickness(20);
 			BackgroundColor = ProjectResource.color_red;
 
