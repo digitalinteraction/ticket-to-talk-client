@@ -93,22 +93,25 @@ namespace TicketToTalk
 
 			cameraController.MediaReady += (f) =>
 			{
-				var page = new NewTicket("Picture", f.Path);
 
-				try
-				{
-					var nav = new NavigationPage(page);
-					nav.BarTextColor = ProjectResource.color_white;
-					nav.BarBackgroundColor = ProjectResource.color_blue;
-					NewTicketInfo.isInTutorial = true;
-					Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
-					Navigation.RemovePage(this);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine("Error taking picture");
-					Debug.WriteLine(ex.StackTrace);
-				}
+                if (f != null)
+                {
+					var page = new NewTicket("Picture", f.Path);
+
+					try
+					{
+						var nav = new NavigationPage(page);
+						nav.BarTextColor = ProjectResource.color_white;
+						nav.BarBackgroundColor = ProjectResource.color_blue;
+						NewTicketInfo.isInTutorial = true;
+						Device.BeginInvokeOnMainThread(() => Navigation.PushModalAsync(nav));
+						Navigation.RemovePage(this);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("Error taking picture");
+					}
+                }
 			};
 
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");

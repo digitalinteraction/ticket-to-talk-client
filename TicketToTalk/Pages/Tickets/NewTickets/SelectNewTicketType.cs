@@ -113,19 +113,24 @@ namespace TicketToTalk
 
 			cameraController.MediaReady += async (f) => 
 			{
-				var page = new NewTicket("Picture", f.Path);
 
-				try
-				{
-					var nav = new NavigationPage(page);
-					nav.SetNavHeaders();
-					await Navigation.PushModalAsync(nav);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine("Error taking picture");
-					Debug.WriteLine(ex.StackTrace);
-				}
+                if (f != null) 
+                {
+					var page = new NewTicket("Picture", f.Path);
+
+					try
+					{
+						var nav = new NavigationPage(page);
+						nav.SetNavHeaders();
+						await Navigation.PushModalAsync(nav);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("Error taking picture");
+                        Debug.WriteLine(ex);
+					}
+                }
+				
 			};
 
 			var action = await DisplayActionSheet("Choose Photo Type", "Cancel", null, "Take a Photo", "Select a Photo From Library");

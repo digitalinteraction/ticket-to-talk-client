@@ -52,7 +52,6 @@ namespace TicketToTalk
 						Directory = "TicketToTalk",
 						Name = name
 					});
-                    Debug.WriteLine(f.AlbumPath);
 					MediaReady(f);
 				});
 			}
