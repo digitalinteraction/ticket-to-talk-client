@@ -184,26 +184,6 @@ namespace TicketToTalk
 				}
 			};
 
-			//Content = new ScrollView
-			//{
-			//	Content = contentStack
-			//};
-
-			//var scrollView = new ScrollView
-			//{
-			//	Content = contentStack
-			//};
-
-			//var layout = new AbsoluteLayout();
-
-			//AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, Session.ScreenHeight, Session.ScreenWidth));
-			//AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
-
-			//layout.Children.Add(scrollView);
-			////layout.Children.Add(indicator);
-
-			//Content = scrollView;
-
 			var layout = new AbsoluteLayout();
 
 			scrollView = new ScrollView

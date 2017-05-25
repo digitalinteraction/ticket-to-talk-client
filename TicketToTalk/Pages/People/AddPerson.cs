@@ -170,6 +170,7 @@ namespace TicketToTalk
 				Text = "Add some notes..."
 			};
 			notesEditor.TextChanged += Entry_TextChanged;
+            notesEditor.HeightRequest = 100;
 
 			var imageStack = new StackLayout
 			{

@@ -70,7 +70,8 @@ namespace TicketToTalk
 			description = new Editor
 			{
 				Text = "Add a description",
-				TextColor = ProjectResource.color_red
+				TextColor = ProjectResource.color_red,
+                HeightRequest = 100
 			};
 			description.TextChanged += Entry_TextChanged;
 
@@ -294,7 +295,8 @@ namespace TicketToTalk
 			description = new Editor
 			{
 				Text = "Add a description",
-				TextColor = ProjectResource.color_red
+				TextColor = ProjectResource.color_red,
+                HeightRequest = 100
 			};
 			description.TextChanged += Entry_TextChanged;
 
