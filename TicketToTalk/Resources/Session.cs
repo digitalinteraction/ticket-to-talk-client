@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.IO;
 using SQLite;
 
@@ -20,7 +20,7 @@ namespace TicketToTalk
 		//public const string DB = "t3.31.db3";
 		//public static readonly string baseUrl = "http://localhost:8080/api/";
 
-		public const string DB = "t3_live.79.db3";
+		public const string DB = "t3_live.80.db3";
 		public static readonly string baseUrl = "https://tickettotalk.openlab.ncl.ac.uk/api/";
 
 		private static SQLiteConnection _connection = null;
@@ -45,6 +45,7 @@ namespace TicketToTalk
 					_connection.CreateTable<Ticket>();
 					_connection.CreateTable<TicketTag>();
 					_connection.CreateTable<User>();
+                    _connection.CreateTable<LastLoggedIn>();
 
 					return _connection;
 				}

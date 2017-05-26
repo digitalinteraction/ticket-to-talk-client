@@ -168,6 +168,8 @@ namespace TicketToTalk
 						{
 							IsBusy = false;
 
+                            updateLastLoggedIn(email.Text);
+
 							await Navigation.PushAsync(nav);
 							Navigation.RemovePage(this);
 						}
@@ -175,6 +177,8 @@ namespace TicketToTalk
 					else
 					{
 						IsBusy = false;
+
+                        updateLastLoggedIn(email.Text);
 
 						await Navigation.PushAsync(new Verification(false));
 						Navigation.RemovePage(this);
@@ -205,13 +209,13 @@ namespace TicketToTalk
 			}
 		}
 
-		/// <summary>
-		/// Event handler for registration button pressed.
-		/// </summary>
-		/// <returns>The register.</returns>
-		/// <param name="sender">Sender.</param>
-		/// <param name="ea">Ea.</param>
-		private async void HandleRegister(object sender, EventArgs ea)
+        /// <summary>
+        /// Event handler for registration button pressed.
+        /// </summary>
+        /// <returns>The register.</returns>
+        /// <param name="sender">Sender.</param>
+        /// <param name="ea">Ea.</param>
+        private async void HandleRegister(object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
@@ -259,11 +263,59 @@ namespace TicketToTalk
         {
             base.OnAppearing();
 
+            email.Text = getLastLoggedIn();
+
 			await email.FadeTo(1, 500);
 			await password.FadeTo(1, 500);
 			await login.FadeTo(1, 500);
 			await register.FadeTo(1, 500);
         }
-	}
+
+        /// <summary>
+        /// Updates the last logged in user.
+        /// </summary>
+        /// <param name="email">Email.</param>
+		private void updateLastLoggedIn(string email)
+		{
+
+            var lastLoggedIn = new LastLoggedIn(email, DateTime.Now);
+            lock (Session.Connection) 
+            {
+                Session.Connection.Insert(lastLoggedIn);
+            }
+		}
+
+        /// <summary>
+        /// Gets the last logged in user
+        /// </summary>
+        /// <returns>The last logged in.</returns>
+        private string getLastLoggedIn()
+        {
+
+            string e = "";
+
+            lock (Session.Connection) 
+            {
+                var last = Session.Connection.Table<LastLoggedIn>().OrderByDescending(l => l.date).FirstOrDefault();
+
+                if (last == null) 
+                {
+                    return null;
+                }
+
+                e = last.email;
+            }
+
+
+            if (!(String.IsNullOrWhiteSpace(e))) 
+            {
+                return e;
+            }
+            else 
+            {
+                return null;
+            }
+        }
+    }
 }
 
