@@ -17,7 +17,6 @@ namespace TicketToTalk
 		private Entry password;
 		private Button login;
 		private Button register;
-		//private ActivityIndicator indicator = null;
 		ScrollView scrollView;
 
 		/// <summary>
@@ -33,7 +32,7 @@ namespace TicketToTalk
 
 			indicator = new ProgressSpinner(this, ProjectResource.color_blue_transparent, ProjectResource.color_white);
 
-			Title = "Title";
+			Title = "Login";
 
 			Padding = new Thickness(20);
 
@@ -71,7 +70,8 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				TextColor = ProjectResource.color_white,
 				PlaceholderColor = ProjectResource.color_dark,
-				WidthRequest = (Session.ScreenWidth * 0.75)
+				WidthRequest = (Session.ScreenWidth * 0.75),
+                Keyboard = Keyboard.Email
 			};
 			email.TextChanged += Entry_TextChanged;
 
@@ -168,6 +168,8 @@ namespace TicketToTalk
 						{
 							IsBusy = false;
 
+                            updateLastLoggedIn(email.Text);
+
 							await Navigation.PushAsync(nav);
 							Navigation.RemovePage(this);
 						}
@@ -175,6 +177,8 @@ namespace TicketToTalk
 					else
 					{
 						IsBusy = false;
+
+                        updateLastLoggedIn(email.Text);
 
 						await Navigation.PushAsync(new Verification(false));
 						Navigation.RemovePage(this);
@@ -205,22 +209,22 @@ namespace TicketToTalk
 			}
 		}
 
-		/// <summary>
-		/// Event handler for registration button pressed.
-		/// </summary>
-		/// <returns>The register.</returns>
-		/// <param name="sender">Sender.</param>
-		/// <param name="ea">Ea.</param>
-		private async void HandleRegister(object sender, EventArgs ea)
+        /// <summary>
+        /// Event handler for registration button pressed.
+        /// </summary>
+        /// <returns>The register.</returns>
+        /// <param name="sender">Sender.</param>
+        /// <param name="ea">Ea.</param>
+        private async void HandleRegister(object sender, EventArgs ea)
 		{
 			await register.FadeTo(0, 500);
 			await login.FadeTo(0, 500);
 			await password.FadeTo(0, 500);
 			await email.FadeTo(0, 500);
 
-			var nav = new Register();
+            var nav = new Register(email.Text, password.Text);
 			await Navigation.PushAsync(nav);
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -234,12 +238,10 @@ namespace TicketToTalk
 			if (sender == email) 
 			{
 				email.Focus();
-				//scrollView.ScrollToAsync(email, ScrollToPosition.End, true);
 			}
 			if (sender == password)
 			{
 				password.Focus();
-				//scrollView.ScrollToAsync(password, ScrollToPosition.End, true);
 			}
 			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
 				&& (!string.IsNullOrEmpty(password.Text));
@@ -255,6 +257,65 @@ namespace TicketToTalk
 				login.IsEnabled = false;
 			}
 		}
-	}
+
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            email.Text = getLastLoggedIn();
+
+			await email.FadeTo(1, 500);
+			await password.FadeTo(1, 500);
+			await login.FadeTo(1, 500);
+			await register.FadeTo(1, 500);
+        }
+
+        /// <summary>
+        /// Updates the last logged in user.
+        /// </summary>
+        /// <param name="email">Email.</param>
+		private void updateLastLoggedIn(string email)
+		{
+
+            var lastLoggedIn = new LastLoggedIn(email, DateTime.Now);
+            lock (Session.Connection) 
+            {
+                Session.Connection.Insert(lastLoggedIn);
+            }
+		}
+
+        /// <summary>
+        /// Gets the last logged in user
+        /// </summary>
+        /// <returns>The last logged in.</returns>
+        private string getLastLoggedIn()
+        {
+
+            string e = "";
+
+            lock (Session.Connection) 
+            {
+                var last = Session.Connection.Table<LastLoggedIn>().OrderByDescending(l => l.date).FirstOrDefault();
+
+                if (last == null) 
+                {
+                    return null;
+                }
+
+                e = last.email;
+            }
+
+
+            if (!(String.IsNullOrWhiteSpace(e))) 
+            {
+                return e;
+            }
+            else 
+            {
+                return null;
+            }
+        }
+    }
 }
 

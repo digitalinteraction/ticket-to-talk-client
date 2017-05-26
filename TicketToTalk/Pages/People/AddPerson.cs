@@ -38,11 +38,12 @@ namespace TicketToTalk
 		private Picker relationPicker;
 		private Button savePersonButton;
 		private Person person;
+        private Entry birthYear;
 
-		/// <summary>
-		/// Creates an instance of an add person view.
-		/// </summary>
-		public AddPerson(Person person)
+        /// <summary>
+        /// Creates an instance of an add person view.
+        /// </summary>
+        public AddPerson(Person person)
 		{
 
             TrackedName = "Add Person";
@@ -114,16 +115,24 @@ namespace TicketToTalk
 				Margin = new Thickness(0, 10, 0, 2)
 			};
 
-			yearPicker = new Picker
-			{
-				Title = "Year",
-				TextColor = ProjectResource.color_red
-			};
-			yearPicker.SelectedIndexChanged += Entry_TextChanged;
-			for (int i = DateTime.Now.Year - 100; i < DateTime.Now.Year; i++)
-			{
-				yearPicker.Items.Add((i + 1).ToString());
-			}
+			//yearPicker = new Picker
+			//{
+			//	Title = "Year",
+			//	TextColor = ProjectResource.color_red
+			//};
+			//yearPicker.SelectedIndexChanged += Entry_TextChanged;
+			//for (int i = DateTime.Now.Year - 100; i < DateTime.Now.Year; i++)
+			//{
+			//	yearPicker.Items.Add((i + 1).ToString());
+			//}
+
+            birthYear = new Entry 
+            {
+				Placeholder = "1920",
+				TextColor = ProjectResource.color_red,
+                Keyboard = Keyboard.Numeric
+            };
+            birthYear.TextChanged += Entry_TextChanged;
 
 			var relationLabel = new Label
 			{
@@ -170,6 +179,7 @@ namespace TicketToTalk
 				Text = "Add some notes..."
 			};
 			notesEditor.TextChanged += Entry_TextChanged;
+            notesEditor.HeightRequest = 100;
 
 			var imageStack = new StackLayout
 			{
@@ -204,7 +214,7 @@ namespace TicketToTalk
 					nameLabel,
 					name,
 					DOBLabel,
-					yearPicker,
+                    birthYear,
 					birthPlace,
 					birthPlaceEntry,
 					relationLabel,
@@ -331,14 +341,14 @@ namespace TicketToTalk
 		/// <returns>The text changed.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void Entry_TextChanged(object sender, EventArgs e)
+		private async void Entry_TextChanged(object sender, EventArgs e)
 		{
 			var entriesNotNull = (!string.IsNullOrEmpty(name.Text))
 				&& (!string.IsNullOrEmpty(birthPlaceEntry.Text))
 				&& (!string.IsNullOrEmpty(town_city.Text))
 				&& (!string.IsNullOrEmpty(notesEditor.Text))
 				&& (relationPicker.SelectedIndex != -1)
-				&& (yearPicker.SelectedIndex != -1);
+                && (!string.IsNullOrEmpty(birthYear.Text));
 
 			if (entriesNotNull)
 			{
@@ -357,12 +367,22 @@ namespace TicketToTalk
 		/// </summary>
 		private async void SavePerson(object sender, EventArgs ea)
 		{
+
+			if ((!string.IsNullOrEmpty(birthYear.Text)))
+			{
+				if (int.Parse(birthYear.Text) > DateTime.Now.Year)
+				{
+					await DisplayAlert("Add Person", "Birth year cannot be in the future", "OK");
+                    return;
+				}
+			}
+
 			savePersonButton.IsEnabled = false;
 
 			Person tempPerson = new Person
 			{
 				name = name.Text,
-				birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString(),
+                birthYear = birthYear.Text,
 				birthPlace = birthPlaceEntry.Text,
 				area = town_city.Text,
 				notes = notesEditor.Text,
@@ -417,12 +437,22 @@ namespace TicketToTalk
 		/// <param name="e">E.</param>
 		private async void SavePersonChanges(object sender, EventArgs e)
 		{
+
+			if ((!string.IsNullOrEmpty(birthYear.Text)))
+			{
+				if (int.Parse(birthYear.Text) > DateTime.Now.Year)
+				{
+					await DisplayAlert("Add Person", "Birth year cannot be in the future", "OK");
+					return;
+				}
+			}
+
 			savePersonButton.IsEnabled = false;
 
 			var p = personController.GetPerson(person.id);
 
 			p.name = name.Text;
-			p.birthYear = (DateTime.Now.Year - 99 + yearPicker.SelectedIndex).ToString();
+            p.birthYear = birthYear.Text;
 			p.birthPlace = birthPlaceEntry.Text;
 			p.area = town_city.Text;
 			p.notes = notesEditor.Text;
