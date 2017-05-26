@@ -30,7 +30,7 @@ namespace TicketToTalk
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.Register"/> class.
 		/// </summary>
-		public Register()
+		public Register(String email, String password)
 		{
 
             TrackedName = "Register";
@@ -78,8 +78,15 @@ namespace TicketToTalk
 			emailEntry = new Entry
 			{
 				Placeholder = "Enter your email...",
-				TextColor = ProjectResource.color_red
+				TextColor = ProjectResource.color_red,
+                Keyboard = Keyboard.Email
 			};
+
+            if (!(String.IsNullOrWhiteSpace(email))) 
+            {
+                emailEntry.Text = email;
+            }
+
 			emailEntry.TextChanged += Entry_TextChanged;
 
 			var passwordLabel = new Label
@@ -94,6 +101,12 @@ namespace TicketToTalk
 				IsPassword = true,
 				TextColor = ProjectResource.color_red,
 			};
+
+			if (!(String.IsNullOrWhiteSpace(password)))
+			{
+                passwordEntry.Text = password;
+			}
+
 			passwordEntry.TextChanged += Entry_TextChanged;
 
 			var confirmPasswordLabel = new Label
@@ -252,13 +265,6 @@ namespace TicketToTalk
 					file = await cameraController.SelectPicture();
 					break;
 			}
-
-			//CameraController.TakePhoto(this, null);
-		}
-
-		protected void Complete(MediaFile file)
-		{
-
 		}
 
 		/// <summary>

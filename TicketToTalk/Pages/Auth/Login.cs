@@ -17,7 +17,6 @@ namespace TicketToTalk
 		private Entry password;
 		private Button login;
 		private Button register;
-		//private ActivityIndicator indicator = null;
 		ScrollView scrollView;
 
 		/// <summary>
@@ -33,7 +32,7 @@ namespace TicketToTalk
 
 			indicator = new ProgressSpinner(this, ProjectResource.color_blue_transparent, ProjectResource.color_white);
 
-			Title = "Title";
+			Title = "Login";
 
 			Padding = new Thickness(20);
 
@@ -71,7 +70,8 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				TextColor = ProjectResource.color_white,
 				PlaceholderColor = ProjectResource.color_dark,
-				WidthRequest = (Session.ScreenWidth * 0.75)
+				WidthRequest = (Session.ScreenWidth * 0.75),
+                Keyboard = Keyboard.Email
 			};
 			email.TextChanged += Entry_TextChanged;
 
@@ -218,9 +218,9 @@ namespace TicketToTalk
 			await password.FadeTo(0, 500);
 			await email.FadeTo(0, 500);
 
-			var nav = new Register();
+            var nav = new Register(email.Text, password.Text);
 			await Navigation.PushAsync(nav);
-			Navigation.RemovePage(this);
+			//Navigation.RemovePage(this);
 		}
 
 		/// <summary>
@@ -234,12 +234,10 @@ namespace TicketToTalk
 			if (sender == email) 
 			{
 				email.Focus();
-				//scrollView.ScrollToAsync(email, ScrollToPosition.End, true);
 			}
 			if (sender == password)
 			{
 				password.Focus();
-				//scrollView.ScrollToAsync(password, ScrollToPosition.End, true);
 			}
 			var entriesNotNull = (!string.IsNullOrEmpty(email.Text))
 				&& (!string.IsNullOrEmpty(password.Text));
@@ -255,6 +253,17 @@ namespace TicketToTalk
 				login.IsEnabled = false;
 			}
 		}
+
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+			await email.FadeTo(1, 500);
+			await password.FadeTo(1, 500);
+			await login.FadeTo(1, 500);
+			await register.FadeTo(1, 500);
+        }
 	}
 }
 
