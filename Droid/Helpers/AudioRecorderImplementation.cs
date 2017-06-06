@@ -34,9 +34,9 @@ namespace TicketToTalk.Droid
 			path = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath + "/" + fileName;
 
 			Debug.WriteLine("AndroidAudioRecorder: path = " + path);
-			_recorder.SetAudioSource(AudioSource.Mic);
-			_recorder.SetOutputFormat(OutputFormat.ThreeGpp);
-			_recorder.SetAudioEncoder(AudioEncoder.AmrNb);
+            _recorder.SetAudioSource(AudioSource.Mic);
+            _recorder.SetOutputFormat(OutputFormat.Mpeg4);
+            _recorder.SetAudioEncoder(AudioEncoder.Aac);
 			_recorder.SetOutputFile(path);
 			_recorder.Prepare();
 			_recorder.Start();
