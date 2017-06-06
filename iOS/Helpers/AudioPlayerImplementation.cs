@@ -13,8 +13,9 @@ namespace TicketToTalk.iOS
 	{
 		AVAudioPlayer _player;
 		bool finished = false;
+        private AVAudioSession audioSession;
 
-		public AudioPlayerImplementation()
+        public AudioPlayerImplementation()
 		{
 		}
 
@@ -25,11 +26,23 @@ namespace TicketToTalk.iOS
 		/// <param name="fileName">File name.</param>
 		public void SetupPlayer(string fileName)
 		{
+			audioSession = AVAudioSession.SharedInstance();
+            var error = audioSession.SetCategory(AVAudioSessionCategory.Playback);
+			if (error != null)
+			{
+				Console.WriteLine(error);
+			}
+			error = audioSession.SetActive(true);
+			if (error != null)
+			{
+				Console.WriteLine(error);
+			}
+
 			string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), fileName);
 			var url = NSUrl.FromString(path);
 
 			_player = AVAudioPlayer.FromUrl(url);
-			//_player.Volume = 1f;
+			_player.Volume = 1.0f;
 
 			_player.FinishedPlaying += PlayerFinishedPlaying;
 			_player.PrepareToPlay();

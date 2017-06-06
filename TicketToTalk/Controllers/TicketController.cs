@@ -545,6 +545,8 @@ namespace TicketToTalk
 
 			var url = new Uri(Session.baseUrl + "tickets/download?ticket_id=" + ticket.id + "&token=" + Session.Token.val + "&api_key=" + Session.activeUser.api_key);
 
+            Debug.WriteLine(url);
+
 			Console.WriteLine("Beginning Download");
 			Stream returned = null;
 

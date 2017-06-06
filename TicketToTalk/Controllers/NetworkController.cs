@@ -62,6 +62,8 @@ namespace TicketToTalk
 			URL = URL.Substring(0, URL.Length - 1);
 			var uri = new Uri(URLBase + URL);
 
+            Debug.WriteLine(uri);
+
 			HttpResponseMessage response = null;
 
 			// Get response

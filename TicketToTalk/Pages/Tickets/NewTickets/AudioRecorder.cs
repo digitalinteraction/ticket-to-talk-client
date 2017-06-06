@@ -115,7 +115,7 @@ namespace TicketToTalk
 			{
 				record.Source = "stop_icon.png";
 				recording = true;
-				DependencyService.Get<IAudioRecorder>().Record("u_" + Session.activeUser.id + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".wav");
+				DependencyService.Get<IAudioRecorder>().Record("u_" + Session.activeUser.id + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".m4a");
 				inf.Text = "Recording...";
 				saveAudio.BackgroundColor = ProjectResource.color_grey;
 				saveAudio.IsEnabled = false;
