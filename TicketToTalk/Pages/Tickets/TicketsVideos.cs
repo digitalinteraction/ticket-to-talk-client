@@ -9,6 +9,7 @@ namespace TicketToTalk
 	/// </summary>
 	public class TicketsVideos : TrackedContentPage
 	{
+        private ProgressSpinner indicator;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.TicketsVideos"/> class.
@@ -17,6 +18,8 @@ namespace TicketToTalk
 		{
 
             TrackedName = "Video Tickets";
+
+            indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
 			
 			// Set Padding
 			Padding = new Thickness(20);
@@ -62,7 +65,7 @@ namespace TicketToTalk
 			ticketsListView.SeparatorColor = Color.Transparent;
 
 
-			Content = new StackLayout
+			var stack = new StackLayout
 			{
 				Spacing = 12,
 				Children =
@@ -70,6 +73,16 @@ namespace TicketToTalk
 					ticketsListView
 				}
 			};
+
+			var layout = new AbsoluteLayout();
+
+			AbsoluteLayout.SetLayoutBounds(stack, new Rectangle(0.5, 0.5, 1, 1));
+			AbsoluteLayout.SetLayoutFlags(stack, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(stack);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>
@@ -78,7 +91,7 @@ namespace TicketToTalk
 		/// <returns>The selection.</returns>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		private void OnSelection(object sender, SelectedItemChangedEventArgs e)
+		private async void OnSelection(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem == null)
 			{
@@ -88,7 +101,23 @@ namespace TicketToTalk
 			Ticket ticket = (Ticket)e.SelectedItem;
 			ToolbarItems.Clear();
 
-			Navigation.PushAsync(new ViewTicket(ticket));
+			IsBusy = true;
+
+			var nav = new ViewTicket(ticket);
+			var ready = await nav.SetUpTicketForDisplay();
+
+			if (ready)
+			{
+				IsBusy = false;
+
+				await Navigation.PushAsync(nav);
+			}
+			else
+			{
+				IsBusy = false;
+
+				await DisplayAlert("No Network", "Ticket could not be downloaded", "OK");
+			}
 
 			//Navigation.PushAsync(new ViewTicket(ticket));
 			((ListView)sender).SelectedItem = null; //uncomment line if you want to disable the visual selection state.
