@@ -16,7 +16,7 @@ namespace TicketToTalk
 
 		public static bool isInTutorial = false;
 		private ContentView ticketInf = new ContentView();
-		public static ActivityIndicator indicator;
+        public static ProgressSpinner indicator;
 		ScrollView scrollView;
 		AbsoluteLayout layout = new AbsoluteLayout();
 
@@ -64,14 +64,6 @@ namespace TicketToTalk
 				}
 			}
 
-			indicator = new ActivityIndicator
-			{
-				BackgroundColor = ProjectResource.color_white_transparent,
-				Color = ProjectResource.color_dark,
-				IsVisible = false,
-				IsEnabled = false
-			};
-
 			var stack = new StackLayout
 			{
 				VerticalOptions = LayoutOptions.StartAndExpand,
@@ -90,11 +82,13 @@ namespace TicketToTalk
 
 			layout.HeightRequest = Session.ScreenHeight;
 
+            indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
+
 			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
 			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
 
-			AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, 1.0, 1.0));
-			AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.All);
+			//AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, 1.0, 1.0));
+			//AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.All);
 
 			layout.Children.Add(scrollView);
 			layout.Children.Add(indicator);

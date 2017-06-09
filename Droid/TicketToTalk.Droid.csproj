@@ -217,6 +217,9 @@
     <AndroidResource Include="Resources\drawable\ic_info_3x.png" />
     <AndroidResource Include="Resources\drawable\clipboard_white_icon.png" />
     <AndroidResource Include="Resources\drawable\app_icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\app_icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\app_icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\app_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />

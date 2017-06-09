@@ -38,6 +38,18 @@ namespace TicketToTalk.Droid
             _recorder.SetOutputFormat(OutputFormat.Mpeg4);
             _recorder.SetAudioEncoder(AudioEncoder.Aac);
 			_recorder.SetOutputFile(path);
+
+            if ( Int32.Parse(Android.OS.Build.VERSION.Sdk) >= 10) 
+            {
+                _recorder.SetAudioSamplingRate(44100);
+                _recorder.SetAudioEncodingBitRate(96000);
+            }
+            else 
+            {
+				_recorder.SetAudioSamplingRate(8000);
+				_recorder.SetAudioEncodingBitRate(12200);
+            }
+
 			_recorder.Prepare();
 			_recorder.Start();
 		}

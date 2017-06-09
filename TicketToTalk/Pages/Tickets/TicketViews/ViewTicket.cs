@@ -157,7 +157,7 @@ namespace TicketToTalk
 			{
 				try
 				{
-					await ticketController.DownloadTicketContent(displayedTicket);
+                    await Task.Run(() => ticketController.DownloadTicketContent(displayedTicket));
 				}
 				catch (NoNetworkException ex)
 				{
