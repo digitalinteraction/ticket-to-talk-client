@@ -8,7 +8,8 @@ using Plugin.CurrentActivity;
 namespace TicketToTalk.Droid
 {
 	//You can specify additional application information in this attribute
-    [Application]
+    //[Application]
+    [Application(Label = "Ticket to Talk", Icon = "@drawable/app_icon")]
     public class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
