@@ -43,9 +43,9 @@ namespace TicketToTalk
 			var titleLabel = new Label
 			{
 				Text = "Title",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            titleLabel.SetSubHeaderStyle();
 
 			saveButton = new Button
 			{
@@ -55,58 +55,62 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				IsEnabled = false,
 				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0, 0, 0, 10)
 			};
+            saveButton.SetStyle();
 			saveButton.Clicked += SaveChanges;
 
 			title = new Entry
 			{
 				Placeholder = "Add a ticket title",
 				Text = ticket.title,
-				TextColor = ProjectResource.color_red
-			};
+            };
+            title.SetStyle();
+            title.TextColor = ProjectResource.color_red;
 
 			// Description Label
 			var descriptionLabel = new Label
 			{
 				Text = "Description",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            descriptionLabel.SetSubHeaderStyle();
 
 			// Description Entry
 			description = new Editor
 			{
 				Text = ticket.description,
 				TextColor = ProjectResource.color_red,
-				Margin = new Thickness(0, 0, 0, 2)
+				Margin = new Thickness(0, 0, 0, 2),
+                HeightRequest = 100
 			};
+            description.SetStyle();
 
 			// Area label
 			var areaLabel = new Label
 			{
 				Text = "Area",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            areaLabel.SetSubHeaderStyle();
 
 			// Area entry
 			town_city = new Entry
 			{
-				//Text = area.townCity,
 				Text = ticket.area,
 				Placeholder = "Town/City",
-				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 5)
 			};
+            town_city.SetStyle();
+            town_city.TextColor = ProjectResource.color_red;
 
 			// Year label
 			var yearLabel = new Label
 			{
 				Text = "Year",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            yearLabel.SetSubHeaderStyle();
 
 			// Year Picker
 			yearPicker = new Picker
@@ -135,9 +139,9 @@ namespace TicketToTalk
 			var periodLabel = new Label
 			{
 				Text = "Period",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            periodLabel.SetSubHeaderStyle();
 
 			period_picker = new Picker
 			{
@@ -149,9 +153,9 @@ namespace TicketToTalk
 			var accessLevelLabel = new Label
 			{
 				Text = "Who Can See This?",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            accessLevelLabel.SetSubHeaderStyle();
 
 			access_level = new Picker
 			{

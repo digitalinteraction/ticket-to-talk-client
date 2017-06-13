@@ -25,16 +25,17 @@ namespace TicketToTalk
 
 			var nameLabel = new Label
 			{
-				FontSize = 18,
-				TextColor = ProjectResource.color_dark,
 			};
+            nameLabel.SetSubHeaderStyle();
+            nameLabel.VerticalOptions = LayoutOptions.Start;
 			nameLabel.SetBinding(Label.TextProperty, "name");
 
 			var relation = new Label
 			{
-				FontSize = 12,
-				TextColor = ProjectResource.color_blue,
 			};
+            relation.SetBodyStyle();
+            relation.VerticalOptions = LayoutOptions.Start;
+            relation.TextColor = ProjectResource.color_blue;
 			relation.SetBinding(Label.TextProperty, "email");
 
 			var detailsStack = new StackLayout

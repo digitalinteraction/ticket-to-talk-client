@@ -138,6 +138,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pages\Auth\Participate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TrackedContentPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LastLoggedIn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)T3ImageCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

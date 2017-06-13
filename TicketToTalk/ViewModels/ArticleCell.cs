@@ -37,16 +37,19 @@ namespace TicketToTalk
 
 			var title = new Label
 			{
-				FontSize = 14,
-				TextColor = ProjectResource.color_dark,
+				//FontSize = 14,
+				//TextColor = ProjectResource.color_dark,
 			};
+            title.SetSubHeaderStyle();
 			title.SetBinding(Label.TextProperty, "title");
 
 			var link = new Label
 			{
-				FontSize = 12,
-				TextColor = ProjectResource.color_blue,
+				//FontSize = 12,
+				//TextColor = ProjectResource.color_blue,
 			};
+            link.SetBodyStyle();
+            link.TextColor = ProjectResource.color_blue;
 			link.SetBinding(Label.TextProperty, "link");
 
 			var detailsStack = new StackLayout

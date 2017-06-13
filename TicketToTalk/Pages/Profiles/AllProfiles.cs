@@ -89,9 +89,7 @@ namespace TicketToTalk
 			var stack = new StackLayout();
 			stack.Children.Add(tableView);
 			Content = stack;
-
-			Debug.WriteLine(Session.activeUser);
-		}
+        }
 
 		/// <summary>
 		/// Launch person profile on cell tap.

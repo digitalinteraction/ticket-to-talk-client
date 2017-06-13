@@ -24,6 +24,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				FontSize = 16
 			};
+            p1.SetBodyStyle();
 
 			var p2 = new Label
 			{
@@ -31,6 +32,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				FontSize = 16
 			};
+            p2.SetBodyStyle();
 
 			var p3 = new Label
 			{
@@ -38,6 +40,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				FontSize = 16
 			};
+            p3.SetBodyStyle();
 
 			var nuLogo = new Image
 			{

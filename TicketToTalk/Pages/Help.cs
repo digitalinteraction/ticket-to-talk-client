@@ -30,11 +30,10 @@ namespace TicketToTalk
 			var summary = new Label 
 			{
 				Text = "Help bridge gaps in conversation with Ticket to Talk.",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            summary.SetSubHeaderStyle();
+            summary.HorizontalTextAlignment = TextAlignment.Center;
+            summary.HorizontalOptions = LayoutOptions.CenterAndExpand;
 
 			var intro = new Label 
 			{
@@ -45,15 +44,13 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				FontSize = 14,
 			};
+            intro.SetBodyStyle();
 
 			var ticketsTitle = new Label 
 			{
 				Text = "Tickets",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            ticketsTitle.SetSubHeaderStyle();
 
 			var ticketsAdding = new Label
 			{
@@ -62,9 +59,8 @@ namespace TicketToTalk
 					"Select the add button in the top corner and select the type of ticket you want to create. " +
 					"From here you can select or take a photo, record a sound, or add a link to a youtube video. " +
 					"Once you have added the ticket fill out the information on the screen and click add!",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            ticketsAdding.SetBodyStyle();
 
 			var ticketsViewing = new Label
 			{
@@ -72,36 +68,28 @@ namespace TicketToTalk
 					"If you have added a ticket you can view it from the tickets page. " +
 					"The tickets are sorted into categories of ticket type and the stages in life of the person your tickets are attached to. " +
 					"Simply click on a ticket to view it.",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            ticketsViewing.SetBodyStyle();
 
 			var inspirationTitle = new Label
 			{
 				Text = "Inspiration",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            inspirationTitle.SetSubHeaderStyle();
 
 			var inspirationInf = new Label
 			{
 				Text =
 					"If you need some inspiration about what ticket to add then try the inspirations feature. " +
 					"Look through the provided inspiration and use these to add your tickets!",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            inspirationInf.SetBodyStyle();
 
 			var conversationsTitle = new Label 
 			{
 				Text = "Conversations",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            conversationsTitle.SetSubHeaderStyle();
 
 			var conversationsInf = new Label
 			{
@@ -110,18 +98,14 @@ namespace TicketToTalk
 					"When viewing a ticket tap options, select add to conversation, and then select the conversation you want to add the ticket to. " +
 					"Then when you are ready to start the conversation select it from the conversations menu and press start. " +
 					"Dont forget to add some notes about the converation when you are finished for the other contributors to see!",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            conversationsInf.SetBodyStyle();
 
 			var usefulInformationTitle = new Label
 			{
 				Text = "Useful Information",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            usefulInformationTitle.SetSubHeaderStyle();
 
 			var usefulInformationInf = new Label
 			{
@@ -129,27 +113,22 @@ namespace TicketToTalk
 					"If you come across an article you like then add it to the useful information page. " +
 					"You can use this to save pages you find useful. " +
 					"If you think someone else might use the information you can share the article with them by selecting share from the options menu when viewing the infomation.",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            usefulInformationInf.SetBodyStyle();
 
 			var peopleTitle = new Label
 			{
 				Text = "People",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            peopleTitle.SetSubHeaderStyle();
 
 			var peopleInf = new Label
 			{
 				Text =
 					"You can add contributors to a person from their profile. " +
 					"Select send invitation, put in their email, and select the group you want to add them to.",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
 			};
+            peopleInf.SetBodyStyle();
 
 			var content = new StackLayout 
 			{

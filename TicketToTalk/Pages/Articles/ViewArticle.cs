@@ -31,11 +31,12 @@ namespace TicketToTalk
 
 			var articleTitle = new Label
 			{
-				FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-				TextColor = ProjectResource.color_dark,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				//FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+				//TextColor = ProjectResource.color_dark,
+				//FontAttributes = FontAttributes.Bold,
+				//HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            articleTitle.SetHeaderStyle();
 			articleTitle.SetBinding(Label.TextProperty, "title");
 			articleTitle.BindingContext = currentArticle;
 
@@ -51,28 +52,30 @@ namespace TicketToTalk
 			var notesLabel = new Label
 			{
 				Text = "Notes",
-				TextColor = ProjectResource.color_blue
 			};
+            notesLabel.SetSubHeaderStyle();
+            notesLabel.TextColor = ProjectResource.color_blue;
 
 			var notesContent = new Label
 			{
 				Text = article.notes,
-				TextColor = ProjectResource.color_dark
 			};
+            notesContent.SetBodyStyle();
 			notesContent.SetBinding(Label.TextProperty, "notes");
 			notesContent.BindingContext = currentArticle;
 
 			var linkLabel = new Label
 			{
-				Text = "Link",
-				TextColor = ProjectResource.color_blue
+				Text = "Link"
 			};
+            linkLabel.SetSubHeaderStyle();
+            linkLabel.TextColor = ProjectResource.color_blue;
 
 			var linkContent = new Label
 			{
 				Text = article.link,
-				TextColor = ProjectResource.color_dark
 			};
+            linkContent.SetBodyStyle();
 			linkContent.SetBinding(Label.TextProperty, "link");
 			linkContent.BindingContext = currentArticle;
 
@@ -83,9 +86,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				BackgroundColor = ProjectResource.color_blue,
 				WidthRequest = Session.ScreenWidth * 0.4,
-				Margin = new Thickness(0, 0, 0, 10),
-				BorderRadius = 5
 			};
+            viewArticleButton.SetStyle();
 			viewArticleButton.Clicked += LaunchBrowser;
 
 			var shareArticleButton = new Button
@@ -95,9 +97,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				BackgroundColor = ProjectResource.color_dark,
 				WidthRequest = Session.ScreenWidth * 0.4,
-				Margin = new Thickness(0, 0, 0, 10),
-				BorderRadius = 5
 			};
+            shareArticleButton.SetStyle();
 			shareArticleButton.Clicked += ShareArticleButton_Clicked;
 
 			var buttonStack = new StackLayout

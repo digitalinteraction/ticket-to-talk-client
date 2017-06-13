@@ -26,6 +26,8 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_white,
 				WidthRequest = 200
 			};
+            newPersonButton.SetStyle();
+            newPersonButton.Margin = new Thickness(0, 0, 0, 0);
 			newPersonButton.Clicked += NewPersonButton_Clicked;
 
 			var joinPersonButton = new Button
@@ -38,6 +40,8 @@ namespace TicketToTalk
 				WidthRequest = 200,
 				IsEnabled = false
 			};
+            joinPersonButton.SetStyle();
+            joinPersonButton.Margin = new Thickness(0, 0, 0, 0);
 			joinPersonButton.Clicked += JoinPersonButton_Clicked;
 
 			// Get invitations

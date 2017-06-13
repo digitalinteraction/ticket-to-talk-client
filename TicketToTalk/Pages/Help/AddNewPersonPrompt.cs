@@ -39,14 +39,20 @@ namespace TicketToTalk
 			var info = new Label
 			{
 				Text = "Let's make a profile for someone you'd like to collect tickets for!",
-				TextColor = ProjectResource.color_white,
-				HorizontalTextAlignment = TextAlignment.Center,
+				//TextColor = ProjectResource.color_white,
+				//HorizontalTextAlignment = TextAlignment.Center,
 			};
+            info.SetSubHeaderStyle();
+            info.TextColor = ProjectResource.color_white;
+            info.HorizontalTextAlignment = TextAlignment.Center;
+            info.HorizontalOptions = LayoutOptions.CenterAndExpand;
 
 			var button = new Button
 			{
 				Text = "Add a Person",
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
@@ -54,6 +60,8 @@ namespace TicketToTalk
 			{
 				Text = "Skip Tutorial"
 			};
+            skipTutorialButton.SetStyle();
+            skipTutorialButton.Margin = new Thickness(0, 0, 0, 0);
 			skipTutorialButton.SetButtonStyle(ProjectResource.color_red);
 			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
 			skipTutorialButton.IsVisible = canSkip;

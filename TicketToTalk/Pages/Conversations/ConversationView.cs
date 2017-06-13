@@ -62,45 +62,45 @@ namespace TicketToTalk
 			var dateLabel = new Label
 			{
 				Text = "Time",
-				TextColor = ProjectResource.color_dark
 			};
+            dateLabel.SetSubHeaderStyle();
 
 			var date = new Label
 			{
 				Text = conversation.displayDate,
-				TextColor = ProjectResource.color_red
 			};
+            date.SetBodyStyle();
+            date.TextColor = ProjectResource.color_red;
 			date.SetBinding(Label.TextProperty, new Binding(path: "timestamp", stringFormat: "{0:hh:mm tt}" ));
 			date.BindingContext = conversation;
 
 			var notesLabel = new Label
 			{
 				Text = "Notes",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			var notes = new Label
 			{
-				TextColor = ProjectResource.color_red,
 			};
+            notes.SetBodyStyle();
+            notes.TextColor = ProjectResource.color_red;
 			notes.SetBinding(Label.TextProperty, "notes");
 			notes.BindingContext = conversation;
 
 			var ticketsLabel = new Label
 			{
 				Text = "Tickets",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            ticketsLabel.SetHeaderStyle();
 
 			var newTicketLabel = new Label
 			{
-				Text = "Add a Ticket",
-				TextColor = ProjectResource.color_dark,
-				HorizontalOptions = LayoutOptions.StartAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand
+				Text = "Add a Ticket"
 			};
+            newTicketLabel.SetSubHeaderStyle();
 
 			var newTicketIcon = new Image()
 			{
@@ -150,6 +150,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5
 			};
+            startConversation.SetStyle();
 			startConversation.Clicked += StartConversation_Clicked;
 
 			var stack = new StackLayout

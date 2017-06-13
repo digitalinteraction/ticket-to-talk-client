@@ -36,10 +36,12 @@ namespace TicketToTalk
 			inf = new Label
 			{
 				Text = "Tap the mic to start recording.",
-				TextColor = ProjectResource.color_red,
-				VerticalOptions = LayoutOptions.Center,
-				HorizontalOptions = LayoutOptions.Center,
+				//TextColor = ProjectResource.color_red,
+				//VerticalOptions = LayoutOptions.Center,
+				//HorizontalOptions = LayoutOptions.Center,
 			};
+            inf.SetHeaderStyle();
+            inf.TextColor = ProjectResource.color_red;
 
 			record = new Image
 			{
@@ -57,9 +59,9 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_grey,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = (Session.ScreenWidth * 0.5),
-				Margin = new Thickness(0, 0, 0, 10),
 				IsEnabled = false
 			};
+            saveAudio.SetStyle();
 			saveAudio.Clicked += Finished_Clicked;
 
 			labelStack = new StackLayout

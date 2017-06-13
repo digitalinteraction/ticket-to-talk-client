@@ -57,6 +57,7 @@ namespace TicketToTalk
 			listView.BindingContext = conversations;
 			listView.SeparatorColor = Color.Transparent;
 			listView.ItemTemplate = cell;
+            listView.HasUnevenRows = true;
 			listView.ItemSelected += async (sender, e) =>
 			{
 				if (e.SelectedItem == null)
@@ -95,10 +96,8 @@ namespace TicketToTalk
 			var label = new Label
 			{
 				Text = "Select a conversation",
-				TextColor = ProjectResource.color_dark,
-				HorizontalOptions = LayoutOptions.StartAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
+            label.SetSubHeaderStyle();
 
 			var add_img = new Image()
 			{

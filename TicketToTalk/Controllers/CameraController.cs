@@ -52,7 +52,7 @@ namespace TicketToTalk
 						Directory = "TicketToTalk",
 						Name = name
 					});
-					MediaReady(f);
+					if (f != null) MediaReady(f);
 				});
 			}
 			catch (Exception e) 
@@ -97,8 +97,7 @@ namespace TicketToTalk
 				Device.BeginInvokeOnMainThread( async () => { 
 					var f = await CrossMedia.Current.PickPhotoAsync();
 
-                    Debug.WriteLine(f.AlbumPath);
-					MediaReady(f);
+                    if (f != null) MediaReady(f);
 				});
 			}
 			catch (Exception e) 

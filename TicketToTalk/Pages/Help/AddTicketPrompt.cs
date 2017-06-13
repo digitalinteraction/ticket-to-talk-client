@@ -43,12 +43,15 @@ namespace TicketToTalk
 			{
 				Text = "You've added a person! Let's add a photo 'ticket' that we can use in conversation with them.",
 			};
+            label.SetSubHeaderStyle();
 			label.SetLabelStyleInversreCenter();
 
 			var button = new Button
 			{
 				Text = "Add a Ticket"
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 
@@ -56,6 +59,8 @@ namespace TicketToTalk
 			{
 				Text = "Skip Tutorial"
 			};
+            skipTutorialButton.SetStyle();
+            skipTutorialButton.Margin = new Thickness(0, 0, 0, 0);
 			skipTutorialButton.SetButtonStyle(ProjectResource.color_red);
 			skipTutorialButton.Clicked += SkipTutorialButton_Clicked;
 

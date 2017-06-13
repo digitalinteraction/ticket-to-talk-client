@@ -36,19 +36,20 @@ namespace TicketToTalk
 
 			var description = new Label
 			{
-				Text = "Add a link to a YouTube video!",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
+				Text = "Add a URL to YouTube Video",
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            description.SetSubHeaderStyle();
+            description.VerticalOptions = LayoutOptions.Start;
 
 			link = new Entry
 			{
-				Placeholder = "Add your link here!",
+				Placeholder = "https://youtube.com/7642u34h2",
 				TextColor = ProjectResource.color_red,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
+            link.SetStyle();
+            link.VerticalOptions = LayoutOptions.Start;
 			link.TextChanged += Link_TextChanged;
 
 			button = new Button
@@ -57,15 +58,16 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.Center,
 				WidthRequest = (Session.ScreenWidth * 0.5),
-				VerticalOptions = LayoutOptions.End,
-				Margin = new Thickness(0, 0, 0, 10),
 				IsEnabled = false,
 				BackgroundColor = ProjectResource.color_grey
 			};
+            button.SetStyle();
+            button.VerticalOptions = LayoutOptions.End;
 			button.Clicked += Button_Clicked;
 
-			var content = new StackLayout
-			{
+            var content = new StackLayout
+            {
+                VerticalOptions = LayoutOptions.StartAndExpand,
 				Padding = new Thickness(20, 10, 20, 20),
 				Children = {
 					description,

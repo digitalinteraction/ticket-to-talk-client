@@ -87,9 +87,6 @@ namespace TicketToTalk
 			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
 			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
 
-			//AbsoluteLayout.SetLayoutBounds(indicator, new Rectangle(0.5, 0.5, 1.0, 1.0));
-			//AbsoluteLayout.SetLayoutFlags(indicator, AbsoluteLayoutFlags.All);
-
 			layout.Children.Add(scrollView);
 			layout.Children.Add(indicator);
 

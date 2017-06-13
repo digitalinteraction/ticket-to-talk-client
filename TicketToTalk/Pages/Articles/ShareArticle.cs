@@ -39,11 +39,11 @@ namespace TicketToTalk
 
 			var descriptionLabel = new Label
 			{
-				TextColor = ProjectResource.color_dark,
 				Text = "Enter the email address of who you want to send this article to.",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            descriptionLabel.SetSubHeaderStyle();
+            descriptionLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
+            descriptionLabel.HorizontalTextAlignment = TextAlignment.Center;
 
 			email = new Entry
 			{
@@ -52,16 +52,15 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
+            email.SetStyle();
 			email.TextChanged += InputChanged;
 
 			var notesLabel = new Label
 			{
-				TextColor = ProjectResource.color_dark,
 				Text = "Include your notes",
-				HorizontalOptions = LayoutOptions.StartAndExpand,
-				VerticalOptions = LayoutOptions.Center,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            notesLabel.SetSubHeaderStyle();
+            notesLabel.HorizontalTextAlignment = TextAlignment.Center;
 
 			toggle = new Switch
 			{
@@ -75,7 +74,7 @@ namespace TicketToTalk
 				Padding = new Thickness(20),
 				Orientation = StackOrientation.Horizontal,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.StartAndExpand,
+				//VerticalOptions = LayoutOptions.StartAndExpand,
 				Children =
 				{
 					notesLabel,
@@ -93,6 +92,7 @@ namespace TicketToTalk
 				IsEnabled = false,
 				WidthRequest = Session.ScreenWidth * 0.5
 			};
+            sendButton.SetStyle();
 			sendButton.Clicked += SendButton_Clicked;
 
 			var buttonStack = new StackLayout
