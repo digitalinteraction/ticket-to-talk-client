@@ -139,6 +139,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)TrackedContentPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LastLoggedIn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)T3ImageCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StyledTicketCell.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TicketPeriodCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controllers\" />

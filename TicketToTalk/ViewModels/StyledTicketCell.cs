@@ -1,25 +1,24 @@
-﻿using System;
-using System.Diagnostics;
-using Newtonsoft.Json.Linq;
+﻿// Author: Daniel Welsh - d.welsh@ncl.ac.uk
+// Created on: 13/06/2017
+//
+// StyledTicketCell.cs
+using System;
+
 using Xamarin.Forms;
 
 namespace TicketToTalk
 {
-
-	/// <summary>
-	/// Conversation item cell.
-	/// </summary>
-    public class ConversationItemCell : ViewCell
-	{
+    public class StyledTicketCell : ViewCell
+    {
         private Image ticketIcon;
         private Label titleLabel;
         private Label year;
 
-        public ConversationItemCell()
-		{
+        public StyledTicketCell()
+        {
 			var deleteCell = new MenuItem
 			{
-				Text = "Remove",
+				Text = "Delete",
 				IsDestructive = true
 			};
 			deleteCell.Clicked += DeleteCell_Clicked;
@@ -34,7 +33,7 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center,
 			};
-			ticketIcon.SetBinding(Image.SourceProperty, "imageSource");
+            ticketIcon.SetBinding(Image.SourceProperty, "imageSource");
 
 			titleLabel = new Label
 			{
@@ -60,7 +59,7 @@ namespace TicketToTalk
 				Children =
 				{
 					titleLabel,
-					year
+                    year
 				}
 			};
 
@@ -77,48 +76,30 @@ namespace TicketToTalk
 				}
 			};
 			this.View = cellLayout;
-		}
+        }
 
 		/// <summary>
 		/// Deletes the cell clicked.
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="e">E.</param>
-		async void DeleteCell_Clicked(object sender, EventArgs e)
+		public async void DeleteCell_Clicked(object sender, EventArgs e)
 		{
 			var mi = ((MenuItem)sender);
 
-			var conversationItem = (ConversationItem)mi.BindingContext;
+			var ticket = (Ticket)mi.BindingContext;
 
-			var conversationController = new ConversationController();
-
-			bool removed = false;
+			var ticketController = new TicketController();
 
 			try
 			{
-				removed = await conversationController.RemoveTicketFromConversationRemotely(conversationItem.conversation, conversationItem.ticket);
+				await ticketController.DestroyTicket(ticket);
 			}
 			catch (NoNetworkException ex)
 			{
 				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
 			}
-
-			if (removed)
-			{
-				conversationController.RemoveTicketFromConversation(conversationItem.conversation, conversationItem.ticket);
-				ConversationView.conversationItems.Remove(conversationItem);
-				ConversationSelect.conversations.Remove(conversationItem.conversation);
-
-				foreach (Conversation c in ConversationsView.conversations)
-				{
-					if (c.id == conversationItem.conversation.id)
-					{
-						c.ticketCount--;
-						break;
-					}
-				}
-			}
 		}
-	}
+    }
 }
 

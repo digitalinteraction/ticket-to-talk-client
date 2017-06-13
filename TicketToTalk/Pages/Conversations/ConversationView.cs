@@ -127,12 +127,6 @@ namespace TicketToTalk
 			// Format image cell
 			var cell = new DataTemplate(typeof(ConversationItemCell));
 
-			cell.SetBinding(TextCell.TextProperty, "title");
-			cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
-			cell.SetBinding(ImageCell.ImageSourceProperty, "displayIcon");
-			cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
-			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
-
 			var ticketsListView = new ListView();
 
 			ticketsListView.SetBinding(ListView.ItemsSourceProperty, ".");
@@ -141,6 +135,7 @@ namespace TicketToTalk
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
+            ticketsListView.HasUnevenRows = true;
 
 			var startConversation = new Button
 			{
@@ -413,8 +408,9 @@ namespace TicketToTalk
 						ticket.displayIcon = "area_icon.png";
 						break;
 				}
+                ticket.imageSource = ImageSource.FromFile(ticket.displayIcon);
 
-				var convItem = new ConversationItem(conversation, ticket);
+                var convItem = new ConversationItem(conversation, ticket);
 				conversationItems.Add(convItem);
 			}
 

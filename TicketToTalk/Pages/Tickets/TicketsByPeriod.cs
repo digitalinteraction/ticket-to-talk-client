@@ -20,9 +20,24 @@ namespace TicketToTalk
 		{
 
 			private string _ticketCount = String.Empty;
+            private string _text = String.Empty;
 
 			public Period period { get; set; }
-			public string text { get; set; }
+			public string text 
+            { 
+                get 
+                {
+                    return _text;
+                }
+                set 
+                {
+                    if (value != _text) 
+                    {
+                        this._text = value;
+                        NotifyPropertyChanged();
+                    }
+                }
+            }
 			public int tickets { get; set; }
 			public string ticketCount
 			{
@@ -134,10 +149,7 @@ namespace TicketToTalk
 					periodContainers.Add(tp);
 				}
 
-				var cell = new DataTemplate(typeof(TextCell));
-				cell.SetBinding(TextCell.TextProperty, "text");
-				cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_red);
-				cell.SetBinding(TextCell.DetailProperty, "ticketCount");
+                var cell = new DataTemplate(typeof(TicketPeriodCell));
 
 				// ListView setup
 				ListView periodsListView = new ListView();
@@ -146,6 +158,7 @@ namespace TicketToTalk
 				periodsListView.BindingContext = periodContainers;
 				periodsListView.SeparatorColor = Color.Transparent;
 				periodsListView.ItemSelected += OnSelection;
+                periodsListView.HasUnevenRows = true;
 
 				Content = new StackLayout
 				{

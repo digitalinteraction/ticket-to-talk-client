@@ -47,23 +47,19 @@ namespace TicketToTalk
 						t.displayIcon = "video_icon.png";
 						break;
 				}
+
+                t.imageSource = ImageSource.FromFile(t.displayIcon);
 			}
 
 			// Format image cell
-			var cell = new DataTemplate(typeof(TicketCell));
-			cell.SetBinding(TextCell.TextProperty, "title");
-			cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
-			cell.SetBinding(ImageCell.ImageSourceProperty, "displayIcon");
-			cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
-			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
+			var cell = new DataTemplate(typeof(StyledTicketCell));
 
-			//ticketsListView.ItemsSource = pictureTickets;
 			ticketsListView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			ticketsListView.BindingContext = ViewTickets.ticketVideo;
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
-
+            ticketsListView.HasUnevenRows = true;
 
 			var stack = new StackLayout
 			{
