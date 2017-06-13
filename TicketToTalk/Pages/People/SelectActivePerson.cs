@@ -133,11 +133,8 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
+            IsBusy = true;
 
-		}
-
-		public async Task<bool> SetUpSelectActivePerson() 
-		{
 			// Try and get people from the server
 			try
 			{
@@ -160,6 +157,8 @@ namespace TicketToTalk
 					p.relation = personController.GetRelationship(p.id);
 					people.Add(p);
 				}
+
+                IsBusy = false;
 			}
 
 			// If network not available, use local records.
@@ -174,16 +173,69 @@ namespace TicketToTalk
 					people.Add(p);
 				}
 
+                IsBusy = false;
+
 				await DisplayAlert("No Network", ex.Message, "Dismiss");
 			}
 
 			if (people.Count == 0)
 			{
 				Content = compRegLayout;
+
 			}
 
-			return true;
+            IsBusy = false;
+			//return true;
 		}
+
+		//public async Task<bool> SetUpSelectActivePerson() 
+		//{
+		//	// Try and get people from the server
+		//	try
+		//	{
+		//		//var task = Task.Run(() => personController.GetPeopleFromServer());
+		//		var returned_people = new ObservableCollection<Person>();
+
+		//		try
+		//		{
+		//			//returned_people = task.Result;
+		//			returned_people = await Task.Run(() => personController.GetPeopleFromServer());
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			throw ex;
+		//		}
+		//		foreach (Person p in returned_people)
+		//		{
+		//			personController.AddPersonLocally(p);
+		//			p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
+		//			p.relation = personController.GetRelationship(p.id);
+		//			people.Add(p);
+		//		}
+		//	}
+
+		//	// If network not available, use local records.
+		//	catch (Exception ex)
+		//	{
+		//		var stored_people = new ObservableCollection<Person>(personController.GetPeople());
+
+		//		foreach (Person p in stored_people)
+		//		{
+		//			p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
+		//			p.relation = personController.GetRelationship(p.id);
+		//			people.Add(p);
+		//		}
+
+		//		await DisplayAlert("No Network", ex.Message, "Dismiss");
+		//	}
+
+		//	if (people.Count == 0)
+		//	{
+		//		Content = compRegLayout;
+		//	}
+
+		//	return true;
+		//}
 	}
 }
 

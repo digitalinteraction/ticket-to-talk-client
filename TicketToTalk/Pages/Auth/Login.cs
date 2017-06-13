@@ -167,17 +167,17 @@ namespace TicketToTalk
 					{
 
 						var nav = new SelectActivePerson();
-						var ready = await nav.SetUpSelectActivePerson();
+						//var ready = await nav.SetUpSelectActivePerson();
 
-						if (ready) 
-						{
-							IsBusy = false;
+						//if (ready) 
+						//{
+						IsBusy = false;
 
-                            updateLastLoggedIn(email.Text);
+                        updateLastLoggedIn(email.Text);
 
-							await Navigation.PushAsync(nav);
-							Navigation.RemovePage(this);
-						}
+						await Navigation.PushAsync(nav);
+						Navigation.RemovePage(this);
+						//}
 					}
 					else
 					{
