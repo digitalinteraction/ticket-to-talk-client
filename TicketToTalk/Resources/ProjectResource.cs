@@ -16,6 +16,21 @@ namespace TicketToTalk
 		public static readonly Color color_grey_transparent = new Color(218, 226, 223, 0.8);
 		public static readonly Color color_white_transparent = new Color(255, 255, 250, 0.5);
 
+        public static readonly string Font_IOS_BoldHeader = "Nunito-SemiBold";
+        public static readonly string Font_IOS_Header = "Nunito-Regular";
+        public static readonly string Font_IOS_Body = "OpenSans-Regular";
+
+		public static readonly string Font_Android_BoldHeader = "Nunito-SemiBold.ttf#Nunito-SemiBold";
+		public static readonly string Font_Android_Header = "Nunito-Regular.ttf#Nunito-SemiBold";
+		public static readonly string Font_Android_Body = "OpenSans-Regular.ttf#OpenSans-Regular";
+
+        public static readonly int TextSize_H1 = 42;
+        public static readonly int TextSize_Large = 22;
+        public static readonly int TextSize_Medium = 18;
+        public static readonly int TextSize_Small = 16;
+
+        public static readonly int Padding = 20;
+
 		public static readonly string[] relations =
 		{
 			"Father",

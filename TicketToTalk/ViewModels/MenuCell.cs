@@ -25,9 +25,8 @@ namespace TicketToTalk
 
 			var label = new Label
 			{
-				TextColor = ProjectResource.color_dark,
-				VerticalOptions = LayoutOptions.CenterAndExpand,
 			};
+            label.SetSubHeaderStyle();
 			label.SetBinding(Label.TextProperty, "Title");
 
 			var content = new StackLayout

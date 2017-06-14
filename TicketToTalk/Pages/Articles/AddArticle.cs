@@ -45,16 +45,18 @@ namespace TicketToTalk
 			var titleLabel = new Label
 			{
 				Text = "Title",
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 2)
 			};
+            titleLabel.SetSubHeaderStyle();
+            titleLabel.Margin = new Thickness(0, 10, 0, 2);
 
-			title = new Entry
+
+            title = new Entry
 			{
 				Placeholder = "Title",
 				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 2)
 			};
+            title.SetStyle();
 			title.TextChanged += Entry_TextChanged;
 
 			var notesLabel = new Label
@@ -63,6 +65,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			notes = new Editor
 			{
@@ -70,6 +73,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 2)
 			};
+            notes.SetStyle();
 			notes.TextChanged += Entry_TextChanged;
 
 			var linkLabel = new Label
@@ -78,6 +82,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            linkLabel.SetSubHeaderStyle();
 
 			link = new Entry
 			{
@@ -85,6 +90,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
 				Margin = new Thickness(0, 0, 0, 2)
 			};
+            link.SetStyle();
 			link.TextChanged += Entry_TextChanged;
 
 			saveButton = new Button()
@@ -98,6 +104,8 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5),
 				Margin = new Thickness(0, 0, 0, 10)
 			};
+            saveButton.SetStyle();
+
 			if (article == null)
 			{
 				saveButton.Clicked += SaveArticle;

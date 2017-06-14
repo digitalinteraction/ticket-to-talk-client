@@ -39,11 +39,10 @@ namespace TicketToTalk
 			title = new Label
 			{
 				Text = "Ticket to Talk",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				FontSize = 42,
-				TextColor = ProjectResource.color_white,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            title.SetHeaderStyle();
+            title.FontSize = ProjectResource.TextSize_H1;
+            title.TextColor = ProjectResource.color_white;
 
 			loadTime = new Label
 			{
@@ -61,6 +60,7 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5),
 				IsEnabled = false
 			};
+            login.SetStyle();
 			login.Clicked += HandleLogin;
 
 			email = new Entry
@@ -71,9 +71,11 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_white,
 				PlaceholderColor = ProjectResource.color_dark,
 				WidthRequest = (Session.ScreenWidth * 0.75),
-                Keyboard = Keyboard.Email
+                Keyboard = Keyboard.Email,
 			};
 			email.TextChanged += Entry_TextChanged;
+            email.SetStyle();
+            email.PlaceholderColor = ProjectResource.color_white;
 
 			password = new Entry
 			{
@@ -86,6 +88,8 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.75)
 			};
 			password.TextChanged += Entry_TextChanged;
+            password.SetStyle();
+            password.PlaceholderColor = ProjectResource.color_white;
 
 			register = new Button
 			{
@@ -96,6 +100,7 @@ namespace TicketToTalk
 				WidthRequest = (Session.ScreenWidth * 0.5)
 			};
 			register.Clicked += HandleRegister;
+            register.SetStyle();
 
 			var pageContent = new StackLayout
 			{
@@ -162,17 +167,17 @@ namespace TicketToTalk
 					{
 
 						var nav = new SelectActivePerson();
-						var ready = await nav.SetUpSelectActivePerson();
+						//var ready = await nav.SetUpSelectActivePerson();
 
-						if (ready) 
-						{
-							IsBusy = false;
+						//if (ready) 
+						//{
+						IsBusy = false;
 
-                            updateLastLoggedIn(email.Text);
+                        updateLastLoggedIn(email.Text);
 
-							await Navigation.PushAsync(nav);
-							Navigation.RemovePage(this);
-						}
+						await Navigation.PushAsync(nav);
+						Navigation.RemovePage(this);
+						//}
 					}
 					else
 					{

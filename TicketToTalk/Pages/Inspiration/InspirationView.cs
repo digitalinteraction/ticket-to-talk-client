@@ -47,16 +47,17 @@ namespace TicketToTalk
 
 			question = new Label
 			{
-				HorizontalOptions = LayoutOptions.Start,
-				TextColor = ProjectResource.color_dark,
-				FontAttributes = FontAttributes.Bold,
 			};
+            question.SetSubHeaderStyle();
+            question.VerticalOptions = LayoutOptions.Start;
 
 			promptLabel = new Label
 			{
-				HorizontalOptions = LayoutOptions.Start,
-				TextColor = ProjectResource.color_dark,
+				//HorizontalOptions = LayoutOptions.Start,
+				//TextColor = ProjectResource.color_dark,
 			};
+            promptLabel.SetBodyStyle();
+            promptLabel.VerticalOptions = LayoutOptions.Start;
 
 			Title = "Inspiration";
 
@@ -69,9 +70,11 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				IsVisible = false,
 				IsEnabled = true,
-				Margin = new Thickness(0, 20)
 			};
-			searchButton.Clicked += SearchButton_Clicked;
+            searchButton.SetStyle();
+            searchButton.Margin = new Thickness(0, 20);
+            searchButton.VerticalOptions = LayoutOptions.Start;
+            searchButton.Clicked += SearchButton_Clicked;
 
 			inspiration = inspirationController.GetRandomInspiration();
 
@@ -86,6 +89,8 @@ namespace TicketToTalk
 				no_ins = true;
 			}
 
+            recordMediaButton.SetStyle();
+            recordMediaButton.Margin = new Thickness(0, 0, 0, 0);
 			recordMediaButton.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			recordMediaButton.WidthRequest = 125;
 			recordMediaButton.TextColor = ProjectResource.color_white;
@@ -100,6 +105,8 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_white,
 				BackgroundColor = ProjectResource.color_dark
 			};
+            nextButton.SetStyle();
+            nextButton.Margin = new Thickness(0, 0, 0, 0);
 			nextButton.Clicked += NextButton_Clicked;
 
 			var buttonStack = new StackLayout
@@ -114,6 +121,13 @@ namespace TicketToTalk
 				}
 			};
 
+            var noNetworkLabel = new Label 
+            {
+				Text = "Please connect to a network to view inspirations.",
+            };
+            noNetworkLabel.SetSubHeaderStyle();
+            noNetworkLabel.VerticalOptions = LayoutOptions.Start;
+
 			StackLayout content = null;
 
 			if (no_ins)
@@ -123,13 +137,7 @@ namespace TicketToTalk
 					Padding = new Thickness(20),
 					Spacing = 12,
 					Children = {
-						new Label
-						{
-							Text = "Please connect to a network to view inspirations.",
-							TextColor = ProjectResource.color_dark,
-							FontSize = 16,
-							FontAttributes = FontAttributes.Bold
-						}
+                        noNetworkLabel
 					}
 				};
 			}

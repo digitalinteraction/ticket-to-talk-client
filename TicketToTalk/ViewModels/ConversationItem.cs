@@ -1,4 +1,6 @@
 ﻿using System;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
 	/// <summary>
@@ -12,14 +14,16 @@ namespace TicketToTalk
 		public string title { get; set; }
 		public string year { get; set; }
 		public string displayIcon { get; set; }
+        public ImageSource imageSource { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:TicketToTalk.ConversationItem"/> class.
 		/// </summary>
-		public ConversationItem(Conversation conversation, Ticket ticket)
+        public ConversationItem(Conversation conversation, Ticket ticket)
 		{
 			this.conversation = conversation;
 			this.ticket = ticket;
+            this.imageSource = ticket.imageSource;
 			title = ticket.title;
 			year = ticket.year;
 			displayIcon = ticket.displayIcon;

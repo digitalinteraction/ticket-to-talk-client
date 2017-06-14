@@ -58,29 +58,34 @@ namespace TicketToTalk
 			var nameLabel = new Label
 			{
 				Text = "Name",
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0)
 			};
+            nameLabel.SetSubHeaderStyle();
+            nameLabel.Margin = new Thickness(0, 10, 0, 0);
+
 			nameEntry = new Entry
 			{
 				Placeholder = "Enter your name",
 				TextColor = ProjectResource.color_red
 			};
+            nameEntry.SetStyle();
 			nameEntry.Focus();
 			nameEntry.TextChanged += Entry_TextChanged;
 
 			var emailLabel = new Label
 			{
 				Text = "Email",
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0)
 			};
-			emailEntry = new Entry
+            emailLabel.SetSubHeaderStyle();
+            emailLabel.Margin = new Thickness(0, 10, 0, 0);
+
+
+            emailEntry = new Entry
 			{
 				Placeholder = "Enter your email...",
 				TextColor = ProjectResource.color_red,
                 Keyboard = Keyboard.Email
 			};
+            emailEntry.SetStyle();
 
             if (!(String.IsNullOrWhiteSpace(email))) 
             {
@@ -92,15 +97,17 @@ namespace TicketToTalk
 			var passwordLabel = new Label
 			{
 				Text = "Password",
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0)
 			};
+            passwordLabel.SetSubHeaderStyle();
+            passwordLabel.Margin = new Thickness(0, 10, 0, 0);
+
 			passwordEntry = new Entry
 			{
 				Placeholder = "Enter your password...",
 				IsPassword = true,
 				TextColor = ProjectResource.color_red,
 			};
+            passwordEntry.SetStyle();
 
 			if (!(String.IsNullOrWhiteSpace(password)))
 			{
@@ -112,9 +119,10 @@ namespace TicketToTalk
 			var confirmPasswordLabel = new Label
 			{
 				Text = "Confirm Password",
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0)
 			};
+            confirmPasswordLabel.SetSubHeaderStyle();
+            confirmPasswordLabel.Margin = new Thickness(0, 10, 0, 0);
+
 			confirmPasswordEntry = new Entry
 			{
 				Placeholder = "Re-enter your password...",
@@ -122,6 +130,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red
 			};
 			confirmPasswordEntry.TextChanged += Entry_TextChanged;
+            confirmPasswordEntry.SetStyle();
 
 			var imageStack = new StackLayout
 			{
@@ -129,22 +138,6 @@ namespace TicketToTalk
 				Children =
 				{
 					personImage
-				}
-			};
-
-			var headerStack = new StackLayout
-			{
-				Padding = new Thickness(10),
-				BackgroundColor = ProjectResource.color_red,
-
-				Children =
-				{
-					new Label
-					{
-						Text = "Details",
-						HorizontalOptions = LayoutOptions.CenterAndExpand,
-						TextColor = ProjectResource.color_white,
-					}
 				}
 			};
 
@@ -176,7 +169,9 @@ namespace TicketToTalk
 				IsEnabled = false,
 				Margin = new Thickness(0, 0, 0, 10)
 			};
+            savePersonButton.SetStyle();
 			savePersonButton.Clicked += RegisterProfile;
+
 			var buttonStack = new StackLayout
 			{
 				Spacing = 0,
@@ -186,12 +181,18 @@ namespace TicketToTalk
 				}
 			};
 
+            var header = new Label()
+            {
+                Text = "Details"
+            };
+            header.SetHeaderStyle();
+
 			var contentStack = new StackLayout
 			{
 				Spacing = 0,
 				Children = {
 					imageStack,
-					headerStack,
+                    header,
 					detailsStack,
 					buttonStack
 				}

@@ -33,7 +33,7 @@ namespace TicketToTalk
 			}
 
 			// Set Padding
-			Padding = new Thickness(20);
+			Padding = new Thickness(10);
 			Title = title;
 
 			ToolbarItems.Add(new ToolbarItem
@@ -43,8 +43,6 @@ namespace TicketToTalk
 				Order = ToolbarItemOrder.Primary,
 				Command = new Command(LaunchNewTicketView),
 			});
-
-			BackgroundColor = ProjectResource.color_white;
 
 			var ticketsListView = new ListView();
 
@@ -69,21 +67,18 @@ namespace TicketToTalk
 						t.displayIcon = "area_icon.png";
 						break;
 				}
+
+                t.imageSource = ImageSource.FromFile(t.displayIcon);
 			}
 
-			// Format image cell
-			var cell = new DataTemplate(typeof(TicketCell));
-			cell.SetBinding(TextCell.TextProperty, "title");
-			cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
-			cell.SetBinding(ImageCell.ImageSourceProperty, "displayIcon");
-			cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
-			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
+            var cell = new DataTemplate(typeof(StyledTicketCell));
 
 			ticketsListView.SetBinding(ListView.ItemsSourceProperty, ".");
 			ticketsListView.BindingContext = displayTickets;
 			ticketsListView.ItemTemplate = cell;
 			ticketsListView.ItemSelected += OnSelection;
 			ticketsListView.SeparatorColor = Color.Transparent;
+            ticketsListView.HasUnevenRows = true;
 
 			var stack = new StackLayout
 			{

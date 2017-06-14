@@ -39,14 +39,17 @@ namespace TicketToTalk
 			var label = new Label
 			{
 				Text = "How was your conversation? Update your notes below",
-				TextColor = ProjectResource.color_dark
 			};
+            label.SetSubHeaderStyle();
+            label.VerticalOptions = LayoutOptions.Start;
 
 			editor = new Editor
 			{
 				Text = conversation.notes,
-				TextColor = ProjectResource.color_red
 			};
+            editor.SetStyle();
+            editor.TextColor = ProjectResource.color_red;
+            editor.VerticalOptions = LayoutOptions.Start;
 
 			var button = new Button
 			{
@@ -56,8 +59,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 				VerticalOptions = LayoutOptions.EndAndExpand,
-				Margin = new Thickness(0, 0, 0, 10)
 			};
+            button.SetStyle();
 			button.Clicked += Button_Clicked;
 
 			Content = new StackLayout

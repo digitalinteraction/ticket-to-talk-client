@@ -30,32 +30,33 @@ namespace TicketToTalk
 			var descriptionLabel = new Label
 			{
 				Text = "Enter the email address of who you want to contribute to this person.",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            descriptionLabel.SetSubHeaderStyle();
+            descriptionLabel.VerticalOptions = LayoutOptions.Start;
 
 			email = new Entry
 			{
 				Placeholder = "Contributer's email",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				TextColor = ProjectResource.color_red,
-				WidthRequest = Session.ScreenWidth * 0.8
+				WidthRequest = Session.ScreenWidth * 0.8,
+                Keyboard = Keyboard.Email
 			};
+            email.SetStyle();
+            email.TextColor = ProjectResource.color_red;
 			email.TextChanged += InputChanged;
+            email.VerticalOptions = LayoutOptions.Start;
 
 			var groupsLabel = new Label
 			{
 				Text = "Choose a user group.",
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalTextAlignment = TextAlignment.Center,
 				Margin = new Thickness(0, 10, 0, 0),
 			};
+            groupsLabel.SetSubHeaderStyle();
+            groupsLabel.VerticalOptions = LayoutOptions.Start;
 
 			group = new Picker
 			{
 				Title = "Group",
 				TextColor = ProjectResource.color_red,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
 			for (int i = 0; i < userGroups.Length; i++)
@@ -74,6 +75,8 @@ namespace TicketToTalk
 				IsEnabled = false,
 				WidthRequest = Session.ScreenWidth * 0.5
 			};
+            sendButton.SetStyle();
+            sendButton.Margin = new Thickness(0, 0, 0, 0);
 			sendButton.Clicked += SendButton_Clicked;
 
 			var buttonStack = new StackLayout

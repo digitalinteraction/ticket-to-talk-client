@@ -35,12 +35,14 @@ namespace TicketToTalk
             {
                 Text = "Ticket to Talk was created by Newcastle University as part of an ongoing research study in intergenerational interactions within dementia.\n\nWould you like to take part by sharing your data with Newcastle University? Please tap the link below for more information before participating."
 			};
-			desc.SetLabelStyleInversreCenter();
+            desc.SetBodyStyle();
+            desc.SetLabelStyleInversreCenter();
 
             var link = new Label
             {
                 Text = hyperlink,
             };
+            link.SetSubHeaderStyle();
             link.SetLabelStyleInversreCenter();
             link.TextColor = ProjectResource.color_dark;
 
@@ -57,6 +59,7 @@ namespace TicketToTalk
 				Text = "Accept"
 			};
             accept.SetButtonStyle(ProjectResource.color_dark);
+            accept.SetStyle();
 			accept.WidthRequest = (Session.ScreenWidth * 0.4);
             accept.Clicked += Accept_Clicked;
 
@@ -65,6 +68,7 @@ namespace TicketToTalk
 				Text = "Skip",
 			};
 			reject.SetButtonStyle(ProjectResource.color_dark);
+            reject.SetStyle();
 			reject.WidthRequest = (Session.ScreenWidth * 0.4);
             reject.Clicked += Reject_Clicked;
 

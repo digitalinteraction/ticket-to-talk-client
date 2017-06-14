@@ -9,9 +9,13 @@ namespace TicketToTalk
 	/// <summary>
 	/// Conversation item cell.
 	/// </summary>
-	public class ConversationItemCell : ImageCell
+    public class ConversationItemCell : ViewCell
 	{
-		public ConversationItemCell()
+        private Image ticketIcon;
+        private Label titleLabel;
+        private Label year;
+
+        public ConversationItemCell()
 		{
 			var deleteCell = new MenuItem
 			{
@@ -21,6 +25,58 @@ namespace TicketToTalk
 			deleteCell.Clicked += DeleteCell_Clicked;
 
 			ContextActions.Add(deleteCell);
+
+			ticketIcon = new Image
+			{
+				HeightRequest = 50,
+				WidthRequest = 50,
+				Aspect = Aspect.AspectFill,
+				HorizontalOptions = LayoutOptions.Center,
+				VerticalOptions = LayoutOptions.Center,
+			};
+			ticketIcon.SetBinding(Image.SourceProperty, "imageSource");
+
+			titleLabel = new Label
+			{
+			};
+			titleLabel.SetSubHeaderStyle();
+			titleLabel.VerticalOptions = LayoutOptions.Start;
+			titleLabel.SetBinding(Label.TextProperty, "title");
+
+			year = new Label
+			{
+			};
+			year.SetBodyStyle();
+			year.TextColor = ProjectResource.color_red;
+			year.VerticalOptions = LayoutOptions.Start;
+			year.SetBinding(Label.TextProperty, "year");
+
+			var detailsStack = new StackLayout
+			{
+				Padding = new Thickness(10, 0, 0, 0),
+				Spacing = 2,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				VerticalOptions = LayoutOptions.CenterAndExpand,
+				Children =
+				{
+					titleLabel,
+					year
+				}
+			};
+
+			var cellLayout = new StackLayout
+			{
+				Spacing = 0,
+				Padding = new Thickness(10, 5, 10, 5),
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				Children =
+				{
+					ticketIcon,
+					detailsStack
+				}
+			};
+			this.View = cellLayout;
 		}
 
 		/// <summary>

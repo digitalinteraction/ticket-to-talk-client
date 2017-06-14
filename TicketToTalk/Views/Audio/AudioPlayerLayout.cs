@@ -111,10 +111,13 @@ namespace TicketToTalk
 			var duration = new Label
 			{
 				Text = durString,
-				TextColor = ProjectResource.color_blue,
-				HorizontalOptions = LayoutOptions.EndAndExpand,
+				//TextColor = ProjectResource.color_blue,
+				//HorizontalOptions = LayoutOptions.EndAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
+            duration.SetBodyStyle();
+            duration.TextColor = ProjectResource.color_red;
+            duration.HorizontalOptions = LayoutOptions.EndAndExpand;
 
 			var current = new Label
 			{
@@ -122,6 +125,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 				VerticalOptions = LayoutOptions.CenterAndExpand
 			};
+            current.SetBodyStyle();
+            current.TextColor = ProjectResource.color_red;
 			current.SetBinding(Label.TextProperty, "current_time");
 			current.BindingContext = clock;
 

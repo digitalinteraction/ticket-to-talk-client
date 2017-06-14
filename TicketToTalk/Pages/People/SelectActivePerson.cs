@@ -35,10 +35,11 @@ namespace TicketToTalk
 
 			var label = new Label
 			{
-				Text = "Choose who you want to talk to.",
-				TextColor = ProjectResource.color_dark,
-				HorizontalTextAlignment = TextAlignment.Center
+				Text = "Choose who you want to talk to."
 			};
+            label.SetSubHeaderStyle();
+            label.HorizontalTextAlignment = TextAlignment.Center;
+            label.HorizontalOptions = LayoutOptions.CenterAndExpand;
 
 			var peopleListView = new ListView
 			{
@@ -55,10 +56,11 @@ namespace TicketToTalk
 			var incompleteRegistration = new Label
 			{
 				Text = "You have not yet completed the registration process. Select next to continue",
-				TextColor = ProjectResource.color_dark,
-				FontSize = 16,
-				HorizontalTextAlignment = TextAlignment.Center,
 			};
+            incompleteRegistration.SetSubHeaderStyle();
+            incompleteRegistration.HorizontalOptions = LayoutOptions.CenterAndExpand;
+            incompleteRegistration.HorizontalTextAlignment = TextAlignment.Center;
+            incompleteRegistration.VerticalOptions = LayoutOptions.Start;
 
 			var continueButton = new Button
 			{
@@ -69,9 +71,10 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				VerticalOptions = LayoutOptions.End
 			};
+            continueButton.SetStyle();
+            continueButton.Margin = new Thickness(0, 0, 0, 0);
 			continueButton.Clicked += (sender, e) =>
 			{
-
 				var t = new AddNewPersonPrompt(false);
 				Application.Current.MainPage = t;
 				AllProfiles.promptShown = true;
@@ -130,11 +133,8 @@ namespace TicketToTalk
 		{
 			base.OnAppearing();
 
+            IsBusy = true;
 
-		}
-
-		public async Task<bool> SetUpSelectActivePerson() 
-		{
 			// Try and get people from the server
 			try
 			{
@@ -157,6 +157,8 @@ namespace TicketToTalk
 					p.relation = personController.GetRelationship(p.id);
 					people.Add(p);
 				}
+
+                IsBusy = false;
 			}
 
 			// If network not available, use local records.
@@ -171,16 +173,69 @@ namespace TicketToTalk
 					people.Add(p);
 				}
 
+                IsBusy = false;
+
 				await DisplayAlert("No Network", ex.Message, "Dismiss");
 			}
 
 			if (people.Count == 0)
 			{
 				Content = compRegLayout;
+
 			}
 
-			return true;
+            IsBusy = false;
+			//return true;
 		}
+
+		//public async Task<bool> SetUpSelectActivePerson() 
+		//{
+		//	// Try and get people from the server
+		//	try
+		//	{
+		//		//var task = Task.Run(() => personController.GetPeopleFromServer());
+		//		var returned_people = new ObservableCollection<Person>();
+
+		//		try
+		//		{
+		//			//returned_people = task.Result;
+		//			returned_people = await Task.Run(() => personController.GetPeopleFromServer());
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			throw ex;
+		//		}
+		//		foreach (Person p in returned_people)
+		//		{
+		//			personController.AddPersonLocally(p);
+		//			p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
+		//			p.relation = personController.GetRelationship(p.id);
+		//			people.Add(p);
+		//		}
+		//	}
+
+		//	// If network not available, use local records.
+		//	catch (Exception ex)
+		//	{
+		//		var stored_people = new ObservableCollection<Person>(personController.GetPeople());
+
+		//		foreach (Person p in stored_people)
+		//		{
+		//			p.imageSource = await Task.Run(() => personController.GetPersonProfilePicture(p));
+		//			p.relation = personController.GetRelationship(p.id);
+		//			people.Add(p);
+		//		}
+
+		//		await DisplayAlert("No Network", ex.Message, "Dismiss");
+		//	}
+
+		//	if (people.Count == 0)
+		//	{
+		//		Content = compRegLayout;
+		//	}
+
+		//	return true;
+		//}
 	}
 }
 

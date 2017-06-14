@@ -156,6 +156,7 @@
     <Compile Include="Helpers\AudioPlayerImplementation.cs" />
     <Compile Include="Helpers\ImageResizerImplementation.cs" />
     <Compile Include="Helpers\CameraAndroid.cs" />
+    <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -167,9 +168,6 @@
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
-    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
     <AndroidResource Include="Resources\drawable\photo_icon.png" />
     <AndroidResource Include="Resources\drawable\video_icon.png" />
     <AndroidResource Include="Resources\drawable\audio_icon.png" />
@@ -216,6 +214,15 @@
     <AndroidResource Include="Resources\drawable\YFNE.jpg" />
     <AndroidResource Include="Resources\drawable\ic_info_3x.png" />
     <AndroidResource Include="Resources\drawable\clipboard_white_icon.png" />
+    <AndroidResource Include="Resources\drawable\app_icon_old.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\app_icon_old.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\app_icon_old.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\app_icon_old.png" />
+    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+    <AndroidResource Include="Resources\drawable\white_logo.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\white_logo.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\white_logo.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\white_logo.png" />
     <AndroidResource Include="Resources\drawable\app_icon.png" />
     <AndroidResource Include="Resources\drawable-hdpi\app_icon.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\app_icon.png" />
@@ -228,6 +235,13 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidEnvironment Include="EnvironmentVariables.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Montserrat-Regular.ttf" />
+    <AndroidAsset Include="Assets\Montserrat-SemiBold.ttf" />
+    <AndroidAsset Include="Assets\OpenSans-Regular.ttf" />
+    <AndroidAsset Include="Assets\Nunito-Regular.ttf" />
+    <AndroidAsset Include="Assets\Nunito-SemiBold.ttf" />
   </ItemGroup>
   <Import Project="..\TicketToTalk\TicketToTalk.projitems" Label="Shared" Condition="Exists('..\TicketToTalk\TicketToTalk.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

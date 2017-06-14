@@ -37,12 +37,15 @@ namespace TicketToTalk
 			{
 				Text = text
 			};
+            label.SetSubHeaderStyle();
 			label.SetLabelStyleInversreCenter();
 
 			var button = new Button
 			{
 				Text = "Dismiss"
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 

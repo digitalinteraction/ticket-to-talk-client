@@ -34,7 +34,7 @@ namespace TicketToTalk
 			{
 				Text = "You're nearly registered!\n\nPlease verify your email address by entering the code emailed to you."
 			};
-
+            label.SetBodyStyle();
 			label.SetLabelStyleInversreCenter();
 
 			code = new Entry
@@ -44,12 +44,14 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_red,
 			};
 			code.Focus();
+            code.SetStyle();
 			code.TextChanged += Entry_TextChanged;
 
 			send = new Button 
 			{
 				Text = "Verify"
 			};
+            send.SetStyle();
 			send.SetButtonStyle(ProjectResource.color_grey);
 			send.WidthRequest = (Session.ScreenWidth * 0.4);
 			send.IsEnabled = false;
@@ -59,6 +61,7 @@ namespace TicketToTalk
 			{
 				Text = "Resend Email",
 			};
+            resend.SetStyle();
 			resend.SetButtonStyle(ProjectResource.color_dark);
 			resend.WidthRequest = (Session.ScreenWidth * 0.4);
 			resend.Clicked += Resend_Clicked;

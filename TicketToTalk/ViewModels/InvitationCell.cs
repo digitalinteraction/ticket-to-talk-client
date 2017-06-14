@@ -30,16 +30,17 @@ namespace TicketToTalk
 
 			nameLabel = new Label
 			{
-				FontSize = 18,
-				TextColor = ProjectResource.color_dark,
 			};
+            nameLabel.SetSubHeaderStyle();
+            nameLabel.VerticalOptions = LayoutOptions.Start;
 			nameLabel.SetBinding(Label.TextProperty, "person_name");
 
 			relation = new Label
 			{
-				FontSize = 12,
-				TextColor = ProjectResource.color_red,
 			};
+            relation.SetBodyStyle();
+            relation.VerticalOptions = LayoutOptions.Start;
+            relation.TextColor = ProjectResource.color_red;
 
 			relation.SetBinding(Label.TextProperty, new Binding("name", stringFormat: "Invited by {0}"));
 

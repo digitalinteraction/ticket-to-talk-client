@@ -36,16 +36,20 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 0, 0, 5)
 			};
+            nameLabel.SetHeaderStyle();
+            nameLabel.VerticalOptions = LayoutOptions.Start;
 			nameLabel.SetBinding(Label.TextProperty, "name");
 			nameLabel.BindingContext = Session.activeUser;
 
 			var email = new Label 
 			{
 				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_blue,
-				FontSize = 12,
-				HorizontalOptions = LayoutOptions.CenterAndExpand
 			};
+            email.SetSubHeaderStyle();
+            email.VerticalOptions = LayoutOptions.Start;
+            email.HorizontalOptions = LayoutOptions.CenterAndExpand;
+            email.HorizontalTextAlignment = TextAlignment.Center;
+            email.TextColor = ProjectResource.color_red;
 			email.SetBinding(Label.TextProperty, "email");
 			email.BindingContext = Session.activeUser;
 

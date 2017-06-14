@@ -53,6 +53,7 @@ namespace TicketToTalk
 			articleList.ItemTemplate = new DataTemplate(typeof(ArticleCell));
 			articleList.SeparatorColor = Color.Transparent;
 			articleList.ItemSelected += OnSelection;
+            articleList.HasUnevenRows = true;
 
 			Content = new StackLayout
 			{

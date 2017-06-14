@@ -86,60 +86,53 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            nameLabel.SetSubHeaderStyle();
 
 			name = new Entry
 			{
-				Placeholder = "Name",
-				TextColor = ProjectResource.color_red
+				Placeholder = "Name"
 			};
+            name.SetStyle();
+            name.TextColor = ProjectResource.color_red;
 			name.TextChanged += Entry_TextChanged;
 
 			var birthPlace = new Label
 			{
 				Text = "Where were they born?",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            birthPlace.SetSubHeaderStyle();
 
 			birthPlaceEntry = new Entry
 			{
 				Placeholder = "Town or City",
 				TextColor = ProjectResource.color_red
 			};
+            birthPlaceEntry.SetStyle();
 			birthPlaceEntry.TextChanged += Entry_TextChanged;
 
 			var DOBLabel = new Label
 			{
 				Text = "When were they born (approximately)",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
-
-			//yearPicker = new Picker
-			//{
-			//	Title = "Year",
-			//	TextColor = ProjectResource.color_red
-			//};
-			//yearPicker.SelectedIndexChanged += Entry_TextChanged;
-			//for (int i = DateTime.Now.Year - 100; i < DateTime.Now.Year; i++)
-			//{
-			//	yearPicker.Items.Add((i + 1).ToString());
-			//}
+            DOBLabel.SetSubHeaderStyle();
 
             birthYear = new Entry 
             {
 				Placeholder = "1920",
-				TextColor = ProjectResource.color_red,
                 Keyboard = Keyboard.Numeric
             };
+            birthYear.SetStyle();
+            birthYear.TextColor = ProjectResource.color_red;
             birthYear.TextChanged += Entry_TextChanged;
 
 			var relationLabel = new Label
 			{
 				Text = "How do you know them?",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            relationLabel.SetSubHeaderStyle();
 
 			relationPicker = new Picker
 			{
@@ -155,29 +148,31 @@ namespace TicketToTalk
 			var area = new Label
 			{
 				Text = "Where have they lived most of their life?",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            area.SetSubHeaderStyle();
 
 			town_city = new Entry
 			{
-				Placeholder = "Town or City",
-				TextColor = ProjectResource.color_red
+				Placeholder = "Town or City"
 			};
+            town_city.SetStyle();
+            town_city.TextColor = ProjectResource.color_red;
 			town_city.TextChanged += Entry_TextChanged;
 
 			var notesLabel = new Label
 			{
 				Text = "Write some notes about their condition",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			notesEditor = new Editor
 			{
-				TextColor = ProjectResource.color_red,
 				Text = "Add some notes..."
 			};
+            notesEditor.SetStyle();
+            notesEditor.TextColor = ProjectResource.color_red;
 			notesEditor.TextChanged += Entry_TextChanged;
             notesEditor.HeightRequest = 100;
 
@@ -190,20 +185,11 @@ namespace TicketToTalk
 				}
 			};
 
-			var headerStack = new StackLayout
-			{
-				Padding = new Thickness(10),
-				BackgroundColor = ProjectResource.color_red,
-				Children =
-				{
-					new Label
-					{
-						Text = "Details",
-						HorizontalOptions = LayoutOptions.CenterAndExpand,
-						TextColor = ProjectResource.color_white
-					}
-				}
-			};
+            var header = new Label
+            {
+				Text = "Details"
+            };
+            header.SetHeaderStyle();
 
 			var detailsStack = new StackLayout
 			{
@@ -232,11 +218,10 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_grey,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = (Session.ScreenWidth * 0.5),
-				FontAttributes = FontAttributes.Bold,
 				Text = "Save",
 				IsEnabled = false,
-				Margin = new Thickness(0, 0, 0, 10)
 			};
+            savePersonButton.SetStyle();
 			if (person != null)
 			{
 				savePersonButton.Clicked += SavePersonChanges;
@@ -260,7 +245,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				Children = {
 					imageStack,
-					headerStack,
+					header,
 					detailsStack,
 					buttonStack
 				}

@@ -32,6 +32,8 @@ namespace TicketToTalk
 			person = invitation.person;
 			Title = person.name;
 
+            Padding = ProjectResource.Padding;
+
 			var users = Task.Run(() => personController.GetUsers(person.id)).Result;
 
 			var profilePic = new CircleImage
@@ -52,43 +54,29 @@ namespace TicketToTalk
 			var nameLabel = new Label
 			{
 				Text = person.name,
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 20,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            nameLabel.SetHeaderStyle();
 
 			var detailsHeader = new Label
 			{
 				Text = "Details",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            detailsHeader.SetSubHeaderStyle();
 
 			var birthYearLabel = new Label
 			{
 				Text = string.Format("Born in {0}, {1}", person.birthPlace, person.birthYear),
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_blue,
-				FontSize = 14,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            birthYearLabel.SetBodyStyle();
+            birthYearLabel.TextColor = ProjectResource.color_red;
 
 			var associatesLabel = new Label
 			{
 				Text = "Contributors to This Person:",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				Margin = new Thickness(0, 10, 0, 0)
+				Margin = new Thickness(0, 0, 0, 0)
 			};
+            associatesLabel.SetSubHeaderStyle();
 
 			var viewersStack = new StackLayout
 			{
@@ -100,34 +88,26 @@ namespace TicketToTalk
 				var label = new Label
 				{
 					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
-					HorizontalTextAlignment = TextAlignment.Center,
-					TextColor = ProjectResource.color_blue,
-					FontSize = 14,
-					HorizontalOptions = LayoutOptions.CenterAndExpand,
 				};
+                label.SetBodyStyle();
+                label.TextColor = ProjectResource.color_red;
 				viewersStack.Children.Add(label);
 			}
 
 			var notesLabel = new Label
 			{
 				Text = "Notes on Their Condition",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			var notes = new Label
 			{
 				Text = person.notes,
 				WidthRequest = Session.ScreenWidth * 0.75,
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            notes.SetBodyStyle();
+            notes.TextColor = ProjectResource.color_red;
 
 			button = new Button
 			{
@@ -138,6 +118,8 @@ namespace TicketToTalk
 				WidthRequest = Session.ScreenWidth * 0.5,
 				IsEnabled = false
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.Clicked += async (sender, e) =>
 			{
 
@@ -175,6 +157,8 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 			};
+            rejectButton.SetStyle();
+            rejectButton.Margin = new Thickness(0, 0, 0, 0);
 			rejectButton.Clicked += async (sender, e) =>
 			{
 				var userController = new UserController();
@@ -190,19 +174,15 @@ namespace TicketToTalk
 			var relationLabel = new Label
 			{
 				Text = "Select a relation to accept the invitation.",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            relationLabel.SetSubHeaderStyle();
 
 			relation = new Picker
 			{
 				Title = "Relation",
 				TextColor = ProjectResource.color_red,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
+				//HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.8
 			};
 			foreach (string s in ProjectResource.relations)

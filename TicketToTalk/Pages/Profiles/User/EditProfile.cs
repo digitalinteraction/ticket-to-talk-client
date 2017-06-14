@@ -45,44 +45,51 @@ namespace TicketToTalk
 			var nameLabel = new Label
 			{
 				Text = "Name",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            nameLabel.SetSubHeaderStyle();
 
 			name = new Entry
 			{
 				Text = Session.activeUser.name,
 				TextColor = ProjectResource.color_red,
 			};
+            name.SetStyle();
 			name.TextChanged += EntryChanged;
 
 			var emailLabel = new Label
 			{
 				Text = "Email",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            emailLabel.SetSubHeaderStyle();
 
 			email = new Entry
 			{
 				Text = Session.activeUser.email,
 				TextColor = ProjectResource.color_red,
+                Keyboard = Keyboard.Email
 			};
 			email.TextChanged += EntryChanged;
+            email.SetStyle();
 
 			var passwordLabel = new Label
 			{
 				Text = "Password",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            passwordLabel.SetSubHeaderStyle();
 
 			password = new Entry
 			{
 				Text = Session.activeUser.password,
 				TextColor = ProjectResource.color_red,
-				IsPassword = true
+				IsPassword = true,
 			};
+            password.SetStyle();
 			password.TextChanged += EntryChanged;
 
 			var confirmPasswordLabel = new Label
@@ -91,6 +98,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            confirmPasswordLabel.SetSubHeaderStyle();
 
 			confirmPassword = new Entry
 			{
@@ -98,6 +106,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
 				IsPassword = true
 			};
+            confirmPassword.SetStyle();
 			confirmPassword.TextChanged += EntryChanged;
 
 			saveButton = new Button
@@ -106,10 +115,11 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_grey,
 				TextColor = ProjectResource.color_white,
 				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0, 0, 0, 20),
+				//Margin = new Thickness(0, 0, 0, 20),
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				VerticalOptions = LayoutOptions.EndAndExpand,
 			};
+            saveButton.SetStyle();
 			saveButton.Clicked += SaveButton_Clicked;
 
 			var meta_content = new StackLayout

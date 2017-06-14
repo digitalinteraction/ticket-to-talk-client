@@ -27,28 +27,31 @@ namespace TicketToTalk
 
 			var userName = new Label
 			{
-				FontSize = 14,
-				TextColor = ProjectResource.color_white,
-				FontAttributes = FontAttributes.Bold
 			};
+            userName.SetSubHeaderStyle();
+            userName.VerticalOptions = LayoutOptions.Center;
+            userName.TextColor = ProjectResource.color_white;
 			userName.SetBinding(Label.TextProperty, "name");
 			userName.BindingContext = Session.activeUser;
 
+            var userEmail = new Label
+            {
+                Text = Session.activeUser.email,
+            };
+            userEmail.SetBodyStyle();
+            userEmail.VerticalOptions = LayoutOptions.Center;
+            userEmail.TextColor = ProjectResource.color_white;
+
 			var menuContent = new ContentView
 			{
+                VerticalOptions = LayoutOptions.CenterAndExpand,
 				BackgroundColor = ProjectResource.color_blue,
-				Padding = new Thickness(20, 0, 0, 20),
 				Content = new StackLayout 
 				{
 					Children = 
 					{
 						userName,
-						new Label
-						{
-							Text = Session.activeUser.email,
-							FontSize = 14,
-							TextColor = ProjectResource.color_white,
-						}
+                        userEmail
 					}
 				},
 			};
@@ -69,6 +72,7 @@ namespace TicketToTalk
 				Children = 
 				{
 					new UserProfileImage((Session.ScreenWidth * 0.2), "left", ProjectResource.color_white),
+                    menuContent
 				}
 			};
 
@@ -79,7 +83,6 @@ namespace TicketToTalk
 				Children =
 				{
 					images,
-					menuContent,
 					new StackLayout
 					{
 						Padding = new Thickness(0,10,0,0),

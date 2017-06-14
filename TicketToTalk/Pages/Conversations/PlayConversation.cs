@@ -69,6 +69,7 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.4
 			};
+            next.SetStyle();
 			next.Clicked += Next_Clicked;
 
 			var previous = new Button
@@ -80,6 +81,7 @@ namespace TicketToTalk
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.4
 			};
+            previous.SetStyle();
 			previous.Clicked += Previous_Clicked;
 
 			ticketStack = new StackLayout
@@ -95,20 +97,24 @@ namespace TicketToTalk
 			ticketTitleLabel = new Label
 			{
 				Text = tickets[currentIndex].title,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				HorizontalTextAlignment = TextAlignment.Center,
+				//TextColor = ProjectResource.color_dark,
+				//FontSize = 18,
+				//HorizontalTextAlignment = TextAlignment.Center,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            ticketTitleLabel.SetHeaderStyle();
 
 			descriptionLabel = new Label
 			{
 				Text = tickets[currentIndex].description,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
-				HorizontalTextAlignment = TextAlignment.Center,
+				//TextColor = ProjectResource.color_dark,
+				//FontSize = 14,
+				//HorizontalTextAlignment = TextAlignment.Center,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            descriptionLabel.SetBodyStyle();
+            descriptionLabel.HorizontalTextAlignment = TextAlignment.Center;
+            descriptionLabel.HorizontalOptions = LayoutOptions.CenterAndExpand;
 
 			var buttonStack = new StackLayout
 			{

@@ -29,12 +29,15 @@ namespace TicketToTalk
 			{
 				Text = "You've added a person and a photo ticket! Look for the ticket option in the menu to view it."
 			};
+            label.SetSubHeaderStyle();
 			label.SetLabelStyleInversreCenter();
 
 			var button = new Button
 			{
 				Text = "Finish Tutorial"
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.SetButtonStyle(ProjectResource.color_dark);
 			button.Clicked += Button_Clicked;
 

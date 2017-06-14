@@ -28,31 +28,13 @@ namespace TicketToTalk
 				Command = new Command(Cancel)
 			});
 
-			var photoCell = new ImageCell
-			{
-				Text = "Picture",
-				Detail = "Add or Select a Picture",
-				DetailColor = ProjectResource.color_blue,
-				ImageSource = "photo_icon.png",
-			};
-			photoCell.Tapped += PhotoButton_Clicked;
+            var photoCell = new T3ImageCell("Picture", "Take or Choose a Picture", ImageSource.FromFile("photo_icon.png"));
+            photoCell.Tapped += PhotoButton_Clicked;
 
-			var audioCell = new ImageCell
-			{
-				Text = "Sound",
-				Detail = "Record a Sound",
-				DetailColor = ProjectResource.color_blue,
-				ImageSource = "audio_icon.png",
-			};
+            var audioCell = new T3ImageCell("Sound", "Record a Sound", ImageSource.FromFile("audio_icon.png"));
 			audioCell.Tapped += SongButton_Clicked;
 
-			var youTubeCell = new ImageCell
-			{
-				Text = "YouTube",
-				Detail = "Add a YouTube Video",
-				DetailColor = ProjectResource.color_blue,
-				ImageSource = "video_icon.png",
-			};
+            var youTubeCell = new T3ImageCell("Video", "Add a YouTube Video", ImageSource.FromFile("video_icon.png"));
 			youTubeCell.Tapped += YouTubeCell_Tapped;
 
 			var table = new TableView

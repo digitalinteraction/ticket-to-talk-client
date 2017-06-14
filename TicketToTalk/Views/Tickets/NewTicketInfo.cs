@@ -41,31 +41,33 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				IsEnabled = false,
 				WidthRequest = (Session.ScreenWidth * 0.5),
-				Margin = new Thickness(0, 0, 0, 10)
 			};
+            saveButton.SetStyle();
 			saveButton.Clicked += UploadTicket;
 
 			// Set UI Elements
 			Label titleLabel = new Label
 			{
 				Text = "Title",
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            titleLabel.SetSubHeaderStyle();
 
 			title = new Entry
 			{
 				Placeholder = "Add a ticket title",
 				TextColor = ProjectResource.color_red
 			};
+            title.SetStyle();
 			title.TextChanged += Entry_TextChanged;
 
 			Label descriptionLabel = new Label
 			{
 				Text = "Description",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            descriptionLabel.SetSubHeaderStyle();
 
 			description = new Editor
 			{
@@ -73,14 +75,17 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
                 HeightRequest = 100
 			};
+            description.SetStyle();
 			description.TextChanged += Entry_TextChanged;
 
 			Label yearLabel = new Label
 			{
 				Text = "Year",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            yearLabel.SetSubHeaderStyle();
+
 			yearPicker = new Picker
 			{
 				Title = "Year",
@@ -106,9 +111,10 @@ namespace TicketToTalk
 					area = new Label
 					{
 						Text = "Location",
-						TextColor = ProjectResource.color_dark,
+						//TextColor = ProjectResource.color_dark,
 						Margin = new Thickness(0, 10, 0, 2)
 					};
+                    area.SetSubHeaderStyle();
 
 					town_city = new Entry
 					{
@@ -116,6 +122,7 @@ namespace TicketToTalk
 						TextColor = ProjectResource.color_red,
 						Margin = new Thickness(0, 0, 0, 2)
 					};
+                    town_city.SetStyle();
 					town_city.TextChanged += Entry_TextChanged;
 
 					break;
@@ -124,9 +131,10 @@ namespace TicketToTalk
 			var periodLabel = new Label
 			{
 				Text = "What Period is this from?",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            periodLabel.SetSubHeaderStyle();
 
 			period = new Picker
 			{
@@ -149,6 +157,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            accessLevelLabel.SetSubHeaderStyle();
 
 			access_level = new Picker
 			{
@@ -161,20 +170,12 @@ namespace TicketToTalk
 				access_level.Items.Add(s);
 			}
 
-			var headerStack = new StackLayout
-			{
-				Padding = new Thickness(10),
-				BackgroundColor = ProjectResource.color_red,
-				Children =
-				{
-					new Label
-					{
-						Text = "Details",
-						HorizontalOptions = LayoutOptions.CenterAndExpand,
-						TextColor = ProjectResource.color_white,
-					}
-				}
-			};
+            var header = new Label
+            {
+                Text = "Details",
+                Margin = new Thickness(0,10,0,0)
+            };
+            header.SetHeaderStyle();
 
 			StackLayout detailsStack;
 			switch (mediaType)
@@ -239,7 +240,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				Children =
 				{
-					headerStack,
+					header,
 					detailsStack,
 					buttonStack
 				}
@@ -266,8 +267,9 @@ namespace TicketToTalk
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				IsEnabled = false,
 				WidthRequest = (Session.ScreenWidth * 0.5),
-				Margin = new Thickness(0, 0, 0, 10)
+				//Margin = new Thickness(0, 0, 0, 10)
 			};
+            saveButton.SetStyle();
 			saveButton.Clicked += UploadTicket;
 
 			// Set UI Elements
@@ -277,12 +279,14 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            titleLabel.SetSubHeaderStyle();
 
 			title = new Entry
 			{
 				Placeholder = "Add a ticket title",
 				TextColor = ProjectResource.color_red
 			};
+            title.SetStyle();
 			title.TextChanged += Entry_TextChanged;
 
 			Label descriptionLabel = new Label
@@ -291,6 +295,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            descriptionLabel.SetSubHeaderStyle();
 
 			description = new Editor
 			{
@@ -298,6 +303,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_red,
                 HeightRequest = 100
 			};
+            description.SetStyle();
 			description.TextChanged += Entry_TextChanged;
 
 			Label yearLabel = new Label
@@ -306,6 +312,8 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            yearLabel.SetSubHeaderStyle();
+
 			yearPicker = new Picker
 			{
 				Title = "Year",
@@ -352,6 +360,7 @@ namespace TicketToTalk
 				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            periodLabel.SetSubHeaderStyle();
 
 			period = new Picker
 			{
@@ -371,9 +380,10 @@ namespace TicketToTalk
 			var accessLevelLabel = new Label
 			{
 				Text = "Who Can See This?",
-				TextColor = ProjectResource.color_dark,
+				//TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 2)
 			};
+            accessLevelLabel.SetSubHeaderStyle();
 
 			access_level = new Picker
 			{
@@ -386,20 +396,12 @@ namespace TicketToTalk
 				access_level.Items.Add(s);
 			}
 
-			var headerStack = new StackLayout
+			var header = new Label
 			{
-				Padding = new Thickness(10),
-				BackgroundColor = ProjectResource.color_red,
-				Children =
-				{
-					new Label
-					{
-						Text = "Details",
-						HorizontalOptions = LayoutOptions.CenterAndExpand,
-						TextColor = ProjectResource.color_white,
-					}
-				}
+				Text = "Details",
+                Margin = new Thickness(0, 10, 0, 0)
 			};
+			header.SetHeaderStyle();
 
 			StackLayout detailsStack;
 			switch (mediaType)
@@ -465,7 +467,7 @@ namespace TicketToTalk
 				Spacing = 0,
 				Children =
 				{
-					headerStack,
+					header,
 					detailsStack,
 					buttonStack
 				}

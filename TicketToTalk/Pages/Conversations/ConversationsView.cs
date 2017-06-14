@@ -69,7 +69,6 @@ namespace TicketToTalk
 			var listView = new ListView();
 			listView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
 			listView.HasUnevenRows = true;
-			listView.RowHeight = 50;
 			listView.BindingContext = conversations;
 			listView.SeparatorColor = Color.Transparent;
 			listView.ItemTemplate = new DataTemplate(typeof(ConversationCell));

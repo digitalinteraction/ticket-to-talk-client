@@ -20,16 +20,15 @@ namespace TicketToTalk
 
 			var dayMonth = new Label
 			{
-				FontSize = 18,
-				TextColor = ProjectResource.color_dark,
 			};
+            dayMonth.SetSubHeaderStyle();
 			dayMonth.SetBinding(Label.TextProperty, "displayDate");
 
 			var ticketCount = new Label
 			{
-				FontSize = 12,
-				TextColor = ProjectResource.color_red,
 			};
+            ticketCount.SetBodyStyle();
+            ticketCount.TextColor = ProjectResource.color_red;
 			ticketCount.SetBinding(Label.TextProperty, new Binding("ticketCount", stringFormat: "Ticket(s): {0}"));
 
 			var content = new StackLayout()

@@ -24,6 +24,8 @@ namespace TicketToTalk
 		public PersonProfile(Person person)
 		{
 
+            Padding = ProjectResource.Padding;
+
             TrackedName = "Person Profile";
 
 			currentPerson = person;
@@ -55,12 +57,8 @@ namespace TicketToTalk
 
 			var nameLabel = new Label
 			{
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 20,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            nameLabel.SetHeaderStyle();
 			nameLabel.SetBinding(Label.TextProperty, "name");
 			nameLabel.BindingContext = currentPerson;
 
@@ -72,45 +70,35 @@ namespace TicketToTalk
 
 			var relation = new Label
 			{
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_blue,
-				FontSize = 14,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            relation.SetSubHeaderStyle();
+            relation.TextColor = ProjectResource.color_red;
+            relation.HorizontalTextAlignment = TextAlignment.Center;
+            relation.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			relation.SetBinding(Label.TextProperty, "relation");
 			relation.BindingContext = pivot;
 
 			var detailsHeader = new Label
 			{
 				Text = "Details",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            detailsHeader.SetSubHeaderStyle();
 
 			var birthYearLabel = new Label
 			{
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_blue,
-				FontSize = 14,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
-			birthYearLabel.SetBinding(Label.TextProperty, "displayString");
+            birthYearLabel.SetBodyStyle();
+            birthYearLabel.TextColor = ProjectResource.color_red;
+            birthYearLabel.SetBinding(Label.TextProperty, "displayString");
 			birthYearLabel.BindingContext = currentPerson;
 
 			var associatesLabel = new Label
 			{
 				Text = "Contributors to This Person:",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            associatesLabel.SetSubHeaderStyle();
 
 			var viewersStack = new StackLayout
 			{
@@ -119,14 +107,13 @@ namespace TicketToTalk
 
 			if (users.Count == 0) 
 			{
-				viewersStack.Children.Add(new Label 
-				{
+                var l = new Label 
+                {
 					Text = "Contributors Unavailable",
-					HorizontalTextAlignment = TextAlignment.Center,
-					TextColor = ProjectResource.color_blue,
-					FontSize = 14,
-					HorizontalOptions = LayoutOptions.CenterAndExpand,
-				});
+                };
+                l.SetBodyStyle();
+                l.TextColor = ProjectResource.color_red;
+				viewersStack.Children.Add(l);
 			}
 
 			foreach (User u in users)
@@ -134,45 +121,38 @@ namespace TicketToTalk
 				var label = new Label
 				{
 					Text = string.Format("{0} ({1})", u.name, u.pivot.user_type),
-					HorizontalTextAlignment = TextAlignment.Center,
-					TextColor = ProjectResource.color_blue,
-					FontSize = 14,
-					HorizontalOptions = LayoutOptions.CenterAndExpand,
 				};
+				label.SetBodyStyle();
+				label.TextColor = ProjectResource.color_red;
 				viewersStack.Children.Add(label);
 			}
 
 			var notesLabel = new Label
 			{
 				Text = "Notes on Their Condition",
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			var notes = new Label
 			{
 				Text = person.notes,
-				WidthRequest = Session.ScreenWidth * 0.75,
-				HorizontalTextAlignment = TextAlignment.Center,
-				TextColor = ProjectResource.color_dark,
-				FontSize = 14,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
 			};
+            notes.SetBodyStyle();
+            notes.TextColor = ProjectResource.color_red;
 			notes.SetBinding(Label.TextProperty, "notes");
 			notes.BindingContext = currentPerson;
 
 			var button = new Button
 			{
 				Text = "Invite Contributor",
-				BackgroundColor = ProjectResource.color_red,
+				BackgroundColor = ProjectResource.color_blue,
 				TextColor = ProjectResource.color_white,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
 			};
+            button.SetStyle();
+            button.Margin = new Thickness(0, 0, 0, 0);
 			button.Clicked += async (sender, e) =>
 			{
 				await Navigation.PushAsync(new SendInvitation(person));

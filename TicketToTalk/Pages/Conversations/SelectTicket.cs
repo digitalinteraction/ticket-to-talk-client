@@ -42,18 +42,19 @@ namespace TicketToTalk
 
 			var listView = new ListView();
 
-			var cell = new DataTemplate(typeof(ImageCell));
-			cell.SetBinding(TextCell.TextProperty, "title");
-			cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
-			cell.SetBinding(ImageCell.ImageSourceProperty, "displayIcon");
-			cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
-			cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
+            var cell = new DataTemplate(typeof(StyledTicketCell));
+			//cell.SetBinding(TextCell.TextProperty, "title");
+			//cell.SetBinding(TextCell.DetailProperty, new Binding("year"));
+			//cell.SetBinding(ImageCell.ImageSourceProperty, "displayIcon");
+			//cell.SetValue(TextCell.TextColorProperty, ProjectResource.color_blue);
+			//cell.SetValue(TextCell.DetailColorProperty, ProjectResource.color_dark);
 
 			listView.SetBinding(ListView.ItemsSourceProperty, ".");
 			listView.BindingContext = tickets;
 			listView.ItemTemplate = cell;
 			listView.ItemSelected += OnSelection;
 			listView.SeparatorColor = Color.Transparent;
+            listView.HasUnevenRows = true;
 
 
 			Content = new StackLayout
@@ -145,7 +146,7 @@ namespace TicketToTalk
 						t.displayIcon = "area_icon.png";
 						break;
 				}
-
+                t.imageSource = ImageSource.FromFile(t.displayIcon);
 				tickets.Add(t);
 			}
 

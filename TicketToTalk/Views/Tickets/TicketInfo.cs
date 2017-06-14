@@ -18,31 +18,27 @@ namespace TicketToTalk
 
 			var title = new Label
 			{
-				FontSize = 18,
-				FontAttributes = FontAttributes.Bold,
-				TextColor = ProjectResource.color_dark,
-				HorizontalTextAlignment = TextAlignment.Center,
 			};
+            title.SetHeaderStyle();
 			title.SetBinding(Label.TextProperty, "title");
 			title.BindingContext = ViewTicket.displayedTicket;
 
 			var description = new Label 
 			{
-				FontSize = 14,
-				TextColor = ProjectResource.color_dark,
 				Margin = new Thickness(0, 10, 0, 0),
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            description.SetBodyStyle();
+            description.HorizontalTextAlignment = TextAlignment.Center;
+            description.HorizontalOptions = LayoutOptions.CenterAndExpand;
 			description.SetBinding(Label.TextProperty, "description");
 			description.BindingContext = ViewTicket.displayedTicket;
 
 			var location = new Label 
 			{
-				FontSize = 14,
-				TextColor = ProjectResource.color_dark,
-				Margin = new Thickness(0, 10, 0, 0),
-				HorizontalTextAlignment = TextAlignment.Center
 			};
+            location.SetBodyStyle();
+            location.HorizontalOptions = LayoutOptions.CenterAndExpand;
+            location.HorizontalTextAlignment = TextAlignment.Center;
 			location.SetBinding(Label.TextProperty, "displayString");
 			location.BindingContext = ViewTicket.displayedTicket;
 

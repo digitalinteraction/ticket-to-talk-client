@@ -39,6 +39,7 @@ namespace TicketToTalk
 			{
 				Text = "Select a date for the conversation."
 			};
+            dateLabel.SetSubHeaderStyle();
 
 			datepicker = new DatePicker
 			{
@@ -51,6 +52,7 @@ namespace TicketToTalk
 				Text = "Select a time for the conversation.",
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            timeLabel.SetSubHeaderStyle();
 
 			timePicker = new TimePicker
 			{
@@ -62,12 +64,14 @@ namespace TicketToTalk
 				Text = "Notes",
 				Margin = new Thickness(0, 10, 0, 0)
 			};
+            notesLabel.SetSubHeaderStyle();
 
 			notes = new Editor()
 			{
-				Text = "Add some notes about the conversation...",
-				TextColor = ProjectResource.color_red
+				Text = "Add some notes about the conversation..."
 			};
+            notes.SetStyle();
+            notes.TextColor = ProjectResource.color_red;
 
 			saveButton = new Button()
 			{
@@ -76,9 +80,9 @@ namespace TicketToTalk
 				BackgroundColor = ProjectResource.color_blue,
 				HorizontalOptions = LayoutOptions.CenterAndExpand,
 				WidthRequest = Session.ScreenWidth * 0.5,
-				Margin = new Thickness(0, 0, 0, 10),
 				IsEnabled = true
 			};
+            saveButton.SetStyle();
 			saveButton.Clicked += SaveButton_Clicked;
 
 			var buttonStack = new StackLayout

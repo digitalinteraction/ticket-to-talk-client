@@ -2,156 +2,176 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SQLite;
+using Xamarin.Forms;
+
 namespace TicketToTalk
 {
-	/// <summary>
-	/// Ticket.
-	/// </summary>
-	public class Ticket : IComparable, INotifyPropertyChanged
-	{
-		private string _title;
-		private string _description;
-		private string _year;
-		private string _pathToFile;
-		private string _area;
-		private string _access_level;
-		private int _period_id;
-		private string _displayString;
+    /// <summary>
+    /// Ticket.
+    /// </summary>
+    public class Ticket : IComparable, INotifyPropertyChanged
+    {
+        private string _title;
+        private string _description;
+        private string _year;
+        private string _pathToFile;
+        private string _area;
+        private string _access_level;
+        private int _period_id;
+        private string _displayString;
+        private ImageSource _imageSource;
 
-		[PrimaryKey]
-		public int id { get; set; }
-		public string title
-		{
-			get
-			{
-				return _title;
-			}
-			set
-			{
-				if (value != _title)
-				{
-					_title = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public string description
-		{
-			get
-			{
-				return _description;
-			}
-			set
-			{
-				if (value != _description)
-				{
-					_description = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public string mediaType { get; set; }
-		public string year
-		{
-			get
-			{
-				return _year;
-			}
-			set
-			{
-				if (value != _year)
-				{
-					_year = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public string pathToFile
-		{
-			get
-			{
-				return _pathToFile;
-			}
-			set
-			{
-				if (value != _pathToFile)
-				{
-					_pathToFile = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		[Ignore]
-		public string displayIcon { get; set; }
-		public string access_level
-		{
-			get
-			{
-				return _access_level;
-			}
-			set
-			{
-				if (value != _access_level)
-				{
-					_access_level = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
+        [PrimaryKey]
+        public int id { get; set; }
+        public string title
+        {
+            get
+            {
+                return _title;
+            }
+            set
+            {
+                if (value != _title)
+                {
+                    _title = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public string description
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                if (value != _description)
+                {
+                    _description = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public string mediaType { get; set; }
+        public string year
+        {
+            get
+            {
+                return _year;
+            }
+            set
+            {
+                if (value != _year)
+                {
+                    _year = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public string pathToFile
+        {
+            get
+            {
+                return _pathToFile;
+            }
+            set
+            {
+                if (value != _pathToFile)
+                {
+                    _pathToFile = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        [Ignore]
+        public string displayIcon { get; set; }
+        public string access_level
+        {
+            get
+            {
+                return _access_level;
+            }
+            set
+            {
+                if (value != _access_level)
+                {
+                    _access_level = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-		public string area
-		{
-			get
-			{
-				return _area;
-			}
-			set
-			{
-				if (value != _area)
-				{
-					_area = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
+        public string area
+        {
+            get
+            {
+                return _area;
+            }
+            set
+            {
+                if (value != _area)
+                {
+                    _area = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-		//public int area_id { get; set; }
-		public int person_id { get; set; }
-		public int period_id
-		{
-			get
-			{
-				return _period_id;
-			}
-			set
-			{
-				if (value != _period_id)
-				{
-					_period_id = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public DateTime created_at { get; set; }
-		public DateTime updated_at { get; set; }
-		[Ignore]
-		public Tag[] tags { get; set; }
-		[Ignore]
-		public string displayString
-		{
-			get
-			{
-				return _displayString;
-			}
-			set
-			{
-				if (value != _displayString)
-				{
-					_displayString = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
+        //public int area_id { get; set; }
+        public int person_id { get; set; }
+        public int period_id
+        {
+            get
+            {
+                return _period_id;
+            }
+            set
+            {
+                if (value != _period_id)
+                {
+                    _period_id = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        [Ignore]
+        public Tag[] tags { get; set; }
+        [Ignore]
+        public string displayString
+        {
+            get
+            {
+                return _displayString;
+            }
+            set
+            {
+                if (value != _displayString)
+                {
+                    _displayString = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        [Ignore]
+        public ImageSource imageSource 
+        {
+            get 
+            {
+                return _imageSource;
+            }
+            set 
+            {
+                if (value != _imageSource) 
+                {
+                    this._imageSource = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
 		/// <summary>
 		/// Creates a new instance of a ticket.
