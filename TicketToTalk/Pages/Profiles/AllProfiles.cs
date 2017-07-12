@@ -127,6 +127,7 @@ namespace TicketToTalk
 		/// <returns>The add new person view.</returns>
 		private void launchAddNewPersonView()
 		{
+            Console.WriteLine("Adding new person");
 			Navigation.PushAsync(new AddPersonChoice());
 		}
 

@@ -28,6 +28,8 @@ namespace TicketToTalk
 		public NewTicket(string mediaType, string filePath)
 		{
 
+			indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
+
             TrackedName = "New Ticket";
 
 			ToolbarItems.Add(new ToolbarItem
@@ -82,8 +84,6 @@ namespace TicketToTalk
 
 			layout.HeightRequest = Session.ScreenHeight;
 
-            indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
-
 			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
 			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
 
@@ -110,8 +110,34 @@ namespace TicketToTalk
 		{
 			Title = "New Ticket";
 
+			indicator = new ProgressSpinner(this, ProjectResource.color_white, ProjectResource.color_dark);
+
+			TrackedName = "New Ticket";
+
+			ToolbarItems.Add(new ToolbarItem
+			{
+				Text = "Cancel",
+				Order = ToolbarItemOrder.Primary,
+				Command = new Command(Cancel)
+			});
+
+			// Set title.
+			Title = "New Ticket";
+			ContentView mediaContent = null;
+
+			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
+			if (!hasPerms)
+			{
+				Navigation.PopAsync();
+			}
+			else
+			{
+			
+			}
+
 			var stack = new StackLayout
 			{
+				VerticalOptions = LayoutOptions.StartAndExpand,
 				Spacing = 0,
 				Children =
 				{
@@ -120,10 +146,20 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new ScrollView
+			scrollView = new ScrollView
 			{
 				Content = stack
 			};
+
+			layout.HeightRequest = Session.ScreenHeight;
+
+			AbsoluteLayout.SetLayoutBounds(scrollView, new Rectangle(0.5, 0.5, 1.0, 1.0));
+			AbsoluteLayout.SetLayoutFlags(scrollView, AbsoluteLayoutFlags.All);
+
+			layout.Children.Add(scrollView);
+			layout.Children.Add(indicator);
+
+			Content = layout;
 		}
 
 		/// <summary>

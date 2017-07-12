@@ -17,10 +17,10 @@ namespace TicketToTalk
 		public static int ScreenWidth;
 		public static int ScreenHeight;
 
-		//public const string DB = "t3.31.db3";
+		//public const string DB = "t3.32.db3";
 		//public static readonly string baseUrl = "http://localhost:8080/api/";
 
-		public const string DB = "t3_live.1.6.db3";
+		public const string DB = "t3_live.1.8.db3";
 		public static readonly string baseUrl = "https://tickettotalk.openlab.ncl.ac.uk/api/";
 
 		private static SQLiteConnection _connection = null;
