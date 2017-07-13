@@ -123,7 +123,6 @@ namespace TicketToTalk
 
 			// Set title.
 			Title = "New Ticket";
-			ContentView mediaContent = null;
 
 			var hasPerms = Task.Run(() => checkStoragePerms()).Result;
 			if (!hasPerms)
