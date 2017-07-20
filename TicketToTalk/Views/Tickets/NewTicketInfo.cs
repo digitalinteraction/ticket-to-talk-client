@@ -485,7 +485,7 @@ namespace TicketToTalk
 		{
 
 			saveButton.IsEnabled = false;
-			NewTicket.indicator.IsEnabled = true;
+			//NewTicket.indicator.IsEnabled = true;
 			NewTicket.indicator.IsVisible = true;
 			NewTicket.indicator.IsRunning = true;
 
@@ -542,14 +542,14 @@ namespace TicketToTalk
 						isInTutorial = false;
 						NewTicket.indicator.IsVisible = false;
 						NewTicket.indicator.IsRunning = false;
-						NewTicket.indicator.IsEnabled = false;
+						//NewTicket.indicator.IsEnabled = false;
 						Application.Current.MainPage = new FinishTutorialPage();
 					}
 					else
 					{
 						NewTicket.indicator.IsVisible = false;
 						NewTicket.indicator.IsRunning = false;
-						NewTicket.indicator.IsEnabled = false;
+						//NewTicket.indicator.IsEnabled = false;
 						await Navigation.PopModalAsync();
 					}
 				}
@@ -557,7 +557,7 @@ namespace TicketToTalk
 				{
 					NewTicket.indicator.IsVisible = false;
 					NewTicket.indicator.IsRunning = false;
-					NewTicket.indicator.IsEnabled = false;
+					//NewTicket.indicator.IsEnabled = false;
 					await Application.Current.MainPage.DisplayAlert("New Ticket", "Ticket to could not be uploaded", "OK");
 					saveButton.IsEnabled = true;
 				}
@@ -566,7 +566,7 @@ namespace TicketToTalk
 			{
 				NewTicket.indicator.IsVisible = false;
 				NewTicket.indicator.IsRunning = false;
-				NewTicket.indicator.IsEnabled = false;
+				//NewTicket.indicator.IsEnabled = false;
 
 				await Application.Current.MainPage.DisplayAlert("No Network", ex.Message, "Dismiss");
 				saveButton.IsEnabled = true;

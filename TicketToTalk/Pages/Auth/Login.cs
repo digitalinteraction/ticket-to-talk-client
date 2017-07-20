@@ -201,7 +201,7 @@ namespace TicketToTalk
 					await register.FadeTo(1, 500);
 				}
 			}
-			catch (NoNetworkException ex)
+			catch (Exception ex)
 			{
 				IsBusy = false;
 

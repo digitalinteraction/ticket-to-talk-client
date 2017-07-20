@@ -125,7 +125,16 @@ namespace TicketToTalk
 			var userController = new UserController();
 			var chosenGroup = userGroups[group.SelectedIndex];
 
-			var sent = await userController.SendInviteToPerson(email.Text.ToLower(), chosenGroup, person.id);
+			bool sent = false;
+
+			try
+			{
+				sent = await userController.SendInviteToPerson(email.Text.ToLower(), chosenGroup, person.id);
+			}
+			catch (Exception ex)
+			{
+				await DisplayAlert("No Network", ex.Message, "OK");
+			}
 
 			if (sent)
 			{

@@ -57,7 +57,7 @@ namespace TicketToTalk
 				Debug.WriteLine(ex);
 			}
 
-			if (rawInvites.Count > 0)
+			if (rawInvites != null && rawInvites.Count > 0)
 			{
 				joinPersonButton.Text = string.Format("See Invitations({0})", rawInvites.Count);
 				joinPersonButton.BackgroundColor = ProjectResource.color_red;
