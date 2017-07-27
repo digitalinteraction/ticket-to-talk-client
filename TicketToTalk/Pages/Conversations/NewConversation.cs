@@ -111,7 +111,7 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new StackLayout
+			var stackLayout = new StackLayout
 			{
 				Spacing = 0,
 				Children =
@@ -121,6 +121,13 @@ namespace TicketToTalk
 
 				}
 			};
+
+			var stack = new ScrollView
+			{
+                Content = stackLayout
+            };
+
+            Content = stack;
 		}
 
 		/// <summary>
@@ -218,7 +225,7 @@ namespace TicketToTalk
 				}
 			};
 
-			Content = new StackLayout
+			var stackLayout = new StackLayout
 			{
 				Spacing = 0,
 				Children =
@@ -228,6 +235,13 @@ namespace TicketToTalk
 
 				}
 			};
+
+			var stack = new ScrollView
+			{
+				Content = stackLayout
+			};
+
+            Content = stack;
 		}
 
 		/// <summary>
