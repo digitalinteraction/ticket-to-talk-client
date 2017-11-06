@@ -229,7 +229,7 @@ namespace TicketToTalk
 			{
 				Spacing = 0,
 				Children =
-				{
+				{  
 					content,
 					buttonStack
 
