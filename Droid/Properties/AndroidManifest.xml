@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.1" package="uk.ac.ncl.openlab.tickettotalk" android:versionCode="2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.2" package="uk.ac.ncl.openlab.tickettotalk" android:versionCode="3">
 	<uses-sdk android:minSdkVersion="19" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<application android:label="Ticket to Talk" android:largeHeap="true" android:icon="@drawable/app_icon">
+	<application android:label="Ticket to Talk" android:largeHeap="true" android:icon="@drawable/icon">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="uk.ncl.ac.d.welsh.ticket_to_talk.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
 		</provider>

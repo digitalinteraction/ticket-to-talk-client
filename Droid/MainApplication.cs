@@ -9,7 +9,7 @@ namespace TicketToTalk.Droid
 {
 	//You can specify additional application information in this attribute
     //[Application]
-    [Application(Label = "Ticket to Talk", Icon = "@drawable/app_icon")]
+    [Application(Label = "Ticket to Talk", Icon = "@drawable/icon")]
     public class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
